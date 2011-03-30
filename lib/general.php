@@ -519,7 +519,7 @@ function _vae_htmlarea($text, $a, $offsite = false) {
   $size_video = (strlen($width) && strlen($height) && ($width < 400 || $height < 300));
   $player_width = ($size_video ? $width : 400);
   $player_height = ($size_video ? $height : 300);
-  $text = preg_replace_callback("/<img([^>]*)\/VAE_HOSTED_AUDIO\/([0-9]*)([^>]*)>/", create_function(
+  $text = preg_replace_callback("/<img([^>]*)\/(VAE|VERB)_HOSTED_AUDIO\/([0-9]*)([^>]*)>/", create_function(
     '$matches', ($offsite ? "return '';" :
     '$id = _vae_global_id();
      _vae_needs_javascript("audio-player");
@@ -531,10 +531,10 @@ function _vae_htmlarea($text, $a, $offsite = false) {
       <param name="menu" value="false">
       <param name="wmode" value="transparent">
       </object>\';')), $text);
-  $text = preg_replace_callback("/<img([^>]*)src=(\"|'|)([^>]*)\/VAE_HOSTED_IMAGE\/([0-9]*)(\"|'|)/", create_function(
+  $text = preg_replace_callback("/<img([^>]*)src=(\"|'|)([^>]*)\/(VAE|VERB)_HOSTED_IMAGE\/([0-9]*)(\"|'|)/", create_function(
     '$matches',
     'return "<img" . $matches[1] . "src=\"' . _vae_absolute_data_url() . '" . vae_asset($matches[4], "' . $width . '","' . $height . '", "' . $quality . '", ' . $preserve_filename . ') . "\"";'), $text);
-  $text = preg_replace_callback("/<img([^>]*)\/VAE_HOSTED_VIDEO\/([0-9]*)([^>]*)>/", create_function(
+  $text = preg_replace_callback("/<img([^>]*)\/(VAE|VERB)_HOSTED_VIDEO\/([0-9]*)([^>]*)>/", create_function(
     '$matches', ($offsite ? "return '';" : 
     '$id = _vae_global_id();
      $file = vae_asset($matches[2]);
