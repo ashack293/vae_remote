@@ -1,0 +1,17 @@
+<v:users:register path="/artists" redirect="/in">
+<v:text_field path="name" />
+<v:text_field path="password" />
+</v:users:register>
+>
+<form action="/page?__v:users_register=2631da8a84b1d2e81fe110d3392aa407" method="post">
+<input value="" name="name" id="name" type="text" />
+<input value="" name="password" id="password" type="text" />
+</form>
+=
+Erequired path
+<v:users:register />
+=
+Erequired redirect
+<v:users:register path="/artists" />
+=
+<v:users:register path="/artists" redirect="/in" />

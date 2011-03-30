@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://coinmill.com/rss.xsl"?>
+<rss version="2.0">
+ <channel>
+  <selflink>http://coinmill.com/rss/AUD_USD.xml</selflink>
+  <title>Coinmill.com Currency Rates</title>
+  <link>http://coinmill.com/</link>
+  <description>Current rates and calculator for currencies</description>
+  <language>en</language>
+  <pubDate>Thu, 24 Dec 2009 00:00:00 EST</pubDate>
+  <lastBuildDate>Sun, 27 Dec 2009 20:49:39 EST</lastBuildDate>
+  <item>
+   <title>Australian Dollar and United States Dollar</title>
+   <link>http://coinmill.com/AUD_USD.html</link>
+   <description>
+     <![CDATA[
+        1.00 AUD = 0.88 USD<br/>
+        1.00 USD = 1.10 AUD<br/>
+       <a href="http://coinmill.com/AUD_USD.html">Converter</a> --
+       <a href="http://coinmill.com/chart/AUD_USD.html">Rate Chart</a>
+     ]]>
+   </description>
+   <pubDate>Thu, 24 Dec 2009 00:00:00 EST</pubDate>
+   <guid>Coinmill.com AUD/USD 2009-12-24</guid>
+  </item>
+ </channel>
+</rss>

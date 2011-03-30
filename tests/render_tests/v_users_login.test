@@ -1,0 +1,17 @@
+<v:users:login path="/artists" required="name,password" redirect="/in">
+<v:text_field path="name" />
+<v:text_field path="password" />
+</v:users:login>
+>
+<form action="/page?__v:users_login=89dc8b48539e5ecd7eaedf6e32ed0cbf" method="post">
+<input value="" name="name" id="name" type="text" />
+<input value="" name="password" id="password" type="text" />
+</form>
+=
+Erequired path
+<v:users:login />
+=
+Erequired required
+<v:users:login path="/artists" />
+=
+<v:users:login path="/artists" required="cow" />

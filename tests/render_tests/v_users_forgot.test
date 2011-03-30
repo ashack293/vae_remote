@@ -1,0 +1,19 @@
+<v:users:forgot path="/artists" required="name,password" email_field="email" redirect="/in">
+<v:text_field path="name" />
+<v:text_field path="password" />
+</v:users:forgot>
+>
+<form action="/page?__v:users_forgot=be962afb00504a45dd0d0cdd021ab55f" method="post">
+<input value="" name="name" id="name" type="text" />
+<input value="" name="password" id="password" type="text" />
+</form>
+<?php $this->assertSessionDep('__v:logged_in'); ?>
+=
+Erequired email_field
+<v:users:forgot />
+=
+Erequired path
+<v:users:forgot email_field="email" />
+=
+Erequired required
+<v:users:forgot path="/artists" email_field="email" />

@@ -1,0 +1,21 @@
+<v:php>return "cow";</v:php>
+>
+cow
+=
+<v:php>$kevin = "awesome";</v:php>
+<v:php>return $kevin;</v:php>
+>
+awesome
+=
+<v:section path="13421"><v:php>return $id;</v:php></v:section>
+>
+13421
+=
+<v:section path="13421"><v:php>return $context['name'];</v:php></v:section>
+>
+Freefall
+=
+<v? $kevin = "awesome"; ?>
+<v?=$kevin?>
+>
+awesome

@@ -1,0 +1,8 @@
+<v:store:addresses>a</v:store:addresses>
+>
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCustomer(); $_SESSION['__v:store']['customer_addresses'] = array(array('billing_name' => "a1"), array('billing_name' => "a2")); ?>
+<v:store:addresses>-<v:text path="billing_name" />~</v:store:addresses>
+>
+-a1~-a2~

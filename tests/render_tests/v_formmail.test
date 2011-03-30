@@ -1,0 +1,10 @@
+<v:formmail to="kevin@actionverb.com" redirect="/stalked">
+<v:text_field path="name" />
+</v:formmail>
+>
+<form action="/page?__v:formmail=011dae68c7ce4210f496f34e44125450" method="post">
+<input value="" name="name" id="name" type="text" />
+</form>
+=
+Erequired to
+<v:formmail />

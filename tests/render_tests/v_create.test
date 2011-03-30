@@ -1,0 +1,8 @@
+<v:section path="13421"><v:create path="/artists"><v:text_field path="name" /></v:create></v:section>
+>
+<form action="/page?__v:create=e7fee3e3f9314298d1af921c47d930bf" method="post"><input name="name" id="name" type="text" /></form>
+=
+Erequired path
+<v:create />
+=
+<v:create path="/artists" />

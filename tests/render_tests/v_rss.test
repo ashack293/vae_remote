@@ -1,0 +1,126 @@
+Erequired path
+<v:rss />
+=
+Erequired title
+<v:rss path="/artists" />
+=
+Erequired description
+<v:rss path="/artists" title="My Feed" />
+=
+<v:rss path="/artists" title="My Feed" description="the best feed ever" title_field="name" description_field="genre" />
+>
+<?xml version="1.0"?>
+<rss version="2.0">
+ <channel>
+  <title>My Feed</title>
+  <link>http://btg.vaesite.com/</link>
+  <description>the best feed ever</description>
+  <language>en-us</language>
+  <generator>Vae</generator>
+  <item>
+   <title>Freefall</title>
+   <description>Rock</description>
+   <guid>http://btg.vaesite.com/?_guid=13421</guid>
+  </item>
+  <item>
+   <title>Kevin Bombino</title>
+   <description>Rock/Indie</description>
+   <link>http://btg.vaesite.com/artist/kevin-bombino</link>
+   <guid>http://btg.vaesite.com/artist/kevin-bombino</guid>
+  </item>
+  <item>
+   <title>Pratt Avenue</title>
+   <description>Glam/Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=13447</guid>
+  </item>
+  <item>
+   <title>Matt Blake</title>
+   <description>2 Step / Tropical / Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=14448</guid>
+  </item>
+ </channel>
+</rss>
+=
+<v:rss path="/artists" title="My Feed" description="the best feed ever" title_field="name" description_field="genre">
+ <morestuff>test<v=name></morestuff>
+</v:rss>
+>
+<?xml version="1.0"?>
+<rss version="2.0">
+ <channel>
+  <title>My Feed</title>
+  <link>http://btg.vaesite.com/</link>
+  <description>the best feed ever</description>
+  <language>en-us</language>
+  <generator>Vae</generator>
+  <item>
+   <title>Freefall</title>
+   <description>Rock</description>
+   <guid>http://btg.vaesite.com/?_guid=13421</guid>
+ <morestuff>testFreefall</morestuff>
+  </item>
+  <item>
+   <title>Kevin Bombino</title>
+   <description>Rock/Indie</description>
+   <link>http://btg.vaesite.com/artist/kevin-bombino</link>
+   <guid>http://btg.vaesite.com/artist/kevin-bombino</guid>
+ <morestuff>testKevin Bombino</morestuff>
+  </item>
+  <item>
+   <title>Pratt Avenue</title>
+   <description>Glam/Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=13447</guid>
+ <morestuff>testPratt Avenue</morestuff>
+  </item>
+  <item>
+   <title>Matt Blake</title>
+   <description>2 Step / Tropical / Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=14448</guid>
+ <morestuff>testMatt Blake</morestuff>
+  </item>
+ </channel>
+</rss>
+=
+<v:rss path="/artists" title="My Feed" description="the best feed ever" title_field="name" description_field="bio" author_field="genre">
+ <g:price>15.00</g:price>
+</v:rss>
+>
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+ <channel>
+  <title>My Feed</title>
+  <link>http://btg.vaesite.com/</link>
+  <description>the best feed ever</description>
+  <language>en-us</language>
+  <generator>Vae</generator>
+  <item>
+   <title>Freefall</title>
+   <author>Rock</author>
+   <description>A powerpop/indie/rock band from Cambridge, Massachusetts, United States which began on the 28th of December, 2004.  With Sam Lissner on lead vocals and guitar, Kevin Bombino also on lead vocals and guitar, Ben Feltner on bass and vocals and Neil Hartmann on drums.</description>
+   <guid>http://btg.vaesite.com/?_guid=13421</guid>
+ <g:price>15.00</g:price>
+  </item>
+  <item>
+   <title>Kevin Bombino</title>
+   <author>Rock/Indie</author>
+   <description>Kevin Bombino is the founder of Action Verb, LLC and these are all the demos of his that he threw out a long time ago.</description>
+   <link>http://btg.vaesite.com/artist/kevin-bombino</link>
+   <guid>http://btg.vaesite.com/artist/kevin-bombino</guid>
+ <g:price>15.00</g:price>
+  </item>
+  <item>
+   <title>Pratt Avenue</title>
+   <author>Glam/Crunk</author>
+   <description>Kevin Bombino had a band even in High School. :)</description>
+   <guid>http://btg.vaesite.com/?_guid=13447</guid>
+ <g:price>15.00</g:price>
+  </item>
+  <item>
+   <title>Matt Blake</title>
+   <author>2 Step / Tropical / Crunk</author>
+   <description>Created a graphic guide to using NormaTec equipment for patients, from concept through photography, page layout, and deployment. Helped design and test business processes for filing insurance claims with Medicare and HMOs, including primary insurance billing and Medicare appeals. Set up small business account and was point of contact with Dell, sourcing and purchasing all computer equipment. Acted as office purchasing agent.</description>
+   <guid>http://btg.vaesite.com/?_guid=14448</guid>
+ <g:price>15.00</g:price>
+  </item>
+ </channel>
+</rss>

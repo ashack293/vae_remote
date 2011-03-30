@@ -1,0 +1,7 @@
+<v:radio name="texte" value="a" />
+>
+<input name="texte" type="radio" value="a" />
+=
+<v:radio path="texte" value="a" />
+>
+<input value="a" name="texte" id="texte" type="radio" />

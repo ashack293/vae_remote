@@ -1,0 +1,4 @@
+<?php $this->populateCart(); $this->populateCustomer(); ?>
+<v:store:shipping_method />
+>
+Standard Shipping

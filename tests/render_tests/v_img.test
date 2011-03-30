@@ -1,0 +1,17 @@
+Eprovide a value
+<v:img />
+=
+<v:img path="13432/cover_art" />
+>
+=
+<v:img src="cow.jpg" />
+>
+/http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/cow.jpg/
+=
+<v:imurl src="cow.jpg" />
+>
+/http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/cow.jpg/
+=
+<v:img src="cow.jpg" protect="true" />
+>
+/<div style="background-image: url\(http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/cow.jpg\); height: px; width: px;"><img src="\/__assets\/spacer.png" height="" width="" \/><\/div>/

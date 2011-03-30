@@ -1,0 +1,13 @@
+Efield
+<v:store:if_field_overridden />
+=
+Eoptions_collection
+<v:store:if_field_overridden field="weight" />
+=
+<v:section path="13433"><v:store:if_field_overridden field="weight" options_collection="inventory">in<v:else>out</v:else></v:store:if_field_overridden></v:section>
+>
+out
+=
+<v:section path="13435"><v:store:if_field_overridden field="weight" options_collection="inventory">in<v:else>out</v:else></v:store:if_field_overridden></v:section>
+>
+in

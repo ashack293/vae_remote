@@ -1,0 +1,6 @@
+<v:facebook_like />
+<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fbtg.vaesite.com%2Fpage&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:450px; height: 60px"></iframe>
+=
+<v:facebook_like colorscheme="dark" layout="button_count" action="recommend" path="/artists" width="500" />
+<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fbtg.vaesite.com%2F&amp;layout=button_count&amp;show_faces=true&amp;width=500&amp;action=recommend&amp;colorscheme=dark" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:500px; height: 60px"></iframe>
+

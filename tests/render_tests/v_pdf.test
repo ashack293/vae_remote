@@ -1,0 +1,8 @@
+<v:pdf />nothing
+>
+nothing
+=
+<v:pdf orientation="landscape" paper="A4" filename="Moo" />a
+>
+<?php $this->assertEqual($_VAE['prepend'], "<!--PDF--Moo;landscape;A4-->"); ?>
+a

@@ -1,0 +1,19 @@
+Eprice_field
+<v:store:item:price />
+=
+<v:section path="13433"><v:store:item:price price_field="price" /></v:section>
+>
+<span class='currency currency_USD'>$2.99</span>
+<?php $this->assertSessionDep('__v:store_display_currency'); ?>
+=
+<v:section path="13433"><v:store:item:price price_field="price" discount_field="discount" /></v:section>
+>
+<span class='currency currency_USD'>$1.50</span>
+=
+<v:section path="13433"><v:store:add_to_cart redirect="/cart" price_field="price"><v:store:item:price /></v:store:add_to_cart></v:section>
+>
+<form action="/page?__v:store_add_to_cart=898b86eb2da86a92c98d1cd56c148729" method="post"><span class='currency currency_USD'>$2.99</span></form>
+=
+<v:section path="13433"><v:store:add_to_cart redirect="/cart" price_field="price" discount_field="discount"><v:store:item:price /></v:store:add_to_cart></v:section>
+>
+<form action="/page?__v:store_add_to_cart=cd54ec6d905a3ee648927855065de2a9" method="post"><span class='currency currency_USD'>$1.50</span></form>

@@ -1,0 +1,10 @@
+<?php $this->populateCart(); ?>
+<v:store:if_money_order>in<v:else>out</v:else></v:store:if_money_order>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); $_SESSION['__v:store']['payment_method'] = "money_order"; ?>
+<v:store:if_money_order>in<v:else>out</v:else></v:store:if_money_order>
+>
+in

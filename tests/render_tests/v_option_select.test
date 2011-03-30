@@ -1,0 +1,8 @@
+Erequired fields
+<v:option_select />
+=
+Erequired name
+<v:option_select fields="size" />
+=
+Erequired path
+<v:option_select fields="size" name="options" />

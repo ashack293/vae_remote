@@ -1,0 +1,7 @@
+<v:section path="13433"><v:store:item:if_discount discount_field="discount">in<v:else>out</v:else></v:store:item:if_discount></v:section>
+>
+in
+=
+<v:section path="13421"><v:store:item:if_discount discount_field="@discount">in<v:else>out</v:else></v:store:item:if_discount></v:section>
+>
+out

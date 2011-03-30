@@ -1,0 +1,9 @@
+<v:store:if_recent_order_check>in<v:else>out</v:else></v:store:if_recent_order_check>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); $_SESSION['__v:store']['recent_order_data']['payment_method'] = "check"; ?>
+<v:store:if_recent_order_check>in<v:else>out</v:else></v:store:if_recent_order_check>
+>
+in

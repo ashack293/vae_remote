@@ -1,0 +1,21 @@
+Epath
+<v:date_selection date_field="date" />
+=
+Edate_field
+<v:date_selection path="cow" />
+=
+<v:date_selection date_field="date" path="blog_posts" />
+>
+<a class="current" href="/page?date=2008-08">August 2008</a>
+=
+<v:date_selection date_field="date" path="blog_posts" strftime="%Y/%m" />
+>
+<a class="current" href="/page?date=2008-08">2008/08</a>
+=
+<v:date_selection date_field="date" path="blog_posts" strftime="%Y" />
+>
+<a class="current" href="/page?date=2008">2008</a>
+=
+<v:date_selection date_field="date" path="blog_posts" strftime="%Y-%m-%d" />
+>
+<a class="current" href="/page?date=2008-08-21">2008-08-21</a>

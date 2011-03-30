@@ -1,0 +1,10 @@
+<?php $this->populateCart(); ?>
+<v:store:if_paypal_express_checkout>in<v:else>out</v:else></v:store:if_paypal_express_checkout>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout"; ?>
+<v:store:if_paypal_express_checkout>in<v:else>out</v:else></v:store:if_paypal_express_checkout>
+>
+in

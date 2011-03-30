@@ -1,0 +1,45 @@
+<v:collection path="/artists"><v:if total_items="3">in<v:else>out</v:else></v:if></v:collection>
+>
+outoutoutout
+=
+<v:if path="13421/name" is="Kevin">in<v:else>out</v:else></v:if>
+>
+out
+=
+<v:if path="13421/name" is="Freefall">in1<v:else>out1</v:else></v:if>
+>
+in1
+=
+<v:if param="cow">in2<v:else>out2</v:else></v:if>
+>
+out2
+=
+<?php $_REQUEST['cow'] = "2"; ?>
+<v:if param="cow">in3<v:else>out3</v:else></v:if>
+>
+in3
+=
+<v:section path="13421"><v:if id="13421">in4<v:else>out4</v:else></v:if></v:section>
+>
+in4
+=
+<v:section path="13421"><v:if id="$id">in5<v:else>out5</v:else></v:if></v:section>
+>
+out5
+=
+<?php $_REQUEST['id'] = "13421"; ?>
+<v:section path="13421"><v:if id="$id">in6<v:else>out6</v:else></v:if></v:section>
+>
+in6
+=
+<v:section path="13421"><v:if id="artists">in7<v:else>out7</v:else></v:if></v:section>
+>
+in7
+=
+<v:if path="1<2">y1<v:else><v:if path="2<3">y2</v:if></v:else></v:if>
+>
+y1
+=
+<v:if path="1>2">y1<v:else>q<v:if path="2<3">y2<v:else>w</v:else></v:if></v:else></v:if>
+>
+qy2

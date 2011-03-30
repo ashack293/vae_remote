@@ -1,0 +1,4 @@
+<?php $this->populateCart(); $this->populateDiscount(); ?>
+<v:store:cart:discount />
+>
+<span class='currency currency_USD'>1.00</span>

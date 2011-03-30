@@ -1,0 +1,13 @@
+<v:store:credit_card_select />
+>
+=
+<?php $this->populateCart(); ?>
+<v:store:credit_card_select />
+>
+<select><option value="visa">VISA</option><option value="master">MasterCard</option><option value="discover">Discover</option><option value="american_express">American Express</option></select>
+=
+<?php $this->populateCart(); $_SESSION['__v:store']['payment_method'] = "testeuro"; ?>
+<v:store:credit_card_select />
+>
+<select onchange="if (this.value == 'switch' || this.value == 'solo') { jQuery('.switchsolo').show(); } else { jQuery('.switchsolo').hide(); jQuery('.switchsolo input').val(''); }"><option value="switch">Maestro/Switch</option><option value="solo">Solo</option></select>
+<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true)); ?>

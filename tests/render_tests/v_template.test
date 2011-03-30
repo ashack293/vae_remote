@@ -1,0 +1,25 @@
+<v:template filename="nonexistant">
+ stuff
+</v:template>
+>
+stuff
+=
+Erequired filename
+<v:template />
+=
+<v:template filename="template">
+inside
+</v:template>
+>
+header
+inside
+footer
+=
+<v:template filename="template" title="titlemy">
+inside
+</v:template>
+>
+header
+titlemy
+inside
+footer

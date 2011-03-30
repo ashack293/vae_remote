@@ -1,0 +1,3 @@
+<v:hidden_field path="a" />
+>
+<input value="" name="a" id="a" type="hidden" />

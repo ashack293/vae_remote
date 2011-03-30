@@ -1,0 +1,7 @@
+<v:checkbox name="toggle" />
+>
+<input name="toggle" value="1" type="checkbox" />
+=
+<v:checkbox name="toggle" value="mahoney" />
+>
+<input name="toggle" value="1" checked="checked" type="checkbox" />

@@ -1,0 +1,115 @@
+<v:text path="13421/name" />
+>
+Freefall
+=
+<v:text before="BEFORE" path="13421/name" />
+>
+BEFOREFreefall
+=
+<v:text after="AFTER" path="13421/name" />
+>
+FreefallAFTER
+=
+<v:text before="B" after="A" maxlength="3" path="13421/name" />
+>
+BFre...A
+=
+<v:text maxlength="5" path="13421/name" />
+>
+Freef...
+=
+<v:text number_format="1" path="14449/price" />
+>
+4.0
+=
+<v:text strftime="%B %d, %Y" path="14186/date" />
+>
+August 21, 2008
+=
+<v:text strftime="%N" path="14186/date" />
+>
+/days ago/
+=
+<v:text strftime="%Y-%m" path="14186/date" />
+>
+2008-08
+=
+<v:text text="zombie''&pushme" />
+>
+zombie''&amp;pushme
+=
+<v:text text='hasquotes"' />
+>
+hasquotes&quot;
+=
+<v:text placeholder="id" />
+<v:text placeholder="shipment_tracking_number" />
+>
+1234
+1Z8A5E940342201962
+=
+<?php $_REQUEST['love'] = "not"; ?>
+<v:text param="love" />
+>
+not
+=
+<v:text path="14186/date" />
+>
+August 21, 2008
+=
+<v:text path="13421/name" transform="uppercase" />
+>
+FREEFALL
+=
+<v:text path="13421/name" transform="vae_lowercase" />
+>
+freefall
+=
+<v:text path="13421/name" transform="bad" />
+>
+[FUNCTION NOT FOUND: bad]
+=
+<v:text path="14186/body" />
+>
+No matter how determined a woman is to keep the spark alive, other
+ things come into play (depression, work stress, motherhood, unseen
+ episodes of <i>Project Runway</i>). The good news: Help is on the way.
+ The better news: It's not coming from me (who has more questions than
+ answers this month). It's from Leah Millheiser, MD, who runs the Female
+ Sexual Medicine Program at Stanford University.<br> <br> Millheiser
+ says that unlike in men, where the issue of performance is mainly
+ related to blood flow to the penis, in women many factors—physical and
+ psychological—can affect sexual desire and enjoyment. And although we
+ gain confidence to ask for what we need as we age, our bodies change.
+ During perimenopause, libido can drop and orgasms can become less
+ intense or harder to achieve. Millheiser says you and your partner
+ might need to revise routines that worked in the past to learn what
+ works now.<br> <br> Another important thing to remember, she says, is
+ that sexual problems are only problems if you're dissatisfied. Forget
+ what you thought sex should be: Pressure to have sex a certain number
+ of times a week, to conceive, to orgasm…any "to-do" in bed can make
+ 
+ "doing it" a chore rather than a pleasure. "We want women to understand
+ that orgasms are not the be-all and end-all of a satisfying sexual
+ experience," Millheiser says. "However, if a woman is trying to have an
+ orgasm but is unable to and it is causing her stress, that's when
+ talking to a clinician may help."<br> <br> If any sex-related problem
+ is causing you stress, talk to your gynecologist or ask her to
+ recommend a sexual medicine specialist to determine whether your issue
+ is physical or psychological. If it's physical (for example, pain from
+ an STD or other vaginal infection, endometriosis, arousal or orgasm
+ difficulties related to a chronic illness), a specialist should be able
+ to help you. If it's psychological, your doctor might refer you to a
+ sex therapist so that you and your partner can change patterns that
+ aren't working. A sex therapist is not the same as a sex surrogate, by
+ the way, so fear not—all you'll be doing is talking.<br> <br>
+ 
+ Meanwhile, any age is a great age to strip off your sexual "shoulds"
+ and remember that sex is play, not work. Maybe that's all it takes to
+ bring back the fireworks.<span style="font-weight: bold;"><br></span>
+=
+<v:text path="13433/description" />
+>
+Get this limited edition posted that Sam and Kevin made while in college.  Extremely rare and beautiful.<br />
+ <br />
+ Very orange.

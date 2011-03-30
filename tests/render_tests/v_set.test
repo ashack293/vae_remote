@@ -1,0 +1,10 @@
+<v:set name="kevin" />
+>
+<?php $this->assertEqual($_REQUEST['kevin'], "1"); ?>
+=
+<v:set name="kevin" value="7" />
+>
+<?php $this->assertEqual($_REQUEST['kevin'], "7"); ?>
+=
+Erequired name
+<v:set irrelevant="yes" />

@@ -1,0 +1,9 @@
+<v:if_backstage>hello</v:if_backstage><v:else>out</v:else>
+>
+out
+=
+<?php $_SESSION['__v:user_id'] = 1; ?>
+<v:if_backstage>hello</v:if_backstage><v:else>out</v:else>
+>
+hello
+=

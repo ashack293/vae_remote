@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<store-discount-code>
+  <code>BLOGLINGS</code>
+  <created-at type="datetime">2009-02-27T14:02:30-05:00</created-at>
+  <description>Blogger Discount Code</description>
+  <discount-shipping type="boolean">false</discount-shipping>
+  <excluded-classes>42583,55009</excluded-classes>
+  <fixed-amount type="decimal" nil="true"></fixed-amount>
+  <free-shipping type="boolean">false</free-shipping>
+  <id type="integer">186</id>
+  <included-classes></included-classes>
+  <max-per-customer type="integer" nil="true"></max-per-customer>
+  <min-order-amount type="decimal" nil="true"></min-order-amount>
+  <min-order-items type="integer" nil="true"></min-order-items>
+  <number-available type="integer" nil="true"></number-available>
+  <percentage-amount type="decimal">50.0</percentage-amount>
+  <required-classes></required-classes>
+  <start-at type="datetime" nil="true"></start-at>
+  <stop-at type="datetime" nil="true"></stop-at>
+  <updated-at type="datetime">2009-09-24T19:30:11-04:00</updated-at>
+  <website-id type="integer">29</website-id>
+</store-discount-code>

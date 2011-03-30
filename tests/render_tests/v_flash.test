@@ -1,0 +1,6 @@
+<?php _vae_flash("test", 'msg', 'header'); $_SESSION['__v:flash'] = $_SESSION['__v:flash_new']; ?>
+<v:flash flash="header" />
+>
+<div class="flash msg">test</div>
+=
+<v:flash />

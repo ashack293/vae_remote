@@ -1,0 +1,10 @@
+<v:gravatar email="kevin@bombino.org" />
+>
+<img src="http://www.gravatar.com/avatar/b1c5907f336197764e4282f9e11c3a33?default=wavatar&amp;rating=g&amp;size=80" />
+=
+<v:gravatar email="kevin@bombino.org" size="150" default="gravatar" rating="pg" />
+>
+<img src="http://www.gravatar.com/avatar/b1c5907f336197764e4282f9e11c3a33?default=gravatar&amp;rating=pg&amp;size=150" />
+=
+Erequired email
+<v:gravatar />

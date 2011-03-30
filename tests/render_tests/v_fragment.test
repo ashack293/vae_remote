@@ -1,0 +1,22 @@
+<v:fragment for="header">i shouldn't get rendered</v:fragment>MAIN
+>
+MAIN
+=
+<v:fragment cache="kevin">render me beautiful</v:fragment>MAIN
+>
+render me beautifulMAIN
+=
+<v:fragment cache="kevin">render me beautiful</v:fragment>
+<v:fragment cache="kevin">render me ugly</v:fragment>MAIN
+>
+render me beautiful
+render me beautifulMAIN
+=
+<v:fragment cache="vartest">nocache</v:fragment>
+<v:fragment cache="vartest">nocache<v:set_default name="ttt" value="1" /></v:fragment>
+<v:if param="ttt" is="1">SHOULDNT RENDER</v:if>
+>
+nocache
+nocache
+=
+<v:fragment />

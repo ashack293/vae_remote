@@ -1,0 +1,8 @@
+<v:store:user />
+>
+<?php $this->assertRedirect("/"); $this->assertFlash("expired"); ?>
+=
+<?php $this->populateCustomer(); ?>
+<v:store:user><v:text path="billing_name" /></v:store:user>
+>
+Kevin Bombino

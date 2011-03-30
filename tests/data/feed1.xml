@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<website>
+  <content>
+    <ncategories type="4001" id="4001">
+      <name type="4002">Guitars</name>
+      <ncategories type="4001" id="4005">
+        <name type="4002">Electric</name>
+      </ncategories>
+      <ncategories type="4001" id="4006">
+        <name type="4002">Acoustic</name>
+      </ncategories>
+    </ncategories>
+    <ncategories type="4001" id="4002">
+      <name type="4002">Basses</name>
+      <ncategories type="4001" id="4007">
+        <name type="4002">4-String</name>
+      </ncategories>
+      <ncategories type="4001" id="4008">
+        <name type="4002">5-String</name>
+      </ncategories>
+    </ncategories>
+    <ncategories type="4001" id="4003">
+      <name type="4002">School Band</name>
+    </ncategories>
+    <ncategories type="4001" id="4004">
+      <name type="4002">Accessories</name>
+    </ncategories>
+    <categories type="2" id="11">
+      <name type="3">Category 1</name>
+      <designer type="4">12</designer>
+      <recommended type="7">11</recommended>
+    </categories>
+    <categories type="2" id="14">
+      <name type="3">Category 2</name>
+      <designer type="4">12</designer>
+      <recommended type="7">11</recommended>
+    </categories>
+    <categories type="2" id="15">
+      <name type="3">Category 3</name>
+      <designer type="4">12</designer>
+      <recommended type="7">11</recommended>
+      <recommended type="7">14</recommended>
+    </categories>
+    <designers type="5" id="12">
+      <name type="6">Designer 1</name>
+    </designers>
+    <designers type="5" id="13">
+      <name type="6">Designer 2</name>
+    </designers>
+    <artists type="1269" id="13421">
+      <category type="1">11</category>
+      <name type="1270">Freefall</name>
+      <image type="1276">28610</image>
+      <feature_on_homepage type="1295">1</feature_on_homepage>
+      <genre type="1296">Rock</genre>
+      <yield>TEST_NEWSLETTER_YIELD</yield>
+      <bio type="1277">A powerpop/indie/rock band from Cambridge, Massachusetts, United States which began on the 28th of December, 2004.  With Sam Lissner on lead vocals and guitar, Kevin Bombino also on lead vocals and guitar, Ben Feltner on bass and vocals and Neil Hartmann on drums.</bio>
+      <albums type="1271" id="13423">
+        <name type="1272">Road Trip EP</name>
+        <cover_art type="1275">28585</cover_art>
+        <year type="1278">2006</year>
+        <copyright type="1279">Bridging the Gap Music, LLC</copyright>
+        <genre type="1281">Rock</genre>
+        <price type="1274">2.97</price>
+        <feature_on_homepage type="1293">1</feature_on_homepage>
+        <songs type="1273" id="13425">
+          <name type="1280">Last Chance</name>
+          <duration type="1282">3:45</duration>
+          <mp3 type="1283">28616</mp3>
+          <price type="1284">0.99</price>
+          <feature_on_homepage type="1294">1</feature_on_homepage>
+        </songs>
+        <songs type="1273" id="13426">
+          <name type="1280">Leave It All Behind</name>
+          <duration type="1282">3:24</duration>
+          <mp3 type="1283">28618</mp3>
+          <price type="1284">0.99</price>
+          <feature_on_homepage type="1294">1</feature_on_homepage>
+        </songs>
+        <songs type="1273" id="13427">
+          <name type="1280">One More Time</name>
+          <duration type="1282">5:07</duration>
+          <mp3 type="1283">28620</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+      </albums>
+      <albums type="1271" id="13424">
+        <name type="1272">EP</name>
+        <cover_art type="1275">28591</cover_art>
+        <year type="1278">998</year>
+        <copyright type="1279">Bridging the Gap Music, LLC</copyright>
+        <genre type="1281">Rock</genre>
+        <price type="1274">3.96</price>
+        <songs type="1273" id="13428">
+          <name type="1280">Moment by Moment</name>
+          <duration type="1282">3:18</duration>
+          <mp3 type="1283">28622</mp3>
+          <price type="1284">0.99</price>
+          <feature_on_homepage type="1294">1</feature_on_homepage>
+        </songs>
+        <songs type="1273" id="13429">
+          <name type="1280">Each Other</name>
+          <duration type="1282">3:12</duration>
+          <mp3 type="1283">28624</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13430">
+          <name type="1280">Spotlight</name>
+          <duration type="1282">3:14</duration>
+          <mp3 type="1283">28626</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13431">
+          <name type="1280">Wish</name>
+          <duration type="1282">3:29</duration>
+          <mp3 type="1283">28628</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+      </albums>
+      <items type="1285" id="13433">
+        <name type="1286">Freefall 11x17&quot; Full Color Poster</name>
+        <price type="1287">2.99</price>
+        <weight type="1289">1</weight>
+        <image type="1288">28632</image>
+        <discount>50</discount>
+        <inventory type="1290" id="13434">
+          <size type="1291">One Size</size>
+          <inventory type="1292">747</inventory>
+        </inventory>
+        <description type="1297">Get this limited edition posted that Sam and Kevin made while in college.  Extremely rare and beautiful.
+
+Very orange.</description>
+      </items>
+    </artists>
+    <artists type="1269" id="13432" permalink="artist/kevin-bombino">
+      <name type="1270">Kevin Bombino</name>
+      <image type="1276">28613</image>
+      <feature_on_homepage type="1295">1</feature_on_homepage>
+      <genre type="1296">Rock/Indie</genre>
+      <bio type="1277">Kevin Bombino is the founder of Action Verb, LLC and these are all the demos of his that he threw out a long time ago.</bio>
+      <myspace_url>http://myspace.com/kevinbombino</myspace_url>
+      <albums type="1271" id="13437">
+        <name type="1272">Unreleased Songs</name>
+        <cover_art type="1275">28642</cover_art>
+        <year type="1278">2008</year>
+        <copyright type="1279">Kevin Bombino</copyright>
+        <genre type="1281">Rock</genre>
+        <price type="1274">5.99</price>
+        <songs type="1273" id="13438">
+          <name type="1280">Breaking (demo)</name>
+          <duration type="1282">1:55</duration>
+          <mp3 type="1283">28649</mp3>
+          <price type="1284">0.49</price>
+        </songs>
+        <songs type="1273" id="13439">
+          <name type="1280">LEGO</name>
+          <duration type="1282">6:21</duration>
+          <mp3 type="1283">28653</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13440">
+          <name type="1280">Girl that makes you say please</name>
+          <duration type="1282">2:51</duration>
+          <mp3 type="1283">28657</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13441">
+          <name type="1280">Kinetic (demo)</name>
+          <duration type="1282">1:20</duration>
+          <mp3 type="1283">28661</mp3>
+          <price type="1284">0.49</price>
+        </songs>
+        <songs type="1273" id="13443">
+          <name type="1280">Turn the Page</name>
+          <duration type="1282">3:25</duration>
+          <mp3 type="1283">28669</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13444">
+          <name type="1280">Every Inch</name>
+          <duration type="1282">3:03</duration>
+          <mp3 type="1283">28673</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13445">
+          <name type="1280">Mountain Top</name>
+          <duration type="1282">2:53</duration>
+          <mp3 type="1283">28677</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+        <songs type="1273" id="13446">
+          <name type="1280">No Room</name>
+          <duration type="1282">4:56</duration>
+          <mp3 type="1283">28681</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+      </albums>
+      <items type="1285" id="13435">
+        <name type="1286">Kevin Bombino Signed Poster</name>
+        <price type="1287">25.00</price>
+        <weight type="1289">1</weight>
+        <image type="1288">28638</image>
+        <inventory type="1290" id="13436">
+          <size type="1291">One Size</size>
+          <inventory type="1292">0</inventory>
+          <weight>2</weight>
+          <price>100</price>
+          <discount>25</discount>
+        </inventory>
+      </items>
+    </artists>
+    <artists type="1269" id="13447">
+      <name type="1270">Pratt Avenue</name>
+      <image type="1276">28700</image>
+      <genre type="1296">Glam/Crunk</genre>
+      <bio type="1277">Kevin Bombino had a band even in High School. :)</bio>
+      <albums type="1271" id="13448">
+        <name type="1272">Unreleased Songs</name>
+        <cover_art type="1275">28703</cover_art>
+        <year type="1278">2004</year>
+        <copyright type="1279">Kevin Bombino</copyright>
+        <genre type="1281">Rock</genre>
+        <price type="1274">0.99</price>
+        <songs type="1273" id="13442">
+          <name type="1280">Out of My Life</name>
+          <duration type="1282">2:28</duration>
+          <mp3 type="1283">28665</mp3>
+          <price type="1284">0.99</price>
+        </songs>
+      </albums>
+    </artists>
+    <artists type="1269" id="14448">
+      <name type="1270">Matt Blake</name>
+      <image type="1276">30676</image>
+      <genre type="1296">2 Step / Tropical / Crunk</genre>
+      <bio type="1277">Created a graphic guide to using NormaTec equipment for patients, from concept through photography, page layout, and deployment. Helped design and test business processes for filing insurance claims with Medicare and HMOs, including primary insurance billing and Medicare appeals. Set up small business account and was point of contact with Dell, sourcing and purchasing all computer equipment. Acted as office purchasing agent.</bio>
+      <albums type="1271" id="14449">
+        <name type="1272">Blaketronix 2k8</name>
+        <cover_art type="1275">30680</cover_art>
+        <year type="1278">2008</year>
+        <copyright type="1279">Matt Blake</copyright>
+        <genre type="1281">Hip-Hop / Glam / Indie</genre>
+        <price type="1274">3.99</price>
+      </albums>
+    </artists>
+    <blog_posts type="1325" id="14186">
+      <date type="1328">1219291200</date>
+      <title type="1326">This is my first blog post</title>
+      <body type="1327">No matter how determined a woman is to keep the spark alive, other
+things come into play (depression, work stress, motherhood, unseen
+episodes of &lt;i&gt;Project Runway&lt;/i&gt;). The good news: Help is on the way.
+The better news: It's not coming from me (who has more questions than
+answers this month). It's from Leah Millheiser, MD, who runs the Female
+Sexual Medicine Program at Stanford University.&lt;br&gt; &lt;br&gt; Millheiser
+says that unlike in men, where the issue of performance is mainly
+related to blood flow to the penis, in women many factors&#8212;physical and
+psychological&#8212;can affect sexual desire and enjoyment. And although we
+gain confidence to ask for what we need as we age, our bodies change.
+During perimenopause, libido can drop and orgasms can become less
+intense or harder to achieve. Millheiser says you and your partner
+might need to revise routines that worked in the past to learn what
+works now.&lt;br&gt; &lt;br&gt; Another important thing to remember, she says, is
+that sexual problems are only problems if you're dissatisfied. Forget
+what you thought sex should be: Pressure to have sex a certain number
+of times a week, to conceive, to orgasm&#8230;any &quot;to-do&quot; in bed can make
+
+&quot;doing it&quot; a chore rather than a pleasure. &quot;We want women to understand
+that orgasms are not the be-all and end-all of a satisfying sexual
+experience,&quot; Millheiser says. &quot;However, if a woman is trying to have an
+orgasm but is unable to and it is causing her stress, that's when
+talking to a clinician may help.&quot;&lt;br&gt; &lt;br&gt; If any sex-related problem
+is causing you stress, talk to your gynecologist or ask her to
+recommend a sexual medicine specialist to determine whether your issue
+is physical or psychological. If it's physical (for example, pain from
+an STD or other vaginal infection, endometriosis, arousal or orgasm
+difficulties related to a chronic illness), a specialist should be able
+to help you. If it's psychological, your doctor might refer you to a
+sex therapist so that you and your partner can change patterns that
+aren't working. A sex therapist is not the same as a sex surrogate, by
+the way, so fear not&#8212;all you'll be doing is talking.&lt;br&gt; &lt;br&gt;
+
+Meanwhile, any age is a great age to strip off your sexual &quot;shoulds&quot;
+and remember that sex is play, not work. Maybe that's all it takes to
+bring back the fireworks.&lt;span style=&quot;font-weight: bold;&quot;&gt;&lt;br&gt;&lt;/span&gt;</body>
+      <posted_by type="1329">Kevin</posted_by>
+    </blog_posts>
+    <blog_posts type="1325" id="14188">
+      <date type="1328">1219291200</date>
+      <title type="1326">SEcond post</title>
+      <body type="1327">&lt;br&gt;
+  No matter how determined a woman is to keep the spark alive, other
+ things come into play (depression, work stress, motherhood, unseen
+ episodes of &lt;i&gt;Project Runway&lt;/i&gt;). The good news: Help is on the way.
+ The better news: It's not coming from me (who has more questions than
+ answers this month). It's from Leah Millheiser, MD, who runs the Female
+ Sexual Medicine Program at Stanford University.&lt;br&gt; &lt;br&gt; Millheiser
+ says that unlike in men, where the issue of performance is mainly
+ related to blood flow to the penis, in women many factors&#8212;physical and
+ psychological&#8212;can affect sexual desire and enjoyment. And although we
+ gain confidence to ask for what we need as we age, our bodies change.
+ During perimenopause, libido can drop and orgasms can become less
+ intense or harder to achieve. Millheiser says you and your partner
+ might need to revise routines that worked in the past to learn what
+ works now.</body>
+      <posted_by type="1329">Juim</posted_by>
+    </blog_posts>
+  </content>
+  <design>
+    <ncategories type="NewstedCollection" name="Ncategories" id="4001">
+      <name type="TextItem" name="Name" id="4002" />
+    </ncategories>
+    <categories type="Collection" name="Categories" id="2">
+      <name type="TextItem" name="Name" id="3"/>
+      <designer type="SingleAssociationItem" name="Designer" id="4" associated_id="5" />
+      <recommended type="AssociationItem" name="Recommended" id="7" associated_id="2" />
+    </categories>
+    <designers type="Collection" name="Designers" id="5">
+      <name type="TextItem" name="Name" id="6"/>
+    </designers>
+    <artists type="Collection" name="Artists" id="1269" permalink="artist">
+      <category type="SingleAssociationItem" name="Category" id="1" associated_id="2" />
+      <name type="TextItem" name="Name" id="1270"/>
+      <image type="ImageItem" name="Image" id="1276"/>
+      <feature_on_homepage type="CheckboxItem" name="Feature on Homepage" id="1295"/>
+      <genre type="TextItem" name="Genre" id="1296"/>
+      <bio type="TextAreaItem" name="Bio" id="1277"/>
+      <albums type="Collection" name="Albums" id="1271">
+        <name type="TextItem" name="Name" id="1272"/>
+        <cover_art type="ImageItem" name="Cover Art" id="1275"/>
+        <year type="TextItem" name="Year Released" id="1278"/>
+        <copyright type="TextItem" name="Copyright" id="1279"/>
+        <genre type="TextItem" name="Genre" id="1281"/>
+        <price type="TextItem" name="Price" id="1274"/>
+        <feature_on_homepage type="CheckboxItem" name="Feature on Homepage" id="1293"/>
+        <songs type="Collection" name="Songs" id="1273">
+          <name type="TextItem" name="Title" id="1280"/>
+          <duration type="TextItem" name="Duration" id="1282"/>
+          <mp3 type="FileItem" name="MP3" id="1283"/>
+          <price type="TextItem" name="Price" id="1284"/>
+          <feature_on_homepage type="CheckboxItem" name="Feature on Homepage" id="1294"/>
+        </songs>
+      </albums>
+      <items type="Collection" name="Items" id="1285">
+        <name type="TextItem" name="Name" id="1286"/>
+        <price type="TextItem" name="Price" id="1287"/>
+        <weight type="TextItem" name="Weight" id="1289"/>
+        <image type="ImageItem" name="Image" id="1288"/>
+        <inventory type="Collection" name="Inventory" id="1290">
+          <size type="TextItem" name="Size" id="1291"/>
+          <inventory type="TextItem" name="Inventory" id="1292"/>
+        </inventory>
+        <description type="TextAreaItem" name="Description" id="1297"/>
+      </items>
+    </artists>
+    <blog_posts type="Collection" name="Blog Posts" id="1325">
+      <date type="DateItem" name="Date" id="1328"/>
+      <title type="TextItem" name="Title" id="1326"/>
+      <body type="HtmlAreaItem" name="Body" id="1327"/>
+      <posted_by type="TextItem" name="Posted by" id="1329"/>
+    </blog_posts>
+  </design>
+</website>

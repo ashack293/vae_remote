@@ -1,0 +1,22 @@
+<v:collection path="/artists"><v:a_if total_items="3" href="/cow">kevin</v:a_if></v:collection>
+>
+kevinkevinkevinkevin
+=
+<v:collection path="/artists"><v:a_if total_items="4" href="/cow">kevin</v:a_if></v:collection>
+>
+<a href="/cow/13421">kevin</a><a href="/artist/kevin-bombino/cow">kevin</a><a href="/cow/13447">kevin</a><a href="/cow/14448">kevin</a>
+=
+<v:collection paginate="1" path="/artists" next="next">
+</v:collection>
+<v:a_if id="next" href="/kevin">next page</v:a_if>
+>
+<a id="next" href="/page/page/2">next page</a>
+=
+<v:a_if path="13421">freefall</v:a_if>
+<v:a_if path="13421" href="/artist">freefall</v:a_if>
+<v:a_if path="12345">freefall</v:a_if>
+<v:a_if path="12345" href="/artist">freefall</v:a_if>
+>
+<a href="/artist">freefall</a>
+freefall
+freefall

@@ -1,0 +1,27 @@
+Eredirect
+<v:store:checkout />
+=
+Eregister_page
+<v:store:checkout redirect="/order_placed" />
+=
+<v:store:checkout redirect="/order_placed" register_page="/register"></v:store:checkout>
+>
+=
+<?php $_SERVER['HTTPS'] = true; ?>
+<v:store:checkout redirect="/order_placed" register_page="/register"></v:store:checkout>
+>
+<?php $this->assertRedirect("/"); ?>
+=
+<?php $_SERVER['HTTPS'] = true; ?>
+<v:store:checkout redirect="/order_placed" register_page="/register" shop_page="/store"></v:store:checkout>
+>
+<?php $this->assertRedirect("/store"); ?>
+=
+<?php $_SERVER['HTTPS'] = true; $this->populateCart(); ?>
+<v:store:checkout redirect="/order_placed" register_page="/register"></v:store:checkout>
+>
+<?php $this->assertRedirect("/register"); ?>
+=
+<?php $_SERVER['HTTPS'] = true; $this->populateCart(); $this->populateCustomer(); ?>
+<v:store:checkout redirect="/order_placed" register_page="/register"></v:store:checkout>
+<form action="/page?__v:store_checkout=1" id="vae_generated_might_change_1" method="post"></form>

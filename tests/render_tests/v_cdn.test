@@ -1,0 +1,11 @@
+<v:cdn />
+>
+http://btg.vaesite.net/
+=
+<v:cdn src="wp-content/sample-nala.jpg" />
+>
+/http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg/
+=
+<v:cdn href="wp-content/sample-nala.jpg" />
+>
+/http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg/

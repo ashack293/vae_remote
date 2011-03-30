@@ -1,0 +1,13 @@
+<v:store:cart></v:store:cart>
+>
+<div class='vae-store-cart-empty'>Your cart is empty!</div>
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<v:store:cart><v:else>out</v:else></v:store:cart>
+>
+out
+=
+<?php $this->populateCart(); ?>
+<v:store:cart><v:else>out</v:else></v:store:cart>
+>
+<form action="/page?__v:store_cart=0dc36dc6d78cb5ade166f7f60cf5c20c" method="post"></form>

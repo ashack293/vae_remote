@@ -1,0 +1,20 @@
+<v:section path="13421"><v-></v:section>
+>
+13421
+=
+<v:section path="13432"><v~></v:section>
+>
+/artist/kevin-bombino
+=
+<v~13432>
+>
+/artist/kevin-bombino
+=
+<v? $kevin = "awesome"; ?>
+<v?=$kevin?>
+>
+awesome
+=
+<v=13421/name>
+>
+Freefall

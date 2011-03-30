@@ -1,0 +1,9 @@
+<v:store:if_recent_order_credit_card>in<v:else>out</v:else></v:store:if_recent_order_credit_card>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); $_SESSION['__v:store']['recent_order_data']['payment_method'] = "test"; ?>
+<v:store:if_recent_order_credit_card>in<v:else>out</v:else></v:store:if_recent_order_credit_card>
+>
+in

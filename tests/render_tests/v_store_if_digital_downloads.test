@@ -1,0 +1,15 @@
+<v:store:if_digital_downloads>in<v:else>out</v:else></v:store:if_digital_downloads>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); ?>
+<v:store:if_digital_downloads>in<v:else>out</v:else></v:store:if_digital_downloads>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(array('digital' => 1)); ?>
+<v:store:if_digital_downloads>in<v:else>out</v:else></v:store:if_digital_downloads>
+>
+in

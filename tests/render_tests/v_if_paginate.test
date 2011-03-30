@@ -1,0 +1,17 @@
+<v:collection path="artists" paginate="1" id="mycollection"></v:collection>
+<v:if_paginate collection="mycollection">AWESOME<v:else>FAIL</v:else></v:if_paginate>
+>
+AWESOME
+=
+<v:collection path="artists" paginate="1" id="mycollection"></v:collection>
+<v:if_paginate collection="other_collection">nope<v:else>YEP</v:else></v:if_paginate>
+>
+YEP
+=
+<v:if_paginate path="artists" paginate="1">AWESOME<v:else>FAIL</v:else></v:if_paginate>
+>
+AWESOME
+=
+<v:if_paginate path="artists" paginate="10">AWESOME<v:else>MONEY</v:else></v:if_paginate>
+>
+MONEY

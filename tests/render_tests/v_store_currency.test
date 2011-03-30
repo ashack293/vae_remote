@@ -1,0 +1,8 @@
+<v:store:currency />
+>
+USD
+=
+<?php $_SESSION['__v:store_display_currency'] = "AUD"; ?>
+<v:store:currency />
+>
+AUD

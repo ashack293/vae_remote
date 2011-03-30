@@ -1,0 +1,4 @@
+<?php $_VAE['store_cached_subtotal'] = "98.45"; ?>
+<v:store:cart:subtotal />
+>
+<span class='currency currency_USD'>98.45</span>

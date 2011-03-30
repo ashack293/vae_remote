@@ -1,0 +1,170 @@
+<?php
+
+function _verb_store_calculate_shipping_options($weight, $num_items, $subtotal, $zip, $country, $state, $address, $handling) {
+  global $shipping_weight, $shipping_num_boxes, $shipping_num_items, $shipping_subtotal, $order, $_VERB, $method;
+  $shipping_weight = $weight;
+  $shipping_subtotal = $subtotal;
+  $shipping_num_boxes = 1;
+  $shipping_num_items = $num_items;
+  $origin_country = $_VERB['settings']['store_shipping_origin_country'];
+  if (!strlen($origin_country)) $origin_country = "US";
+  $res = array();
+  _verb_store_oscommerce_load();
+  $order = new tep_order($zip, $country, $state, $subtotal);
+  foreach (_verb_store_shipping_methods() as $method) {
+    if (!$_VERB['no_shipping_restrictions']) {
+      if (strlen($method['destination_country'])) {
+        if (strstr($method['destination_country'], "cont_")) {
+          if (!_verb_store_continent_match(str_replace("cont_", "", $method['destination_country']), $country)) continue;
+        } elseif ($method['destination_country'] == "US48") {
+          if ($country != "US" || $state == "AK" || $state == "HI") continue;
+        } elseif (($method['destination_country'] != $country)) {
+          continue;
+        }
+      }
+      if (strlen($method['domestic_only'])) {
+        if ($country && ($origin_country != $country)) {
+          continue;
+        }
+      }
+      if (strlen($method['international_only'])) {
+        if (($origin_country == $country)) continue;
+      }
+      if (strlen($method['minimum_order_amount'])) {
+        if ($subtotal < $method['minimum_order_amount']) continue;
+      }
+      if (strlen($method['maximum_order_amount'])) {
+        if ($subtotal > $method['maximum_order_amount']) continue;
+      }
+      if (strlen($method['class']) && !is_array($method['class'])) {
+        $bad = false;
+        foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
+          if ($method['class'] != $r['shipping_class'])  $bad = true;
+        }
+        if ($bad) {
+          continue;
+        }
+      }
+    }
+    if ($method['user']) {
+      $quotes = array('methods' => array($method));
+      $ext = "";
+    } else {
+      if (($method['method_name'] != "usps") && _verb_store_usps_only($country, $state, $address)) {
+        continue; 
+      }
+      require_once(dirname(__FILE__) . "/oscommerce/" . $method['method_name'] . ".php");
+      $ext = $method['method_name'];
+      $class = new $ext();
+      if ($_SESSION['__v:store']['total_weight']) {
+        $quotes = array('methods' => array());
+        foreach ($_SESSION['__v:store']['total_weight'] as $box_weight) {
+          $shipping_weight = $box_weight;
+          $these_quotes = $class->quote();
+          foreach ($these_quotes["methods"] as $r) {
+            $gotit = false;
+            foreach ($quotes["methods"] as $id => $r2) {
+              if ($r2["display_name"] == $r['display_name']) {
+                $quotes["methods"][$id]['cost'] += $r['cost'];
+                $gotit = true;
+                break;
+              }
+            }
+            if ($gotit) break;
+            $quotes["methods"][] = $r;
+          }
+        }
+      } else {
+        $quotes = $class->quote();
+      }
+    }
+    foreach ($quotes["methods"] as $r) {
+      if (is_numeric($_VERB['settings']['store_shipping_pad_dollars_per_order'])) $r['cost'] += $_VERB['settings']['store_shipping_pad_dollars_per_order'];
+      if (is_numeric($_VERB['settings']['store_shipping_pad_percent_dollars'])) $r['cost'] = ($r['cost'] + $handling) * (1 + ($_VERB['settings']['store_shipping_pad_percent_dollars']/100));
+      if (!$r['no_style']) $styled_ext = ($ext == "fedex" ? "FedEx" : strtoupper($ext));
+      if (!isset($r['keep_titles'])) $r['title'] = ($styled_ext ? $styled_ext . " " : "") . $r['title'];
+      if ($method['display_name']) $r['title'] = $method['display_name'];
+      $r['title'] = trim(str_replace("&reg;", "", strip_tags(html_entity_decode(html_entity_decode($r['title']))))); // remove annoying USPS garbage
+      $r['secondary'] = ($method['secondary'] ? true : false);
+      if (strlen($method["free_shipping_threshold"]) && ($method["free_shipping_threshold"] < _verb_store_compute_subtotal())) {
+        $r['free'] = true;
+      }
+      $r['cost'] = number_format($r['cost'], 2);
+      $r['rate_group'] = $method['rate_group'];
+      array_push($res, $r);
+    }
+  }
+  usort($res, _verb_store_sort_shipping_methods);
+  $final = array();
+  $already_seen = array();
+  foreach ($res as $r) {
+    if ($r['rate_group']) {
+      if ($already_seen[$r['rate_group']] && !$_SESSION['__v:user_id']) {
+        continue;
+      }
+      $already_seen[$r['rate_group']] = true;
+    }
+    if ($r['free']) $r['cost'] = 0.00;
+    array_unshift($final, $r);
+  }
+  return $final;
+}
+
+function _verb_store_continent_match($continent, $country) {
+  foreach (explode("\n", file_get_contents(dirname(__FILE__) . "/../data/countries.txt")) as $line) {
+    if (substr($line, 0, 5) == $continent . " " . $country) return true;
+  }
+  return false;
+}
+
+function _verb_store_sort_shipping_methods($a, $b) {
+  if ($a['secondary'] && !$b['secondary']) return 1;
+  if ($b['secondary'] && !$a['secondary']) return -1;
+  return ($a['cost'] > $b['cost'] ? 1 : -1);
+}
+
+function _verb_store_oscommerce_load() {
+  global $_VERB;
+  require_once(dirname(__FILE__) . "/oscommerce/http_client.php");
+  define("SHIPPING_ORIGIN_COUNTRY", "1");
+  define("MODULE_SHIPPING_USPS_USERID", "533MISHK7183");
+  define("MODULE_SHIPPING_USPS_PASSWORD", "533MISHK7183");
+  define("MODULE_SHIPPING_USPS_SERVER", "production");
+  define("MODULE_SHIPPING_USPS_TEXT_DAY", "day");
+  define("MODULE_SHIPPING_USPS_TEXT_DAYS", "days");
+  define("MODULE_SHIPPING_USPS_TEXT_WEEKS", "weeks");
+  define("SHIPPING_ORIGIN_ZIP", $_VERB['settings']['store_shipping_origin_zip']);
+  define("MODULE_SHIPPING_FEDEX1_WEIGHT", "LBS");
+  define("MODULE_SHIPPING_FEDEX1_DROPOFF", 1);
+}
+
+function _verb_store_usps_only($country, $state, $address) {
+  if ($country != "US") return false;
+  if (preg_match('/^((P\.?O\.?(B\.?)?(\s+Box)?)|(Post\s+Office(\s+Box)?))/i', $address)) return true;
+  if ($state == "AA" || $state == "AE" || $state == "AP") return true;
+  return false;
+}
+
+class tep_order {
+  function tep_order($zip, $country, $state, $total) {
+    $this->info = array('total' => $total);
+    $this->delivery = array('state' => $state, 'postcode' => $zip, 'country' => array('id' => ($country == "US" ? 1 : "9999"), 'iso_code_2' => $country));
+  }
+}
+function tep_get_countries($a, $b) {
+  return array('countries_iso_code_2' => "US");
+}
+function tep_image($a, $b) {
+  return null;
+}
+function tep_not_null($a) {
+  return ($a != null);
+}
+function tep_round_up($amount, $places) {
+  if ($places < 0) { $places = 0; }
+  $mult = pow(10, $places);
+	return (ceil($amount * $mult) / $mult);
+}
+
+
+?>

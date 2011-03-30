@@ -1,0 +1,10 @@
+<v:nowidows>This is some text that might have a widow</v:nowidows>
+>
+This is some text that might have a&nbsp;widow
+=
+<v:nowidows>   This is some text that might have a widow
+
+
+</v:nowidows>
+>
+This is some text that might have a&nbsp;widow

@@ -1,0 +1,8 @@
+<v:store:cart:items><v=name> - <v:store:item:price /></v:store:cart:items>
+>
+=
+<?php $this->populateCart(); ?>
+<v:store:cart:items><v=name> - <v:store:item:price /></v:store:cart:items>
+>
+Item 1 - <span class='currency currency_USD'>$5.00</span>Item 2 - <span class='currency currency_USD'>$149.99</span>
+<?php $this->assertSessionDep('__v:store'); ?>

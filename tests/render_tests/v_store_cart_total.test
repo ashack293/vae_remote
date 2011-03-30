@@ -1,0 +1,4 @@
+<?php $_VAE['store_cached_subtotal'] = "100.00"; $_VAE['store_cached_tax'] = "8.00"; $_VAE['store_cached_shipping'] = "10"; $this->populateDiscount(); $this->populateCart(); ?>
+<v:store:cart:total />
+>
+<span class='currency currency_USD'>117.00</span>

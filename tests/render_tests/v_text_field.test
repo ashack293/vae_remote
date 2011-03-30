@@ -1,0 +1,11 @@
+<v:text_field name="texte" />
+>
+<input name="texte" type="text" />
+=
+<v:text_field path="texte" />
+>
+<input value="" name="texte" id="texte" type="text" />
+=
+<v:text_field />
+>
+<input type="text" />

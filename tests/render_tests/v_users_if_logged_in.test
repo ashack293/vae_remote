@@ -1,0 +1,9 @@
+<v:users:if_logged_in>IN<v:else>OUT</v:else></v:users:if_logged_in>
+>
+OUT
+<?php $this->assertSessionDep('__v:logged_in'); ?>
+=
+<?php $_SESSION['__v:logged_in'] = array('path' => "/artists", 'id' => 13421); ?>
+<v:users:if_logged_in>IN<v:else>OUT</v:else></v:users:if_logged_in>
+>
+IN

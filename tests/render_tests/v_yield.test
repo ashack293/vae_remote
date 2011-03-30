@@ -1,0 +1,15 @@
+<v:yield />
+>
+=
+<v:yield>inside</v:yield>
+>
+inside
+=
+<v:section path="13421"><v:yield /></v:section>
+>
+TEST_NEWSLETTER_YIELD
+=
+<?php global $_VAE; $_VAE['yield'] = "a"; ?>
+<v:yield />
+>
+a

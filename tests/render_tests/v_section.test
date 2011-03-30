@@ -1,0 +1,16 @@
+<v:section path="13421"><v:text path="name" /></v:section>
+>
+Freefall
+=
+<v:section path="13423421"><v:text path="@name" /></v:section>
+>
+=
+<v:section path="13423421"><v:text path="artists/name" /></v:section>
+>
+Freefall
+=
+<v:section path="/">
+<v:text path="artists/name" />
+</v:section>
+>
+Freefall

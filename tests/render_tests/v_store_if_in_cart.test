@@ -1,0 +1,9 @@
+<?php $this->populateCart(); ?>
+<v:section path="13421"><v:store:if_in_cart>in<v:else>out</v:else></v:store:if_in_cart></v:section>
+>
+in
+=
+<?php $this->populateCart(); ?>
+<v:section path="13423"><v:store:if_in_cart>in<v:else>out</v:else></v:store:if_in_cart></v:section>
+>
+out

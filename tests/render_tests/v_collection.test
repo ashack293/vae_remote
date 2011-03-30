@@ -1,0 +1,142 @@
+<v:collection path="@bad">in<v:else>out</v:else></v:collection>
+>
+out
+=
+<v:collection path="artists" filter_input="q">in</v:collection>
+>
+You did not enter a search query.
+=
+<v:collection path="artists" filter_input="q">in<v:else>out</v:else></v:collection>
+>
+out
+=
+<v:collection path="artists">a</v:collection>
+>
+aaaa
+=
+<v:collection path="artists">a<v:divider every="1">b</v:divider></v:collection>
+>
+abababa
+=
+<v:collection path="artists">a<v:divider every="2">b</v:divider></v:collection>
+>
+aabaa
+=
+<v:collection path="artists">a<v:divider every="3">b</v:divider></v:collection>
+>
+aaaba
+=
+<v:collection path="13437/songs">a<v:divider every="4"><div><v:yield /></div></v:divider></v:collection>
+>
+<div>a</div>aaa<div>a</div>aaa
+=
+<v:collection path="artists" per_row="3"><td>a</td></v:collection>
+>
+<tr><td>a</td><td>a</td><td>a</td></tr><tr><td>a</td><td></td><td></td></tr>
+=
+<v:collection path="artists" store_in_session="artists">a</v:collection>
+>
+aaaa
+<?php $this->assertEqual($_VAE['session_cookies'], array('artists' => '13421,/artist/kevin-bombino,13447,14448')); ?>
+=
+<v:collection path="artists" store_in_session="artists" paginate="1">a</v:collection>
+>
+a
+<?php $this->assertEqual($_VAE['session_cookies'], array('artists' => '13421,/artist/kevin-bombino,13447,14448')); ?>
+=
+<v:collection path="artists"><v=name></v:collection>
+>
+FreefallKevin BombinoPratt AvenueMatt Blake
+=
+<v:collection path="artists" skip="3"><v=name></v:collection>
+>
+Matt Blake
+=
+<v:collection path="artists" output_order="reverse"><v=name></v:collection>
+>
+Matt BlakePratt AvenueKevin BombinoFreefall
+=
+<v:collection path="artists" paginate="2"><v=name></v:collection>
+>
+FreefallKevin Bombino
+=
+<v:collection path="artists" paginate="2" skip="1"><v=name></v:collection>
+>
+Kevin BombinoPratt Avenue
+=
+<v:collection path="artists" paginate="2" next="next" previous="previous"><v=name></v:collection>
+<v:a id="previous">Prev</v:a><v:a id="next">Next</v:a>
+>
+FreefallKevin Bombino
+<a id="next" href="/page/page/2">Next</a>
+=
+<?php $_REQUEST['page'] = 2; ?>
+<v:collection path="artists" paginate="2" next="next" previous="previous"><v=name></v:collection>
+<v:a id="previous">Prev</v:a><v:a id="next">Next</v:a>
+>
+Pratt AvenueMatt Blake
+<a id="previous" href="/page">Prev</a>
+=
+<?php $_REQUEST['page'] = "all"; ?>
+<v:collection path="artists" paginate="2" next="next" previous="previous"><v=name></v:collection>
+<v:a id="previous">Prev</v:a><v:a id="next">Next</v:a>
+>
+FreefallKevin BombinoPratt AvenueMatt Blake
+=
+<?php $_REQUEST['page'] = 2; ?>
+<v:collection path="artists" paginate="2" id="artists" next="next" previous="previous" all="all"><v=name></v:collection>
+<v:a id="previous">Prev</v:a><v:a id="next">Next</v:a><v:a id="all">All</v:a>
+>
+Pratt AvenueMatt Blake
+<a id="previous" href="/page">Prev</a><a id="all" href="/page/page/all">All</a>
+=
+<v:collection path="artists" paginate="2" id="artists" page_select="artists_sel"><v=name></v:collection>
+<v:pagination collection="artists" />
+<v:select id="artists_sel" />
+>
+FreefallKevin Bombino
+<a class="current" href="/page">1</a> <a href="/page/page/2">2</a> 
+<select id="artists_sel" onchange=" window.location.href='/page?page='+this.value"><option value="1" selected="selected">1</option><option value="2">2</option></select>
+=
+<v:collection path="artists" paginate="2" default_page="2"><v=name></v:collection>
+<v:a id="previous">Prev</v:a><v:a id="next">Next</v:a>
+>
+Pratt AvenueMatt Blake
+=
+<v:collection path="artists" paginate="1" default_page="last()"><v=name></v:collection>
+>
+Matt Blake
+=
+<v:collection path="artists" paginate="1" default_page="2" max_pages="2"><v=name></v:collection>
+>
+Kevin Bombino
+=
+<v:collection path="artists" paginate="1" default_page="3" max_pages="2"><v=name></v:collection>
+>
+=
+<v:collection path="artists" groups="2"><v=name></v:collection>
+<v:collection path="artists" groups="2"><v=name></v:collection>
+>
+FreefallKevin Bombino
+Pratt AvenueMatt Blake
+=
+<v:collection path="artists" groups="3"><v=name></v:collection>
+<v:collection path="artists" groups="3"><v=name></v:collection>
+<v:collection path="artists" groups="3"><v=name></v:collection>
+>
+FreefallKevin Bombino
+Pratt Avenue
+Matt Blake
+=
+<v:collection path="artists" order="DESC(name)"><v=name></v:collection>
+>
+Pratt AvenueMatt BlakeKevin BombinoFreefall
+=
+<?php $_REQUEST['q'] = "reefall"; ?>
+<v:collection path="artists" filter_input="q"><v=name></v:collection>
+>
+Freefall
+=
+<v:collection path="/artists/albums" order="year" unique="year"><v=year>-</v:collection>
+>
+998-2004-2006-2008-

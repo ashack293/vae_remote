@@ -1,0 +1,8 @@
+<v:store:shipping_methods_select />
+>
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $this->populateCart(); ?>
+<v:store:shipping_methods_select />
+>
+<select onchange=" window.location.href='/page?__v:store_shipping_methods_select=bed4d49b4563cfc1a4542093d0690dda&amp;method='+this.value"><option value="0" selected="selected">Standard Shipping ($63.70)</option></select>

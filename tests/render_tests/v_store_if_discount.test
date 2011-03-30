@@ -1,0 +1,13 @@
+<v:store:if_discount>in<v:else>out</v:else></v:store:if_discount>
+>
+out
+=
+<?php $this->populateCart(); $this->populateDiscount(); ?>
+<v:store:if_discount>in<v:else>out</v:else></v:store:if_discount>
+>
+in
+=
+<?php $this->populateCart(); $this->populateDiscount(); ?>
+<v:store:if_discount custom="somethingcustom">in<v:else>out</v:else></v:store:if_discount>
+>
+out

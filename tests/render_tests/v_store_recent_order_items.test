@@ -1,0 +1,9 @@
+<v:store:recent_order_items />
+>
+<?php $this->assertRedirect("/"); ?>
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $_SESSION['__v:store']['recent_order'] = array(1 => array('name' => "i1"), 2 => array('name' => "i2")); ?>
+<v:store:recent_order_items>-<v=name>~</v:store:recent_order_items>
+>
+-i1~-i2~

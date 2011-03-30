@@ -1,0 +1,3 @@
+<v:require_ssl />
+>
+<?php $this->assertTrue($_VAE['ssl_required']); ?>

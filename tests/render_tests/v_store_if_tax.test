@@ -1,0 +1,9 @@
+<?php $this->populateCart(); ?>
+<v:store:if_tax>in<v:else>out</v:else></v:store:if_tax>
+>
+out
+=
+<?php $this->populateCart(); $_VAE['store_cached_tax'] = 0.67; ?>
+<v:store:if_tax>in<v:else>out</v:else></v:store:if_tax>
+>
+in

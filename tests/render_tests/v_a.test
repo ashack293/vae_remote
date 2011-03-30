@@ -1,0 +1,95 @@
+<v:a href="/kevin.html">kevin</v:a>
+>
+<a href="/kevin.html">kevin</a>
+=
+<v:a href="/kevin.html" badparamter="noo">kevin</v:a>
+>
+<a href="/kevin.html">kevin</a>
+=
+<v:a href="/kevin.html" charset="utf-8" coords="123" hreflang="en" name="cow" rel="lightbox" rev="123" shape="square" target="_blank" type="lightbox">kevin</v:a>
+>
+<a href="/kevin.html" charset="utf-8" coords="123" hreflang="en" name="cow" rel="lightbox" rev="123" shape="square" target="_blank" type="lightbox">kevin</a>
+=
+<v:section path="13432">
+<v:a>test</v:a>
+</v:section>
+>
+<a href="/artist/kevin-bombino">test</a>
+=
+<v:a path="13432">test</v:a>
+>
+<a href="/artist/kevin-bombino">test</a>
+=
+<v:a path="/">test</v:a>
+>
+=
+<v:section path="13432">
+<v:a path="/">test</v:a>
+</v:section>
+>
+=
+<v:section path="13432">
+<v:a href="/url">test</v:a>
+</v:section>
+>
+<a href="/artist/kevin-bombino/url">test</a>
+=
+<v:section path="13432">
+<v:a path="/" href="/url">test</v:a>
+</v:section>
+>
+<a href="/url">test</a>
+=
+<v:a path="13432" href="/artist2#anchor">test</v:a>
+>
+<a href="/artist/kevin-bombino/artist2#anchor">test</a>
+=
+<v:a path="13432" href="/artist2?qs=string#anchor">test</v:a>
+>
+<a href="/artist/kevin-bombino/artist2?qs=string#anchor">test</a>
+=
+<v:a path="13432" href="/artist2" jump="anchor">test</v:a>
+>
+<a href="#anchor">test</a>
+=
+<v:a href="/kevin" ajax="div">test</v:a>
+>
+<a href="/kevin" onclick=" jQuery.get('/kevin', function(d){  jQuery('#div').html(d);  }); return false;">test</a>
+<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true)); ?>
+=
+<v:a href="/kevin" ajax="div" onclick="alert('moo');">test</v:a>
+>
+<a href="/kevin" onclick="alert('moo'); jQuery.get('/kevin', function(d){  jQuery('#div').html(d);  }); return false;">test</a>
+=
+<v:a path="13432/myspace_url">test</v:a>
+>
+<a href="http://myspace.com/kevinbombino">test</a>
+=
+<v:section path="13432"><v:a href="/artist"><v:text path="name" /></v:a></v:section>
+>
+<a href="/artist/kevin-bombino">Kevin Bombino</a>
+=
+<v:section path="13432"><v:a href="/"><v:text path="name" /></v:a></v:section>
+>
+<a href="/">Kevin Bombino</a>
+=
+<?php $_VAE['hrefs']['cow'] = "http://myspace.net/"; ?><v:a id="cow">test</v:a>
+>
+<a id="cow" href="http://myspace.net/">test</a>
+=
+<v:collection path="13421"><v:a href="/c" autofollow="true">a</v:a></v:collection>
+>
+<a href="/c/13421">a</a>
+<?php $this->assertRedirect("/c/13421"); ?>
+=
+<v:a ajax="div" loading="spinner.png" href="/">test</v:a>
+>
+<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d);  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
+=
+<v:a ajax="div" loading="spinner.png" href="/" oncomplete="alert('a');">test</v:a>
+>
+<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d); alert('a'); jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
+=
+<v:a ajax="div" loading="spinner.png" href="/" loadingposition="before">test</v:a>
+>
+<img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" /><a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d);  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a>

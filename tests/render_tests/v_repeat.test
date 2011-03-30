@@ -1,0 +1,10 @@
+Evalid numeric value
+<v:repeat times="kevin"></v:repeat>
+=
+<v:repeat times="3">bounce</v:repeat>
+>
+bouncebouncebounce
+=
+<v:repeat times="3">bounce</v:repeat>
+>
+bouncebouncebounce

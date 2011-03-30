@@ -1,0 +1,7 @@
+<v:if path="1>2">out</v:if><v:else>in</v:else>
+>
+in
+=
+<v:if path="1>2">out1</v:if><v:else><v:if path="1<2">out2</v:if><v:else>in2</v:else></v:else>
+>
+out2

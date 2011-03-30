@@ -1,0 +1,36 @@
+<v:select name="nothing" />
+>
+=
+<v:select options="a,b,c" />
+>
+<select><option value="a">a</option><option value="b">b</option><option value="c">c</option></select>
+=
+<v:select options="a=A,b=B,c=C" />
+>
+<select><option value="a">A</option><option value="b">B</option><option value="c">C</option></select>
+=
+<v:select options='<option value="a">A</option><option value="b">B</option><option value="c">C</option>' />
+>
+<select><option value="a">A</option><option value="b">B</option><option value="c">C</option></select>
+=
+<v:select options="a,b,c" value="a" />
+>
+<select><option value="a" selected="selected">a</option><option value="b">b</option><option value="c">c</option></select>
+=
+<v:select options="a,b,c" value="a" default="b" />
+>
+<select><option value="a" selected="selected">a</option><option value="b">b</option><option value="c">c</option></select>
+=
+<v:select options="a,b,c" default="a" />
+>
+<select><option value="a" selected="selected">a</option><option value="b">b</option><option value="c">c</option></select>
+=
+<v:select options="a,b,c"><option value="addl">exta</option></v:select>
+>
+<select><option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="addl">exta</option></select>
+=
+<v:collection path="/artists" paginate="2" page_select="cow">stuff</v:collection>
+<v:select id="cow" />
+>
+stuffstuff
+<select id="cow" onchange=" window.location.href='/page?page='+this.value"><option value="1" selected="selected">1</option><option value="2">2</option></select>

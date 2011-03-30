@@ -1,0 +1,10 @@
+<?php $_SESSION['__v:store']['recent_order'] = array(array('name' => "Green Owl")); ?>
+<v:store:if_recent_order_digital>in<v:else>out</v:else></v:store:if_recent_order_digital>
+>
+out
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $_SESSION['__v:store']['recent_order'] = array(array('name' => "Green Owl", 'digital' => true)); ?>
+<v:store:if_recent_order_digital>in<v:else>out</v:else></v:store:if_recent_order_digital>
+>
+in

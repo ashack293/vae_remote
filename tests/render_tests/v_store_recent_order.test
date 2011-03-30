@@ -1,0 +1,4 @@
+<?php $_SESSION['__v:store']['recent_order_data'] = array('billing_name' => "Kevin Bombino"); ?>
+<v:store:recent_order>-<v=billing_name>~</v:store:recent_order>
+>
+-Kevin Bombino~

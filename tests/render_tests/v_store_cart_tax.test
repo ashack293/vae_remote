@@ -1,0 +1,4 @@
+<?php $_VAE['store_cached_tax'] = "1.45"; ?>
+<v:store:cart:tax />
+>
+<span class='currency currency_USD'>1.45</span>

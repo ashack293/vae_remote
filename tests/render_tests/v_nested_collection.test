@@ -1,0 +1,28 @@
+<v:nested_collection path="ncategories"><v=name>-</v:nested_collection>
+>
+Guitars-Electric-Acoustic-Basses-4-String-5-String-School Band-Accessories-
+=
+<v:nested_collection path="ncategories"><v=name><v:divider><li><v:yield /></li></v:divider></v:nested_collection>
+>
+<li>Guitars<li>Electric</li><li>Acoustic</li></li><li>Basses<li>4-String</li><li>5-String</li></li><li>School Band</li><li>Accessories</li>
+=
+<v:nested_collection path="ncategories"><v=name><v:divider><li><v:yield /></li></v:divider><v:nested_divider><ul><v:yield /></ul></v:nested_divider></v:nested_collection>
+>
+<ul><li>Guitars<ul><li>Electric</li><li>Acoustic</li></ul></li><li>Basses<ul><li>4-String</li><li>5-String</li></ul></li><li>School Band</li><li>Accessories</li></ul>
+=
+<v:section path="4008"><v:nested_collection path=".."><v=name><v:nested_divider> / </v:nested_divider></v:nested_collection></v:section>
+>
+5-String / Basses
+=
+<v:section path="4008"><v:nested_collection output_order="reverse" path=".."><v=name><v:nested_divider> / </v:nested_divider></v:nested_collection></v:section>
+>
+Basses / 5-String
+=
+<v:nested_collection path="ncategories" filter_input="cow"><v=name>-<v:else>noq</v:else></v:nested_collection>
+>
+noq
+=
+<?php $_REQUEST['cow'] = "Guitar"; ?>
+<v:nested_collection path="ncategories" filter_input="cow"><v=name>-<v:else>noq</v:else></v:nested_collection>
+>
+Guitars-

@@ -1,0 +1,45 @@
+<v:asset src="kevin.css" />
+>
+<_VAE_ASSET_1>
+<?php $this->assertEqual($_VAE['assets'], array('all' => array('kevin.css'))); ?>
+=
+<v:asset href="kevin.css" media="screen" />
+>
+<_VAE_ASSET_1>
+<?php $this->assertEqual($_VAE['assets'], array('screen' => array('kevin.css'))); ?>
+=
+<v:asset src="kevin.js" />
+>
+<_VAE_ASSET_1>
+<?php $this->assertEqual($_VAE['assets'], array('js' => array('kevin.js'))); ?>
+=
+<v:asset src="kevin.js" debug="true" />
+>
+<script type="text/javascript" src="/kevin.js"></script>
+=
+<v:asset src="/kevin.js" debug="true" />
+>
+<script type="text/javascript" src="/kevin.js"></script>
+=
+<v:asset src="kevin.css" debug="true" />
+>
+<link rel="stylesheet" type="text/css" media="all" href="/kevin.css" />
+=
+<v:asset framework="dojo" />
+<v:asset framework="jquery" />
+<v:asset framework="jqueryui" />
+<v:asset framework="mootools" />
+<v:asset framework="swfobject" />
+<v:asset framework="yui" />
+>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1/dojo/dojo.xd.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2/swfobject.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/yui/2/build/yuiloader/yuiloader-min.js"></script>
+=
+<?php $_SERVER['HTTPS'] = true; ?>
+<v:asset framework="dojo" />
+>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/dojo/1/dojo/dojo.xd.js"></script>

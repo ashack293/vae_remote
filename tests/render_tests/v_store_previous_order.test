@@ -1,0 +1,9 @@
+<v:store:previous_order />
+>
+<?php $this->assertRedirect("/"); ?>
+<?php $this->assertSessionDep('__v:store'); ?>
+=
+<?php $_REQUEST['order'] = 1; $_SESSION['__v:store']['previous_orders'] = array(1 => array('total' => '7.00')); ?>
+<v:store:previous_order><v:text path="total" /></v:store:previous_order>
+>
+7.00
