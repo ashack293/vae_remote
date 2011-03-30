@@ -1,5 +1,7 @@
 <?php
 
+if ($_VERB) $_VAE = $_VERB;
+
 $_VAE['version'] = 100;
 
 function _vae_should_load() {
