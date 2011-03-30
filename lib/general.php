@@ -773,11 +773,12 @@ function _vae_load_cache($reload = false) {
 }
 
 function _vae_load_settings() {
-  global $_VAE;
+  global $_VAE, $_VERB;
   if (isset($_VAE['settings'])) return;
   if (!file_exists($_VAE['config']['data_path'] . "settings.php")) {
     _vae_update_settings_feed();
   }
+  if ($_VERB['settings']) $_VAE['settings'] = $_VERB['settings'];
   require_once($_VAE['config']['data_path'] . "settings.php");
   if (!$_VAE['config']['force_local_assets'] && !$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router']) {
     if (strlen($_VAE['settings']['cdn_host'])) {
