@@ -618,7 +618,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     global $_VAE;
     if ($_VAE['config']['content_subdomain']) {
       return $_VAE['config']['content_subdomain'];
-    } elseif (preg_match('/\/([a-z0-9]*)\.vae\//', $_SERVER['DOCUMENT_ROOT'], $matches)) {
+    } elseif (preg_match('/\/([a-z0-9]*)\.verb\//', $_SERVER['DOCUMENT_ROOT'], $matches)) {
       return $matches[1];
     } elseif (function_exists('_vae_test_xml_path')) {
       return _vae_test_xml_path();
