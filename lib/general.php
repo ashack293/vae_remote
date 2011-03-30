@@ -778,8 +778,8 @@ function _vae_load_settings() {
   if (!file_exists($_VAE['config']['data_path'] . "settings.php")) {
     _vae_update_settings_feed();
   }
-  if ($_VERB['settings']) $_VAE['settings'] = $_VERB['settings'];
   require_once($_VAE['config']['data_path'] . "settings.php");
+  if (isset($_VERB['settings'])) $_VAE['settings'] = $_VERB['settings'];
   if (!$_VAE['config']['force_local_assets'] && !$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router']) {
     if (strlen($_VAE['settings']['cdn_host'])) {
       $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['cdn_host'] . "/";
