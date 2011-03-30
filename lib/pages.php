@@ -9,7 +9,7 @@ function _vae_page() {
   $a = explode(".", $_REQUEST['__page']);
   _vae_page_find($a[0]);
   _vae_page_check_redirects();
-  if ($_REQUEST['__vae_local']) return _vae_local("/" . $a[0]);
+  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local("/" . $a[0]);
   if ($a[0] == "admin" || $a[0] == "admin/") {
     @Header("Location: https://" . $_VAE['settings']['subdomain'] . ".vaecms.com/");
     _vae_die();
@@ -132,7 +132,7 @@ function _vae_page_run($page, $template, $context, $from_cache = false) {
   list($filename, $vaeml) = _vae_src($template);
   if (!strlen($vaeml)) return _vae_page_404("Could not find Permalink HTML page.  We were looking for $template or $template.html or $template.haml or $template.php.");
   if ($from_cache == false) memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array('id' => $_REQUEST['id'], 'template' => (string)$template));
-  if ($_REQUEST['__vae_local']) return _vae_local($template);
+  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local($template);
   $_VAE['filename'] = $filename;
   _vae_set_cache_key();
   if ($_ENV['TEST']) return $filename;

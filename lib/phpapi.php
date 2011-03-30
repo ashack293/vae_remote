@@ -17,14 +17,14 @@ function vae_cache($key, $timeout = 3600, $function = "", $global = false) {
     return $cached[1];
   }
   $out = $function();
-  if (!$_REQUEST['__debug'] && !$_REQUEST['__vae_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
+  if (!$_REQUEST['__debug'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
   return $out;
 }
 
 function vae_cdn_url() {
   global $_VAE;
   if (isset($_VAE['config']['cdn_url'])) return $_VAE['config']['cdn_url'];
-  if ($_REQUEST['__vae_local']) return "/";
+  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return "/";
   return "http" . (($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . "/";
 }
 

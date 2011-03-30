@@ -48,7 +48,8 @@ if (_vae_should_load()) {
   /* Initialize */
   _vae_set_default_config();
   unset($_SESSION['__v:flash_new']);
-  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");
   
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
@@ -75,7 +76,7 @@ if (_vae_should_load()) {
   if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();
   _vae_page_check_redirects();
   _vae_parse_path();
-  if ($_REQUEST['__vae_local']) _vae_local();
+  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
     
   if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass") {
     require_once(dirname(__FILE__) . "/haml.php");

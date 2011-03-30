@@ -1381,7 +1381,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_payment_methods_select');
   _vae_store_set_default_payment_method();
-  if ($_REQUEST['__v_actionvae_admin_test']) $_SESSION['__v:store']['payment_method'] = "actionvae_admin_test_payment";
+  if ($_REQUEST['__v_actionverb_admin_test']) $_SESSION['__v:store']['payment_method'] = "actionverb_admin_test_payment";
   if (_vae_store_compute_total() == 0.00) {
     $a['options'] = array($_SESSION['__v:store']['payment_method'] => $_SESSION['__v:store']['payment_method']);
   } else {
@@ -1555,7 +1555,7 @@ function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {
   $xml = '<?xml version="1.0"?>
   <AccessRequest>
   <AccessLicenseNumber>FC57D838E6B7AF48</AccessLicenseNumber>
-  <UserId>actionvae</UserId>
+  <UserId>actionverb</UserId>
   <Password>39FQ3kjJJ</Password>
   </AccessRequest>
   <?xml version="1.0"?>

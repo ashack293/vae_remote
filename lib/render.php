@@ -419,7 +419,7 @@ function _vae_render_disqus($a, &$tag, $context, &$callback, $render_context) {
   $xid = ($context ? $context->id : null);
   $js = '<div id="disqus_thread"></div>
     <script type="text/javascript">'. (($context && $context->id) ? '
-      var disqus_identifier = ' . $xid . ';' : '') . ($_REQUEST['__vae_local'] ? '
+      var disqus_identifier = ' . $xid . ';' : '') . (($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) ? '
       var disqus_developer = true;' : '') . ($a['css'] ? '
       var disqus_iframe_css = ' . $a['css'] . ';' : '') . '
       (function() {
@@ -579,7 +579,7 @@ function _vae_render_formmail($a, &$tag, $context, &$callback, $render_context) 
 function _vae_render_fragment($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   if (!$a['cache']) return "";
-  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local']) {
+  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $key = $_VAE['global_cache_key'] . $a['cache'];
     $cached = memcache_get($_VAE['memcached'], $key);
     if (is_array($cached) && $cached[0] == "chks") {

@@ -399,7 +399,7 @@ function _vae_handleob($vaeml) {
       }
     }
     if (isset($_VAE['ticks'])) return _vae_render_timer();
-    if (($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__xhr']) {
+    if (($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
@@ -684,7 +684,7 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_tick("can't use cached version because there is data in the flash bucket");
   } elseif (count($_COOKIE)) {
     _vae_tick("can't use cached version because there's a cookie");
-  } elseif (!isset($_REQUEST['__vae_local'])) {
+  } elseif (!isset($_REQUEST['__vae_local']) && !isset($_REQUEST['__verb_local'])) {
     $cached = memcache_get($_VAE['memcached'], $cache_key);
     if (is_array($cached) && $cached[0] == "c") {
       $out = $cached[1];
@@ -792,7 +792,7 @@ function _vae_load_settings() {
 
 function _vae_local($filename = "") {
   global $_VAE;
-  $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'];
+  $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'] . $_REQUEST['__verb_local'];
   if ($_REQUEST['__local_username']) {
     echo _vae_local_authenticate($memcache_base_key);
     return _vae_die();
@@ -802,6 +802,7 @@ function _vae_local($filename = "") {
     _vae_error("Your Local Development Session expired.  Please restart the Local Preview server and try again.");
   }
   $memcache_base_key .= "f";
+  if ($_REQUEST['__verb_local_files']) $_REQUEST['__vae_local_files'] = $_REQUEST['__verb_local_files'];
   if (count($_REQUEST['__vae_local_files'])) {
     foreach ($_REQUEST['__vae_local_files'] as $fname => $file) {
       memcache_set($_VAE['memcached'], $memcache_base_key . $fname, $file);
@@ -814,6 +815,8 @@ function _vae_local($filename = "") {
   $_VAE['filename'] = $filename;
   $vae_php = memcache_get($_VAE['memcached'], $memcache_base_key . "/__vae.php");
   if (strlen($vae_php)) _vae_local_exec($vae_php);
+  $verb_php = memcache_get($_VAE['memcached'], $memcache_base_key . "/__verb.php");
+  if (strlen($verb_php)) _vae_local_exec($verb_php);
   if (strstr($filename, ".sass")) {
     require_once(dirname(__FILE__)."/haml.php");
     echo _vae_sass($script, true, dirname($filename));
@@ -851,8 +854,11 @@ function _vae_local_exec($script) {
 }
 
 function _vae_local_needs($filename) {
-  if (!$_REQUEST['__vae_local']) return;
-  return _vae_render_final("__vae_local_needs=" . $filename);
+  if ($_REQUEST['__vae_local']) {
+    return _vae_render_final("__vae_local_needs=" . $filename);
+  } elseif ($_REQUEST['__verb_local']) {
+    return _vae_render_final("__verb_local_needs=" . $filename);
+  }
 }
 
 function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one_winner = false) {
@@ -1244,7 +1250,7 @@ function _vae_qs($out = "", $keep_current = true, $append_to_end = "") {
   $out = $path = "";
   if (count($new)) {
     foreach ($new as $k => $v) {
-      if ($k != "__vae_local" && $k != "__vae_ssl_router" && $k != "__page" && strlen($v)) {
+      if ($k != "__vae_local" && $k != "__vae_ssl_router" && $k != "__verb_local" && $k != "__page" && strlen($v)) {
         if ((preg_match("/([a-z0-9]*_)?page/", $k) && preg_match("/^([0-9]*|all)$/", $v) && !isset($_VAE['settings']['query_string_pagination'])) || ($k == "locale")) {
           if (($v != 1) && ($v != "en")) $path .= "/" . $k . "/" . $v;
         } else {
@@ -1473,7 +1479,7 @@ function _vae_report_error($subject, $message, $urgent = true) {
   foreach ($_REQUEST as $k => $v) {
     if (!in_array($k, $bad)) $body .= $k . " => " . $v . "\n";
   }
-  _vae_mail("support@actionvae.com", "Verb Remote Error : " . $subject, $body, "From: vaeerrors@actionvae.com");
+  _vae_mail("support@actionverb.com", "Verb Remote Error : " . $subject, $body, "From: vaeerrors@actionverb.com");
   if ($urgent) _vae_mail("2563376464@vtext.com", "REST ERROR", substr($message, 0, 120), "From: kevin@bombino.org");
   return $body;
 }
@@ -1487,7 +1493,7 @@ function _vae_request_param($name, $flash = false) {
 function _vae_require_ssl() {
   global $_VAE;
   $_VAE['ssl_required'] = true;
-  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local']) {
+  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".vae/releases/")) {
       $domain = $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_ssl'];
@@ -1548,6 +1554,8 @@ function _vae_set_cache_key() {
   $key .= filemtime($_SERVER['DOCUMENT_ROOT'] . $_VAE['filename']) . "-";
   $vae_php = $_SERVER['DOCUMENT_ROOT'] . '/__vae.php';
   if (file_exists($vae_php)) $key .= filemtime($vae_php);
+  $verb_php = $_SERVER['DOCUMENT_ROOT'] . '/__verb.php';
+  if (file_exists($verb_php)) $key .= filemtime($verb_php);
   $key = md5($key.$_VAE['filename'].$_SERVER['HTTP_HOST'].$_SERVER['QUERY_STRING'].(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : "").serialize($_POST));
   $_VAE['cache_key'] = $key;
 }
@@ -1568,6 +1576,8 @@ function _vae_set_default_config() {
   $key = @filemtime($_VAE['config']['data_path'] . 'feed.xml');
   $vae_yml = $_SERVER['DOCUMENT_ROOT'] . '/__vae.yml';
   if (file_exists($vae_yml)) $key .= filemtime($vae_yml);
+  $verb_yml = $_SERVER['DOCUMENT_ROOT'] . '/__verb.yml';
+  if (file_exists($verb_yml)) $key .= filemtime($verb_yml);
   $_VAE['global_cache_key'] = $key;
 }
 
