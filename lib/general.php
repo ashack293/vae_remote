@@ -32,7 +32,7 @@ function _vae_akismet($a) {
 	$http_request .= "Host: $host\r\n";
 	$http_request .= "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
 	$http_request .= "Content-Length: " . strlen($query_string) . "\r\n";
-	$http_request .= "User-Agent: Verb/0.4.0 | Akismet/2.0\r\n";
+	$http_request .= "User-Agent: Vae/0.4.0 | Akismet/2.0\r\n";
 	$http_request .= "\r\n";
 	$http_request .= $query_string;
 	$response = '';
@@ -172,9 +172,9 @@ function _vae_escape_for_js($html) {
 function _vae_error($msg, $debugging_info = "", $filename = null) {
   global $_VAE;
   if (_vae_in_ob() || $_REQUEST['__v:store_payment_method_ipn']) {
-    throw new VerbException($msg, $debugging_info, $filename);
+    throw new VaeException($msg, $debugging_info, $filename);
   } else {
-    echo _vae_render_error(new VerbException($msg, $debugging_info, $filename));
+    echo _vae_render_error(new VaeException($msg, $debugging_info, $filename));
   }
   _vae_die();
 }
@@ -242,7 +242,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
 }
 
 function _vae_final($out) {
-  throw new VerbFragment($out);
+  throw new VaeFragment($out);
 }
 
 function _vae_find_dividers($tag) {
@@ -717,10 +717,10 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_set_initial_context();
     _vae_tick("set initial context");
     list($parse_tree, $render_context) = _vae_parse_vaeml($vaeml, $_VAE['filename']);
-    _vae_tick("parse VerbML");
+    _vae_tick("parse VaeML");
     try {
       $out = _vae_render_tags($parse_tree, $_VAE['context'], $render_context);
-    } catch (VerbFragment $e) {
+    } catch (VaeFragment $e) {
       $out = $e->getMessage();
     }
     if (isset($_VAE['assets']) || isset($_VAE['javascripts'])) $out = _vae_inject_assets($out);
@@ -833,7 +833,7 @@ function _vae_local_authenticate($memcache_base_key) {
   $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
     memcache_set($_VAE['memcached'], $memcache_base_key . "auth", $out);
-    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Verb Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\n\n";
+    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\n\n";
     else return $out;
   }
   return "BAD";
@@ -880,7 +880,7 @@ function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one
     }
     usleep(200000);
   }
-  _vae_error("","Could not obtain Verb Lock.");
+  _vae_error("","Could not obtain Vae Lock.");
 }
 
 function _vae_lock_release($param = true, $which_lock = 'global') {
@@ -933,7 +933,7 @@ function _vae_merge_data_from_tags(&$tag, &$data, &$errors, $nested = false) {
   if ($tag['attrs']['nested']) $nested = true;
   if ($nested) {
     foreach ($_POST as $k => $v) {
-      if (!in_array($k, array("VerbSession", "id", "locale", "page", "recaptcha_challenge_field", "recaptcha_response_field")) && (substr($k, 0, 3) != "__v") && (substr($k, 0, 3) != "utm")) {
+      if (!in_array($k, array("VaeSession", "id", "locale", "page", "recaptcha_challenge_field", "recaptcha_response_field")) && (substr($k, 0, 3) != "__v") && (substr($k, 0, 3) != "utm")) {
         if (is_array($v)) $v = implode(", ", $v);
         $data[$k] = $v;
       }
@@ -1321,7 +1321,7 @@ function _vae_remote() {
   } else {
     _vae_error("","Secret Key Mismatch");
   }
-  _vae_die("Verb Remote Done");
+  _vae_die("Vae Remote Done");
 }
 
 function _vae_remove_file($name) {
@@ -1398,9 +1398,9 @@ function _vae_render_error($e) {
   global $_VAE;
   @header("HTTP/1.1 500 Internal Server Error");
   @header("Status: 500 Internal Server Error");
-  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr(get_class($e), "Verb"))) {
-    $error_type = "Verb Error";
-    if (get_class($e) == "VerbException" || get_class($e) == "VerbSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
+  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr(get_class($e), "Vae"))) {
+    $error_type = "Vae Error";
+    if (get_class($e) == "VaeException" || get_class($e) == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
   } else {
     $error_type = "Exception Thrown";
     $msg = get_class($e) . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
@@ -1428,7 +1428,7 @@ function _vae_render_error($e) {
   }
   $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . get_class($e) . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
   if ($backtrace && (count($backtrace) > 1)) {
-    if ($_REQUEST['__debug'] || !strstr(get_class($e), "Verb")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
+    if ($_REQUEST['__debug'] || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
   //if (!$_ENV['TEST'] && !$_REQUEST['__debug']) {
@@ -1450,7 +1450,7 @@ function _vae_render_message($title, $msg) {
   $out .= "<style type='text/css'>";
   if (!_vae_is_xhr()) $out .= "body { background: #333; margin: 0px; font: 14px \"Lucida Grande\", \"Myriad\", \"Lucida Sans Unicode\", Arial, Helvetica, sans-serif; }\nh1 { margin-top: 0px; }\n#main { background: #fff url(" . $_VAE['config']['asset_url'] . "images/grad-bottom.png) bottom repeat-x; padding: 15px 15px 100px 15px; min-height: 400px; }\n#footer { font-size: 0.75em; text-align: center; color: #fff; height: 50px; padding-top: 15px; background: url(" . $_VAE['config']['asset_url'] . "images/grad-footer.png) top repeat-x; }\n";
   $out .= "a { color: #fff; }\n.c, pre { font-family: Monaco, \"Bitstream Vera Sans Mono\", \"Lucida Console\", \"Courier New\", serif; }\n.c { font-size: 1.1em; color: #faec31; }\n.b { overflow: auto; margin: 15px 0px; color: #fff; background: #666; padding: 15px; }\n.fail { color: red; }\n.bt3 { color: #faec31; }\n.bt4 { color: #ee4423; }\n.bt5 { color: #ccc; }\n</style>";
-  $out .= "</head><body><div id='main'><h1><img src='" . $_VAE['config']['asset_url'] . "images/vae.png' alt='Verb' /></h1>";
+  $out .= "</head><body><div id='main'><h1><img src='" . $_VAE['config']['asset_url'] . "images/vae.png' alt='Vae' /></h1>";
   if ($msg != false) $out .= $msg . _vae_render_message_footer();
   return $out;
 }
@@ -1467,7 +1467,7 @@ function _vae_render_timer() {
   foreach ($_VAE['ticks'] as $r) {
     $ticks .= "<tr style='color: #fff;'><td>" . $r[0] . "</td><td align='right'>" . number_format($r[1]*100/$sum, 3) . "%</td><td align='right'>" . number_format($r[1], 3) . "ms</td></tr>\n";
   }
-  return _vae_render_message("Verb Timer", "<h2>Verb Timer</h2><div class='b'><table style='width: 100%;'>" . $ticks . "</table></div>");
+  return _vae_render_message("Vae Timer", "<h2>Vae Timer</h2><div class='b'><table style='width: 100%;'>" . $ticks . "</table></div>");
 }
 
 function _vae_report_error($subject, $message, $urgent = true) {
@@ -1480,7 +1480,7 @@ function _vae_report_error($subject, $message, $urgent = true) {
   foreach ($_REQUEST as $k => $v) {
     if (!in_array($k, $bad)) $body .= $k . " => " . $v . "\n";
   }
-  _vae_mail("support@actionverb.com", "Verb Remote Error : " . $subject, $body, "From: vaeerrors@actionverb.com");
+  _vae_mail("support@actionverb.com", "Vae Remote Error : " . $subject, $body, "From: vaeerrors@actionverb.com");
   if ($urgent) _vae_mail("2563376464@vtext.com", "REST ERROR", substr($message, 0, 120), "From: kevin@bombino.org");
   return $body;
 }
