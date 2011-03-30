@@ -32,7 +32,7 @@ class fedex {
   }
   
   function error($msg) {
-    _verb_error("FedEx Shipping Module Error: " . $msg);
+    _vae_error("FedEx Shipping Module Error: " . $msg);
   }
 
   function quote() {
@@ -81,7 +81,7 @@ class fedex {
   function _getMeter() {
     global $method;
     $hash = md5(serialize($method));
-    if ($cached = _verb_read_file("_verb_store_shipping_fedex_meter_number.txt")) {
+    if ($cached = _vae_read_file("_vae_store_shipping_fedex_meter_number.txt")) {
       $cached_data = unserialize($cached);
       if ($hash == $cached_data['hash']) {
         $this->meter = $cached_data;
@@ -115,7 +115,7 @@ class fedex {
     $meterStart += 6;
     $meterEnd = strpos($fedexData, '"', $meterStart);
     $this->meter = array('hash' => $hash, 'data' => substr($fedexData, $meterStart, $meterEnd - $meterStart));
-    _verb_write_file("_verb_store_shipping_fedex_meter_number.txt", serialize($this->meter));
+    _vae_write_file("_vae_store_shipping_fedex_meter_number.txt", serialize($this->meter));
     return true;
   }
 

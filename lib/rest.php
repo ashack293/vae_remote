@@ -1,15 +1,15 @@
 <?php
  
-function _verb_array_from_rails_xml($xml, $is_array = false, $transform = null) {
+function _vae_array_from_rails_xml($xml, $is_array = false, $transform = null) {
   $r = array();
   if ($is_array) {
     foreach ($xml as $x) {
-      $r[(int)$x->id] = _verb_array_from_rails_xml($x, false, $transform);
+      $r[(int)$x->id] = _vae_array_from_rails_xml($x, false, $transform);
     }
   } else {
     foreach ($xml as $k => $v) {
       if (count($v->children())) {
-        $val = _verb_array_from_rails_xml($v->children(), true, $transform);
+        $val = _vae_array_from_rails_xml($v->children(), true, $transform);
       } else {
         $val = (string)$v;
         if ($v->attributes()->type == "boolean") {
@@ -24,7 +24,7 @@ function _verb_array_from_rails_xml($xml, $is_array = false, $transform = null) 
   return $r;
 }
  
-function _verb_build_xml($parent, $data) {
+function _vae_build_xml($parent, $data) {
   if (!strlen($parent)) return "";
   $xml = "<" . $parent .">";
   foreach ($data as $k => $v) {
@@ -32,7 +32,7 @@ function _verb_build_xml($parent, $data) {
       $xml .= "<" . $k . ">";
       if (is_array($v)) {
         foreach ($v as $item) {
-          $xml .= _verb_build_xml("item", $item);
+          $xml .= _vae_build_xml("item", $item);
         }
       } else {
         $xml .= htmlspecialchars($v);
@@ -44,32 +44,32 @@ function _verb_build_xml($parent, $data) {
   return $xml;
 }
 
-function _verb_create($structure_id, $row_id, $data) {
-  global $_VERB;
-  $raw = _verb_rest($data, "content/create/" . $structure_id . "/" . $row_id, "content");
+function _vae_create($structure_id, $row_id, $data) {
+  global $_VAE;
+  $raw = _vae_rest($data, "content/create/" . $structure_id . "/" . $row_id, "content");
   if ($raw == false) return false;
-  $data = _verb_array_from_rails_xml(simplexml_load_string($raw));
+  $data = _vae_array_from_rails_xml(simplexml_load_string($raw));
   return $data['id'];
   return true;
 }
 
-function _verb_proxy($url, $qs = "", $send_request_data = false, $yield = false) {
-  global $_VERB;
+function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) {
+  global $_VAE;
   $id = md5(rand());
-  memcache_set($_VERB['memcached'], "_proxy_$id", serialize($_SESSION));
+  memcache_set($_VAE['memcached'], "_proxy_$id", serialize($_SESSION));
   if ($yield) {
-    memcache_set($_VERB['memcached'], "_proxy_yield_$id", $yield);
+    memcache_set($_VAE['memcached'], "_proxy_yield_$id", $yield);
     $qs .= "&__get_yield=1";
   }
   if ($send_request_data) {
-    memcache_set($_VERB['memcached'], "_proxy_post_$id", serialize($_POST));
-    memcache_set($_VERB['memcached'], "_proxy_request_$id", serialize($_REQUEST));
+    memcache_set($_VAE['memcached'], "_proxy_post_$id", serialize($_POST));
+    memcache_set($_VAE['memcached'], "_proxy_request_$id", serialize($_REQUEST));
     $qs .= "&__get_request_data=1";
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);
   $qs .= "&__proxy=" . $id;
   $host = ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']);
-  $out = _verb_simple_rest("http://" . $host . "/" . $url . "?" . $qs);
+  $out = _vae_simple_rest("http://" . $host . "/" . $url . "?" . $qs);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
@@ -79,34 +79,34 @@ function _verb_proxy($url, $qs = "", $send_request_data = false, $yield = false)
   return $out;
 }
 
-function _verb_rest($data, $method, $param, $tag = null, $errors = null, $hide_errors = false) {
-  global $_VERB;
+function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_errors = false) {
+  global $_VAE;
   if ($errors == null) $errors = array();
-  if ($tag) _verb_merge_data_from_tags($tag, $data, $errors);
-  if (count($errors) == 0) $ret = _verb_send_rest($method, _verb_build_xml($param, $data), $errors);
-  if (!$hide_errors && _verb_flash_errors($errors, $tag['attrs']['flash'])) {
+  if ($tag) _vae_merge_data_from_tags($tag, $data, $errors);
+  if (count($errors) == 0) $ret = _vae_send_rest($method, _vae_build_xml($param, $data), $errors);
+  if (!$hide_errors && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
     return false;
   } elseif (!$hide_errors && ($ret == false)) {
-    _verb_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
+    _vae_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
     if (!strstr($method, "content/create")) {
-      _verb_report_error("REST API Error", $_VERB['resterror']);
+      _vae_report_error("REST API Error", $_VAE['resterror']);
     }
   }
   return $ret;
 }
 
-function _verb_send_rest($method, $data, &$errors) {
-  global $_VERB;
+function _vae_send_rest($method, $data, &$errors) {
+  global $_VAE;
   if ($_ENV['TEST']) {
-    $_VERB['rest_sent']++;
-    if (isset($_VERB['mock_rest_error'])) {
-      if (strlen($_VERB['mock_rest_error'])) $errors[] = $_VERB['mock_rest_error'];
+    $_VAE['rest_sent']++;
+    if (isset($_VAE['mock_rest_error'])) {
+      if (strlen($_VAE['mock_rest_error'])) $errors[] = $_VAE['mock_rest_error'];
       return false;
     }
-    if (isset($_VERB['mock_rest']) && strlen($mock = array_shift($_VERB['mock_rest']))) return $mock;
+    if (isset($_VAE['mock_rest']) && strlen($mock = array_shift($_VAE['mock_rest']))) return $mock;
     return '<success></success>';
   }
-  $url = str_replace("http://", "https://", $_VERB['config']["backlot_url"]) . "/" . $method . (strstr($method, "?") ? "&" : "?") . "secret_key=" . $_VERB['config']["secret_key"];
+  $url = str_replace("http://", "https://", $_VAE['config']["backlot_url"]) . "/" . $method . (strstr($method, "?") ? "&" : "?") . "secret_key=" . $_VAE['config']["secret_key"];
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_POST, true);
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -127,7 +127,7 @@ function _verb_send_rest($method, $data, &$errors) {
   foreach (array('cc_number','cc_cvv','password','cc_month','cc_year','cc_start_month','cc_start_year') as $bad) {
     $data = preg_replace("/<" . $bad . ">([^<]*)/", "<" . $bad . ">[FILTERED]", $data);
   }
-  $_VERB['resterror'] = "Submitting to URL: $url\n\n-------------\n\nData:\n\n$data\n\nResponse:\n\n$response\n\n-------------";
+  $_VAE['resterror'] = "Submitting to URL: $url\n\n-------------\n\nData:\n\n$data\n\nResponse:\n\n$response\n\n-------------";
   preg_match_all("|<error>(.*)</error>|U", $response, $out, PREG_SET_ORDER);
   if (count($out)) {
     foreach ($out as $r) {
@@ -140,14 +140,14 @@ function _verb_send_rest($method, $data, &$errors) {
   return false;
 }
 
-function _verb_simple_rest($url, $post_data = null) {
-  global $_VERB;
+function _vae_simple_rest($url, $post_data = null) {
+  global $_VAE;
   if ($_ENV['TEST'] && !$_SESSION['real_rest']) {
-    $_VERB['rest_sent']++;
-    if (!isset($_VERB['mock_rest'])) return "";
-    return array_shift($_VERB['mock_rest']);
+    $_VAE['rest_sent']++;
+    if (!isset($_VAE['mock_rest'])) return "";
+    return array_shift($_VAE['mock_rest']);
   }
-  if (!strstr($url, "://")) $url = $_VERB['config']['backlot_url'] . $url;
+  if (!strstr($url, "://")) $url = $_VAE['config']['backlot_url'] . $url;
   if ($post_data) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -160,15 +160,15 @@ function _verb_simple_rest($url, $post_data = null) {
   return file_get_contents($url);
 }
 
-function _verb_update($id, $data) {
-  global $_VERB;
-  $_VERB['__verb_update_ct']++;
+function _vae_update($id, $data) {
+  global $_VAE;
+  $_VAE['__vae_update_ct']++;
   $errors = array();
-  if (_verb_rest($data, "content/update/" . $id . (($_VERB['__verb_update_ct'] % 20) ? "?no_hook=true" : ""), "content", null, $errors, true) == false) {
+  if (_vae_rest($data, "content/update/" . $id . (($_VAE['__vae_update_ct'] % 20) ? "?no_hook=true" : ""), "content", null, $errors, true) == false) {
     return false;
   }
-  if (!isset($_VERB['run_hooks'])) $_VERB['run_hooks'] = array();
-  $_VERB['run_hooks'][] = array("content:updated", $id);
+  if (!isset($_VAE['run_hooks'])) $_VAE['run_hooks'] = array();
+  $_VAE['run_hooks'][] = array("content:updated", $id);
   return true;
 }
 

@@ -19,7 +19,7 @@ class Context {
   
   function required_attr($attr, $a, $type) {
     $out = $this->attr($attr, $a);
-    if ($out == false) _verb_error("Tag <span class='c'>&lt;v:" . $type . "&gt;</span> is missing the required <span class='c'>$attr=</span> attribute.  Either add this attribute, or move this tag inside another tag that passes down this attribute.");
+    if ($out == false) _vae_error("Tag <span class='c'>&lt;v:" . $type . "&gt;</span> is missing the required <span class='c'>$attr=</span> attribute.  Either add this attribute, or move this tag inside another tag that passes down this attribute.");
     return $out;
   }
   

@@ -1,8 +1,8 @@
 <?php
  
-$_VERB['local_newest_version'] = "0.4.0";
+$_VAE['local_newest_version'] = "0.4.0";
  
-function _verb_list_countries() {
+function _vae_list_countries() {
   return array('AF' => 'Afghanistan',
                'AX' => 'Aland Islands',
                'AL' => 'Albania',
@@ -229,9 +229,9 @@ function _verb_list_countries() {
                'ZW' => 'Zimbabwe');
 }
 
-$_VERB['continents'] = array("AF","AN","AS","EU","NA","OC","SA");
+$_VAE['continents'] = array("AF","AN","AS","EU","NA","OC","SA");
 
-$_VERB['states'] = array(
+$_VAE['states'] = array(
   "AU" => array(
     array('', ""), 
 		array('ACT', "Australian Capital Territory (ACT)"),
@@ -327,7 +327,7 @@ $_VERB['states'] = array(
   )
 );
 
-$_VERB['attributes'] = array(
+$_VAE['attributes'] = array(
   'a' => array('charset','coords','href','hreflang','name','rel','rev','shape','target','type'),
   'collection' => array("all","default_page","filter_input","groups","id","max_pages","nested","next","order","output_order","page_select","paginate","path","per_row","previous","skip","store_in_session","wrap"),
   'form' => array('accept','action','accept-charset','ajax','enctype','flash','method','name','target','validateinline'),
@@ -338,7 +338,7 @@ $_VERB['attributes'] = array(
   'textarea' => array('cols','disabled','name','readonly','rows')
 );
 
-$_VERB['currency_names'] = array(
+$_VAE['currency_names'] = array(
   "AUD" => "Australian Dollar",
   "CAD" => "Canadian Dollar",
   "CNY" => "Chinese Yuan",
@@ -360,7 +360,7 @@ $_VERB['currency_names'] = array(
   "USD" => "United States Dollar"
 );
 
-$_VERB['currency_symbols'] = array(
+$_VAE['currency_symbols'] = array(
   "AUD" => "$",
   "CAD" => "$",
   "CNY" => "&#165;",
@@ -382,12 +382,12 @@ $_VERB['currency_symbols'] = array(
   "USD" => "$"
 );
 
-$_VERB['recaptcha'] = array(
+$_VAE['recaptcha'] = array(
   'public' => '6LdnAwUAAAAAAKkRHsF2xiQJ_IEqYOkf8NUux3uk',
   'private' => '6LdnAwUAAAAAANP63-wrr83KBL7byxb4diiMJT1_'
 );
 
-$_VERB['store']['payment_methods'] = array(
+$_VAE['store']['payment_methods'] = array(
   'authorize_net' => array('name' => "Credit Card", 'credit_card' => true), 
   'braintree' => array('name' => "Credit Card", 'credit_card' => true), 
   'card_stream' => array('name' => "Credit Card", 'credit_card' => true), 
@@ -396,7 +396,7 @@ $_VERB['store']['payment_methods'] = array(
   'efsnet' => array('name' => "Credit Card", 'credit_card' => true), 
   'eway' => array('name' => "Credit Card", 'credit_card' => true), 
   'exact' => array('name' => "Credit Card", 'credit_card' => true), 
-  'google_checkout' => array('name' => "Google Checkout", 'callback' => '_verb_store_payment_google_checkout_callback', 'ipn' => '_verb_store_payment_google_checkout_ipn'), 
+  'google_checkout' => array('name' => "Google Checkout", 'callback' => '_vae_store_payment_google_checkout_callback', 'ipn' => '_vae_store_payment_google_checkout_ipn'), 
   'linkpoint' => array('name' => "Credit Card", 'credit_card' => true), 
   'check' => array('name' => "Check"), 
   'money_order' => array('name' => "Money Order"), 
@@ -410,7 +410,7 @@ $_VERB['store']['payment_methods'] = array(
   'pay_secure' => array('name' => "Credit Card", 'credit_card' => true), 
   'payflow_pro' => array('name' => "Credit Card", 'credit_card' => true), 
   'payment_express' => array('name' => "Credit Card", 'credit_card' => true), 
-  'paypal' => array('name' => "PayPal", 'callback' => '_verb_store_payment_paypal_callback', 'ipn' => '_verb_store_payment_paypal_ipn'), 
+  'paypal' => array('name' => "PayPal", 'callback' => '_vae_store_payment_paypal_callback', 'ipn' => '_vae_store_payment_paypal_ipn'), 
   'paypal_direct_payment' => array('name' => "Credit Card", 'credit_card' => true), 
   'paypal_express_checkout' => array('name' => "PayPal Express Checkout"), 
   'psigate' => array('name' => "Credit Card", 'credit_card' => true), 
@@ -440,38 +440,38 @@ $_VERB['store']['payment_methods'] = array(
 
 
 
-$_VERB['tags'] = array (
+$_VAE['tags'] = array (
   'a' => 
   array (
-    'handler' => '_verb_render_a',
+    'handler' => '_vae_render_a',
     'html' => 'a',
   ),
   'a_if' => 
   array (
-    'handler' => '_verb_render_a_if',
+    'handler' => '_vae_render_a_if',
     'html' => 'a',
   ),
   'asset' => 
   array (
-    'handler' => '_verb_render_asset',
+    'handler' => '_vae_render_asset',
   ),
   'captcha' => 
   array (
-    'handler' => '_verb_render_captcha',
+    'handler' => '_vae_render_captcha',
     'html' => 'input',
   ),
   'cdn' => 
   array (
-    'handler' => '_verb_render_cdn'
+    'handler' => '_vae_render_cdn'
   ),
   'checkbox' => 
   array (
-    'handler' => '_verb_render_checkbox',
+    'handler' => '_vae_render_checkbox',
     'html' => 'input',
   ),
   'collection' => 
   array (
-    'handler' => '_verb_render_collection',
+    'handler' => '_vae_render_collection',
     'required' => 
     array (
       0 => 'path',
@@ -479,13 +479,13 @@ $_VERB['tags'] = array (
   ),
   'country_select' => 
   array (
-    'handler' => '_verb_render_country_select',
+    'handler' => '_vae_render_country_select',
     'html' => 'select',
   ),
   'create' => 
   array (
-    'callback' => '_verb_callback_create',
-    'handler' => '_verb_render_create',
+    'callback' => '_vae_callback_create',
+    'handler' => '_vae_render_create',
     'required' => 
     array (
       0 => 'path',
@@ -495,12 +495,12 @@ $_VERB['tags'] = array (
   ),
   'date_select' => 
   array (
-    'handler' => '_verb_render_date_select',
+    'handler' => '_vae_render_date_select',
     'html' => 'select',
   ),
   'date_selection' => 
   array (
-    'handler' => '_verb_render_date_selection',
+    'handler' => '_vae_render_date_selection',
     'html' => 'a',
     'required' => 
     array (
@@ -510,11 +510,11 @@ $_VERB['tags'] = array (
   ),
   'debug' => 
   array (
-    'handler' => '_verb_render_debug',
+    'handler' => '_vae_render_debug',
   ),
   'disqus' => 
   array (
-    'handler' => '_verb_render_disqus',
+    'handler' => '_vae_render_disqus',
     'required' => 
     array (
       0 => 'shortname',
@@ -522,19 +522,19 @@ $_VERB['tags'] = array (
   ),
   'divider' => 
   array (
-    'handler' => '_verb_render_divider',
+    'handler' => '_vae_render_divider',
   ),
   'else' => 
   array (
-    'handler' => '_verb_render_else',
+    'handler' => '_vae_render_else',
   ),
   'elseif' => 
   array (
-    'handler' => '_verb_render_elseif',
+    'handler' => '_vae_render_elseif',
   ),
   'facebook_comments' => 
   array (
-    'handler' => '_verb_render_facebook_comments',
+    'handler' => '_vae_render_facebook_comments',
     'required' => 
     array (
       0 => 'appid',
@@ -542,12 +542,12 @@ $_VERB['tags'] = array (
   ),
   'facebook_like' => 
   array (
-    'handler' => '_verb_render_facebook_like',
+    'handler' => '_vae_render_facebook_like',
   ),
   'file' => 
   array (
-    'callback' => '_verb_callback_file',
-    'handler' => '_verb_render_file',
+    'callback' => '_vae_callback_file',
+    'handler' => '_vae_render_file',
     'html' => 'a',
     'required' => 
     array (
@@ -557,12 +557,12 @@ $_VERB['tags'] = array (
   ),
   'file_field' => 
   array (
-    'handler' => '_verb_render_file_field',
+    'handler' => '_vae_render_file_field',
     'html' => 'input',
   ),
   'fileurl' => 
   array (
-    'handler' => '_verb_render_fileurl',
+    'handler' => '_vae_render_fileurl',
     'required' => 
     array (
       0 => 'path',
@@ -570,11 +570,11 @@ $_VERB['tags'] = array (
   ),
   'flash' => 
   array (
-    'handler' => '_verb_render_flash',
+    'handler' => '_vae_render_flash',
   ),
   'form' => 
   array (
-    'handler' => '_verb_render_form',
+    'handler' => '_vae_render_form',
     'html' => 'form',
     'required' => 
     array (
@@ -582,8 +582,8 @@ $_VERB['tags'] = array (
   ),
   'formmail' => 
   array (
-    'callback' => '_verb_callback_formmail',
-    'handler' => '_verb_render_formmail',
+    'callback' => '_vae_callback_formmail',
+    'handler' => '_vae_render_formmail',
     'html' => 'form',
     'required' => 
     array (
@@ -593,11 +593,11 @@ $_VERB['tags'] = array (
   ),
   'fragment' => 
   array (
-    'handler' => '_verb_render_fragment',
+    'handler' => '_vae_render_fragment',
   ),
   'gravatar' => 
   array (
-    'handler' => '_verb_render_gravatar',
+    'handler' => '_vae_render_gravatar',
     'html' => 'img',
     'required' => 
     array (
@@ -606,37 +606,37 @@ $_VERB['tags'] = array (
   ),
   'hidden_field' => 
   array (
-    'handler' => '_verb_render_hidden_field',
+    'handler' => '_vae_render_hidden_field',
     'html' => 'input',
   ),
   'if' => 
   array (
-    'handler' => '_verb_render_if',
+    'handler' => '_vae_render_if',
   ),
   'if_backstage' => 
   array (
-    'handler' => '_verb_render_if_backstage',
+    'handler' => '_vae_render_if_backstage',
   ),
   'if_paginate' => 
   array (
-    'handler' => '_verb_render_if_paginate',
+    'handler' => '_vae_render_if_paginate',
   ),
   'if_time' => 
   array (
-    'handler' => '_verb_render_if_time',
+    'handler' => '_vae_render_if_time',
   ),
   'img' => 
   array (
-    'handler' => '_verb_render_img',
+    'handler' => '_vae_render_img',
     'html' => 'img'
   ),
   'imurl' => 
   array (
-    'handler' => '_verb_render_img'
+    'handler' => '_vae_render_img'
   ),
   'module' => 
   array (
-    'handler' => '_verb_render_template',
+    'handler' => '_vae_render_template',
     'required' => 
     array (
       0 => 'filename',
@@ -644,7 +644,7 @@ $_VERB['tags'] = array (
   ),
   'nested_collection' => 
   array (
-    'handler' => '_verb_render_nested_collection',
+    'handler' => '_vae_render_nested_collection',
     'required' => 
     array (
       0 => 'path',
@@ -652,12 +652,12 @@ $_VERB['tags'] = array (
   ),
   'nested_divider' => 
   array (
-    'handler' => '_verb_render_divider',
+    'handler' => '_vae_render_divider',
   ),
   'newsletter' => 
   array (
-    'callback' => '_verb_callback_newsletter',
-    'handler' => '_verb_render_newsletter',
+    'callback' => '_vae_callback_newsletter',
+    'handler' => '_vae_render_newsletter',
     'html' => 'form',
     'required' => 
     array (
@@ -667,11 +667,11 @@ $_VERB['tags'] = array (
   ),
   'nowidows' => 
   array (
-    'handler' => '_verb_render_nowidows',
+    'handler' => '_vae_render_nowidows',
   ),
   'option_select' => 
   array (
-    'handler' => '_verb_render_option_select',
+    'handler' => '_vae_render_option_select',
     'html' => 'select',
     'required' => 
     array (
@@ -682,51 +682,51 @@ $_VERB['tags'] = array (
   ),
   'pdf' => 
   array (
-    'handler' => '_verb_render_pdf',
+    'handler' => '_vae_render_pdf',
     'required' => 
     array (
     ),
   ),
   'pagination' => 
   array (
-    'handler' => '_verb_render_pagination',
+    'handler' => '_vae_render_pagination',
     'html' => 'a',
   ),
   'password_field' => 
   array (
-    'handler' => '_verb_render_password_field',
+    'handler' => '_vae_render_password_field',
     'html' => 'input',
   ),
   'php' => 
   array (
-    'handler' => '_verb_render_php',
+    'handler' => '_vae_render_php',
   ),
   'radio' => 
   array (
-    'handler' => '_verb_render_radio',
+    'handler' => '_vae_render_radio',
     'html' => 'input',
   ),
   'repeat' => 
   array (
-    'handler' => '_verb_render_repeat',
+    'handler' => '_vae_render_repeat',
   ),
   'require_permalink' => 
   array (
-    'handler' => '_verb_render_require_permalink',
+    'handler' => '_vae_render_require_permalink',
     'required' => 
     array (
     ),
   ),
   'require_ssl' => 
   array (
-    'handler' => '_verb_render_require_ssl',
+    'handler' => '_vae_render_require_ssl',
     'required' => 
     array (
     ),
   ),
   'rss' => 
   array (
-    'handler' => '_verb_render_rss',
+    'handler' => '_vae_render_rss',
     'required' => 
     array (
       0 => 'path',
@@ -736,7 +736,7 @@ $_VERB['tags'] = array (
   ),
   'section' => 
   array (
-    'handler' => '_verb_render_section',
+    'handler' => '_vae_render_section',
     'required' => 
     array (
       0 => 'path',
@@ -744,12 +744,12 @@ $_VERB['tags'] = array (
   ),
   'select' => 
   array (
-    'handler' => '_verb_render_select',
+    'handler' => '_vae_render_select',
     'html' => 'select',
   ),
   'set' => 
   array (
-    'handler' => '_verb_render_set',
+    'handler' => '_vae_render_set',
     'required' => 
     array (
       0 => 'name',
@@ -757,12 +757,12 @@ $_VERB['tags'] = array (
   ),
   'set_default' => 
   array (
-    'handler' => '_verb_render_set_default',
+    'handler' => '_vae_render_set_default',
     'required' => array('name')
   ),
   'session_dump' => 
   array (
-    'handler' => '_verb_render_session_dump',
+    'handler' => '_vae_render_session_dump',
     'required' => 
     array (
       0 => 'key',
@@ -770,16 +770,16 @@ $_VERB['tags'] = array (
   ),
   'site_seal' => 
   array (
-    'handler' => '_verb_render_site_seal',
+    'handler' => '_vae_render_site_seal',
   ),
   'state_select' => 
   array (
-    'handler' => '_verb_render_state_select',
+    'handler' => '_vae_render_state_select',
     'html' => 'select',
   ),
   'template' => 
   array (
-    'handler' => '_verb_render_template',
+    'handler' => '_vae_render_template',
     'required' => 
     array (
       0 => 'filename',
@@ -787,107 +787,107 @@ $_VERB['tags'] = array (
   ),
   'text' => 
   array (
-    'handler' => '_verb_render_text',
+    'handler' => '_vae_render_text',
     'required' => 
     array (
     ),
   ),
   'text_area' => 
   array (
-    'handler' => '_verb_render_text_area',
+    'handler' => '_vae_render_text_area',
     'html' => 'textarea',
   ),
   'text_field' => 
   array (
-    'handler' => '_verb_render_text_field',
+    'handler' => '_vae_render_text_field',
     'html' => 'input',
   ),
   'unsubscribe' => 
   array (
-    'handler' => '_verb_render_unsubscribe',
+    'handler' => '_vae_render_unsubscribe',
   ),
   'update' => 
   array (
-    'callback' => '_verb_callback_update',
-    'handler' => '_verb_render_update',
+    'callback' => '_vae_callback_update',
+    'handler' => '_vae_render_update',
     'filename' => 'callback.php',
     'html' => 'form',
   ),
   'video' => 
   array (
-    'handler' => '_verb_render_video',
+    'handler' => '_vae_render_video',
   ),
   'yield' => 
   array (
-    'handler' => '_verb_render_yield',
+    'handler' => '_vae_render_yield',
   ),
   'zip' => 
   array (
-    'callback' => '_verb_callback_zip',
-    'handler' => '_verb_render_zip',
+    'callback' => '_vae_callback_zip',
+    'handler' => '_vae_render_zip',
     'html' => 'a',
     'filename' => 'callback.php',
   ),
   'store_add_to_cart' => 
   array (
-    'callback' => '_verb_store_callback_add_to_cart',
-    'handler' => '_verb_store_render_add_to_cart',
+    'callback' => '_vae_store_callback_add_to_cart',
+    'handler' => '_vae_store_render_add_to_cart',
     'html' => 'form',
   ),
   'store_address_delete' => 
   array (
-    'callback' => '_verb_store_callback_address_delete',
+    'callback' => '_vae_store_callback_address_delete',
     'html' => 'a',
-    'handler' => '_verb_store_render_address_delete',
+    'handler' => '_vae_store_render_address_delete',
   ),
   'store_address_select' => 
   array (
-    'callback' => '_verb_store_callback_address_select',
-    'handler' => '_verb_store_render_address_select',
+    'callback' => '_vae_store_callback_address_select',
+    'handler' => '_vae_store_render_address_select',
     'html' => 'select',
   ),
   'store_addresses' => 
   array (
-    'handler' => '_verb_store_render_addresses',
+    'handler' => '_vae_store_render_addresses',
   ),
   'store_bundled_item' => 
   array (
-    'handler' => '_verb_store_render_bundled_item',
+    'handler' => '_vae_store_render_bundled_item',
   ),
   'store_cart' => 
   array (
-    'callback' => '_verb_store_callback_cart',
-    'handler' => '_verb_store_render_cart',
+    'callback' => '_vae_store_callback_cart',
+    'handler' => '_vae_store_render_cart',
     'html' => 'form',
   ),
   'store_cart_items' => 
   array (
-    'handler' => '_verb_store_render_cart_items',
+    'handler' => '_vae_store_render_cart_items',
   ),
   'store_cart_discount' => 
   array (
-    'handler' => '_verb_store_render_cart_discount',
+    'handler' => '_vae_store_render_cart_discount',
   ),
   'store_cart_shipping' => 
   array (
-    'handler' => '_verb_store_render_cart_shipping',
+    'handler' => '_vae_store_render_cart_shipping',
   ),
   'store_cart_subtotal' => 
   array (
-    'handler' => '_verb_store_render_cart_subtotal',
+    'handler' => '_vae_store_render_cart_subtotal',
   ),
   'store_cart_tax' => 
   array (
-    'handler' => '_verb_store_render_cart_tax',
+    'handler' => '_vae_store_render_cart_tax',
   ),
   'store_cart_total' => 
   array (
-    'handler' => '_verb_store_render_cart_total',
+    'handler' => '_vae_store_render_cart_total',
   ),
   'store_checkout' => 
   array (
-    'callback' => '_verb_store_callback_checkout',
-    'handler' => '_verb_store_render_checkout',
+    'callback' => '_vae_store_callback_checkout',
+    'handler' => '_vae_store_render_checkout',
     'html' => 'form',
     'required' => 
     array (
@@ -897,68 +897,68 @@ $_VERB['tags'] = array (
   ),
   'store_credit_card' => 
   array (
-    'handler' => '_verb_store_render_if_credit_card',
+    'handler' => '_vae_store_render_if_credit_card',
   ),
   'store_credit_card_select' => 
   array (
-    'handler' => '_verb_store_render_credit_card_select',
+    'handler' => '_vae_store_render_credit_card_select',
     'html' => 'select',
   ),
   'store_currency' => 
   array (
-    'handler' => '_verb_store_render_currency',
+    'handler' => '_vae_store_render_currency',
   ),
   'store_currency_select' => 
   array (
-    'callback' => '_verb_store_callback_currency_select',
-    'handler' => '_verb_store_render_currency_select',
+    'callback' => '_vae_store_callback_currency_select',
+    'handler' => '_vae_store_render_currency_select',
     'html' => 'select',
   ),
   'store_discount' => 
   array (
-    'callback' => '_verb_store_callback_discount',
-    'handler' => '_verb_store_render_discount',
+    'callback' => '_vae_store_callback_discount',
+    'handler' => '_vae_store_render_discount',
     'html' => 'form',
   ),
   'store_forgot' => 
   array (
-    'callback' => '_verb_store_callback_forgot',
-    'handler' => '_verb_store_render_forgot',
+    'callback' => '_vae_store_callback_forgot',
+    'handler' => '_vae_store_render_forgot',
     'html' => 'form',
   ),
   'store_google_checkout' => 
   array (
-    'callback' => '_verb_store_callback_google_checkout',
-    'handler' => '_verb_store_render_google_checkout',
+    'callback' => '_vae_store_callback_google_checkout',
+    'handler' => '_vae_store_render_google_checkout',
     'html' => 'img',
   ),
   'store_if_bank_transfer' => 
   array (
-    'handler' => '_verb_store_render_if_bank_transfer',
+    'handler' => '_vae_store_render_if_bank_transfer',
   ),
   'store_if_check' => 
   array (
-    'handler' => '_verb_store_render_if_check',
+    'handler' => '_vae_store_render_if_check',
   ),
   'store_if_credit_card' => 
   array (
-    'handler' => '_verb_store_render_if_credit_card',
+    'handler' => '_vae_store_render_if_credit_card',
   ),
   'store_if_currency' => 
   array (
-    'handler' => '_verb_store_render_if_currency',
+    'handler' => '_vae_store_render_if_currency',
   ),
   'store_if_digital_downloads' => 
   array (
-    'handler' => '_verb_store_render_if_digital_downloads',
+    'handler' => '_vae_store_render_if_digital_downloads',
   ),
   'store_if_discount' => 
   array (
-    'handler' => '_verb_store_render_if_discount',
+    'handler' => '_vae_store_render_if_discount',
   ),
   'store_if_field_overridden' => 
   array (
-    'handler' => '_verb_store_render_if_field_overridden',
+    'handler' => '_vae_store_render_if_field_overridden',
     'required' => 
     array (
       0 => 'field',
@@ -967,130 +967,130 @@ $_VERB['tags'] = array (
   ),
   'store_if_logged_in' => 
   array (
-    'handler' => '_verb_store_render_if_logged_in',
+    'handler' => '_vae_store_render_if_logged_in',
   ),
   'store_if_money_order' => 
   array (
-    'handler' => '_verb_store_render_if_money_order',
+    'handler' => '_vae_store_render_if_money_order',
   ),
   'store_if_pay_in_store' => 
   array (
-    'handler' => '_verb_store_render_if_pay_in_store',
+    'handler' => '_vae_store_render_if_pay_in_store',
   ),
   'store_if_paypal' => 
   array (
-    'handler' => '_verb_store_render_if_paypal',
+    'handler' => '_vae_store_render_if_paypal',
   ),
   'store_if_paypal_express_checkout' => 
   array (
-    'handler' => '_verb_store_render_if_paypal_express_checkout',
+    'handler' => '_vae_store_render_if_paypal_express_checkout',
   ),
   'store_if_recent_order_bank_transfer' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_bank_transfer',
+    'handler' => '_vae_store_render_if_recent_order_bank_transfer',
   ),
   'store_if_recent_order_check' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_check',
+    'handler' => '_vae_store_render_if_recent_order_check',
   ),
   'store_if_recent_order_credit_card' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_credit_card',
+    'handler' => '_vae_store_render_if_recent_order_credit_card',
   ),
   'store_if_recent_order_digital' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_digital',
+    'handler' => '_vae_store_render_if_recent_order_digital',
   ),
   'store_if_recent_order_money_order' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_money_order',
+    'handler' => '_vae_store_render_if_recent_order_money_order',
   ),
   'store_if_recent_order_pay_in_store' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_pay_in_store',
+    'handler' => '_vae_store_render_if_recent_order_pay_in_store',
   ),
   'store_if_recent_order_paypal' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_paypal',
+    'handler' => '_vae_store_render_if_recent_order_paypal',
   ),
   'store_if_recent_order_paypal_express_checkout' => 
   array (
-    'handler' => '_verb_store_render_if_recent_order_paypal_express_checkout',
+    'handler' => '_vae_store_render_if_recent_order_paypal_express_checkout',
   ),
   'store_if_shippable' => 
   array (
-    'handler' => '_verb_store_render_if_shippable',
+    'handler' => '_vae_store_render_if_shippable',
   ),
   'store_if_tax' => 
   array (
-    'handler' => '_verb_store_render_if_tax',
+    'handler' => '_vae_store_render_if_tax',
   ),
   'store_if_user' => 
   array (
-    'handler' => '_verb_store_render_if_user',
+    'handler' => '_vae_store_render_if_user',
   ),
   'store_item_if_discount' => 
   array (
-    'handler' => '_verb_store_render_item_if_discount',
+    'handler' => '_vae_store_render_item_if_discount',
   ),
   'store_item_price' => 
   array (
-    'handler' => '_verb_store_render_item_price',
+    'handler' => '_vae_store_render_item_price',
   ),
   'store_login' => 
   array (
-    'callback' => '_verb_store_callback_login',
-    'handler' => '_verb_store_render_login',
+    'callback' => '_vae_store_callback_login',
+    'handler' => '_vae_store_render_login',
     'html' => 'form',
   ),
   'store_logout' => 
   array (
-    'callback' => '_verb_store_callback_logout',
+    'callback' => '_vae_store_callback_logout',
     'html' => 'a',
-    'handler' => '_verb_store_render_logout',
+    'handler' => '_vae_store_render_logout',
   ),
   'store_paypal_checkout' => 
   array (
-    'callback' => '_verb_store_callback_paypal_checkout',
-    'handler' => '_verb_store_render_paypal_checkout',
+    'callback' => '_vae_store_callback_paypal_checkout',
+    'handler' => '_vae_store_render_paypal_checkout',
     'html' => 'img',
   ),
   'store_paypal_express_checkout' => 
   array (
-    'callback' => '_verb_store_callback_paypal_express_checkout',
-    'handler' => '_verb_store_render_paypal_express_checkout',
+    'callback' => '_vae_store_callback_paypal_express_checkout',
+    'handler' => '_vae_store_render_paypal_express_checkout',
     'html' => 'img',
   ),
   'store_payment_methods_select' => 
   array (
-    'callback' => '_verb_store_callback_payment_methods_select',
-    'handler' => '_verb_store_render_payment_methods_select',
+    'callback' => '_vae_store_callback_payment_methods_select',
+    'handler' => '_vae_store_render_payment_methods_select',
     'html' => 'select',
   ),
   'store_previous_order_items' => 
   array (
-    'handler' => '_verb_store_render_previous_order_items',
+    'handler' => '_vae_store_render_previous_order_items',
   ),
   'store_previous_order' => 
   array (
-    'handler' => '_verb_store_render_previous_order',
+    'handler' => '_vae_store_render_previous_order',
   ),
   'store_previous_orders' => 
   array (
-    'handler' => '_verb_store_render_previous_orders',
+    'handler' => '_vae_store_render_previous_orders',
   ),
   'store_recent_order' => 
   array (
-    'handler' => '_verb_store_render_recent_order',
+    'handler' => '_vae_store_render_recent_order',
   ),
   'store_recent_order_items' => 
   array (
-    'handler' => '_verb_store_render_recent_order_items',
+    'handler' => '_vae_store_render_recent_order_items',
   ),
   'store_register' => 
   array (
-    'callback' => '_verb_store_callback_register',
-    'handler' => '_verb_store_render_register',
+    'callback' => '_vae_store_callback_register',
+    'handler' => '_vae_store_render_register',
     'html' => 'form',
     'required' => 
     array (
@@ -1099,18 +1099,18 @@ $_VERB['tags'] = array (
   ),
   'store_shipping_methods_select' => 
   array (
-    'callback' => '_verb_store_callback_shipping_methods_select',
-    'handler' => '_verb_store_render_shipping_methods_select',
+    'callback' => '_vae_store_callback_shipping_methods_select',
+    'handler' => '_vae_store_render_shipping_methods_select',
     'html' => 'select',
   ),
   'store_user' => 
   array (
-    'handler' => '_verb_store_render_user',
+    'handler' => '_vae_store_render_user',
   ),
   'users_forgot' => 
   array (
-    'callback' => '_verb_users_callback_forgot',
-    'handler' => '_verb_users_render_forgot',
+    'callback' => '_vae_users_callback_forgot',
+    'handler' => '_vae_users_render_forgot',
     'html' => 'form',
     'required' => 
     array (
@@ -1122,13 +1122,13 @@ $_VERB['tags'] = array (
   ),
   'users_if_logged_in' => 
   array (
-    'handler' => '_verb_users_render_if_logged_in',
+    'handler' => '_vae_users_render_if_logged_in',
     'filename' => 'users.php',
   ),
   'users_login' => 
   array (
-    'callback' => '_verb_users_callback_login',
-    'handler' => '_verb_users_render_login',
+    'callback' => '_vae_users_callback_login',
+    'handler' => '_vae_users_render_login',
     'html' => 'form',
     'required' => 
     array (
@@ -1139,15 +1139,15 @@ $_VERB['tags'] = array (
   ),
   'users_logout' => 
   array (
-    'callback' => '_verb_users_callback_logout',
+    'callback' => '_vae_users_callback_logout',
     'html' => 'a',
-    'handler' => '_verb_users_render_logout',
+    'handler' => '_vae_users_render_logout',
     'filename' => 'users.php',
   ),
   'users_register' => 
   array (
-    'callback' => '_verb_users_callback_register',
-    'handler' => '_verb_users_render_register',
+    'callback' => '_vae_users_callback_register',
+    'handler' => '_vae_users_render_register',
     'html' => 'form',
     'required' => 
     array (
@@ -1158,127 +1158,127 @@ $_VERB['tags'] = array (
   ),
   'store_if_in_cart' => 
   array (
-    'handler' => '_verb_store_render_if_in_cart',
+    'handler' => '_vae_store_render_if_in_cart',
   ),
 );
-$_VERB['callbacks'] = array (
+$_VAE['callbacks'] = array (
   'create' => 
   array (
-    'callback' => '_verb_callback_create',
+    'callback' => '_vae_callback_create',
     'filename' => 'callback.php',
   ),
   'file' => 
   array (
-    'callback' => '_verb_callback_file',
+    'callback' => '_vae_callback_file',
     'filename' => 'callback.php',
   ),
   'formmail' => 
   array (
-    'callback' => '_verb_callback_formmail',
+    'callback' => '_vae_callback_formmail',
     'filename' => 'callback.php',
   ),
   'newsletter' => 
   array (
-    'callback' => '_verb_callback_newsletter',
+    'callback' => '_vae_callback_newsletter',
     'filename' => 'callback.php',
   ),
   'update' => 
   array (
-    'callback' => '_verb_callback_update',
+    'callback' => '_vae_callback_update',
     'filename' => 'callback.php',
   ),
   'zip' => 
   array (
-    'callback' => '_verb_callback_zip',
+    'callback' => '_vae_callback_zip',
     'filename' => 'callback.php',
   ),
   'store_add_to_cart' => 
   array (
-    'callback' => '_verb_store_callback_add_to_cart',
+    'callback' => '_vae_store_callback_add_to_cart',
   ),
   'store_address_delete' => 
   array (
-    'callback' => '_verb_store_callback_address_delete',
+    'callback' => '_vae_store_callback_address_delete',
   ),
   'store_address_select' => 
   array (
-    'callback' => '_verb_store_callback_address_select',
+    'callback' => '_vae_store_callback_address_select',
   ),
   'store_cart' => 
   array (
-    'callback' => '_verb_store_callback_cart',
+    'callback' => '_vae_store_callback_cart',
   ),
   'store_checkout' => 
   array (
-    'callback' => '_verb_store_callback_checkout',
+    'callback' => '_vae_store_callback_checkout',
   ),
   'store_currency_select' => 
   array (
-    'callback' => '_verb_store_callback_currency_select',
+    'callback' => '_vae_store_callback_currency_select',
   ),
   'store_discount' => 
   array (
-    'callback' => '_verb_store_callback_discount',
+    'callback' => '_vae_store_callback_discount',
   ),
   'store_forgot' => 
   array (
-    'callback' => '_verb_store_callback_forgot',
+    'callback' => '_vae_store_callback_forgot',
   ),
   'store_google_checkout' => 
   array (
-    'callback' => '_verb_store_callback_google_checkout',
+    'callback' => '_vae_store_callback_google_checkout',
   ),
   'store_login' => 
   array (
-    'callback' => '_verb_store_callback_login',
+    'callback' => '_vae_store_callback_login',
   ),
   'store_logout' => 
   array (
-    'callback' => '_verb_store_callback_logout',
+    'callback' => '_vae_store_callback_logout',
   ),
   'store_paypal_checkout' => 
   array (
-    'callback' => '_verb_store_callback_paypal_checkout',
+    'callback' => '_vae_store_callback_paypal_checkout',
   ),
   'store_paypal_express_checkout' => 
   array (
-    'callback' => '_verb_store_callback_paypal_express_checkout',
+    'callback' => '_vae_store_callback_paypal_express_checkout',
   ),
   'store_payment_methods_select' => 
   array (
-    'callback' => '_verb_store_callback_payment_methods_select',
+    'callback' => '_vae_store_callback_payment_methods_select',
   ),
   'store_register' => 
   array (
-    'callback' => '_verb_store_callback_register',
+    'callback' => '_vae_store_callback_register',
   ),
   'store_shipping_methods_select' => 
   array (
-    'callback' => '_verb_store_callback_shipping_methods_select',
+    'callback' => '_vae_store_callback_shipping_methods_select',
   ),
   'users_forgot' => 
   array (
-    'callback' => '_verb_users_callback_forgot',
+    'callback' => '_vae_users_callback_forgot',
     'filename' => 'users.php',
   ),
   'users_login' => 
   array (
-    'callback' => '_verb_users_callback_login',
+    'callback' => '_vae_users_callback_login',
     'filename' => 'users.php',
   ),
   'users_logout' => 
   array (
-    'callback' => '_verb_users_callback_logout',
+    'callback' => '_vae_users_callback_logout',
     'filename' => 'users.php',
   ),
   'users_register' => 
   array (
-    'callback' => '_verb_users_callback_register',
+    'callback' => '_vae_users_callback_register',
     'filename' => 'users.php',
   ),
 );
 
-$_VERB['form_items'] = array (
+$_VAE['form_items'] = array (
   'captcha' => 1,
   'checkbox' => 1,
   'country_select' => 1,

@@ -2,9 +2,9 @@
  
 require_once(dirname(__FILE__) . "/../vendor/dompdf-0.5.1/dompdf_config.inc.php");
 
-function _verb_pdf() {
-  $html = _verb_proxy($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'] . "&__skip_pdf=1", true);
-  if (strstr($html, '<html><head><title>Verb Error</title>')) {
+function _vae_pdf() {
+  $html = _vae_proxy($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'] . "&__skip_pdf=1", true);
+  if (strstr($html, '<html><head><title>Vae Error</title>')) {
     echo $html;
     die();
   }
@@ -26,7 +26,7 @@ function _verb_pdf() {
   try {
     @$dompdf->render();
   } catch(Exception $e) {
-    _verb_error("Couldn't render PDF.  Please double check that your HTML is valid.  Make sure that it passes the <a href='http://validator.w3.org/'>HTML Validation test</a>.");
+    _vae_error("Couldn't render PDF.  Please double check that your HTML is valid.  Make sure that it passes the <a href='http://validator.w3.org/'>HTML Validation test</a>.");
   }
   $dompdf->stream($filename . ".pdf");
   die();

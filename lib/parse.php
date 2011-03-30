@@ -1,12 +1,12 @@
 <?php
 
-function _verb_contains_yield(&$tag) {
+function _vae_contains_yield(&$tag) {
   $tags = &$tag['tags'];
   $count = count($tags);
   for ($i = 0; $i < $count; $i++) {
     $tag = &$tags[$i];
     if (count($tag['tags'])) {
-      if (_verb_contains_yield($tag)) return true;
+      if (_vae_contains_yield($tag)) return true;
     }
     if ($tag['type'] == 'yield') {
       return true;
@@ -15,7 +15,7 @@ function _verb_contains_yield(&$tag) {
   return false;
 }
 
-function _verb_find_fragment($parent_tag, $fragment) {
+function _vae_find_fragment($parent_tag, $fragment) {
   $tags = &$parent_tag['tags'];
   $count = count($tags);
   for ($i = 0; $i < $count; $i++) {
@@ -27,20 +27,20 @@ function _verb_find_fragment($parent_tag, $fragment) {
   return false;
 }
 
-function _verb_merge_yield(&$parse_tree, &$nested_tags, &$render_context) {
+function _vae_merge_yield(&$parse_tree, &$nested_tags, &$render_context) {
   $tags = &$parse_tree['tags'];
   $count = count($tags);
   for ($i = 0; $i < $count; $i++) {
     $tag = &$tags[$i];
     if (count($tag['tags']) && $tag['type'] != 'nested_divider') {
-      _verb_merge_yield($tag, $nested_tags, $render_context);
+      _vae_merge_yield($tag, $nested_tags, $render_context);
     }
     if ($tag['type'] == 'flash') {
       $render_context->set_in_place("has_flash_tag" . $tag['attrs']['flash']);
     }
     if ($tag['type'] == 'yield') {
       if (strlen($tag['attrs']['for'])) {
-        $fragment = _verb_find_fragment($nested_tags, $tag['attrs']['for']);
+        $fragment = _vae_find_fragment($nested_tags, $tag['attrs']['for']);
         if ($fragment !== false && count($fragment['tags'])) {
           array_splice($tags, $i, 1, $fragment['tags']);
           $i += count($fragment['tags']) - 1;
@@ -56,48 +56,48 @@ function _verb_merge_yield(&$parse_tree, &$nested_tags, &$render_context) {
   return array($parse_tree, $render_context);
 }
 
-function _verb_parse_verbml($verbml, $filename = null, $nested_tags = null, $render_context = null) {
-  global $_VERB;
-  $cache_key = "verbml" . $filename . $_SERVER['DOCUMENT_ROOT'] . md5($verbml);
+function _vae_parse_vaeml($vaeml, $filename = null, $nested_tags = null, $render_context = null) {
+  global $_VAE;
+  $cache_key = "vaeml" . $filename . $_SERVER['DOCUMENT_ROOT'] . md5($vaeml);
   if ($render_context == null) $render_context = new Context();
-  if (isset($_VERB['verbml_cache'][$cache_key])) $cached = $_VERB['verbml_cache'][$cache_key];
-  elseif ($_REQUEST['__debug'] != "parse") $cached = memcache_get($_VERB['memcached'], $cache_key);
-  if ($cached) return _verb_merge_yield($cached, $nested_tags, $render_context);
+  if (isset($_VAE['vaeml_cache'][$cache_key])) $cached = $_VAE['vaeml_cache'][$cache_key];
+  elseif ($_REQUEST['__debug'] != "parse") $cached = memcache_get($_VAE['memcached'], $cache_key);
+  if ($cached) return _vae_merge_yield($cached, $nested_tags, $render_context);
   if (substr($filename, -5) == ".haml" || substr($filename, -9) == ".haml.php") {
     require_once(dirname(__FILE__) . "/haml.php");
-    $verbml = _verb_haml($verbml);
-    _verb_tick("parse Haml");
+    $vaeml = _vae_haml($vaeml);
+    _vae_tick("parse Haml");
   }
-  $parser = new VerbMLParser($verbml, $filename);
+  $parser = new VaeMLParser($vaeml, $filename);
   $res = $parser->parse();
   if ($res === false) return false;
   $par_tag = array('tags' => $res);
-  memcache_set($_VERB['memcached'], $cache_key, $par_tag);
-  $_VERB['verbml_cache'][$cache_key] = $par_tag;
-  return _verb_merge_yield($par_tag, $nested_tags, $render_context);
+  memcache_set($_VAE['memcached'], $cache_key, $par_tag);
+  $_VAE['vaeml_cache'][$cache_key] = $par_tag;
+  return _vae_merge_yield($par_tag, $nested_tags, $render_context);
 }
 
-function _verb_parser_mask_errors($errno, $error_string) {
-  global $_VERB;
+function _vae_parser_mask_errors($errno, $error_string) {
+  global $_VAE;
   $e = str_replace(array(
       "DOMDocument::loadXML() [<a href='domdocument.loadxml'>domdocument.loadxml</a>]: ", 
-      " in tag verbml line 1 in Entity", 
-      " and verbml in Entity", 
+      " in tag vaeml line 1 in Entity", 
+      " and vaeml in Entity", 
       " in Entity", 
       ), "", $error_string);
-  if (!isset($_VERB['parser_errors'])) $_VERB['parser_errors'] = "";
-  $_VERB['parser_errors'] .= "<li>" . $e . "</li>";
+  if (!isset($_VAE['parser_errors'])) $_VAE['parser_errors'] = "";
+  $_VAE['parser_errors'] .= "<li>" . $e . "</li>";
 }
 
-class VerbMLParser {
+class VaeMLParser {
   
-  function __construct($verbml, $filename) {
+  function __construct($vaeml, $filename) {
     $this->filename = $filename;
-    $this->verbml = $verbml;
+    $this->vaeml = $vaeml;
   }
   
-  function dom_to_verb($node) {
-    global $_VERB;
+  function dom_to_vae($node) {
+    global $_VAE;
     $out = array();
     foreach ($node->childNodes as $child) {
       if ($child->nodeType == XML_TEXT_NODE) {
@@ -107,16 +107,16 @@ class VerbMLParser {
         foreach ($child->attributes as $attrName => $attrNode) {
           $attrs[$attrName] = $this->fix($attrNode->nodeValue);
         }
-        if (count($_VERB['tags'][$child->nodeName]['required'])) {
-          foreach ($_VERB['tags'][$child->nodeName]['required'] as $req) {
-            if (!strlen($attrs[$req])) return _verb_error("Tag <span class='c'>&lt;v:" . _verb_h($child->nodeName) . "&gt;</span> is missing the required <span class='c'>" . _verb_h($req) . "=</span> attribute.", "", $this->filename);
+        if (count($_VAE['tags'][$child->nodeName]['required'])) {
+          foreach ($_VAE['tags'][$child->nodeName]['required'] as $req) {
+            if (!strlen($attrs[$req])) return _vae_error("Tag <span class='c'>&lt;v:" . _vae_h($child->nodeName) . "&gt;</span> is missing the required <span class='c'>" . _vae_h($req) . "=</span> attribute.", "", $this->filename);
           }
         }
-        $tags = $this->dom_to_verb($child);
+        $tags = $this->dom_to_vae($child);
         if ($tags === false) return false;
         $out[] = array('type' => $child->nodeName, 'tags' => $tags, 'filename' => $this->filename, 'attrs' => $attrs);
       } else {
-        return _verb_error("VerbML Parser encountered an unexpected node.");
+        return _vae_error("VaeML Parser encountered an unexpected node.");
       }
     }
     return $out;
@@ -127,18 +127,18 @@ class VerbMLParser {
   }
   
   function parse() {
-    global $_VERB;
+    global $_VAE;
     $this->i = "_99" . substr(md5(rand()), 0, 6);
-    $verbml = str_replace(array("<", "&","]]>"), array("L" . $this->i, "A" . $this->i, "B" . $this->i), $this->verbml);
-    $verbml = preg_replace_callback("/" . "L" . $this->i . "(|\\/)v:([^> ]*)/", create_function('$m', 'return "<" . $m[1] . str_replace(":", "_", $m[2]);'), $verbml);
+    $vaeml = str_replace(array("<", "&","]]>"), array("L" . $this->i, "A" . $this->i, "B" . $this->i), $this->vaeml);
+    $vaeml = preg_replace_callback("/" . "L" . $this->i . "(|\\/)v:([^> ]*)/", create_function('$m', 'return "<" . $m[1] . str_replace(":", "_", $m[2]);'), $vaeml);
     $dom = new DomDocument();
-    $xml = "<verbml>" . $verbml . "</verbml>";
-    set_error_handler('_verb_parser_mask_errors');
+    $xml = "<vaeml>" . $vaeml . "</vaeml>";
+    set_error_handler('_vae_parser_mask_errors');
     if ($dom->loadXML($xml) == FALSE) {
-      return _verb_error("Could not parse VerbML document.  Please make sure all your VerbML tags are closed properly.  This information may help:<ul>" . $_VERB['parser_errors'] . "</ul>");
+      return _vae_error("Could not parse VaeML document.  Please make sure all your VaeML tags are closed properly.  This information may help:<ul>" . $_VAE['parser_errors'] . "</ul>");
     }
     restore_error_handler();
-    return $this->dom_to_verb($dom->firstChild);
+    return $this->dom_to_vae($dom->firstChild);
   }
   
 }

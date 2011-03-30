@@ -14,11 +14,11 @@ class VaeContext implements ArrayAccess, Countable {
   private $___singleData;
   private $___structure = null;
   
-  public function __construct($context = null, &$query = null, $singleData = null, $dataSource = "verbdb") {
+  public function __construct($context = null, &$query = null, $singleData = null, $dataSource = "vaedb") {
     $this->___context = $context;
     $this->___query = $query;
     $this->___singleData = $singleData;
-    if ($context && get_class($context) == "VerbDbContext" && $context->dataMap) {
+    if ($context && get_class($context) == "VaeDbContext" && $context->dataMap) {
       $this->___addData($context->dataMap);
       if ($context->dataSource) $dataSource = $context->dataSource;
     } 
@@ -38,7 +38,7 @@ class VaeContext implements ArrayAccess, Countable {
     if ($formId) $this->___formId = $formId;
     if ($clone) {
       VaeQuery::___openClient();
-      $this->___context = new VerbDbContext(array('id' => $data['id']));
+      $this->___context = new VaeDbContext(array('id' => $data['id']));
     }
   }
   
@@ -70,7 +70,7 @@ class VaeContext implements ArrayAccess, Countable {
   }
   
   private function ___proxyObject() {
-    if (strlen($this->___singleData) && $this->___dataSource == "verbdb") {
+    if (strlen($this->___singleData) && $this->___dataSource == "vaedb") {
       return $this->___context->get($this->___query, null, false);
     }
     return false;
@@ -94,7 +94,7 @@ class VaeContext implements ArrayAccess, Countable {
   
   public function __toString() {
     if (strlen($this->___singleData)) return (string)$this->___singleData;
-    if ($this->___context && (get_class($this->___context) != "VerbDbContext")) return "";
+    if ($this->___context && (get_class($this->___context) != "VaeDbContext")) return "";
     if (strlen($this->___context->data)) return $this->___context->data;
     return "";
   }
@@ -156,13 +156,13 @@ class VaeContext implements ArrayAccess, Countable {
     if ($query == "structure") return $this->structure();
     if ($query == "totalMatches") return $this->totalMatches();
     if ($query == "type") return $this->type();
-    if (substr($query, 0, 3) == "___") throw new VerbException("", "get() called on an internal property");
+    if (substr($query, 0, 3) == "___") throw new VaeException("", "get() called on an internal property");
     if (substr($query, 0, 1) == "@") {
       $query = substr($query, 1);
       $raiseErrors = false;
     }
     if (isset($this->___locals[$query])) return $this->___locals[$query];
-    list($path, $query) = _verbql_query($query, $this, $options, $raiseErrors);
+    list($path, $query) = _vaeql_query($query, $this, $options, $raiseErrors);
     unset($options['assume_numbers']);
     if (!$path) return $query;
     if ($ret = $this->___findQueryFromCache($query, $options, $useDataCache)) return $ret;
@@ -207,7 +207,7 @@ class VaeContext implements ArrayAccess, Countable {
   public function permalink($leadingSlash = true) {
     $p = $this->___context->permalink;
     if (strlen($p)) return (($leadingSlash) ? "/" : "") . $p;
-    if (is_numeric($this->___formId)) return verb($this->___context->id)->permalink($leadingSlash);
+    if (is_numeric($this->___formId)) return vae($this->___context->id)->permalink($leadingSlash);
     return "";
   }
   
@@ -294,7 +294,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       if (substr($query, 0, 1) == "~") {
         self::___openClient();
         $q = new VaeSqlQuery($responseId, substr($query, 1), $options);
-        return $q->toVerbDbResponse();
+        return $q->toVaeDbResponse();
       }
       for ($i = 0; $i < 10; $i++) {
         try {
@@ -304,12 +304,12 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
           sleep(5);
         }
       }
-      throw new VerbException("", "Could not connect to VerbDBd to get()");
-    } catch (VerbDbInternalError $ie) {
-      if ($raiseErrors) throw new VerbException("", "VerbDB Internal Error: " . $ie->getMessage());
+      throw new VaeException("", "Could not connect to VaeDBd to get()");
+    } catch (VaeDbInternalError $ie) {
+      if ($raiseErrors) throw new VaeException("", "VaeDB Internal Error: " . $ie->getMessage());
       return false;
-    } catch (VerbDbQueryError $qe) {
-      if ($raiseErrors) throw new VerbException("VerbQL Query Error: " . $qe->getMessage());
+    } catch (VaeDbQueryError $qe) {
+      if ($raiseErrors) throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
       return false;
     }
   }
@@ -369,7 +369,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       if ($dataContext) {
         $dataContext->___addQuery($dataQuery);
       } else {
-        throw new VerbException("", "verbdb returned more contexts than I was expecting?!");
+        throw new VaeException("", "vaedb returned more contexts than I was expecting?!");
       }
       $iter->next();
     }
@@ -388,8 +388,8 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     if (!self::$sessionId) self::___openSession();
     try {
       $response = self::$client->createInfo(self::$sessionId, $this->___responseId, $query);
-    } catch (VerbDbQueryError $qe) {
-      throw new VerbException("VerbQL Query Error: " . $qe->getMessage());
+    } catch (VaeDbQueryError $qe) {
+      throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
     }
     $iter = new VaeQueryIterator($this);
     foreach ($response->contexts as $createInfo) {
@@ -413,7 +413,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       }
     }
     if (!$response) {
-      throw new VerbException("", "Could not connect to VerbDBd to data()");
+      throw new VaeException("", "Could not connect to VaeDBd to data()");
     }
     $iter = new VaeQueryIterator($this);
     foreach ($response->contexts as $data) {
@@ -421,7 +421,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       if ($dataContext) {
         $dataContext->___addData($data->data);
       } else {
-        throw new VerbException("", "verbdb returned more contexts than I was expecting?!");
+        throw new VaeException("", "vaedb returned more contexts than I was expecting?!");
       }
       $iter->next();
     }
@@ -597,7 +597,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         $raiseErrors = true;
       }
       if (!$already_transformed) {
-        list($path, $query) = _verbql_query($query, $this, $options, $raiseErrors);
+        list($path, $query) = _vaeql_query($query, $this, $options, $raiseErrors);
         if (!$path) return $query;
       }
       return new self($query, $options, null, null, $raiseErrors);
@@ -615,45 +615,45 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   }
   
   private static function ___getSubdomain() {
-    global $_VERB;
-    if ($_VERB['config']['content_subdomain']) {
-      return $_VERB['config']['content_subdomain'];
-    } elseif (preg_match('/\/([a-z0-9]*)\.verb\//', $_SERVER['DOCUMENT_ROOT'], $matches)) {
+    global $_VAE;
+    if ($_VAE['config']['content_subdomain']) {
+      return $_VAE['config']['content_subdomain'];
+    } elseif (preg_match('/\/([a-z0-9]*)\.vae\//', $_SERVER['DOCUMENT_ROOT'], $matches)) {
       return $matches[1];
-    } elseif (function_exists('_verb_test_xml_path')) {
-      return _verb_test_xml_path();
+    } elseif (function_exists('_vae_test_xml_path')) {
+      return _vae_test_xml_path();
     } else {
-      return $_VERB['settings']['subdomain'];
+      return $_VAE['settings']['subdomain'];
     }
   }
   
   public static function ___openClient() {
-    if (!self::$client) self::$client = _verb_dbd();
+    if (!self::$client) self::$client = _vae_dbd();
   }
   
   public static function ___openSession() {
-    global $_VERB;
+    global $_VAE;
     self::___openClient();
     $staging = false;
-    if ($_VERB['settings']['subdomain'] . "-staging." . $_VERB['settings']['domain_ssl'] == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VERB['settings']['subdomain'] . ".verbsite.com" == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VERB['settings']['subdomain'] . "." . $_VERB['settings']['domain_site'] == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VERB['staging'] == true) $staging = true;
+    if ($_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'] == $_SERVER['HTTP_HOST']) $staging = true;
+    if ($_VAE['settings']['subdomain'] . ".vaesite.com" == $_SERVER['HTTP_HOST']) $staging = true;
+    if ($_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_site'] == $_SERVER['HTTP_HOST']) $staging = true;
+    if ($_VAE['staging'] == true) $staging = true;
     for ($i = 0; $i < 5; $i++) {
       try {
-        self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VERB['config']['secret_key'], $staging);
+        self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], $staging);
         return;
       } catch (TException $e) {
         sleep(5);
       }
     }
-    throw new VerbException("", "Could not connect to VerbDBd to openSession");
+    throw new VaeException("", "Could not connect to VaeDBd to openSession");
   }
   
   public static function ___resetSite() {
-    global $_VERB;
+    global $_VAE;
     self::___openClient();
-    self::$sessionId = self::$client->resetSite(self::___getSubdomain(), $_VERB['config']['secret_key']);
+    self::$sessionId = self::$client->resetSite(self::___getSubdomain(), $_VAE['config']['secret_key']);
   }
 
 }
@@ -715,17 +715,17 @@ class VaeSqlQuery {
   private $table = null;
   
   public function __construct($responseId, $query, $options) {
-    $this->response = new VerbDbResponse();
+    $this->response = new VaeDbResponse();
     self::$responseId++;
     $this->response->id = self::$responseId;
-    $context = new VerbDbResponseForContext();
+    $context = new VaeDbResponseForContext();
     $this->connect();
     $this->buildQuery($query, $options);
     $this->executeQuery();
     $context->totalItems = $this->totalResults();
     $context->contexts = array();
     while ($row = mysql_fetch_assoc($this->mysqlResult)) {
-      $ctxt = new VerbDbContext();
+      $ctxt = new VaeDbContext();
       if ($row['id']) $ctxt->id = $row['id'];
       $ctxt->dataSource = "sql";
       $ctxt->dataMap = $row;
@@ -734,7 +734,7 @@ class VaeSqlQuery {
     $this->response->contexts = array();
     if (false && $responseId) {
       if (!isset(self::$responses[$responseId])) {
-        throw new VerbDbInternalError("Invalid responseId");
+        throw new VaeDbInternalError("Invalid responseId");
       }
       $responseNumber = count(self::$responses[$responseId]->contexts);
     } else {
@@ -774,14 +774,14 @@ class VaeSqlQuery {
       }
       $order = " ORDER BY " . $order;
       if (strstr($query, " ORDER BY ")) {
-        throw new VerbException("Cannot use <span class='c'>order</span> option if your SQL query manually specifies <span class='c'>ORDER BY</span>");
+        throw new VaeException("Cannot use <span class='c'>order</span> option if your SQL query manually specifies <span class='c'>ORDER BY</span>");
       }
     }
     if ($options['groups']) {
-      throw new VerbException("Cannot use <span class='c'>groups</span> option in SQL queries.");      
+      throw new VaeException("Cannot use <span class='c'>groups</span> option in SQL queries.");      
     }
     if (stristr($options['page'], "last")) {
-      throw new VerbException("Cannot use <span class='c'>page=\"last()\"</span> option in SQL queries.");      
+      throw new VaeException("Cannot use <span class='c'>page=\"last()\"</span> option in SQL queries.");      
     }
     if ($options['paginate']) $options['limit'] = $options['paginate'];
     if (stristr($options['page'], "all")) unset($options['limit']);
@@ -795,12 +795,12 @@ class VaeSqlQuery {
       $query = str_replace("SELECT ", "SELECT SQL_CALC_FOUND_ROWS ", $query);
       $this->limited = true;
       if (strstr($query, " LIMIT ")) {
-        throw new VerbException("Cannot use <span class='c'>group</span>/<span class='c'>limit</span>/<span class='c'>paginate</span>/<span class='c'>skip</span> options if your SQL query manually specifies <span class='c'>LIMIT</span>");
+        throw new VaeException("Cannot use <span class='c'>group</span>/<span class='c'>limit</span>/<span class='c'>paginate</span>/<span class='c'>skip</span> options if your SQL query manually specifies <span class='c'>LIMIT</span>");
       }
     }
     if ($options['filter']) {
       if (!$this->table) {
-        throw new VerbException("Cannot use <span class='c'>filter</span> option if you manually specified a SQL query.");
+        throw new VaeException("Cannot use <span class='c'>filter</span> option if you manually specified a SQL query.");
       }
       foreach ($this->getColumns() as $column) {
         if ($colList) $colList .= " OR ";
@@ -816,13 +816,13 @@ class VaeSqlQuery {
     if (self::$connection == null) {
       $ci = self::$connectionInfo;
       if (!$ci[0] || !$ci[1] || !$ci[2] || !$ci[3]) {
-        throw new VerbException('SQL Query requested but you did not provide SQL credentials by calling <span class="c">verb_sql_credentials($username, $password)</span>');
+        throw new VaeException('SQL Query requested but you did not provide SQL credentials by calling <span class="c">vae_sql_credentials($username, $password)</span>');
       }
       if ((self::$connection = mysql_connect($ci[0], $ci[2], $ci[3])) === false) {
-        throw new VerbException("Could not connect to database using username: " . $c[2]);
+        throw new VaeException("Could not connect to database using username: " . $c[2]);
       }
       if (!mysql_select_db($ci[1], self::$connection)) {
-        throw new VerbException("Could not open database: " . $c[1]);
+        throw new VaeException("Could not open database: " . $c[1]);
       }
     }
   }
@@ -842,7 +842,7 @@ class VaeSqlQuery {
   }
   
   private function mysqlError() {
-    throw new VerbException("MySQL Error: " . mysql_error(self::$connection) . ".  Attempted query was: <span class='c'>" . $this->query . "</span>.");
+    throw new VaeException("MySQL Error: " . mysql_error(self::$connection) . ".  Attempted query was: <span class='c'>" . $this->query . "</span>.");
   }
   
   private function totalResults() {
@@ -856,7 +856,7 @@ class VaeSqlQuery {
     }
   }
   
-  public function toVerbDbResponse() {
+  public function toVaeDbResponse() {
     return $this->response;
   }
 
@@ -868,33 +868,33 @@ class VaeSqlQuery {
 
 /*** Public API ***/
 
-function verb($query = null, $options = null, $context = "__") {
-  global $_VERB;
+function vae($query = null, $options = null, $context = "__") {
+  global $_VAE;
   if ($context == "__") {
-    _verb_set_initial_context();
-    $context = $_VERB['context'];
+    _vae_set_initial_context();
+    $context = $_VAE['context'];
   }
   if ($context) return $context->get($query, $options);
   return VaeQuery::___factory($query, $options);
 }
 
-function verb_context($array = null) {
-  global $_VERB;
-  if ($array == null) return $_VERB['verbql_context'];
+function vae_context($array = null) {
+  global $_VAE;
+  if ($array == null) return $_VAE['vaeql_context'];
   return VaeQuery::___fromArray($array);
 }
 
-function verb_find($query = null, $options = null, $context = null) {
-  return verb($query, $options, $context);
+function vae_find($query = null, $options = null, $context = null) {
+  return vae($query, $options, $context);
 }
 
-function verb_sql_credentials($username, $password) {
+function vae_sql_credentials($username, $password) {
   VaeSqlQuery::setConnection("localhost", $username, $username, $password);
 }
 
 /**** Internal API ****/
 
-function _verb_fetch($query = null, $context = null, $options = null) {
+function _vae_fetch($query = null, $context = null, $options = null) {
   if ($context) {
     $c = $context->get($query, $options);
     if (is_object($c)) return $c->found();
@@ -905,27 +905,27 @@ function _verb_fetch($query = null, $context = null, $options = null) {
   return $ret;
 }
 
-function _verb_fetch_for_creating($query, $context = null) {
+function _vae_fetch_for_creating($query, $context = null) {
   if (is_object($context)) return $context->forCreating($query);
   $obj = VaeQuery::___factory();
   if (is_object($obj)) return $obj->forCreating($query);
   return false;
 }
 
-function _verb_fetch_without_errors($query = null, $context = null, $options = null) {
+function _vae_fetch_without_errors($query = null, $context = null, $options = null) {
   if (substr($query, 0, 1) != "@") $query = "@" . $query;
-  return _verb_fetch($query, $context, $options);
+  return _vae_fetch($query, $context, $options);
 }
 
-function _verb_reset_site() {
+function _vae_reset_site() {
   return VaeQuery::___resetSite();
 }
 
-function _verb_array_to_xml($array, $clone = false) {
+function _vae_array_to_xml($array, $clone = false) {
   return VaeQuery::___fromArray($array, $clone);
 }
 
-function _verb_to_xml($array, $clone = false, $formId = null) {
+function _vae_to_xml($array, $clone = false, $formId = null) {
   return VaeContext::___fromArray($array, $formId, $clone);
 }
 
@@ -936,8 +936,8 @@ function _vaeql_function($function, $args) {
     $result = call_user_func_array($function, $args);
   } elseif (function_exists("vae_" . $function)) {
     $result = call_user_func_array("vae_" . $function, $args);
-  } elseif (function_exists("verb_" . $function)) {
-    $result = call_user_func_array("verb_" . $function, $args);
+  } elseif (function_exists("vae_" . $function)) {
+    $result = call_user_func_array("vae_" . $function, $args);
   } else {
     return "[FUNCTION NOT FOUND: $function]";
   }
@@ -946,23 +946,23 @@ function _vaeql_function($function, $args) {
 }
 
 function _vaeql_path($path) {
-  global $_VERB;
-  $ret = (string)_verb_fetch($path, $_VERB['verbql_context']);
+  global $_VAE;
+  $ret = (string)_vae_fetch($path, $_VAE['vaeql_context']);
   return $ret;
 }
 
-function _verbql_query($query, $context = null, $options = null, $raiseErrors = true) {
-  global $_VERB;
+function _vaeql_query($query, $context = null, $options = null, $raiseErrors = true) {
+  global $_VAE;
   if (is_null($options)) $options = array();
-  $_VERB['verbql_context'] = $context;
+  $_VAE['vaeql_context'] = $context;
   $query = preg_replace('/\[([A-Za-z0-9_]*)=DATE\(([^]]*)\)\]/i', "[\\1:DATERANGE(\\2)]", $query);
   $ret = _vaeql_query_internal($query);
   if (is_array($ret)) {
     list($path, $query) = $ret;
   } elseif ($ret < -99) {
-    throw new VerbException("", "VerbQL Internal Error.  Error Code: " . $ret);
+    throw new VaeException("", "VaeQL Internal Error.  Error Code: " . $ret);
   } elseif ((substr($query, 0, 1) != "@") && $raiseErrors) {
-    throw new VerbException("We could not parse VerbQL Query: <span class='code'>" . $query . "</span>");
+    throw new VaeException("We could not parse VaeQL Query: <span class='code'>" . $query . "</span>");
   } else {
     $path = 0;
     $query = "";
@@ -978,8 +978,8 @@ function _vaeql_range_function($function, $args) {
     $result = call_user_func_array($function, $args);
   } elseif (function_exists("vae_" . $function)) {
     $result = call_user_func_array("vae_" . $function, $args);
-  } elseif (function_exists("verb_" . $function)) {
-    $result = call_user_func_array("verb_" . $function, $args);
+  } elseif (function_exists("vae_" . $function)) {
+    $result = call_user_func_array("vae_" . $function, $args);
   } else {
     return "[FUNCTION NOT FOUND: $function]";
   }

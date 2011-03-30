@@ -1,6 +1,6 @@
 <?php
 
-final class VerbException extends Exception {
+final class VaeException extends Exception {
   public $debugging_info;
   public $backtrace;
   public $filename;
@@ -14,7 +14,7 @@ final class VerbException extends Exception {
 
 }
 
-final class VerbFragment extends Exception {
+final class VaeFragment extends Exception {
 }
 
 ?>

@@ -25,7 +25,7 @@ class auspost {
       }
     }
     if (!count($quotes['methods']) && strlen($potential_error)) {
-      if (!strstr($potential_error, "Invalid Destination Postcode")) _verb_error("Australia Post Shipping Error: " . $potential_error);
+      if (!strstr($potential_error, "Invalid Destination Postcode")) _vae_error("Australia Post Shipping Error: " . $potential_error);
     }
     return $quotes;
   }

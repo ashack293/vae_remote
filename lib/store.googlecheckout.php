@@ -1,9 +1,9 @@
 <?php
 
-function _verb_google_checkout_get_arr_result($child_node) {
+function _vae_google_checkout_get_arr_result($child_node) {
   $result = array();
   if(isset($child_node)) {
-    if(_verb_google_checkout_is_associative_array($child_node)) {
+    if(_vae_google_checkout_is_associative_array($child_node)) {
       $result[] = $child_node;
     }
     else {
@@ -15,14 +15,14 @@ function _verb_google_checkout_get_arr_result($child_node) {
   return $result;
 }
 
-function _verb_google_checkout_go($a) {
-  global $_VERB;
+function _vae_google_checkout_go($a) {
+  global $_VAE;
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlecart.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleitem.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleshipping.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googletax.php");
-  $m = _verb_store_payment_google_checkout_method();
-  $cart = new GoogleCart($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _verb_store_currency()); 
+  $m = _vae_store_payment_google_checkout_method();
+  $cart = new GoogleCart($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _vae_store_currency()); 
   foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
     if ($_SESSION['__v:store']['user_shipping_methods']) {
       $r['user_shipping'] = serialize($_SESSION['__v:store']['user_shipping_methods']);
@@ -37,13 +37,13 @@ function _verb_google_checkout_go($a) {
     if ($r['tax_class']) $item->SetTaxTableSelector($r['tax_class']);
     $cart->AddItem($item);
   }
-  if (_verb_store_if_shippable()) {
-    $_VERB['no_shipping_restrictions'] = true;
-    _verb_google_checkout_set_domestic();
-    _verb_store_compute_shipping();
+  if (_vae_store_if_shippable()) {
+    $_VAE['no_shipping_restrictions'] = true;
+    _vae_google_checkout_set_domestic();
+    _vae_store_compute_shipping();
     $shipping_options = $_SESSION['__v:store']['shipping']['options'];
-    _verb_google_checkout_set_international();
-    _verb_store_compute_shipping();
+    _vae_google_checkout_set_international();
+    _vae_store_compute_shipping();
     $shipping_options = array_reverse(array_merge($_SESSION['__v:store']['shipping']['options'], $shipping_options), true);
     $shipping_added = array();
     foreach ($shipping_options as $r) {
@@ -55,7 +55,7 @@ function _verb_google_checkout_go($a) {
     }
   }
   $alternate_tables = array();
-  $rates = $_VERB['settings']['tax_rates'];
+  $rates = $_VAE['settings']['tax_rates'];
   if (is_array($rates) && count($rates) > 0) {
     foreach ($rates as $id => $rate) {
       $tax_rule = new GoogleDefaultTaxRule($rate['rate'] / 100.0, ($rate['include_shipping'] ? "true" : "false"));
@@ -82,11 +82,11 @@ function _verb_google_checkout_go($a) {
   }
   $cart->SetMerchantCalculations("http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?__v:store_payment_method_ipn=google_checkout", "true", "true", "true");
   list($status, $error) = $cart->CheckoutServer2Server();
-  _verb_error("Google Checkout Error: " . $error);
+  _vae_error("Google Checkout Error: " . $error);
 }
 
-function _verb_google_checkout_import_cart($cart) {
-  global $_VERB;
+function _vae_google_checkout_import_cart($cart) {
+  global $_VAE;
   $out = "";
   foreach ($cart as $item) {
     $a = array();
@@ -96,27 +96,27 @@ function _verb_google_checkout_import_cart($cart) {
       if ($e[0] == "user_shipping") {
         $_SESSION['__v:store']['user_shipping_methods'] = unserialize($val);
       } elseif ($e[0] == "tag_attrs") {
-        $_VERB['google_checkout_attrs'] = unserialize($val);
+        $_VAE['google_checkout_attrs'] = unserialize($val);
       } elseif (strlen($e[0])) {
         $a[$e[0]] = $val;
       }
     }
-    _verb_store_add_item_to_cart($a['id'], $a['option_id'], $a['qty'], $a);
+    _vae_store_add_item_to_cart($a['id'], $a['option_id'], $a['qty'], $a);
   }
-  _verb_log(serialize($_SESSION));
+  _vae_log(serialize($_SESSION));
   return $out;
 }
 
-function _verb_google_checkout_ipn() {
-  global $_VERB;
+function _vae_google_checkout_ipn() {
+  global $_VAE;
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlemerchantcalculations.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlerequest.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleresult.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleresponse.php");
-  $m = _verb_store_payment_google_checkout_method();
+  $m = _vae_store_payment_google_checkout_method();
   $out = "";
   $Gresponse = new GoogleResponse($m['merchant_id'], $m['merchant_key']);
-  $Grequest = new GoogleRequest($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _verb_store_currency());
+  $Grequest = new GoogleRequest($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _vae_store_currency());
   $xml_response = file_get_contents("php://input");
   list($root, $data) = $Gresponse->GetParsedXML($xml_response);
   $Gresponse->SetMerchantAuthentication($merchant_id, $merchant_key);
@@ -134,11 +134,11 @@ function _verb_google_checkout_ipn() {
       break;
     }
     case "merchant-calculation-callback": {
-      $merchant_calc = new GoogleMerchantCalculations(_verb_store_currency());
-      $out .= _verb_google_checkout_import_cart($data[$root]['shopping-cart']['items']['item']);
-      $addresses = _verb_google_checkout_get_arr_result($data[$root]['calculate']['addresses']['anonymous-address']);
+      $merchant_calc = new GoogleMerchantCalculations(_vae_store_currency());
+      $out .= _vae_google_checkout_import_cart($data[$root]['shopping-cart']['items']['item']);
+      $addresses = _vae_google_checkout_get_arr_result($data[$root]['calculate']['addresses']['anonymous-address']);
       foreach ($addresses as $curr_address) {
-        unset($_VERB['store_cached_shipping']);
+        unset($_VAE['store_cached_shipping']);
         $_SESSION['__v:store']['user'] = array(
           'shipping_city' => $curr_address['city']['VALUE'],
           'shipping_state' => $curr_address['region']['VALUE'],
@@ -147,28 +147,28 @@ function _verb_google_checkout_ipn() {
         );
         $shipping_methods = array();
         if (isset($data[$root]['calculate']['shipping'])) {
-          $shipping = _verb_google_checkout_get_arr_result($data[$root]['calculate']['shipping']['method']);
+          $shipping = _vae_google_checkout_get_arr_result($data[$root]['calculate']['shipping']['method']);
           foreach($shipping as $curr_ship) {
             $shipping_methods[] = array('name' => $curr_ship['name']);
           }
         } else {
           $shipping_methods[] = array();
         }
-        unset($_VERB['store_cached_shipping']);
-        _verb_store_compute_shipping();
+        unset($_VAE['store_cached_shipping']);
+        _vae_store_compute_shipping();
         foreach ($shipping_methods as $s) { 
           unset($_SESSION['__v:store']['discount_code']);
           $merchant_result = new GoogleResult($curr_address['id']);
           if (isset($data[$root]['calculate']['merchant-code-strings']['merchant-code-string'])) {
             $_SESSION['__v:store']['discount_code_show_errors'] = false;
-            $codes = _verb_google_checkout_get_arr_result($data[$root]['calculate']['merchant-code-strings']['merchant-code-string']);
+            $codes = _vae_google_checkout_get_arr_result($data[$root]['calculate']['merchant-code-strings']['merchant-code-string']);
             foreach($codes as $curr_code) {
               $code = preg_replace("/[^a-z0-9]/", "", strtolower($curr_code['code']));
               if ($_SESSION['__v:store']['discount_code']) {
                 $coupon = new GoogleCoupons("false", $code, 0, "You can only use one coupon code per order.");
               } else {
                 $_SESSION['__v:store']['discount_code'] = $code;
-                if ($amount = _verb_store_compute_discount(null, null, $tag['attrs']['flash'])) {
+                if ($amount = _vae_store_compute_discount(null, null, $tag['attrs']['flash'])) {
                   $coupon = new GoogleCoupons("true", $curr_code['code'], $amount, "Applied Coupon Code: " . $code);
                 } else {
                   $_SESSION['__v:store']['discount_code'] = null;
@@ -183,8 +183,8 @@ function _verb_google_checkout_ipn() {
             foreach ($_SESSION['__v:store']['shipping']['options'] as $r) {
               if ($r['title'] == $s['name']) {
                 $cost = $r['cost'];
-                $_VERB['store_cached_shipping'] = $cost;
-                unset($_VERB['store_cached_tax']);
+                $_VAE['store_cached_shipping'] = $cost;
+                unset($_VAE['store_cached_tax']);
               }
             }
             if ($cost !== false) {
@@ -194,7 +194,7 @@ function _verb_google_checkout_ipn() {
             }
           }
           if($data[$root]['calculate']['tax']['VALUE'] == "true") {
-            $amount = _verb_store_compute_tax();
+            $amount = _vae_store_compute_tax();
             $merchant_result->SetTaxDetails($amount);
           }
           $merchant_calc->AddResult($merchant_result);
@@ -256,8 +256,8 @@ function _verb_google_checkout_ipn() {
       break;
     }
     case "authorization-amount-notification": {
-      $out .= _verb_google_checkout_import_cart($data[$root]['order-summary']['shopping-cart']['items']['item']);
-      _verb_store_callback_checkout();  
+      $out .= _vae_google_checkout_import_cart($data[$root]['order-summary']['shopping-cart']['items']['item']);
+      _vae_store_callback_checkout();  
       $Gresponse->SendAck();
       break;
     }
@@ -281,15 +281,15 @@ function _verb_google_checkout_ipn() {
       $Gresponse->SendBadRequestStatus("Invalid or not supported Message");
       break;
   }
-  _verb_log($xml_response . ($merchant_calc ? "\n\n----\n\n" . $merchant_calc->GetXML() : ""));
+  _vae_log($xml_response . ($merchant_calc ? "\n\n----\n\n" . $merchant_calc->GetXML() : ""));
 }
 
-function _verb_google_checkout_is_associative_array( $var ) {
+function _vae_google_checkout_is_associative_array( $var ) {
   return is_array( $var ) && !is_numeric( implode( '', array_keys( $var ) ) );
 }
 
-function _verb_google_checkout_set_domestic() {
-  $origin_country = $_VERB['settings']['store_shipping_origin_country'];
+function _vae_google_checkout_set_domestic() {
+  $origin_country = $_VAE['settings']['store_shipping_origin_country'];
   if (strlen($origin_country) && $origin_country != "US") {
     $_SESSION['__v:store']['user'] = array('shipping_country' => $origin_country);
     return;
@@ -302,7 +302,7 @@ function _verb_google_checkout_set_domestic() {
   );
 }
 
-function _verb_google_checkout_set_international() {
+function _vae_google_checkout_set_international() {
   $_SESSION['__v:store']['user'] = array('shipping_country' => "IT");
   return;
 }

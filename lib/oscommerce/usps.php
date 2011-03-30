@@ -60,7 +60,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
 	$this->handling = explode( ", ", MODULE_SHIPPING_USPS_HANDLING_DOMESTIC);
 	//Listed in the order below:
-      $this->verb_types = array('EXPRESS' => 'Express Mail',
+      $this->vae_types = array('EXPRESS' => 'Express Mail',
 						   'PRIORITY' => 'Priority Mail',
 						   'FIRST CLASS' => 'First-Class Mail',
 						   'PARCEL' => 'Parcel Post',
@@ -338,7 +338,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
         reset($this->types);
         $allowed_types = array();
         foreach( explode(",", $method['types']) as $value ) {
-           $allowed_types[] = $this->verb_types[$value];
+           $allowed_types[] = $this->vae_types[$value];
         }
         
         while (list($key, $value) = each($this->types)) {
