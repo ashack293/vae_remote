@@ -523,7 +523,7 @@ function _vae_htmlarea($text, $a, $offsite = false) {
     '$matches', ($offsite ? "return '';" :
     '$id = _vae_global_id();
      _vae_needs_javascript("audio-player");
-     $file = "' . _vae_absolute_data_url() . '" . vae_asset($matches[2]);
+     $file = "' . _vae_absolute_data_url() . '" . vae_asset($matches[3]);
      return \'<object type="application/x-shockwave-flash" data="' . $_VAE['config']['asset_url'] . 'audioplayer.swf" id="audioplayer\' . $id . \'" height="24" width="290">
       <param name="movie" value="' . $_VAE['config']['asset_url'] . 'audioplayer.swf">
       <param name="FlashVars" value="playerID=\' . $id . \'&amp;soundFile=\' . $file . \'' . $audio_player_vars . '">
@@ -533,11 +533,11 @@ function _vae_htmlarea($text, $a, $offsite = false) {
       </object>\';')), $text);
   $text = preg_replace_callback("/<img([^>]*)src=(\"|'|)([^>]*)\/(VAE|VERB)_HOSTED_IMAGE\/([0-9]*)(\"|'|)/", create_function(
     '$matches',
-    'return "<img" . $matches[1] . "src=\"' . _vae_absolute_data_url() . '" . vae_asset($matches[4], "' . $width . '","' . $height . '", "' . $quality . '", ' . $preserve_filename . ') . "\"";'), $text);
+    'return "<img" . $matches[1] . "src=\"' . _vae_absolute_data_url() . '" . vae_asset($matches[5], "' . $width . '","' . $height . '", "' . $quality . '", ' . $preserve_filename . ') . "\"";'), $text);
   $text = preg_replace_callback("/<img([^>]*)\/(VAE|VERB)_HOSTED_VIDEO\/([0-9]*)([^>]*)>/", create_function(
     '$matches', ($offsite ? "return '';" : 
     '$id = _vae_global_id();
-     $file = vae_asset($matches[2]);
+     $file = vae_asset($matches[3]);
      if ($file == "tryagain.flv") $file = "' . $_VAE['config']['backlot_url'] . '/videos/" . $file;
      else $file = "' . _vae_absolute_data_url() . '" . $file; 
      _vae_needs_javascript("jwplayer");
