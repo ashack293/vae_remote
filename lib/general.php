@@ -832,7 +832,7 @@ function _vae_local_authenticate($memcache_base_key) {
   $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
     memcache_set($_VAE['memcached'], $memcache_base_key . "auth", $out);
-    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Verb Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaecms.com/vae_local\n*****\n\n";
+    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Verb Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\n\n";
     else return $out;
   }
   return "BAD";
@@ -1495,11 +1495,11 @@ function _vae_require_ssl() {
   $_VAE['ssl_required'] = true;
   if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
-    if ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".vae/releases/")) {
+    if ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_ssl'];
     } elseif ($_VAE['settings']['domain_ssl']) {
       $domain = $_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'];
-    } elseif (strstr($_SERVER['DOCUMENT_ROOT'], ".vae/releases/")) {
+    } elseif (strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['subdomain'] . "-secure.vaesite.com";
     } else {
       $domain = $_VAE['settings']['subdomain'] . ".vaesite.com";
