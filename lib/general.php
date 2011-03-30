@@ -1446,17 +1446,37 @@ function _vae_render_final($txt) {
 
 function _vae_render_message($title, $msg) {
   global $_VAE;
-  $out = "<html><head><title>" . $title . "</title>";
-  $out .= "<style type='text/css'>";
-  if (!_vae_is_xhr()) $out .= "body { background: #333; margin: 0px; font: 14px \"Lucida Grande\", \"Myriad\", \"Lucida Sans Unicode\", Arial, Helvetica, sans-serif; }\nh1 { margin-top: 0px; }\n#main { background: #fff url(" . $_VAE['config']['asset_url'] . "images/grad-bottom.png) bottom repeat-x; padding: 15px 15px 100px 15px; min-height: 400px; }\n#footer { font-size: 0.75em; text-align: center; color: #fff; height: 50px; padding-top: 15px; background: url(" . $_VAE['config']['asset_url'] . "images/grad-footer.png) top repeat-x; }\n";
-  $out .= "a { color: #fff; }\n.c, pre { font-family: Monaco, \"Bitstream Vera Sans Mono\", \"Lucida Console\", \"Courier New\", serif; }\n.c { font-size: 1.1em; color: #faec31; }\n.b { overflow: auto; margin: 15px 0px; color: #fff; background: #666; padding: 15px; }\n.fail { color: red; }\n.bt3 { color: #faec31; }\n.bt4 { color: #ee4423; }\n.bt5 { color: #ccc; }\n</style>";
-  $out .= "</head><body><div id='main'><h1><img src='" . $_VAE['config']['asset_url'] . "images/vae.png' alt='Vae' /></h1>";
-  if ($msg != false) $out .= $msg . _vae_render_message_footer();
+  $out .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><?php echo $title; ?></title>';
+  if (!_vae_is_xhr()) {
+    $out .= '
+        <link rel="stylesheet" type="text/css" media="all" href="http://verb.vaesite.net/stylesheets/reset-min.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="http://verb.vaesite.net/stylesheets/global.css" />
+    ';
+  }
+  $out .= '</head>
+      <body class="inner">
+        <div id="header">
+          <a class="vae-logo-top" href="http://vaeplatform.com/">
+            <img alt="Vae&trade;" src="http://vaeplatform.com/images-o/logo-top.png" title="Vae&trade;" />
+          </a>
+          <div id="nav-top">
+          </div>
+          <div id="inner-heading" style="margin-top: 77px">
+            <h1>' . $title . '</h1>
+          </div>
+        </div>
+        <div id="content" class="content-text" style="padding: 50px 0 30px">
+          <p>' . $msg . '</p>
+        </div>
+        <div id="footer-wrap">
+        </div>
+      </body>
+    </html>';
   return $out;
-}
-
-function _vae_render_message_footer() {
-  return "</div>" . (_vae_is_xhr() ? "" : "<div id='footer'>Copyright &copy;2007-" . strftime("%Y") . " Action Verb, LLC.</div>") . "</body></html>";
 }
 
 function _vae_render_timer() {
