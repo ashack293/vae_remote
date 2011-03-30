@@ -33,6 +33,7 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/vae_exception.php");
   _vae_configure_php();
   require_once(dirname(__FILE__) . "/callback.php");
+  require_once(dirname(__FILE__) . "/compat.php");
   require_once(dirname(__FILE__) . "/constants.php");
   require_once(dirname(__FILE__) . "/context.php");
   require_once(dirname(__FILE__) . "/func.php");
