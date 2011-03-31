@@ -6,6 +6,7 @@ $_VAE['version'] = 100;
 
 function _vae_should_load() {
   if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__novae.php")) return false;
+  if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__noverb.php")) return false;
   if (preg_match('/^\/piwik/', $_SERVER['REQUEST_URI'])) return false;
   return true;
 }
