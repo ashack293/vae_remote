@@ -637,6 +637,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     $staging = false;
     if ($_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'] == $_SERVER['HTTP_HOST']) $staging = true;
     if ($_VAE['settings']['subdomain'] . ".vaesite.com" == $_SERVER['HTTP_HOST']) $staging = true;
+    if ($_VAE['settings']['subdomain'] . ".verbsite.com" == $_SERVER['HTTP_HOST']) $staging = true;
     if ($_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_site'] == $_SERVER['HTTP_HOST']) $staging = true;
     if ($_VAE['staging'] == true) $staging = true;
     for ($i = 0; $i < 5; $i++) {
