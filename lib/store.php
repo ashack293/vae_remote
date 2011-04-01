@@ -335,11 +335,16 @@ function _vae_store_callback_google_checkout($tag) {
 
 function _vae_store_callback_login($tag) {
   if ($raw = _vae_rest(array(), "customers/authenticate", "customer", $tag, null, true)) {
-    _vae_store_load_customer($raw);
-    if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-    return _vae_callback_redirect($_SERVER['PHP_SELF']);
+    $err = _vae_store_load_customer($raw);
+    if (!$err) {
+      if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+      return _vae_callback_redirect($_SERVER['PHP_SELF']);
+    } else {
+      _vae_flash($err, 'err', $tag['attrs']['flash']);
+    }
+  } else {
+    _vae_flash(($tag['attrs']['invalid'] ? $tag['attrs']['invalid'] : 'Login information incorrect.'),'err', $tag['attrs']['flash']);
   }
-  _vae_flash(($tag['attrs']['invalid'] ? $tag['attrs']['invalid'] : 'Login information incorrect.'),'err', $tag['attrs']['flash']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
@@ -696,8 +701,11 @@ function _vae_store_create_customer($data, $newsletter_code = null) {
     }
   } else {
     if ($raw = _vae_rest($data, "customers/create_or_update", "customer")) {
+      if ($err = _vae_store_load_customer($raw, strlen($data['password']))) {
+        _vae_flash($err, 'err');
+        return false;
+      }
       $_SESSION['__v:store']['user'] = $data;
-      _vae_store_load_customer($raw, strlen($data['password']));
       if ($newsletter_code) _vae_newsletter_subscribe($newsletter_code, $data['e_mail_address']);
       _vae_run_hooks("store:register:success", $_SESSION['__v:store']['user']);
       return true;
@@ -841,6 +849,9 @@ function _vae_store_item_has_options($id, $option_field) {
 function _vae_store_load_customer($raw, $logged_in = true) {
   _vae_session_deps_add('__v:store', '_vae_store_load_customer');
   $data = simplexml_load_string($raw);
+  if ($data->{banned} == "true") {
+    return "The store owner has banned your customer account from making purchases.  Please contact the store for further assistance.";
+  }
   if (!isset($_SESSION['__v:store']['user'])) $_SESSION['__v:store']['user'] = array();
   if ($logged_in) {
     $_SESSION['__v:store']['customer_id'] = (int)$data->id;
@@ -852,6 +863,7 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
   $_SESSION['__v:store']['user']['e_mail_address'] = (string)$data->{'e-mail-address'};
   _vae_store_populate_addresses();
+  return false;
 }
 
 function _vae_store_most_specific_field($r, $field) {
