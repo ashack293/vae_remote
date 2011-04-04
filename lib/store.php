@@ -378,7 +378,7 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
     $_SESSION['__v:store']['paypal_express_checkout'] = array('token' => $_REQUEST['token'], 'payer_id' => $_REQUEST['PayerID']);
     if ($addr = _vae_rest(array('token' => $_REQUEST['token']), "store/paypal_express_checkout", "order")) {
       $xml = simplexml_load_string($addr);
-      $data = array('e_mail_address' => $xml->email);
+      $data = array('e_mail_address' => (string)$xml->email);
       foreach (array("billing_", "shipping_") as $type) {
         foreach($xml as $k => $v) {
           if ($k == "address1") $k = "address";
