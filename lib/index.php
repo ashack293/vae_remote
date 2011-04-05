@@ -81,7 +81,7 @@ if (_vae_should_load()) {
   _vae_page_check_redirects();
   _vae_parse_path();
   if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
-    
+
   if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass") {
     require_once(dirname(__FILE__) . "/haml.php");
     ob_start('_vae_sass_ob');

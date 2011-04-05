@@ -115,6 +115,7 @@ function vae_staging() {
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl']) return true;
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . $_VAE['settings']['domain_site']) return true;
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . ".vaesite.com") return true;
+  if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . ".verbsite.com") return true;
   return false;
 }
 
