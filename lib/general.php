@@ -652,7 +652,7 @@ function _vae_inject_assets_css_callback($a) {
 
 function _vae_inject_cdn($out) {
   $out = preg_replace_callback("/(\"|'|url\\()http:\\/\\/(www\\.|)" . preg_replace("/^www\\./", "", $_SERVER['HTTP_HOST']) . "\\/([^\"')]*\\/|)wp-(content|photos)\\/([^\"')]*)(\"|'|\\))/", "_vae_inject_cdn_callback", $out);
-  $out = preg_replace('/vaesite\.com\.lg1([a-z0-9]*)\.simplecdn\.net/', "vaesite.net", $out);
+  $out = preg_replace('/verbsite\.com\.lg1([a-z0-9]*)\.simplecdn\.net/', "vaesite.net", $out);
   $out = str_replace("verbcms.com", "vaeplatform.com", $out);
   return $out;
 }
