@@ -844,7 +844,16 @@ function _vae_render_option_select($a, &$tag, $context, &$callback, $render_cont
   $out .= _vae_render_tag("input", array('type' => 'hidden', 'value' => (($old_a['default'] && strlen($set_fn)) ? "" : $all_entries->id()), 'name' => $old_a['name'], 'id' => $glob_id), $blank, $context, $render_context);
   if (strlen($set_fn)) {
     $script .= "  function " . $glob_id . "_set() {\n    for (var item_ in " . $name . ") {\n      if (" . $set_fn . ") {\n        jQuery('#" . $glob_id . "').val(item_);\n" . ($a['price_display'] ? "        jQuery('#" . $a['price_display'] . "').html(" . $name . "[item_][0]);\n" : "") . "      }\n    };\n";
-    if ($a['price_display']) $script .= "    sel = jQuery('#" . $glob_id . "').val();\n    if (sel) {\n      for (var item_ in " . $name . ") {\n        price_diff = (" . $name . "[item_][0] - " . $name . "[sel][0]).toFixed(2);\n        if (price_diff > 0) { upcharge = ' [+\$' + price_diff + ']'; } else if (price_diff < 0) { upcharge = ' [-\$' + (price_diff*-1).toFixed(2) + ']'; } else { upcharge = ''; } \n" . $price_hints . "      }\n    }\n";
+    if ($a['price_display']) {
+      $script .= "    sel = jQuery('#" . $glob_id . "').val();\n    if (sel) {\n      for (var item_ in " . $name . ") {\n";
+      $script .= "        price_diff = (" . $name . "[item_][0] - " . $name . "[sel][0]).toFixed(2);\n";
+      if ($a['price_display_changes'] == "full_price") {
+        $script .= "        if (price_diff != 0) { upcharge = ' [$' + " . $name . "[item_][0] + ']'; } else { upcharge = ''; }\n";
+      } else {
+        $script .= "        if (price_diff > 0) { upcharge = ' [+\$' + price_diff + ']'; } else if (price_diff < 0) { upcharge = ' [-\$' + (price_diff*-1).toFixed(2) + ']'; } else { upcharge = ''; } \n";
+      }
+      $script .= $price_hints . "      }\n    }\n";
+    }
     $script .= "  }\n";
     $script .= "  var " . $name . " = {};\n";
     foreach ($entries as $r) {
