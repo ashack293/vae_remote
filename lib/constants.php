@@ -402,6 +402,8 @@ $_VAE['store']['payment_methods'] = array(
   'money_order' => array('name' => "Money Order"), 
   'bank_transfer' => array('name' => "Bank Transfer"), 
   'in_store' => array('name' => "Pay In Store"), 
+  'exact' => array('name' => "Credit Card", 'credit_card' => true), 
+  'lucy' => array('name' => "Credit Card", 'credit_card' => true), 
   'modern_payments' => array('name' => "Credit Card", 'credit_card' => true), 
   'moneris' => array('name' => "Credit Card", 'credit_card' => true), 
   'net_registry' => array('name' => "Credit Card", 'credit_card' => true), 

@@ -395,25 +395,27 @@ function vae_store_update_cart_item($id, $data) {
 }
 
 function vae_store_update_coupon_code($id, $data) {
-  if (!strlen($id)) _vae_error("You called <span class='c'>vae_update_coupon_code()</span> but didn't provide a proper ID.");
+  if (!strlen($id)) _vae_error("You called <span class='c'>vae_store_update_coupon_code()</span> but didn't provide a proper ID.");
   $ret = _vae_rest($data, "store_discount_codes/update/" . $id, "store_discount_code");
   return ($ret != false);
 }
 
 function vae_store_update_tax_rate($id, $data) {
-  if (!strlen($id)) _vae_error("You called <span class='c'>vae_update_tax_rate()</span> but didn't provide a proper ID.");
+  if (!strlen($id)) _vae_error("You called <span class='c'>vae_store_update_tax_rate()</span> but didn't provide a proper ID.");
   $ret = _vae_rest($data, "store_tax_rates/update/" . $id, "store_tax_rate");
   return ($ret != false);
 }
 
 function vae_store_update_order($order_id, $attributes = null) {
   if (!is_array($attributes)) return false;
+  if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order()</span> but didn't provide a proper ID.");
   $ret = _vae_rest($attributes, "store/update/" . $order_id, "store_order", array(), null, true);
   return ($ret != false);
 }
 
 function vae_store_update_order_status($order_id, $status) {
   if ($status != "Processing" && $status != "Ordered" && $status != "Shipped") return false;
+  if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order_status()</span> but didn't provide a proper ID.");
   $ret =_vae_rest(array(), "store/update_status/" . $order_id . "?status=" . $status, "order", null, null, true);
   return ($ret != false);
 }
