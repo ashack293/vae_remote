@@ -1046,7 +1046,7 @@ function _vae_render_select($a, &$tag, $context, &$callback, $render_context) {
   if ((is_string($a['options']) && strstr($a['options'], "<option")) || count($a['options']) || strlen($out)) {
     if (is_string($a['options'])) {
       $out = $a['options'] . $out;
-    } else {
+    } elseif (count($a['options'])) {
       foreach ($a['options'] as $k => $v) {
         if (is_array($v)) {
           $k = $v[0];
@@ -1087,8 +1087,9 @@ function _vae_render_site_seal($a, &$tag, $context, &$callback, $render_context)
 
 function _vae_render_state_select($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
+  $oldclass = $a['class'];
   $a = _vae_form_prepare($a, $tag, $context, $render_context);
-  $a['class'] = $a['id'];
+  $a['class'] = trim(str_replace("required", "", $a['class']) . " " . $a['id']);
   $a['onchange'] = _vae_append_js($a['onchange'], "jQuery('#" . $a['id'] . "').val(jQuery(this).val());");
   $a2 = $a;
   $out = "";
@@ -1098,7 +1099,7 @@ function _vae_render_state_select($a, &$tag, $context, &$callback, $render_conte
     $a['id'] = $a['name'] = $a2['id'] . "_" . $country;
     $out .= _vae_render_select($a, $tag, $context, $callback, $render_context);
   }
-  $a3 = array("type" => "hidden", "value" => $a2['value'], "name" => $a2['name'], "id" => $a2['id'], "onchange" => _vae_append_js("", "jQuery('." . $a['class'] . "').val(jQuery(this).val());"));
+  $a3 = array("type" => "hidden", "value" => $a2['value'], "name" => $a2['name'], "id" => $a2['id'], "class" => $oldclass, "onchange" => _vae_append_js("", "jQuery('." . $a2['id'] . "').val(jQuery(this).val());"));
   $out .= "<input" . _vae_attrs($a3, "input") . " />";
   $a2['name'] .= "_txt";
   $a2['id'] .= "_txt";

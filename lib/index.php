@@ -52,8 +52,6 @@ if (_vae_should_load()) {
   /* Initialize */
   _vae_set_default_config();
   unset($_SESSION['__v:flash_new']);
-  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
-  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");
   
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
@@ -70,12 +68,20 @@ if (_vae_should_load()) {
     require_once(dirname(__FILE__) . "/test.php");
     _vae_test();
   }
+  if ($_REQUEST['__session']) {
+    session_start();
+    var_dump($_SESSION);
+    die();
+  }
   if ($_REQUEST['__build_constants']) {
     require_once(dirname(__FILE__) . "/constants_build.php");
   }
   
-  _vae_load_settings();
+  _vae_load_settings();  
   if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();  
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");  
+  
   _vae_page_check_domain();
   if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();
   _vae_page_check_redirects();

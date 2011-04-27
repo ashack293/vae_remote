@@ -5,6 +5,10 @@ require_once(dirname(__FILE__) . '/store.oscommerce.php');
 function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "", $from_api = false) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_add_item_to_cart');
+  unset($_VAE['store_cached_number_of_items']);
+  unset($_VAE['store_cached_shipping']);
+  unset($_VAE['store_cached_subtotal']);
+  unset($_VAE['store_cached_tax']);
   if (strlen($a['notes']) && !strlen($notes)) $notes = $a['notes'];
   $digital = ((string)$a['digital'] ? 1 : 0);
   if ($id) $item = _vae_fetch($id);
@@ -245,58 +249,17 @@ function _vae_store_callback_cart($tag) {
 }
 
 function _vae_store_callback_checkout($tag = null) {
-  global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_callback_checkout');
-  $current = _vae_store_current_user();
-  _vae_store_set_default_payment_method();
-  $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
-  $line_items = array();
   $_SESSION['__v:store']['checkout_attempts']++;
   if ($tag['attrs']['lockout_redirect'] && ($_SESSION['__v:store']['checkout_attempts'] > 3)) {
     return _vae_callback_redirect($tag['attrs']['lockout_redirect']);
-  } elseif (_vae_store_verify_available()) {
-    _vae_store_compute_shipping();
-    _vae_store_compute_tax();
-    foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
-      $line_items[] = array('qty' => $r['qty'], 'inventory_field' => $r['inventory_field'], 'options' => $r['option_value'], 'option_id' => $r['option_id'], 'original_price' => $r['original_price'], 'row_id' => $r['id'], 'price' => $r['price'], 'notes' => $r['notes'], 'total' => $r['total'], 'tax' => 0, 'name' => $r['name'], 'barcode' => $r['barcode'], 'brand' => $r['brand'], 'category' => $r['category'], 'backstage_notes' => $r['backstage_notes'], 'position' => $id, 'bundled_with' => $r['bundled_with']);
-    }
-    $shipping_method = $_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'];
-    if (!_vae_store_if_shippable() && _vae_store_if_digital_downloads()) {
-      $shipping_method = "Digital Delivery";
-    } elseif (!strlen($shipping_method)) {
-      $shipping_method = "N/A";
-    }
-    $payment_method_id = ($_SESSION['__v:store']['payment_method'] ? $_SESSION['__v:store']['payment_method'] : "Test");
-    $tax_rate = $_SESSION['__v:store']['tax_rate'];
-    $data = array("line_items" => $line_items, 'remote_addr' => $_SERVER['REMOTE_ADDR'], 'customer_id' => $current['id'], 'email' => $current['e_mail_address'], 'discount_code' => $_SESSION['__v:store']['discount_code'], 'discount' => _vae_store_compute_discount(), 'shipping' => _vae_store_compute_shipping(), 'tax' => _vae_store_compute_tax(), 'total' => _vae_store_compute_total(), 'shipping_method' => $shipping_method, 'tax_rate' => $tax_rate, 'payment_method' => $payment_method_id, 'weight' => $_SESSION['__v:store']['shipping']['weight']);
-    if ($_SESSION['__v:store']['paypal_without_vae_checkout']) {
-      unset($data['total']);
-    }
-    $data['token'] = $_SESSION['__v:store']["paypal_express_checkout"]["token"];
-    $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
-    $data['store_name'] = $tag['attrs']['store_name'];
-    $data['store_logo'] = $tag['attrs']['store_logo'];
-    foreach (array('confirmation' => array('order_confirmation','Order Confirmation'), 'received' => array('order_received','Order Received'), 'shipping' => array('shipping_info','Shipping Confirmation'), 'waiting_for_approval' => array('order_waiting_for_approval','Order Waiting For Approval')) as $email => $r) {
-      if (isset($_VAE['google_checkout_attrs']['email_'.$email])) $file = $_VAE['google_checkout_attrs']['email_'.$email];
-      else $file = $tag['attrs']['email_'.$email];
-      if ($file) {
-        if (($html = _vae_find_source($file)) && ($txt = _vae_find_source($file . ".txt"))) {
-          if (($data[$r[0].'_email_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (HTML version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
-          if (($data[$r[0].'_email_text'] = _vae_proxy($txt)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (text version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
-          $data[$r[0].'_email_text'] = strip_tags($data[$r[0].'_email_text']);
-        } else {
-          _vae_error("Unable to find " . $r[1] . " E-Mail file in <span class='c'>" . _vae_h($file) . "</span>.  Remember that you need to provide an HTML version named <span class='c'>" . $file . "</span> and a text-only version named <span class='c'>" . $file . ".txt</span>.  Both may have the <span>.html</span>, <span>.haml</span>, <span>.php</span>, or <span>.haml.php</span> extension.");
-        }
-      }
-    }
-    foreach (array('billing_name','billing_company','billing_address','billing_city','billing_state','billing_country','billing_zip','billing_phone','shipping_name','shipping_company','shipping_address','shipping_address_2','shipping_city','shipping_state','shipping_zip','shipping_country','shipping_phone') as $k) {
-      $data[$k] = $current[$k];
-    }
-    if ($payment_method['callback']) return call_user_func($payment_method['callback'], $data, $tag);
-    if (_vae_store_complete_checkout($data, $tag) === false) return "";
   }
-  if ($tag == null) return true;
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  $ret = _vae_store_checkout($tag['attrs'], $tag);
+  if ($ret == false) {
+    return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  } else {
+    return $ret;
+  }
 }
 
 function _vae_store_callback_currency_select($tag) {
@@ -369,7 +332,7 @@ function _vae_store_callback_payment_methods_select($tag) {
 function _vae_store_callback_paypal_checkout($tag = null) {
   $_SESSION['__v:store']['payment_method'] = "paypal";
   $_SESSION['__v:store']['paypal_without_vae_checkout'] = true;
-  return _vae_store_callback_checkout($tag);
+  return _vae_store_checkout($tag['attrs'], $tag);
 }
 
 function _vae_store_callback_paypal_express_checkout($tag, $from_select = false) {
@@ -440,6 +403,57 @@ function _vae_store_cart_item_name($r) {
   return $r['name'] . (strlen($r['option_value']) ? " (" . $r['option_value'] . ")" : "");
 }
 
+function _vae_store_checkout($a = null, $tag = null) {
+  global $_VAE;
+  $current = _vae_store_current_user();
+  _vae_store_set_default_payment_method();
+  $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
+  $line_items = array();
+  if (_vae_store_verify_available()) {
+    _vae_store_compute_shipping();
+    _vae_store_compute_tax();
+    foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
+      $line_items[] = array('qty' => $r['qty'], 'inventory_field' => $r['inventory_field'], 'options' => $r['option_value'], 'option_id' => $r['option_id'], 'original_price' => $r['original_price'], 'row_id' => $r['id'], 'price' => $r['price'], 'notes' => $r['notes'], 'total' => $r['total'], 'tax' => 0, 'name' => $r['name'], 'barcode' => $r['barcode'], 'brand' => $r['brand'], 'category' => $r['category'], 'backstage_notes' => $r['backstage_notes'], 'position' => $id, 'bundled_with' => $r['bundled_with']);
+    }
+    $shipping_method = $_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'];
+    if (!_vae_store_if_shippable() && _vae_store_if_digital_downloads()) {
+      $shipping_method = "Digital Delivery";
+    } elseif (!strlen($shipping_method)) {
+      $shipping_method = "N/A";
+    }
+    $payment_method_id = ($_SESSION['__v:store']['payment_method'] ? $_SESSION['__v:store']['payment_method'] : "Test");
+    $tax_rate = $_SESSION['__v:store']['tax_rate'];
+    $data = array("line_items" => $line_items, 'remote_addr' => $_SERVER['REMOTE_ADDR'], 'customer_id' => $current['id'], 'email' => $current['e_mail_address'], 'discount_code' => $_SESSION['__v:store']['discount_code'], 'discount' => _vae_store_compute_discount(), 'shipping' => _vae_store_compute_shipping(), 'tax' => _vae_store_compute_tax(), 'total' => _vae_store_compute_total(), 'shipping_method' => $shipping_method, 'tax_rate' => $tax_rate, 'payment_method' => $payment_method_id, 'weight' => $_SESSION['__v:store']['shipping']['weight']);
+    if ($_SESSION['__v:store']['paypal_without_vae_checkout']) {
+      unset($data['total']);
+    }
+    $data['token'] = $_SESSION['__v:store']["paypal_express_checkout"]["token"];
+    $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
+    $data['store_name'] = $a['store_name'];
+    $data['store_logo'] = $a['store_logo'];
+    if ($a['skip_emails']) $data['skip_emails'] = "1";
+    foreach (array('confirmation' => array('order_confirmation','Order Confirmation'), 'received' => array('order_received','Order Received'), 'shipping' => array('shipping_info','Shipping Confirmation'), 'waiting_for_approval' => array('order_waiting_for_approval','Order Waiting For Approval')) as $email => $r) {
+      if (isset($_VAE['google_checkout_attrs']['email_'.$email])) $file = $_VAE['google_checkout_attrs']['email_'.$email];
+      else $file = $a['email_'.$email];
+      if ($file) {
+        if (($html = _vae_find_source($file)) && ($txt = _vae_find_source($file . ".txt"))) {
+          if (($data[$r[0].'_email_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (HTML version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+          if (($data[$r[0].'_email_text'] = _vae_proxy($txt)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (text version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+          $data[$r[0].'_email_text'] = strip_tags($data[$r[0].'_email_text']);
+        } else {
+          _vae_error("Unable to find " . $r[1] . " E-Mail file in <span class='c'>" . _vae_h($file) . "</span>.  Remember that you need to provide an HTML version named <span class='c'>" . $file . "</span> and a text-only version named <span class='c'>" . $file . ".txt</span>.  Both may have the <span>.html</span>, <span>.haml</span>, <span>.php</span>, or <span>.haml.php</span> extension.");
+        }
+      }
+    }
+    foreach (array('billing_name','billing_company','billing_address','billing_city','billing_state','billing_country','billing_zip','billing_phone','shipping_name','shipping_company','shipping_address','shipping_address_2','shipping_city','shipping_state','shipping_zip','shipping_country','shipping_phone') as $k) {
+      $data[$k] = $current[$k];
+    }
+    if ($payment_method['callback']) return call_user_func($payment_method['callback'], $data, $tag);
+    return _vae_store_complete_checkout($data, $tag);
+  }
+  return false;
+}
+
 function _vae_store_complete_checkout($data, $tag = null) {
   $ret = _vae_rest($data, "store/create_order", "order", $tag);
   if ($ret) {
@@ -468,6 +482,9 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
   $show_errors = $_SESSION['__v:store']['discount_code_show_errors'];
   _vae_session_deps_add('__v:store', '_vae_store_compute_discount');
   $current = _vae_store_current_user();
+  if ($_SESSION['__v:store']['user_discount'] && $item == null) {
+    return $_SESSION['__v:store']['user_discount'];
+  }
   if (isset($_SESSION['__v:store']['discount_code'])) {
     $disc = _vae_store_find_discount($_SESSION['__v:store']['discount_code']);
     if ($disc == null || $disc == false || $disc == "BAD") {
@@ -680,10 +697,10 @@ function _vae_store_compute_total() {
   return $total;
 }
 
-function _vae_store_create_customer($data, $newsletter_code = null) {
+function _vae_store_create_customer($data, $newsletter_code = null, $from_php = false) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_create_customer');
-  if ($_VAE['settings']['store_shipping_use_ups_address_validation']) {
+  if (!$from_php && $_VAE['settings']['store_shipping_use_ups_address_validation']) {
     $res = _vae_store_suggest_alternate_address($data['shipping_country'], $data['shipping_city'], $data['shipping_state'], $data['shipping_zip']);
     if ($res === false) {
       _vae_flash('We could not recognize that shipping address.  Please double-check the city, state, zipcode, and country.  If you feel that you are seeing this message in error, please contact the store for assistance.','err');
@@ -702,7 +719,7 @@ function _vae_store_create_customer($data, $newsletter_code = null) {
   } else {
     if ($raw = _vae_rest($data, "customers/create_or_update", "customer")) {
       if ($err = _vae_store_load_customer($raw, strlen($data['password']))) {
-        _vae_flash($err, 'err');
+        if (!$from_php) _vae_flash($err, 'err');
         return false;
       }
       $_SESSION['__v:store']['user'] = $data;
@@ -968,7 +985,7 @@ function _vae_store_payment_paypal_express_checkout_method($required = true) {
   return false;
 }
 
-function _vae_store_payment_paypal_ipn($tag) {
+function _vae_store_payment_paypal_ipn() {
   global $_VAE;
   $report_error = true;
   if (!strlen($_POST['custom'])) return "not from vae";

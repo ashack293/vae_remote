@@ -1098,8 +1098,21 @@ function _vae_needs_jquery() {
   }
 }
 
-function _vae_newsletter_subscribe($code, $email) {
-  return _vae_simple_rest('http://newsletter-agent.com/' . $code, "email=" . $email . "&customer_id=" . $_SESSION['__v:store']['customer_id']);
+function _vae_newsletter_subscribe($code, $email, $confirm_field = null) {
+  $codes = explode(",", $code);
+  if ($confirm_field) {
+    if (!$_REQUEST[$confirm_field]) return;
+    if (is_array($_REQUEST[$confirm_field])) {
+      $codes = array();
+      foreach ($_REQUEST[$confirm_field] as $code) {
+        $codes[] = $code;
+      }
+    }
+  }
+  foreach ($codes as $code) {
+    $out = _vae_simple_rest('http://newsletter-agent.com/' . $code, "email=" . $email . "&customer_id=" . $_SESSION['__v:store']['customer_id']);
+  }
+  return $out;
 }
 
 function _vae_on_dom_ready($js) {
@@ -1515,6 +1528,7 @@ function _vae_request_param($name, $flash = false) {
 function _vae_require_ssl() {
   global $_VAE;
   $_VAE['ssl_required'] = true;
+  $_VAE['cant_cache'] = "ssl_required";
   if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
@@ -1549,7 +1563,7 @@ function _vae_run_hooks($name, $params = null) {
         $retval = call_user_func($a['callback'], $params);
         if ($retval == false) return $retval;
       } catch (Exception $e) {
-        if (strstr($e->message, "TSocket")) {
+        if (strstr($e->getMessage(), "TSocket")) {
         } else {
           _vae_report_error("Callback Hook Error: $name", serialize($e), false);
         }

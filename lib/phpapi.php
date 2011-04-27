@@ -267,8 +267,14 @@ function vae_store_cart_items() {
   return $_SESSION['__v:store']['cart'];
 }
 
+function vae_store_checkout($a) {
+  if ($a['payment_method']) $_SESSION['__v:store']['payment_method'] = $a['payment_method'];
+  _vae_store_checkout($a);
+}
+
 function vae_store_clear_discount_code() {
   $_SESSION['__v:store']['discount_code'] = null;
+  $_SESSION['__v:store']['user_discount'] = null;
   _vae_store_compute_discount();
 }
 
@@ -310,6 +316,11 @@ function vae_store_destroy_tax_rate($id = "") {
 function vae_store_destroy_all_tax_rates() {
   $ret = _vae_rest(array(), "store_tax_rates/destroy_all", "store_tax_rate");
   return ($ret != false);
+}
+
+function vae_store_discount($amount, $code = "CUSTOM") {
+  $_SESSION['__v:store']['discount_code'] = $code;
+  $_SESSION['__v:store']['user_discount'] = number_format($amount, 2);
 }
 
 function vae_store_discount_code($code = null, $force = false) {
@@ -356,6 +367,18 @@ function vae_store_recent_order($all = false) {
   _vae_session_deps_add('__v:store');
   if ($all) return $_SESSION['__v:store']['recent_order_data'];
   return $_SESSION['__v:store']['recent_order'];
+}
+
+function vae_store_register($new_data) {
+  if (!isset($_SESSION['__v:store']['user'])) $_SESSION['__v:store']['user'] = array();
+  $data = $_SESSION['__v:store']['user'];
+  foreach ($new_data as $k => $v) {
+    $data[$k] = $v;
+  }
+  if (_vae_store_create_customer($data, null, true)) {
+    return true;
+  }
+  return false;
 }
 
 function vae_store_remove_from_cart($cart_id) {

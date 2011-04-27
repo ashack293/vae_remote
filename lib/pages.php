@@ -129,10 +129,10 @@ function _vae_page_run($page, $template, $context, $from_cache = false) {
   global $_VAE;
   $_SERVER['PHP_SELF'] = "/" . $page;
   $_VAE['context'] = $context;
+  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local($template);
   list($filename, $vaeml) = _vae_src($template);
   if (!strlen($vaeml)) return _vae_page_404("Could not find Permalink HTML page.  We were looking for $template or $template.html or $template.haml or $template.php.");
   if ($from_cache == false) memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array('id' => $_REQUEST['id'], 'template' => (string)$template));
-  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local($template);
   $_VAE['filename'] = $filename;
   _vae_set_cache_key();
   if ($_ENV['TEST']) return $filename;

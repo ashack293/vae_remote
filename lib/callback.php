@@ -2,9 +2,8 @@
 
 function _vae_callback_create($tag) {
   if ($tag['callback']['structure_id'] && (_vae_rest(array(), "content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : ""), "content", $tag))) {
-    if ($tag['attrs']['newsletter_confirm'] && !$_REQUEST[$tag['attrs']['newsletter_confirm']]) unset($tag['attrs']['newsletter']);
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
-    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field]);
+    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field], $tag['attrs']['newsletter_confirm']);
     unset($tag['attrs']['newsletter']);
     if ($tag['attrs']['formmail']) {
       $tag['attrs']['to'] = $tag['attrs']['formmail'];
@@ -63,9 +62,8 @@ function _vae_callback_formmail($tag) {
       $subject = ($tag['attrs']['subject'] ? $tag['attrs']['subject'] :  $_SERVER['HTTP_HOST'] . " Website Form Submission");
       _vae_multipart_mail($from, $tag['attrs']['to'], $subject, $text, $html);
     }
-    if ($tag['attrs']['newsletter_confirm'] && !$_REQUEST[$tag['attrs']['newsletter_confirm']]) unset($tag['attrs']['newsletter']);
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
-    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field]);
+    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field], $tag['attrs']['newsletter_confirm']);
     if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
   }
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
