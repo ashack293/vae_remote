@@ -450,7 +450,7 @@ function _vae_handleob($vaeml) {
     if ($out == "__STREAM__") return file_get_contents($_VAE['stream']);
     $out = _vae_merge_session_data($out);
   } catch (Exception $e) {
-    if (get_class($e) == "TException" && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
+    if (get_class($e) == "TTransportException" && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
       $_SESSION['__v:error_handling']['recover_from_thrift_exception'] = true;
       sleep(5);
       Header("Location: " . $_SERVER['PHP_SELF']);
@@ -790,6 +790,10 @@ function _vae_load_settings() {
     }
     $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
   }
+  $t = $_VAE['settings']['timezone'];
+  if (strstr($t, "Central Time")) date_default_timezone_set("America/Chicago");
+  if (strstr($t, "Mountain Time")) date_default_timezone_set("America/Denver");
+  if (strstr($t, "Pacific Time")) date_default_timezone_set("America/Los_Angeles");
 }
 
 function _vae_local($filename = "") {
@@ -1364,7 +1368,6 @@ function _vae_render_backtrace($backtrace, $plaintext = false) {
             break;
           case 'string':
             $arg = str_replace("\n", "", $arg);
-            if ($bt['function'] != "get") $arg = substr($arg, 0, 50) . ((strlen($arg) > 50) ? '...' : '');
             $args .= '"' . $arg . '"';
             break;
           case 'array':
@@ -1469,6 +1472,11 @@ function _vae_render_message($title, $msg) {
     $out .= '
         <link rel="stylesheet" type="text/css" media="all" href="http://verb.vaesite.net/stylesheets/reset-min.css" />
         <link rel="stylesheet" type="text/css" media="all" href="http://verb.vaesite.net/stylesheets/global.css" />
+        <style type="text/css">
+         h2 { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; }
+         h3 { margin-top: 40px; }
+         .b { background: #222; color: #fff; padding: 10px; overflow: auto; font-weight: normal; }
+        </style>
     ';
   }
   $out .= '</head>
