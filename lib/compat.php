@@ -141,7 +141,7 @@ function verb_data_url() {
 }
 
 function verb_disable_verbml() {
-  return vae_disable_verbml();
+  return vae_disable_vaeml();
 }
 
 function verb_file($id, $preserve_filename = false) {

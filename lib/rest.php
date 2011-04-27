@@ -28,7 +28,7 @@ function _vae_build_xml($parent, $data) {
   if (!strlen($parent)) return "";
   $xml = "<" . $parent .">";
   foreach ($data as $k => $v) {
-    if (strlen($k)) {
+    if (strlen($k) && !strstr($k, " ")) {
       $xml .= "<" . $k . ">";
       if (is_array($v)) {
         foreach ($v as $item) {
