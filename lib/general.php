@@ -450,7 +450,7 @@ function _vae_handleob($vaeml) {
     if ($out == "__STREAM__") return file_get_contents($_VAE['stream']);
     $out = _vae_merge_session_data($out);
   } catch (Exception $e) {
-    if (get_class($e) == "TTransportException" && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
+    if (get_class($e) == "TSocketException" && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
       $_SESSION['__v:error_handling']['recover_from_thrift_exception'] = true;
       sleep(5);
       Header("Location: " . $_SERVER['PHP_SELF']);

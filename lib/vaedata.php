@@ -300,7 +300,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         try {
           if (!self::$sessionId) self::___openSession();
           return self::$client->get(self::$sessionId, $responseId, $query, $options);
-        } catch (TTransportException $e) {
+        } catch (TSocketException $e) {
           if (!$_REQUEST['__debug']) sleep(5);
         }
       }
@@ -408,7 +408,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     for ($i = 0; $i < 5; $i++) {
       try {
         $response = self::$client->data(self::$sessionId, $this->___responseId);
-      } catch (TTransportException $e) {
+      } catch (TSocketException $e) {
         sleep(5);
       }
     }
@@ -644,7 +644,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], $staging);
         return;
-      } catch (TTransportException $e) {
+      } catch (TSocketException $e) {
         sleep(5);
       }
     }
