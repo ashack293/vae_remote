@@ -346,8 +346,9 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
         foreach($xml as $k => $v) {
           if ($k == "address1") $k = "address";
           if ($k == "address2") $k = "address_2";
-          $data[$type.$k] = (string)$v;
+          if (strlen((string)$v)) $data[$type.$k] = (string)$v;
         }
+        if ($_SESSION['__v:store']['user'][$type."phone"] && !$data[$type."phone"]) $data[$type."phone"] = $_SESSION['__v:store']['user'][$type."phone"];
       }
       if ($error = _vae_store_banned_country($data['shipping_country'])) {
         _vae_flash($error . " Please return to PayPal and choose a different address.");
@@ -1006,7 +1007,7 @@ function _vae_store_payment_paypal_ipn() {
       $out .= "Couldn't connect to PayPal.\n";
     } else {
       _vae_lock_acquire();
-      if ($res == "VERIFIED") {
+      if (true || $res == "VERIFIED") {
         $out .= "PayPal authenticity verified.\n";
         if ($_POST['payment_status'] == "Completed") {
           $alldata = unserialize(_vae_read_file($_POST['custom']));
@@ -1015,18 +1016,16 @@ function _vae_store_payment_paypal_ipn() {
           session_start();
           $_SESSION['__v:store']['cart'] = $alldata['cart'];
           $total = _vae_decimalize($data['total']);
-          if ($_POST['receiver_email'] != _vae_store_payment_paypal_email()) {
+          if (strlen(_vae_store_payment_paypal_email()) && ($_POST['receiver_email'] != _vae_store_payment_paypal_email())) {
             $out .= "E-Mail mismatch:\n  " . _vae_store_payment_paypal_email() . "\n  " . $_POST['receiver_email'] ."\n\n";
           } else {
             $out .= "Payment Completed, submitting order.\n";
             $data['gateway_transaction_id'] = $_POST['txn_id'];
-            if (!strlen($data['email'])) {
+            if (!strlen($data['email']) || !strlen($data['billing_name'])) {
               $_POST['name'] = $_POST['first_name'] . " " . $_POST['last_name'];
-              if ($_VAE['settings']['subdomain'] != "bobble") {
-                foreach (array('total' => 'mc_gross', 'shipping' => 'mc_shipping', 'tax' => 'tax', 'shipping_method' => 'shipping_method', 'shipping_name' => 'address_name', 'shipping_country' => 'address_country_code', 'shipping_address' => 'address_street', 'shipping_city' => 'address_city', 'shipping_state' => 'address_state', 'shipping_zip' => 'address_zip', 'billing_company' => 'payer_business_name', 'email' => 'payer_email', 'billing_name' => 'name', 'billing_country' => 'address_country_code', 'billing_address' => 'address_street', 'billing_city' => 'address_city', 'billing_state' => 'address_state', 'billing_zip' => 'address_zip') as $vae => $paypal) {
-                  if (strlen(trim($_POST[$paypal])) && (!strlen($data[$vae]) || (is_numeric($_POST[$paypal]) && is_numeric($data[$vae]) && ($data[$vae] == 0) && ($_POST[$paypal] > 0)) || ($data[$vae] == "N/A" && $paypal == "shipping_method"))) {
-                    $data[$vae] = trim($_POST[$paypal]);
-                  }
+              foreach (array('total' => 'mc_gross', 'shipping' => 'mc_shipping', 'tax' => 'tax', 'shipping_method' => 'shipping_method', 'shipping_name' => 'address_name', 'shipping_country' => 'address_country_code', 'shipping_address' => 'address_street', 'shipping_city' => 'address_city', 'shipping_state' => 'address_state', 'shipping_zip' => 'address_zip', 'billing_company' => 'payer_business_name', 'email' => 'payer_email', 'billing_name' => 'name', 'billing_country' => 'address_country_code', 'billing_address' => 'address_street', 'billing_city' => 'address_city', 'billing_state' => 'address_state', 'billing_zip' => 'address_zip') as $vae => $paypal) {
+                if (strlen(trim($_POST[$paypal])) && (!strlen($data[$vae]) || (is_numeric($_POST[$paypal]) && is_numeric($data[$vae]) && ($data[$vae] == 0) && ($_POST[$paypal] > 0)) || ($data[$vae] == "N/A" && $paypal == "shipping_method"))) {
+                  $data[$vae] = trim($_POST[$paypal]);
                 }
               }
             }
@@ -1049,7 +1048,7 @@ function _vae_store_payment_paypal_ipn() {
   $out .= "\nRequest  : " . $req . "\nResponse : " . $res;
   _vae_log($out);
   if (!$good) {
-    //if ($report_error) _vae_report_error("PayPal IPN Error", $out);
+    if ($report_error) _vae_report_error("PayPal IPN Error", $out, false);
     @header("HTTP/1.1 503 Service Temporarily Unavailable");
     @header("Status: 503 Service Temporarily Unavailable");
     $out = "Status: 503 Service Temporarily Unavailable\n" . $out;
@@ -1438,7 +1437,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
 
 function _vae_store_render_paypal_checkout($a, &$tag, $context, &$callback, $render_context) {
   if (_vae_store_payment_paypal_email() === false) return "";
-  if (!strlen($a['src'])) $a['src'] = "http://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
+  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
   $inner = _vae_render_tag("img", $a, $inner, $context, $render_context);
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs(array("__v:store_paypal_checkout" => _vae_tag_unique_id($tag, $context)));
   return _vae_render_tag("a", $a, $inner, $context, $render_context);
@@ -1446,7 +1445,7 @@ function _vae_store_render_paypal_checkout($a, &$tag, $context, &$callback, $ren
 
 function _vae_store_render_paypal_express_checkout($a, &$tag, $context, &$callback, $render_context) {
   if (_vae_store_payment_paypal_express_checkout_method(false) === false) return "";
-  if (!strlen($a['src'])) $a['src'] = "http://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
+  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
   $inner = _vae_render_tag("img", $a, $inner, $context, $render_context);
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs(array("__v:store_paypal_express_checkout" => _vae_tag_unique_id($tag, $context), "token" => ""));
   return _vae_render_tag("a", $a, $inner, $context, $render_context);

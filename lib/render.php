@@ -981,6 +981,10 @@ function _vae_render_rss($a, &$tag, $context, &$callback, $render_context) {
   if (!$a['limit']) $a['limit'] = 25;
   foreach (_vae_fetch($a['path'], $context, $a) as $ctxt) {
     $inside = _vae_render_tags($tag, $ctxt, $render_context);
+    if (preg_match('/<item>(.*)<\/item>/s', $inside, $matches)) {
+      $outside = preg_replace('/<item>(.*)<\/item>/s', '', $inside);
+      $inside = $matches[1];
+    }
     $items .= '  <item>' . "\n";
     if (!strstr($inside, "<title>")) $items .= '   <title>' . _vae_format_for_rss(_vae_fetch_multiple($a['title_field'], $ctxt, $a)) . '</title>' . "\n";
     if ($a['author_field'] && !strstr($inside, "<author>")) $items .= '   <author>' . _vae_format_for_rss(_vae_fetch_multiple($a['author_field'], $ctxt, $a)) . '</author>' . "\n";
@@ -996,13 +1000,14 @@ function _vae_render_rss($a, &$tag, $context, &$callback, $render_context) {
     $items .= '  </item>' . "\n";
   }
   $out  = '<?xml version="1.0"?>' . "\n";
-  $out .= '<rss version="2.0"' . (strstr($items, "<g:") ? ' xmlns:g="http://base.google.com/ns/1.0"' : "") . '>' . "\n";
+  $out .= '<rss version="2.0"' . (strstr($items, "<g:") ? ' xmlns:g="http://base.google.com/ns/1.0"' : "") . (strstr($items, "<itunes:") ? ' xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"' : "") . '>' . "\n";
   $out .= ' <channel>' . "\n";
-  $out .= '  <title>' . $a['title'] . '</title>' . "\n";
-  $out .= '  <link>http://' . $_SERVER['HTTP_HOST'] . '/</link>' . "\n";
-  $out .= '  <description>' . $a['description'] . '</description>' . "\n";
-  $out .= '  <language>en-us</language>' . "\n";
+  if (!strstr($outside, "<title>")) $out .= '  <title>' . $a['title'] . '</title>' . "\n";
+  if (!strstr($outside, "<link>")) $out .= '  <link>http://' . $_SERVER['HTTP_HOST'] . '/</link>' . "\n";
+  if (!strstr($outside, "<description>")) $out .= '  <description>' . $a['description'] . '</description>' . "\n";
+  if (!strstr($outside, "<language>")) $out .= '  <language>en-us</language>' . "\n";
   $out .= '  <generator>Vae</generator>' . "\n";
+  $out .= $outside;
   $out .= $items;
   $out .= ' </channel>' . "\n";
   $out .= '</rss>';
