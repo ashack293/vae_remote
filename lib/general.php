@@ -1271,9 +1271,9 @@ function _vae_qs($out = "", $keep_current = true, $append_to_end = "") {
     foreach ($new as $k => $v) {
       if ($k != "__vae_local" && $k != "__vae_ssl_router" && $k != "__verb_local" && $k != "__page" && strlen($v)) {
         if ((preg_match("/([a-z0-9]*_)?page/", $k) && preg_match("/^([0-9]*|all)$/", $v) && !isset($_VAE['settings']['query_string_pagination'])) || ($k == "locale")) {
-          if (($v != 1) && ($v != "en")) $path .= "/" . $k . "/" . $v;
+          if (($v != 1) && ($v != "en")) $path .= "/" . urlencode($k) . "/" . urlencode($v);
         } else {
-          $out .= "&" . $k . "=" . urlencode($v);
+          $out .= "&" . urlencode($k) . "=" . urlencode($v);
         }
       }
     }
