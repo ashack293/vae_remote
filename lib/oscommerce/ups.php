@@ -226,7 +226,6 @@
       } else {
         return 'error';
       }
-      
       $body_array = explode("\n", $body);
 
       $returnval = array();

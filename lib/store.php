@@ -946,6 +946,7 @@ function _vae_store_payment_paypal_callback($data, $tag) {
       $discounted_subtotal += ($price * $r['qty']);
     }
     $option = (strlen($r['options']) ? "&on0_$i=Option&os0_$i=" . urlencode($r['options']) : "");
+    $option .= (strlen($r['notes']) ? "&on1_$i=Note&os1_$i=" . urlencode($r['notes']) : "");
     if (strlen($r['weight'])) $option .= "&weight_$i=" . $r['weight'];
     $items .= "&amount_$i=" . urlencode($price) . $option . "&item_name_$i=" . urlencode($r['name']) . "&item_number_$i=" . urlencode($r['row_id'] . (strlen($r['option_id']) ? "-" . $r['option_id'] : "")) . "&quantity_$i=" . urlencode($r['qty']);
     $i++;

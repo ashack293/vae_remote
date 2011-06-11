@@ -36,6 +36,12 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       if (strlen($method['maximum_order_amount'])) {
         if ($subtotal > $method['maximum_order_amount']) continue;
       }
+      if (strlen($method['minimum_order_num'])) {
+        if ($num_items < $method['minimum_order_num']) continue;
+      }
+      if (strlen($method['maximum_order_num'])) {
+        if ($num_items > $method['maximum_order_num']) continue;
+      }
       if (strlen($method['class']) && !is_array($method['class'])) {
         $bad = false;
         foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
