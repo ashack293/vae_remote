@@ -60,7 +60,7 @@ class fedex {
   }
 
   function _AccessFedex($data) {
-    $this->server = 'gateway.fedex.com/GatewayDC';
+    $this->server = 'gatewaybeta.fedex.com/GatewayDC';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, 'https://' . $this->server);
@@ -101,6 +101,7 @@ class fedex {
     $data .= '4015,"' . $method['phone'] . '"'; // Subscriber phone number
     $data .= '99,""'; // End of Record, required
     $fedexData = $this->_AccessFedex($data);
+    _vae_debug($fedexData);
     $meterStart = strpos($fedexData,'"498,"');
     if ($meterStart === false) {
       if (strlen($fedexData) == 0) {
