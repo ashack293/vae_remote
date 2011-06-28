@@ -17,7 +17,7 @@ function vae_cache($key, $timeout = 3600, $function = "", $global = false) {
     return $cached[1];
   }
   $out = $function();
-  if (!$_REQUEST['__debug'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
+  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
   return $out;
 }
 

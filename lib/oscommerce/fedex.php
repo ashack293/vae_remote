@@ -83,7 +83,7 @@ class fedex {
     $hash = md5(serialize($method));
     if ($cached = _vae_read_file("_vae_store_shipping_fedex_meter_number.txt")) {
       $cached_data = unserialize($cached);
-      if ($hash == $cached_data['hash']) {
+      if ($hash == $cached_data['hash'] || $cached_data['hash'] == "manual") {
         $this->meter = $cached_data;
         return true;
       }
@@ -101,14 +101,13 @@ class fedex {
     $data .= '4015,"' . $method['phone'] . '"'; // Subscriber phone number
     $data .= '99,""'; // End of Record, required
     $fedexData = $this->_AccessFedex($data);
-    _vae_debug($fedexData);
     $meterStart = strpos($fedexData,'"498,"');
     if ($meterStart === false) {
       if (strlen($fedexData) == 0) {
         $this->error_message = "We couldn't register you for a FedEx Meter Number.  It looks like the FedEx servers may be down.  FedEx Error #1.";
       } else {
         $fedexData = $this->_ParseFedex($fedexData);
-        $this->error_message = "We couldn't register you for a FedEx Meter Number.  Double check your settings.  FedEx Error #" . $fedexData['2'] . ': ' . $fedexData['3'];
+        $this->error_message = "We couldn't register you for a FedEx Meter Number.  Double check your settings.  FedEx Error #" . $fedexData['2'] . ': ' . $fedexData['3'] . ".   (Hash: $hash)";
       }
       $this->error($this->error_message);
       return false;
