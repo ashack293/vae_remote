@@ -46,8 +46,8 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/render.php");
   require_once(dirname(__FILE__) . "/rest.php");
   require_once(dirname(__FILE__) . "/store.php");
+  require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/vaedata.php");
-  require_once("/www/vae_thrift/current/php/client.php");
   
   /* Initialize */
   _vae_set_default_config();
