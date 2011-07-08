@@ -671,8 +671,6 @@ function _vae_store_compute_tax() {
       if (strlen($rate['country']) && ($country != $rate['country'])) $use = false;
       if (strlen($rate['state']) && ($state != $rate['state'])) $use = false;
       if ($use) {
-        if (strlen($_SESSION['__v:store']['tax_rate'])) $_SESSION['__v:store']['tax_rate'] .= "/";
-        $_SESSION['__v:store']['tax_rate'] .= $rate['description'];
         $subtotal = 0;
         foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
           if ($r['taxable'] && (!$rate['tax_class'] || ($r['tax_class'] == $rate['tax_class'])) && (!$rate['minimum_price'] || ($r['price'] >= $rate['minimum_price']))) $subtotal += ($r['total'] - _vae_store_compute_discount($r));
@@ -684,6 +682,10 @@ function _vae_store_compute_tax() {
         }
         if ($subtotal < 0) $subtotal = 0;
         $amt = $rate['rate'] * $subtotal / 100;
+        if ($amt > 0) {
+          if (strlen($_SESSION['__v:store']['tax_rate'])) $_SESSION['__v:store']['tax_rate'] .= "/";
+          $_SESSION['__v:store']['tax_rate'] .= $rate['description'];
+        }
         $totamt += $amt;
       }
     }

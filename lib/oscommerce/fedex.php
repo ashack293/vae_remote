@@ -60,7 +60,7 @@ class fedex {
   }
 
   function _AccessFedex($data) {
-    $this->server = 'gatewaybeta.fedex.com/GatewayDC';
+    $this->server = 'gateway.fedex.com/GatewayDC';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, 'https://' . $this->server);
@@ -157,7 +157,7 @@ class fedex {
     $data .= '1116,"I"'; // Dimension units
     $data .= '1401,"' . $this->pounds . '"'; 
     $data .= '1529,"1"'; // Quote discounted rates
-    $data .= '440,"Y"'; // Residential address
+    $data .= '440,"N"'; // Residential address
     $data .= '1273,"01"'; // Package type
     $data .= '1333,"' . MODULE_SHIPPING_FEDEX1_DROPOFF . '"'; // Drop of drop off or pickup
     $data .= '99,""'; // End of record
