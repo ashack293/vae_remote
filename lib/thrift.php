@@ -16,6 +16,7 @@ function _vae_dbd($port = 9091) {
 };
 
 function _vae_thrift_open($client_class, $port) {
+  global $_VAE;
   $GLOBALS['THRIFT_ROOT'] = '/www/vae_thrift/current/php/vendor/thrift';
   require_once $GLOBALS['THRIFT_ROOT'].'/Thrift.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/protocol/TBinaryProtocol.php';
@@ -25,7 +26,12 @@ function _vae_thrift_open($client_class, $port) {
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/VaeRubyd.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/vae_types.php';
   try {
-    $socket = new TSocket('10.38.9.44', $port);
+    $host = 'localhost';
+    $hash = base_convert(substr(md5($_SERVER['DOCUMENT_ROOT']), 0, 2), 16, 10) % 16;
+    if (($_VAE['config']['vaedb'] == "vaedb0" || $hash == 0) && $port == 9091) {
+      $host = '10.38.9.44';
+    }
+    $socket = new TSocket($host, $port);
     $socket->setRecvTimeout(30000);
     $transport = new TBufferedTransport($socket, 1024, 1024);
     $protocol = new TBinaryProtocol($transport);

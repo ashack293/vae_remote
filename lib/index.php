@@ -1,6 +1,10 @@
 <?php
 
-if ($_VERB) $_VAE = $_VERB;
+if ($_VERB) {
+  foreach ($_VERB as $k => $v) {
+    $_VAE[$k] = $v;
+  }
+}
 
 $_VAE['version'] = 100;
 
