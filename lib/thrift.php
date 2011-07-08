@@ -27,7 +27,7 @@ function _vae_thrift_open($client_class, $port) {
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/vae_types.php';
   try {
     $host = 'localhost';
-    $hash = base_convert(substr(md5($_SERVER['DOCUMENT_ROOT']), 0, 2), 16, 10) % 16;
+    $hash = base_convert(substr(md5($_SERVER['DOCUMENT_ROOT']), 0, 2), 16, 10) % 4;
     if (($_VAE['config']['vaedb'] == "vaedb0" || $hash == 0) && $port == 9091) {
       $host = '10.38.9.44';
     }
