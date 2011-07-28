@@ -605,7 +605,7 @@ function _vae_inject_assets($out) {
         if ($_VAE['asset_types'][$group] == "js") {
           require_once(dirname(__FILE__) . "/../vendor/jsmin.php");
           $raw = JSMin::minify($raw);
-        } else {
+        } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/csstidy.php");
           $css = new csstidy();
           $css->parse($raw);
