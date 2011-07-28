@@ -92,7 +92,7 @@ if (_vae_should_load()) {
   _vae_parse_path();
   if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
 
-  if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass") {
+  if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass" || substr($_SERVER['SCRIPT_FILENAME'], -5) == ".scss") {
     require_once(dirname(__FILE__) . "/haml.php");
     ob_start('_vae_sass_ob');
   } elseif (strstr($_SERVER['SCRIPT_FILENAME'], ".pdf") && !isset($_VAE['skip_pdf'])) {

@@ -592,9 +592,9 @@ function _vae_inject_assets($out) {
         $raw = "";
         foreach ($assets as $asset) {
           $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
-          if (strstr($asset, ".sass")) {
+          if (strstr($asset, ".sass") || strstr($asset, ".scss")) {
             require_once(dirname(__FILE__)."/haml.php");
-            $content = _vae_sass($content, false, dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset));
+            $content = _vae_sass($content, false, dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset), strstr($asset, ".scss"));
           }
           if ($_VAE['asset_types'][$group] != "js") {
             $_VAE['assets_css_callback'] = (substr($asset, 0, 1) == "/" ? "" : "/") . dirname($asset);
@@ -823,9 +823,9 @@ function _vae_local($filename = "") {
   if (strlen($vae_php)) _vae_local_exec($vae_php);
   $verb_php = memcache_get($_VAE['memcached'], $memcache_base_key . "/__verb.php");
   if (strlen($verb_php)) _vae_local_exec($verb_php);
-  if (strstr($filename, ".sass")) {
+  if (strstr($filename, ".sass") || strstr($filename, ".scss")) {
     require_once(dirname(__FILE__)."/haml.php");
-    echo _vae_sass($script, true, dirname($filename));
+    echo _vae_sass($script, true, dirname($filename), strstr($filename, ".scss"));
   } else {
     ob_start(_vae_handleob);
     _vae_local_exec($script);
@@ -1702,7 +1702,7 @@ function _vae_src($filename) {
   global $_VAE;
   if (substr($filename, 0, 1) != "/") $filename = "/" . $filename;
   if ($filename == "/") $filename = "/index";
-  foreach (array("", ".html", ".haml", ".php", ".sass", ".xml", ".rss", ".pdf.html", ".pdf.haml", ".pdf.haml.php", ".haml.php") as $ext) {
+  foreach (array("", ".html", ".haml", ".php", ".sass", ".scss", ".xml", ".rss", ".pdf.html", ".pdf.haml", ".pdf.haml.php", ".haml.php") as $ext) {
     if ($_VAE['local']) {
       $vaeml = memcache_get($_VAE['memcached'], $_VAE['local'] . $filename . $ext);
       if (strlen($vaeml)) {

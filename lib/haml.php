@@ -8,7 +8,7 @@ function _vae_haml($haml) {
   return $html;
 }
 
-function _vae_sass($sass, $header = true, $include_directory = null) {
+function _vae_sass($sass, $header = true, $include_directory = null, $scss = false) {
   global $_VAE;
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory);
@@ -22,7 +22,11 @@ function _vae_sass($sass, $header = true, $include_directory = null) {
   }
   if (!strlen($css)) {
     $client = _vae_thrift();
-    $css = $client->sass($sass, $include_directory);
+    if ($scss) {
+      $css = $client->scss($sass, $include_directory);
+    } else {
+      $css = $client->sass($sass, $include_directory);
+    }
     $deps = _vae_sass_deps($sass, $include_directory);
     memcache_set($_VAE['memcached'], $cache_key, array($css, $deps));
   }
@@ -37,9 +41,16 @@ function _vae_sass_deps($sass, $include_directory) {
   if (count($matches)) {
     foreach ($matches as $match) {
       $filename = str_replace(array("'", '"'), "", $match[1]);
-      if (!strstr($filename, ".") || strstr($filename, ".sass")) {
-        $filename = (strstr($filename, ".") ? $filename : $filename . ".sass");
-        $filename = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/") . $filename;
+      if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
+        $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
+        if (!strstr($filename, ".")) {
+          if (file_exists($inc_dir . $filename . ".scss")) {
+            $filename = $filename . ".scss";
+          } else {
+            $filename = $filename . ".sass";
+          }
+        }
+        $filename = $inc_dir . $filename;
         $sass = @file_get_contents($filename);
         $deps[$filename] = md5($sass);
         $deps = array_merge($deps, _vae_sass_deps($sass, $include_directory));
@@ -51,7 +62,11 @@ function _vae_sass_deps($sass, $include_directory) {
 
 function _vae_sass_ob($sass, $header = true) {
   try {
-    return _vae_sass($sass, $header);
+    if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".scss") {
+      return _vae_sass($sass, $header, null, true);
+    } else {
+      return _vae_sass($sass, $header);
+    }
   } catch (Exception $e) {
     return _vae_render_error($e);
   }
