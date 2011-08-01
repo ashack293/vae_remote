@@ -384,7 +384,7 @@ function _vae_render_date_selection($a, &$tag, $context, &$callback, $render_con
           } else {
             $link = strftime("%Y", (string)$date);
           }
-          $data = '<a ' . (($_REQUEST[$param] == $i) ? 'class="current" ' : '') . 'href="' . $a['href'] . _vae_qs(array($param => $link)) . '">' . $formatted . '</a> ';
+          $data = '<a ' . (($_REQUEST[$param] == $link) ? 'class="current" ' : '') . 'href="' . $a['href'] . _vae_qs(array($param => $link)) . '">' . $formatted . '</a> ';
           $out .= _vae_merge_dividers($data, $dividers, $rendered, $context, $render_context);
           $rendered++;
         }
