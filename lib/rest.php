@@ -46,7 +46,9 @@ function _vae_build_xml($parent, $data) {
 
 function _vae_create($structure_id, $row_id, $data) {
   global $_VAE;
-  $raw = _vae_rest($data, "content/create/" . $structure_id . "/" . $row_id, "content");
+  $url = "content/create/" . $structure_id . "/" . $row_id;
+  if ($data['publish'] === false) $url .= "?row[disabled]=1";
+  $raw = _vae_rest($data, $url, "content");
   if ($raw == false) return false;
   $data = _vae_array_from_rails_xml(simplexml_load_string($raw));
   return $data['id'];

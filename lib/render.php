@@ -330,6 +330,7 @@ function _vae_render_create($a, &$tag, $context, &$callback, $render_context) {
   $createInfo = _vae_fetch_for_creating($a['path'], $context);
   $callback['structure_id'] = $createInfo->structure_id;
   $callback['row_id'] = $createInfo->row_id;
+  $callback['unpublished'] = ($a['unpublished']);
   return _vae_render_callback("create", $a, $tag, $context, $callback, $render_context->set("form_create_mode"), $a['path']);
 }
 
