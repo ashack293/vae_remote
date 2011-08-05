@@ -1187,7 +1187,7 @@ function _vae_render_text($a, &$tag, $context, &$callback, $render_context) {
     if ($a['font'] && strlen($text)) {
       $render = vae_text($text, $a['font'], $a['font-size'], $a['color'], $a['kerning'], $a['padding'], $a['max-width']);
     } else {
-      $render = vae_style($text);
+      $render = vae_style($text, ($a['nohtml'] ? false : true));
     }
   }
   if ($a['escape']) $render = addslashes($render);

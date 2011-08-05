@@ -443,8 +443,10 @@ function vae_store_update_order_status($order_id, $status) {
   return ($ret != false);
 }
 
-function vae_style($r) {
-  return nl2br(_vae_urlize(htmlspecialchars(trim(stripslashes($r)))));
+function vae_style($r, $urlize = true) {
+  $r = htmlspecialchars(trim(stripslashes($r)));
+  if ($urlize) $r = _vae_urlize($r);
+  return nl2br($r);
 }
 
 function vae_template_mail($from, $to, $subject, $template, $text_yield = null, $html_yield = null) {

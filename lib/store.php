@@ -319,10 +319,10 @@ function _vae_store_callback_logout($tag) {
 }
 
 function _vae_store_callback_payment_methods_select($tag) {
-  if (($_REQUEST['method'] == "paypal_express_checkout") || $_REQUEST['token']) {
+  if (($_REQUEST['__method'] == "paypal_express_checkout") || $_REQUEST['token']) {
     return _vae_store_callback_paypal_express_checkout($tag, true);
   } else {
-    $_SESSION['__v:store']['payment_method'] = $_REQUEST['method'];
+    $_SESSION['__v:store']['payment_method'] = $_REQUEST['__method'];
   }
   if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
   if (_vae_is_xhr()) return "";
@@ -359,8 +359,8 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
     }
     return _vae_callback_redirect($_SERVER['PHP_SELF']);
   } else {
-    $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
-    $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&method=") : _vae_qs(""));
+    $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
+    $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&__method=") : _vae_qs(""));
     if ($url = _vae_rest(array('ip' => $_SERVER['REMOTE_ADDR'], 'return_url' => $return_url, 'cancel_return_url' => $cancel_url), "store/paypal_express_checkout", "order")) {
       return _vae_callback_redirect($url);
     } else {
@@ -392,7 +392,7 @@ function _vae_store_callback_register($tag) {
 
 function _vae_store_callback_shipping_methods_select($tag) {
   global $_VAE;
-  $method = $_REQUEST['method'];
+  $method = $_REQUEST['__method'];
   $_SESSION['__v:store']['shipping']['selected_index'] = $method;
   $_SESSION['__v:store']['shipping']['selected'] = $_SESSION['__v:store']['shipping']['options'][$method]['cost'];
   if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
@@ -1429,9 +1429,9 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
     }
     if ($a['ajax']) {
       _vae_needs_jquery();
-      $a['onchange'] = _vae_append_js($a['onchange'], _vae_append_js($a['ajaxbefore'], "jQuery.get('" . $_SERVER['PHP_SELF'] . "?__v:store_payment_methods_select=" . _vae_tag_unique_id($tag, $context) . "&method='+this.value, function(d){ " . $a['ajaxsuccess'] . " jQuery('#" . $a['ajax'] . "').html(d); });"));
+      $a['onchange'] = _vae_append_js($a['onchange'], _vae_append_js($a['ajaxbefore'], "jQuery.get('" . $_SERVER['PHP_SELF'] . "?__v:store_payment_methods_select=" . _vae_tag_unique_id($tag, $context) . "&__method='+this.value, function(d){ " . $a['ajaxsuccess'] . " jQuery('#" . $a['ajax'] . "').html(d); });"));
     } else {
-      $a['onchange'] = _vae_append_js($a['onchange'], "window.location.href='" . $_SERVER['PHP_SELF'] . "?__v:store_payment_methods_select=" . _vae_tag_unique_id($tag, $context) . "&method='+this.value");
+      $a['onchange'] = _vae_append_js($a['onchange'], "window.location.href='" . $_SERVER['PHP_SELF'] . "?__v:store_payment_methods_select=" . _vae_tag_unique_id($tag, $context) . "&__method='+this.value");
     }
   }
   $a['value'] = $_SESSION['__v:store']['payment_method'];
@@ -1524,9 +1524,9 @@ function _vae_store_render_shipping_methods_select($a, &$tag, $context, &$callba
   _vae_store_compute_shipping();
   if ($a['ajax']) {
     _vae_needs_jquery();
-    $a['onchange'] = _vae_append_js($a['onchange'], _vae_append_js($a['ajaxbefore'], "jQuery.get('" . $_SERVER['PHP_SELF'] . "?__v:store_shipping_methods_select=" . _vae_tag_unique_id($tag, $context) . "&method='+this.value, function(d){ " . $a['ajaxsuccess'] . " jQuery('#" . $a['ajax'] . "').html(d); });"));
+    $a['onchange'] = _vae_append_js($a['onchange'], _vae_append_js($a['ajaxbefore'], "jQuery.get('" . $_SERVER['PHP_SELF'] . "?__v:store_shipping_methods_select=" . _vae_tag_unique_id($tag, $context) . "&__method='+this.value, function(d){ " . $a['ajaxsuccess'] . " jQuery('#" . $a['ajax'] . "').html(d); });"));
   } else {
-    $a['onchange'] = _vae_append_js($a['onchange'], "window.location.href='" . $_SERVER['PHP_SELF'] . "?__v:store_shipping_methods_select=" . _vae_tag_unique_id($tag, $context) . "&method='+this.value");
+    $a['onchange'] = _vae_append_js($a['onchange'], "window.location.href='" . $_SERVER['PHP_SELF'] . "?__v:store_shipping_methods_select=" . _vae_tag_unique_id($tag, $context) . "&__method='+this.value");
   }
   $a['options'] = array();
   if ($_SESSION['__v:store']['shipping']['options']) {

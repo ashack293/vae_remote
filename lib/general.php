@@ -478,7 +478,7 @@ function _vae_html2rgb($color) {
 
 function _vae_htmlarea($text, $a, $offsite = false) {
   global $_VAE;
-  $text = _vae_urlize($text);
+  if (!$a['nohtml']) $text = _vae_urlize($text);
   $section = $a['section'];
   $width = $a['asset_width'];
   $height = $a['asset_height'];
