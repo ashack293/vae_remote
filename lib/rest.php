@@ -44,14 +44,20 @@ function _vae_build_xml($parent, $data) {
   return $xml;
 }
 
-function _vae_create($structure_id, $row_id, $data) {
+function _vae_create($structure_id, $row_id, $data, $hide_errors = false) {
   global $_VAE;
   $url = "content/create/" . $structure_id . "/" . $row_id;
   if ($data['publish'] === false) $url .= "?row[disabled]=1";
-  $raw = _vae_rest($data, $url, "content");
+  $raw = _vae_rest($data, $url, "content", null, null, $hide_errors);
   if ($raw == false) return false;
   $data = _vae_array_from_rails_xml(simplexml_load_string($raw));
   return $data['id'];
+  return true;
+}
+
+function _vae_destroy($row_id) {
+  $raw = _vae_rest(null, "content/destroy/" . $row_id, "content");
+  if ($raw == false) return false;
   return true;
 }
 
@@ -86,6 +92,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   if ($errors == null) $errors = array();
   if ($tag) _vae_merge_data_from_tags($tag, $data, $errors);
   if (count($errors) == 0) $ret = _vae_send_rest($method, _vae_build_xml($param, $data), $errors);
+  $_VAE['errors'] = $errors;
   if (!$hide_errors && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
     return false;
   } elseif (!$hide_errors && ($ret == false)) {

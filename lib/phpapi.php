@@ -30,7 +30,7 @@ function vae_cdn_url() {
 
 function vae_create($structure_id, $row_id, $data) {
   if (!is_numeric($structure_id)) _vae_error("You called <span class='c'>vae_create()</span> but didn't provide a proper structure ID.");
-  return _vae_create($structure_id, $row_id, $data);
+  return _vae_create($structure_id, $row_id, $data, true);
 }
 
 function vae_customer($id) {
@@ -52,9 +52,19 @@ function vae_data_url() {
   return $_VAE['config']['data_url'];
 }
 
+function vae_destroy($id) {
+  if (!is_numeric($id)) _vae_error("You called <span class='c'>vae_destroy()</span> but didn't provide a proper ID.");
+  return _vae_destroy($id);
+}
+
 function vae_disable_vaeml() {
   ob_end_clean();
   return true;
+}
+
+function vae_errors() {
+  global $_VAE;
+  return $_VAE['errors'];
 }
 
 function vae_file($id, $preserve_filename = false) {
