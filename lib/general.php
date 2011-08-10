@@ -305,7 +305,7 @@ function _vae_form_prepare($a, &$tag, $context, $render_context) {
   if ($a['path']) {
     $find_path =  ((substr($a['path'], 0, 8) == "confirm_") ? substr($a['path'], 8) : $a['path']);
     if (($value = _vae_request_param($find_path, true)) && !is_array($value)) {
-      $a['value'] = htmlentities($value);
+      $a['value'] = $value;
     } elseif (!$render_context->get("form_create_mode")) {
       $a['value'] = _vae_fetch_without_errors($find_path, $context);
     }
@@ -322,7 +322,7 @@ function _vae_form_prepare($a, &$tag, $context, $render_context) {
     if (!isset($a['id'])) $a['id'] = $a['name'];    
   } else {
     if (($value = _vae_request_param($a['name'], true)) && _vae_flash_are_errors() && !is_array($value)) {
-      $a['value'] = htmlentities($value);
+      $a['value'] = $value;
     }
   }
   if ($a['required']) {

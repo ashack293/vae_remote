@@ -62,9 +62,18 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       require_once(dirname(__FILE__) . "/oscommerce/" . $method['method_name'] . ".php");
       $ext = $method['method_name'];
       $class = new $ext();
-      if ($_SESSION['__v:store']['total_weight']) {
+      $box_weights = $_SESSION['__v:store']['total_weight'];
+      if (!$box_weights && ($shipping_weight > 70)) {
+        $box_weights = array();
+        while ($shipping_weight > 70) {
+          $box_weights[] = 70;
+          $shipping_weight -= 70;
+        }
+        $box_weights[] = $shipping_weight;
+      }
+      if ($box_weights) {
         $quotes = array('methods' => array());
-        foreach ($_SESSION['__v:store']['total_weight'] as $box_weight) {
+        foreach ($box_weights as $box_weight) {
           $shipping_weight = $box_weight;
           $these_quotes = $class->quote();
           foreach ($these_quotes["methods"] as $r) {
