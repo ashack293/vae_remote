@@ -25,19 +25,24 @@ function _vae_thrift_open($client_class, $port) {
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/VaeDb.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/VaeRubyd.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/vae_types.php';
-  try {
-    $host = 'localhost';
-    if ($port == 9091 || !$_VAE['settings']['sass_2']) {
-      $host = '10.38.9.44';
+  $i = 0;
+  while ($i < 5) {
+    try {
+      $host = 'localhost';
+      if (($i < 3) && ($port == 9091 || !$_VAE['settings']['sass_2'])) {
+        $host = '10.38.9.44';
+      }
+      $socket = new TSocket($host, $port);
+      $socket->setRecvTimeout(30000);
+      $transport = new TBufferedTransport($socket, 1024, 1024);
+      $protocol = new TBinaryProtocol($transport);
+      $client = new $client_class($protocol);
+      $transport->open();
+      return $client;
+    } catch (TException $tx) {
     }
-    $socket = new TSocket($host, $port);
-    $socket->setRecvTimeout(30000);
-    $transport = new TBufferedTransport($socket, 1024, 1024);
-    $protocol = new TBinaryProtocol($transport);
-    $client = new $client_class($protocol);
-    $transport->open();
-    return $client;
-  } catch (TException $tx) {
-    throw new VaeException("", $tx->getMessage());
+    sleep(5);
+    $i++;
   }
+  throw new VaeException("", $tx->getMessage());
 }
