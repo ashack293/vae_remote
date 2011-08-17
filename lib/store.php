@@ -592,7 +592,7 @@ function _vae_store_compute_shipping($register_page = null) {
   _vae_session_deps_add('__v:store', '_vae_store_compute_shipping');
   if (!count($_SESSION['__v:store']['cart']) || !count($_VAE['settings']['shipping_methods'])) {
     unset($_SESSION['__v:store']['shipping']);
-    return 0.0;
+    return $handling;
   }
   foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
     if ($r['weight']) {
@@ -605,7 +605,7 @@ function _vae_store_compute_shipping($register_page = null) {
   }
   if ($num_items == 0 && !$_SESSION['__v:store']['total_weight']) {
     unset($_SESSION['__v:store']['shipping']);
-    return 0.0;
+    return $handling;
   }
   $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $address . $weight . serialize($_SESSION['__v:store']['total_weight']) . "d");
   if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];

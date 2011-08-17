@@ -29,6 +29,13 @@ function vae_cdn_url() {
 }
 
 function vae_create($structure_id, $row_id, $data) {
+  if (strlen($structure_id) && !is_numeric($structure_id)) {
+    $createInfo = _vae_fetch_for_creating($structure_id);
+    if ($createInfo && is_numeric($createInfo->structure_id)) {
+      $structure_id = $createInfo->structure_id;
+      $row_id = $createInfo->row_id;
+    }
+  }
   if (!is_numeric($structure_id)) _vae_error("You called <span class='c'>vae_create()</span> but didn't provide a proper structure ID.");
   return _vae_create($structure_id, $row_id, $data, true);
 }

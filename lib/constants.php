@@ -1289,6 +1289,7 @@ $_VAE['form_items'] = array (
   'hidden_field' => 1,
   'option_select' => 1,
   'password_field' => 1,
+  'radio' => 1,
   'select' => 1,
   'state_select' => 1,
   'text_area' => 1,
