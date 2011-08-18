@@ -17,7 +17,7 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
         if (strstr($method['destination_country'], "cont_")) {
           if (!_vae_store_continent_match(str_replace("cont_", "", $method['destination_country']), $country)) continue;
         } elseif ($method['destination_country'] == "US48") {
-          if ($country != "US" || $state == "AK" || $state == "HI") continue;
+          if ($country != "US" || !in_array($state, $_VAE['us48'])) continue;
         } elseif (($method['destination_country'] != $country)) {
           continue;
         }

@@ -607,7 +607,7 @@ function _vae_store_compute_shipping($register_page = null) {
     unset($_SESSION['__v:store']['shipping']);
     return $handling;
   }
-  $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $address . $weight . serialize($_SESSION['__v:store']['total_weight']) . "d");
+  $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $state . $address . $weight . serialize($_SESSION['__v:store']['total_weight']) . "d");
   if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
   $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $address, $handling);
   $_SESSION['__v:store']['shipping'] = array('hash' => $hash);
