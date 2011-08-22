@@ -80,6 +80,10 @@ class fedex {
 
   function _getMeter() {
     global $method;
+    if ($method['meter_number']) {
+      $this->meter = $method['meter_number'];
+      return true;
+    }
     $hash = md5(serialize($method));
     if ($cached = _vae_read_file("_vae_store_shipping_fedex_meter_number.txt")) {
       $cached_data = unserialize($cached);
