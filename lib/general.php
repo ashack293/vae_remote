@@ -838,7 +838,7 @@ function _vae_local_authenticate($memcache_base_key) {
   $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
     memcache_set($_VAE['memcached'], $memcache_base_key . "auth", $out);
-    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\n\n";
+    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\nNOTE: the latest version (0.5.0) updates Sass to version 3.  If your sites\ndependon Sass 2, DO NOT UPGRADE.  (Or better yet, upgrade and then update\nyour sites to use Sass 3.)\n*****\n\n";
     else return $out;
   }
   return "BAD";
