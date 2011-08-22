@@ -1,6 +1,6 @@
 <?php
 
-function _vae_users_callback_forgot(&$tag) {
+function _vae_users_callback_forgot($tag) {
   global $_VAE;
   _vae_load_cache();
   if ($_REQUEST['__v:users_forgot_code']) {
@@ -28,7 +28,7 @@ function _vae_users_callback_forgot(&$tag) {
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
-function _vae_users_callback_login(&$tag) {
+function _vae_users_callback_login($tag) {
   global $_VAE;
   $user = _vae_users_find($tag);
   if ($user) {
@@ -39,14 +39,14 @@ function _vae_users_callback_login(&$tag) {
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
-function _vae_users_callback_logout(&$tag) {
+function _vae_users_callback_logout($tag) {
   global $_VAE;
   $_SESSION['__v:logged_in'] = null;
   if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
-function _vae_users_callback_register(&$tag) {
+function _vae_users_callback_register($tag) {
   $ret = _vae_rest(array(), "content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : ""), "content", $tag);
   if ($ret) {
     $data = _vae_array_from_rails_xml(simplexml_load_string($ret));
