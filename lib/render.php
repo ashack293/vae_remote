@@ -484,7 +484,12 @@ function _vae_render_facebook_comments($a, &$tag, $context, &$callback, $render_
         }());
       </script>';
   }
-  return $js . '<fb:comments xid="' . $xid . '" numposts="' . $a['paginate'] . '" width="' . $a['width'] . '"></fb:comments>';
+  $a['xid'] = $xid;
+  $a['numposts'] = $a['paginate'];
+  $out = "";
+  unset($a['path']);
+  unset($a['paginate']);
+  return $js . _vae_render_tag("fb:comments", $a, $out, $context, $render_context);
 }
 
 function _vae_render_facebook_like($a, &$tag, $context, &$callback, $render_context) {
