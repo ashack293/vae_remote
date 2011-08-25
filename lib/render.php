@@ -43,7 +43,7 @@ function _vae_render(&$tag, $context, $render_context) {
     }
     if (isset($return_value)) return $return_value;
   }
-  return ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context));;
+  return ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context, false));;
 }
 
 function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
@@ -277,6 +277,7 @@ function _vae_render_collection($a, &$tag, $context, &$callback, $render_context
           $tr_open = true;
         }
       }
+      if ($a['counter']) $_REQUEST[$a['counter']] = $rendered + 1;
       $this_tag = _vae_render_tags($tag, $context, $render_context);
       $this_tag = _vae_merge_dividers($this_tag, $dividers, $rendered, $context, $render_context);
       if ($reverse) $out = $this_tag . $out;
@@ -773,7 +774,7 @@ function _vae_render_oneline($out, $context, $attribute_type = false) {
   }
   preg_match_all('/<v\\?(.*)\\?>/', $out, $matches, PREG_SET_ORDER);
   foreach ($matches as $regs) {
-    $out = str_replace($regs[0], _vae_php($regs[1], $context), $out);
+    $out = str_replace($regs[0], _vae_php($regs[1], $context, " in one of your <code>&lt;v? ?&gt;</code> tags:<br /><br /><code>" . $regs[1] . "</code>"), $out);
   }
   return str_replace("<v->", ($context ? $context->formId() : ""), $out);
 }
@@ -922,7 +923,8 @@ function _vae_render_pdf($a, &$tag, $context, &$callback, $render_context) {
 }
 
 function _vae_render_php($a, &$tag, $context, &$callback, $render_context) {
-  return _vae_php(_vae_render_tags($tag, $context, $render_context), $context);
+  $php = _vae_render_tags($tag, $context, $render_context);
+  return _vae_php($php, $context, " in <code>" . $tag['filename'] . "</code>:<br /><br /><code>" . $php . "</code>");
 }
 
 function _vae_render_radio($a, &$tag, $context, &$callback, $render_context) {

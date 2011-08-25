@@ -450,7 +450,7 @@ function _vae_handleob($vaeml) {
     if ($out == "__STREAM__") return file_get_contents($_VAE['stream']);
     $out = _vae_merge_session_data($out);
   } catch (Exception $e) {
-    if (get_class($e) == "TSocketException" && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
+    if ((substr(get_class($e), 0, 1) == "T") && !isset($_SESSION['__v:error_handling']['recover_from_thrift_exception'])) {
       $_SESSION['__v:error_handling']['recover_from_thrift_exception'] = true;
       sleep(5);
       Header("Location: " . $_SERVER['PHP_SELF']);
@@ -1220,7 +1220,7 @@ function _vae_parse_path() {
   }
 }
 
-function _vae_php($code, $context) {
+function _vae_php($code, $context, $ref = null) {
   if (substr($code, 0, 1) == "=") $code = "return " . substr($code, 1) . ";";
   preg_match_all("/\\$([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)/", $code, $matches);
   if (is_array($matches) && is_array($matches[0])) {
@@ -1230,7 +1230,7 @@ function _vae_php($code, $context) {
     if (strlen($glbls)) $code = "global " . $glbls . "; " . $code;
   }
   $pfunc = create_function('$context,$id', $code);
-  if (!$pfunc) return _vae_error("Invalid PHP Code.");
+  if (!$pfunc) return _vae_error("Invalid PHP Code" . ($ref ? " " . $ref : ""));
   return $pfunc($context, ($context ? $context->id() : null));
 }
 

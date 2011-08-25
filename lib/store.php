@@ -677,7 +677,7 @@ function _vae_store_compute_tax() {
         }
         $discounted_subtotal = _vae_store_compute_subtotal() - _vae_store_compute_discount();
         if ($subtotal > $discounted_subtotal) $subtotal = $discounted_subtotal;
-        if ($rate['include_shipping']) {
+        if ($rate['include_shipping'] && (($subtotal > 0) || !$rate['tax_class'])) {
           $subtotal += _vae_store_compute_shipping();
         }
         if ($subtotal < 0) $subtotal = 0;
