@@ -13,9 +13,6 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   $digital = ((string)$a['digital'] ? 1 : 0);
   if ($id) $item = _vae_fetch($id);
   $discount = null;
-  if (!is_numeric($id)) {
-    return _vae_error("Adding an item to cart, but no ID was provided.");
-  }
   if (strlen($a['name'])) {
     $name = (string)$a['name'];
   } else {
