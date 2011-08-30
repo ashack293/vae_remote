@@ -258,7 +258,9 @@ function vae_sizedimage($id, $size, $preserve_filename = false) {
 function vae_store_add_item_to_cart($id, $option_id = null, $qty = 1, $a = null, $notes = "") {
   if ($a == null) $a = array('name_field' => 'name', 'price_field' => 'price');
   if ($ret = _vae_store_add_item_to_cart($id, $option_id, $qty, $a, $notes, true)) {
-    _vae_store_verify_available();
+    if (!_vae_store_verify_available(false)) {
+      $ret = false;
+    }
     _vae_run_hooks("store:cart:updated");
   }
   return $ret;

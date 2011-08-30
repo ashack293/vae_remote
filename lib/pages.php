@@ -14,6 +14,9 @@ function _vae_page() {
     @Header("Location: https://" . $_VAE['settings']['subdomain'] . ".vaeplatform.com/");
     _vae_die();
   }
+  if (vae_staging() && $_REQUEST['__page'] == "robots.txt") {
+    _vae_robots_txt();
+  }
   _vae_page_404("Could not match URL.");
 }
 
@@ -138,6 +141,12 @@ function _vae_page_run($page, $template, $context, $from_cache = false) {
   if ($_ENV['TEST']) return $filename;
   ob_start("_vae_handleob");
   require_once($_SERVER['DOCUMENT_ROOT'] . "/" . $filename);
+  _vae_die();
+}
+
+function _vae_robots_txt() {
+  Header("Content-type: text/plain");
+  echo "User-agent: *\r\nDisallow: /";
   _vae_die();
 }
 

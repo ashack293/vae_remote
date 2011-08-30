@@ -13,12 +13,17 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   $digital = ((string)$a['digital'] ? 1 : 0);
   if ($id) $item = _vae_fetch($id);
   $discount = null;
+  if (!is_numeric($id)) {
+    return _vae_error("Adding an item to cart, but no ID was provided.");
+  }
   if (strlen($a['name'])) {
     $name = (string)$a['name'];
   } else {
     if (!strlen($a['name_field'])) return _vae_error("Adding an item to cart, but <span class='c'>name</span> or <span class='c'>name_field</span> is not specified in <span class='c'>&lt;v:store:add_to_cart&gt;");
     $name = (string)_vae_fetch_without_errors($a['name_field'], $item);
-    if (!strlen(trim($name))) return _vae_error("Adding an item to cart, but the name field is blank.");
+    if (!strlen(trim($name))) {
+      return _vae_error("Adding an item to cart, but the name field is blank.");
+    }
   }
   if (strlen($a['price'])) {
     $price = $a['price'];
@@ -1633,7 +1638,7 @@ function _vae_store_transform_orders($xml) {
   return $pdata;
 }
 
-function _vae_store_verify_available() {
+function _vae_store_verify_available($flash = true) {
   global $_VAE;
   $errors = array();
   _vae_session_deps_add('__v:store', '_vae_store_verify_available');
@@ -1661,7 +1666,7 @@ function _vae_store_verify_available() {
     foreach ($errors as $e) {
       $errstr .= "<li>$e</li>";
     }
-    _vae_flash("Some items in your cart are no longer available:<ul>$errstr</ul>", 'err');
+    if ($flash) _vae_flash("Some items in your cart are no longer available:<ul>$errstr</ul>", 'err');
     return false;
   }
   return true;

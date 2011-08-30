@@ -59,9 +59,12 @@ function _vae_callback_formmail($tag) {
       }
       $from = "Form Mailer <no-reply@newsletter-agent.com>";
       if ($tag['attrs']['from']) $from = $tag['attrs']['from'];
-      if ($tag['attrs']['from_field']) $from = $data[$tag['attrs']['from_field']];
       if (strstr($_POST['__v:to'], $tag['attrs']['to'])) $tag['attrs']['to'] = $_POST['__v:to'];
       $subject = ($tag['attrs']['subject'] ? $tag['attrs']['subject'] :  $_SERVER['HTTP_HOST'] . " Website Form Submission");
+      if ($tag['attrs']['from_field']) {
+        $from = $data[$tag['attrs']['from_field']];
+        $subject .= " - " . $from;
+      }
       _vae_multipart_mail($from, $tag['attrs']['to'], $subject, $text, $html);
     }
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
