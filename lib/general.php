@@ -807,6 +807,7 @@ function _vae_local($filename = "") {
   if ($authorized != "GOOD") {
     _vae_error("Your Local Development Session expired.  Please restart the Local Preview server and try again.");
   }
+  ini_set('display_errors', true);
   $memcache_base_key .= "f";
   if ($_REQUEST['__verb_local_files']) $_REQUEST['__vae_local_files'] = $_REQUEST['__verb_local_files'];
   if (count($_REQUEST['__vae_local_files'])) {
@@ -1114,7 +1115,7 @@ function _vae_newsletter_subscribe($code, $email, $confirm_field = null) {
     }
   }
   foreach ($codes as $code) {
-    $out = _vae_simple_rest('http://newsletter-agent.com/' . $code, "email=" . $email . "&customer_id=" . $_SESSION['__v:store']['customer_id']);
+    $out = _vae_simple_rest('http://r.newsletter-agent.com/' . $code, "email=" . $email . "&customer_id=" . $_SESSION['__v:store']['customer_id']);
   }
   return $out;
 }
