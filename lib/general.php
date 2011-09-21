@@ -106,9 +106,9 @@ function _vae_combine_array_keys($array, $keys) {
 
 function _vae_configure_php() {
   global $_VAE;
-  error_reporting(E_ALL ^ E_NOTICE);
+  error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
   set_exception_handler("_vae_exception_handler");
-  //set_error_handler('_vae_error_handler', E_ALL ^ E_NOTICE ^ E_WARNING);
+  //set_error_handler('_vae_error_handler', E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
   date_default_timezone_set("America/New_York");
   ini_set('display_errors', isset($_REQUEST['__debug']));
   if ($_REQUEST['__router']) {

@@ -104,7 +104,7 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       if (strlen($method["free_shipping_threshold"]) && ($method["free_shipping_threshold"] < _vae_store_compute_subtotal())) {
         $r['free'] = true;
       }
-      $r['cost'] = number_format($r['cost'], 2);
+      $r['cost'] = str_replace(",", "", number_format($r['cost'], 2));
       $r['rate_group'] = $method['rate_group'];
       array_push($res, $r);
     }
