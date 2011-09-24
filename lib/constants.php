@@ -386,10 +386,10 @@ $_VAE['attributes'] = array(
   'a' => array('charset','coords','href','hreflang','name','rel','rev','shape','target','type'),
   'collection' => array("all","default_page","filter_input","groups","id","max_pages","nested","next","order","output_order","page_select","paginate","path","per_row","previous","skip","store_in_session","wrap"),
   'form' => array('accept','action','accept-charset','ajax','enctype','flash','method','name','target','validateinline'),
-  'img' => array('align','alt','border','height','hspace','ismap','longdesc','src','usemap','vspace','width'),
-  'input' => array('accept','align','alt','checked','disabled','maxlength','name','placeholder','readonly','size','src','type','value'),
+  'img' => array('align','alt','border','height','hspace','ismap','longdesc','placeholder','src','usemap','vspace','width'),
+  'input' => array('accept','align','alt','checked','disabled','maxlength','name','readonly','size','src','type','value'),
   'select' => array('default','disabled','multiple','name','options','size'),
-  'standard' => array('accesskey','class','dir','id','lang','style','tabindex','title','xml:lang','onblur','onchange','onfocus','onreset','onselect','onsubmit','onclick','ondblclick','onkeydown','onkeypress','onkeyup','onmousedown','onmousemove','onmouseover','onmouseout','onmouseup'),
+  'standard' => array('accesskey','class','dir','id','lang','placeholder','style','tabindex','title','xml:lang','onblur','onchange','onfocus','onreset','onselect','onsubmit','onclick','ondblclick','onkeydown','onkeypress','onkeyup','onmousedown','onmousemove','onmouseover','onmouseout','onmouseup'),
   'textarea' => array('cols','disabled','name','readonly','rows')
 );
 

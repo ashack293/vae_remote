@@ -68,7 +68,7 @@ function _vae_attrs($attrs, $tagname) {
   $out = "";
   if (count($attrs)) {
     foreach ($attrs as $a => $v) {
-      if (strstr($tagname, ":") || in_array($a, $_VAE['attributes']['standard']) || (isset($_VAE['attributes'][$tagname]) && in_array($a, $_VAE['attributes'][$tagname])) && !in_array($a, array("ajax","default","validateinline"))) {
+      if (strstr($tagname, ":") || strstr($a, "data-") || in_array($a, $_VAE['attributes']['standard']) || (isset($_VAE['attributes'][$tagname]) && in_array($a, $_VAE['attributes'][$tagname])) && !in_array($a, array("ajax","default","validateinline"))) {
         if (!is_array($v)) $out .= " " . $a . "=\"" . htmlspecialchars($v) . "\"";
       }
     }
