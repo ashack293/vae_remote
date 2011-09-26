@@ -1611,6 +1611,48 @@ function _vae_session_cookie($name, $val) {
   $_VAE['session_cookies'][$name] = $val;
 }
 
+function _vae_session_handler_open($s, $n) {
+  return true;
+}
+
+function _vae_session_handler_read($id) {
+  global $_VAE;
+  $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
+  if ($r = _vae_sql_r($q)) {
+    $_VAE['session_read'] = true;
+    return base64_decode($r["data"]);
+  } else {
+    return "";
+  }
+}
+
+function _vae_session_handler_write($id, $data) {
+  global $_VAE;
+  if (!$data) return false;
+  $expire = time() + (86400 * 2);
+  $data = _vae_sql_e(base64_encode($data));
+  if (isset($_VAE['session_read'])) {
+    $query = "UPDATE session_data SET data='" . $data . "', expires='" . $expire . "' WHERE id='" . _vae_sql_e($id) . "'";
+  } else {
+    $query = "INSERT INTO session_data (`id`,`data`,`expires`) VALUES('" . _vae_sql_e($id) . "','" . $data . "','" . $expire . "')";
+  }
+  _vae_sql_q($query);
+  return true;
+}
+ 
+function _vae_session_handler_close() {
+  return true;
+}
+ 
+function _vae_session_handler_destroy ($id) {
+  _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
+  return true;
+}
+ 
+function _vae_session_handler_gc($expire) {
+  _vae_sql_q("DELETE FROM session_data WHERE expire<" . time());
+}
+
 function _vae_set_default_config() {
   global $_VAE, $BACKLOTCONFIG;
   if (file_exists(dirname(__FILE__) . "/config.php")) include_once(dirname(__FILE__) . "/config.php");
@@ -1666,15 +1708,25 @@ function _vae_set_login() {
   _vae_die();
 }
 
+function _vae_should_load() {
+  if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__novae.php")) return false;
+  if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__noverb.php")) return false;
+  if (preg_match('/^\/piwik/', $_SERVER['REQUEST_URI'])) return false;
+  return true;
+}
 function _vae_sql_ar() {
-  return mysql_affected_rows();
+  global $_VAE;
+  if (!isset($_VAE['shared_sql'])) {
+    _vae_sql_connect();
+  }
+  return mysql_affected_rows($_VAE['shared_sql']);
 }
 
 function _vae_sql_connect() {
   global $_VAE;
   if (!isset($_VAE['shared_sql'])) {
-    $_VAE['shared_sql'] = mysql_connect("localhost", "vaeshared", "DataData");
-    mysql_select_db("av_vaeshared");
+    $_VAE['shared_sql'] = mysql_connect("localhost", "verbshared", "DataData");
+    mysql_select_db("av_verbshared");
   }
 }
 
@@ -1683,7 +1735,11 @@ function _vae_sql_e($q) {
 }
 
 function _vae_sql_iid() {
-  return mysql_insert_id();
+  global $_VAE;
+  if (!isset($_VAE['shared_sql'])) {
+    _vae_sql_connect();
+  }
+  return mysql_insert_id($_VAE['shared_sql']);
 }
 
 function _vae_sql_n($q) {
@@ -1691,7 +1747,11 @@ function _vae_sql_n($q) {
 }
 
 function _vae_sql_q($q) {
-  $ret = mysql_query($q) or die("Error running $q: " . mysql_error());
+  global $_VAE;
+  if (!isset($_VAE['shared_sql'])) {
+    _vae_sql_connect();
+  }
+  $ret = mysql_query($q, $_VAE['shared_sql']) or die("Error running $q: " . mysql_error($_VAE['shared_sql']));
   return $ret;
 }
 
@@ -1868,6 +1928,6 @@ function _vae_write_file($name, $data) {
   fwrite($f, $data);
   fclose($f);
   if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
-}
+} 
 
 ?>

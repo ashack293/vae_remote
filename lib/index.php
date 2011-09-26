@@ -8,11 +8,10 @@ if ($_VERB) {
 
 $_VAE['version'] = 100;
 
-function _vae_should_load() {
-  if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__novae.php")) return false;
-  if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__noverb.php")) return false;
-  if (preg_match('/^\/piwik/', $_SERVER['REQUEST_URI'])) return false;
-  return true;
+require_once(dirname(__FILE__) . "/general.php");
+
+if (strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
+  session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 }
 
 if (_vae_should_load()) {
@@ -36,7 +35,6 @@ if (_vae_should_load()) {
   //$_VAE['vaedbd_port'] = 9092;
   
   /* Bring in the rest of Vae */
-  require_once(dirname(__FILE__) . "/general.php");
   require_once(dirname(__FILE__) . "/vae_exception.php");
   _vae_configure_php();
   require_once(dirname(__FILE__) . "/callback.php");
