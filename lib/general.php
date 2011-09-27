@@ -1620,11 +1620,12 @@ function _vae_session_handler_read($id) {
   $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
   if ($r = _vae_sql_r($q)) {
     $_VAE['session_read'] = true;
-    _vae_sql_close();
-    return base64_decode($r["data"]);
+    $ret = base64_decode($r["data"]);
   } else {
-    return "";
+    $ret = "";
   }
+  _vae_sql_close();
+  return $ret;
 }
 
 function _vae_session_handler_write($id, $data) {
@@ -1725,7 +1726,9 @@ function _vae_sql_ar() {
 
 function _vae_sql_close() {
   global $_VAE;
-  return mysql_close($_VAE['shared_sql']);
+  $ret = mysql_close($_VAE['shared_sql']);
+  unset($_VAE['shared_sql']);
+  return $ret;
 }
 
 function _vae_sql_connect() {
