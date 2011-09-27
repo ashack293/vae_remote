@@ -96,6 +96,8 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
     foreach ($quotes["methods"] as $r) {
       if (is_numeric($_VAE['settings']['store_shipping_pad_dollars_per_order'])) $r['cost'] += $_VAE['settings']['store_shipping_pad_dollars_per_order'];
       if (is_numeric($_VAE['settings']['store_shipping_pad_percent_dollars'])) $r['cost'] = ($r['cost'] + $handling) * (1 + ($_VAE['settings']['store_shipping_pad_percent_dollars']/100));
+      if (is_numeric($method['pad_dollars_per_order'])) $r['cost'] += $method['pad_dollars_per_order'];
+      if (is_numeric($method['pad_percent'])) $r['cost'] = ($r['cost'] + $handling) * (1 + ($method['pad_percent']/100));
       if (!$r['no_style']) $styled_ext = ($ext == "fedex" ? "FedEx" : strtoupper($ext));
       if (!isset($r['keep_titles'])) $r['title'] = ($styled_ext ? $styled_ext . " " : "") . $r['title'];
       if ($method['display_name']) $r['title'] = $method['display_name'];
