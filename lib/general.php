@@ -214,14 +214,14 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   global $_VAE;
   if (!strlen($id)) return "";
   if ($_ENV['TEST']) return array($iden, $id, $path, $qs, $preserve_filename);
-  if (_vae_prod()) {
-    $ret = _vae_master_rest('file', array('iden' => $iden, 'id' => $id, 'path' => $path, 'qs' => $qs, 'preserve_filename' => $preserve_filename));
-    return $ret;
-  }
   _vae_load_cache();
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
   if (isset($_VAE['file_cache'][$iden])) return $_VAE['file_cache'][$iden];
+  if (_vae_prod()) {
+    $ret = _vae_master_rest('file', array('iden' => $iden, 'id' => $id, 'path' => $path, 'qs' => $qs, 'preserve_filename' => $preserve_filename));
+    return $ret;
+  }
   _vae_lock_acquire();
   if (isset($_VAE['file_cache'][$iden])) return _vae_lock_release($_VAE['file_cache'][$iden]);
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
@@ -1237,17 +1237,21 @@ function _vae_parse_path() {
 }
 
 function _vae_php($code, $context, $ref = null) {
-  if (substr($code, 0, 1) == "=") $code = "return " . substr($code, 1) . ";";
-  preg_match_all("/\\$([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)/", $code, $matches);
-  if (is_array($matches) && is_array($matches[0])) {
-    foreach ($matches[0] as $key) {
-      if ($key != '$context' && $key != '$id') $glbls .= (strlen($glbls) ? ", " : "") . $key;
+  global $_VAE;
+  $hash = md5($code);
+  if (!isset($_VAE['phpfns'][$hash])) {  
+    if (substr($code, 0, 1) == "=") $code = "return " . substr($code, 1) . ";";
+    preg_match_all("/\\$([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)/", $code, $matches);
+    if (is_array($matches) && is_array($matches[0])) {
+      foreach ($matches[0] as $key) {
+        if ($key != '$context' && $key != '$id') $glbls .= (strlen($glbls) ? ", " : "") . $key;
+      }
+      if (strlen($glbls)) $code = "global " . $glbls . "; " . $code;
     }
-    if (strlen($glbls)) $code = "global " . $glbls . "; " . $code;
+    $_VAE['phpfns'][$hash] = create_function('$context,$id', $code);
+    if (!$_VAE['phpfns'][$hash]) return _vae_error("Invalid PHP Code" . ($ref ? " " . $ref : ""));
   }
-  $pfunc = create_function('$context,$id', $code);
-  if (!$pfunc) return _vae_error("Invalid PHP Code" . ($ref ? " " . $ref : ""));
-  return $pfunc($context, ($context ? $context->id() : null));
+  return $_VAE['phpfns'][$hash]($context, ($context ? $context->id() : null));
 }
 
 function _vae_placeholder($which) {

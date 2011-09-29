@@ -151,6 +151,7 @@ function _vae_send_rest($method, $data, &$errors) {
 
 function _vae_master_rest($method, $post_data = null) {
   global $_VAE;
+  _vae_tick("issuing a master rest of method " . $method);
   if ($post_data == null) $post_data = array();
   $post_data['secret_key'] = $_VAE['config']['secret_key'];
   $post_data['method'] = $method;
