@@ -1,8 +1,8 @@
 <?php
 
-if ($_VERB) {
-  foreach ($_VERB as $k => $v) {
-    $_VAE[$k] = $v;
+if ($_VERB['config']) {
+  foreach ($_VERB['config'] as $k => $v) {
+    $_VAE['config'][$k] = $v;
   }
 }
 

@@ -214,6 +214,10 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   global $_VAE;
   if (!strlen($id)) return "";
   if ($_ENV['TEST']) return array($iden, $id, $path, $qs, $preserve_filename);
+  if (_vae_prod()) {
+    $ret = _vae_master_rest('file', array('iden' => $iden, 'id' => $id, 'path' => $path, 'qs' => $qs, 'preserve_filename' => $preserve_filename));
+    return $ret;
+  }
   _vae_load_cache();
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
@@ -1251,6 +1255,12 @@ function _vae_post_process($out) {
   return $out;
 }
 
+function _vae_prod() {
+  global $_VAE;
+  if (isset($_VAE['config']['prod'])) return true;
+  return false;
+}
+
 function _vae_proto() {
   return (($_REQUEST['__vae_ssl_router'] || $_SERVER['HTTPS']) ? "https" : "http") . "://";
 }
@@ -1334,13 +1344,19 @@ function _vae_remote() {
           _vae_run_hooks($_REQUEST['hook'], $_REQUEST['hook_param']);
         }
       }
+    } elseif ($_REQUEST['method'] == "file") {
+      echo _vae_file($_REQUEST['iden'], $_REQUEST['id'], $_REQUEST['path'], $_REQUEST['qs'], $_REQUEST['preserve_filename']);
+    } elseif ($_REQUEST['method'] == "store_file") {
+      echo _vae_store_file($_REQUEST['iden'], base64_decode($_REQUEST['file']), $_REQUEST['ext'], $_REQUEST['filename']);
+    } elseif ($_REQUEST['method'] == "store_files") {
+      _vae_store_files($_REQUEST['key'], $_REQUEST['value']);
     } else {
       _vae_error("","No action specified");
     }
   } else {
     _vae_error("","Secret Key Mismatch");
   }
-  _vae_die("Vae Remote Done");
+  _vae_die();
 }
 
 function _vae_remove_file($name) {
@@ -1813,31 +1829,47 @@ function _vae_store_feed($feed, $message = false) {
 
 function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded = false) {
   global $_VAE;
-  $newname = _vae_make_filename($ext, $filename);
-  if ($gd_or_uploaded == "uploaded") {
-    move_uploaded_file($file, $_VAE['config']['data_path'] . $newname);
-    if ($_ENV['TEST']) $_VAE['files_written'][] = $newname;
-  } elseif ($gd_or_uploaded) {
-    if ($gd == "jpeg") imagejpeg($file, $_VAE['config']['data_path'] . $newname, 100);
-    else imagepng($file, $_VAE['config']['data_path'] . $newname, 9);
-    if ($_ENV['TEST']) $_VAE['files_written'][] = $newname;
+  if (_vae_prod()) {
+    if ($gd_or_uploaded == "uploaded") {
+      $file = file_get_contents($file);
+    } elseif ($gd_or_uploaded) {
+      $newname = tempnam();
+      if ($gd == "jpeg") imagejpeg($file, $newname, 100);
+      else imagepng($file, $newname, 9);
+      $file = file_get_contents($newname);
+    }
+    return _vae_master_rest("store_file", array('iden' => $iden, 'file' => base64_encode($file), 'ext' => $ext, 'filename' => $filename));
   } else {
-    _vae_write_file($newname, $file);
+    $newname = _vae_make_filename($ext, $filename);
+    if ($gd_or_uploaded == "uploaded") {
+      move_uploaded_file($file, $_VAE['config']['data_path'] . $newname);
+      if ($_ENV['TEST']) $_VAE['files_written'][] = $newname;
+    } elseif ($gd_or_uploaded) {
+      if ($gd == "jpeg") imagejpeg($file, $_VAE['config']['data_path'] . $newname, 100);
+      else imagepng($file, $_VAE['config']['data_path'] . $newname, 9);
+      if ($_ENV['TEST']) $_VAE['files_written'][] = $newname;
+    } else {
+      _vae_write_file($newname, $file);
+    }
+    if ($iden) _vae_store_files($iden, $newname);
+    return $newname;
   }
-  if ($iden) _vae_store_files($iden, $newname);
-  return $newname;
 }
 
 function _vae_store_files($key, $value) {
   global $_VAE;
-  _vae_lock_acquire();
-  if ($value == null) {
-    unset($_VAE['file_cache'][$key]);
+  if (_vae_prod()) {
+    _vae_master_rest("store_files", array('key' => $key, 'value' => $value));
   } else {
-    $_VAE['file_cache'][$key] = $value;
+    _vae_lock_acquire();
+    if ($value == null) {
+      unset($_VAE['file_cache'][$key]);
+    } else {
+      $_VAE['file_cache'][$key] = $value;
+    }
+    _vae_write_file("files.psz", serialize($_VAE['file_cache']));
+    _vae_lock_release();
   }
-  _vae_write_file("files.psz", serialize($_VAE['file_cache']));
-  _vae_lock_release();
 }
 
 function _vae_stringify_array($array) {
