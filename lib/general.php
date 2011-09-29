@@ -668,6 +668,17 @@ function _vae_inject_cdn_callback($a) {
   return $a[1] . vae_cdn_url() . substr($url, 1) . $a[6]; 
 }
 
+function _vae_cant_cache_because_of_cookies() {
+  $count = count($_COOKIE);
+  if ($count > 1) return true;
+  if ($count > 0) {
+    foreach ($_COOKIE as $k => $v) {
+      if ($k != "VerbSession") return true;
+    }
+  }
+  return false;
+}
+
 function _vae_interpret_vaeml($vaeml) {
   global $_VAE;
   $out = "";
@@ -687,8 +698,8 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_tick("can't use cached version because there are callbacks");
   } elseif (isset($_SESSION['__v:flash'])) {
     _vae_tick("can't use cached version because there is data in the flash bucket");
-  } elseif (count($_COOKIE)) {
-    _vae_tick("can't use cached version because there's a cookie");
+  } elseif (_vae_cant_cache_because_of_cookies()) {
+    _vae_tick("can't use cached version because there's a cookie:" . serialize($_COOKIE));
   } elseif (!isset($_REQUEST['__vae_local']) && !isset($_REQUEST['__verb_local'])) {
     $cached = memcache_get($_VAE['memcached'], $cache_key);
     if (is_array($cached) && $cached[0] == "c") {
