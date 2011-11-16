@@ -29,9 +29,7 @@ function _vae_thrift_open($client_class, $port) {
   while ($i < 5) {
     try {
       $host = 'localhost';
-      if (!_vae_prod() && ($i < 1) && ($port == 9091 || !$_VAE['settings']['sass_2'])) {
-        $host = '10.38.9.44';
-      }
+      $host = '10.38.9.44';
       $socket = new TSocket($host, $port);
       $socket->setRecvTimeout(30000);
       $transport = new TBufferedTransport($socket, 1024, 1024);

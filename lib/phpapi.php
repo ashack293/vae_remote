@@ -302,6 +302,11 @@ function vae_store_create_coupon_code($data) {
   return ($ret != false);
 }
 
+function vae_store_create_order_comment($order_id, $data) {
+  $ret = _vae_rest($data, "store/create_comment/" . $order_id, "comment");
+  return ($ret != false);
+}
+
 function vae_store_create_tax_rate($data) {
   $ret = _vae_rest($data, "store_tax_rates/create", "store_tax_rate");
   return ($ret != false);
@@ -372,6 +377,9 @@ function vae_store_handling_charge($amount) {
 
 function vae_store_orders($finders = null) {
   if (!is_array($finders)) $finders = array();
+  if ($finders['ids'] && (is_array($finders['ids']))) {
+    $finders['ids'] = implode(",", $finders['ids']);
+  }
   $raw = _vae_rest($finders, "store/orders", "order", array());
   return _vae_store_transform_orders($raw);
 }

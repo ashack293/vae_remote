@@ -104,6 +104,11 @@ function _vae_combine_array_keys($array, $keys) {
   return $out;
 }
 
+function _vae_conf_path() {
+  global $_VAE;
+  return str_replace("/data", "/conf", $_VAE['config']['data_path']);
+}
+
 function _vae_configure_php() {
   global $_VAE;
   error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
@@ -784,17 +789,31 @@ function _vae_load_cache($reload = false) {
   global $_VAE;
   if (isset($_VAE['file_cache']) && !$reload) return;
   $cache = array();
-  if (file_exists($_VAE['config']['data_path'] . "files.psz")) $cache = unserialize(_vae_read_file("files.psz"));
+  if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
+    $cache = unserialize(_vae_read_file("files.psz"));
+  } elseif (file_exists(_vae_conf_path() . "files.psz")) {
+    $cache = unserialize(_vae_read_file("files.psz", _vae_conf_path()));
+  }
   $_VAE['file_cache'] = $cache;
 }
 
 function _vae_load_settings() {
   global $_VAE, $_VERB;
   if (isset($_VAE['settings'])) return;
-  if (!file_exists($_VAE['config']['data_path'] . "settings.php")) {
-    _vae_update_settings_feed();
+  if (_vae_prod()) {
+    if (file_exists($_VAE['config']['data_path'] . "settings.php")) {
+      require_once($_VAE['config']['data_path'] . "settings.php");
+    } elseif (file_exists(_vae_conf_path() . "settings.php")) {
+      require_once(_vae_conf_path() . "settings.php");
+    } else {
+      _vae_error("", "Could not load Settings file");
+    }
+  } else {
+    if (!file_exists($_VAE['config']['data_path'] . "settings.php")) {
+      _vae_update_settings_feed();
+    }
+    require_once($_VAE['config']['data_path'] . "settings.php");
   }
-  require_once($_VAE['config']['data_path'] . "settings.php");
   if (isset($_VERB['settings'])) $_VAE['settings'] = $_VERB['settings'];
   if (!$_VAE['config']['force_local_assets'] && !$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router']) {
     if (strlen($_VAE['settings']['cdn_host'])) {
@@ -889,7 +908,7 @@ function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one
   if ($only_one_winner) {
     $waiting_lock = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".2.lock", "w+");
     if (!flock($waiting_lock, LOCK_EX | LOCK_NB)) {
-      die("Gave up on trying to get this lock because someone else is already waiting for it.");
+      _vae_error("Gave up on trying to get this lock because someone else is already waiting for it. ");
     }
   }
   $_VAE[$which_lock . '_lock'] = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".lock", "w+");
@@ -1308,9 +1327,10 @@ function _vae_qs($out = "", $keep_current = true, $append_to_end = "") {
   return $path . ($out ? "?" . substr($out, 1) : "");
 }
 
-function _vae_read_file($name) {
+function _vae_read_file($name, $path = "") {
   global $_VAE;
-  return @file_get_contents($_VAE['config']['data_path'] . $name);
+  if ($path == "") $path = $_VAE['config']['data_path'];
+  return @file_get_contents($path . $name);
 }
 
 function _vae_register_hook($name, $a) {
@@ -1912,6 +1932,8 @@ function _vae_tick($desc, $userland = false) {
 
 function _vae_update_feed($message = false) {
   global $_VAE;
+  //if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian.verb")) return;
+  if (strstr($_SERVER['DOCUMENT_ROOT'], "ht.verb")) return;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {

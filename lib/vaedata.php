@@ -310,7 +310,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       }
       throw new VaeException("", "Could not connect to VaeDBd to get()");
     } catch (VaeDbInternalError $ie) {
-      if (stristr($ie->getMessage(), "XML file")) {
+      if (stristr($ie->getMessage(), "XML file") && !_vae_prod()) {
         _vae_update_feed(false);
       }
       if ($raiseErrors) throw new VaeException("", "VaeDB Internal Error: " . $ie->getMessage());
@@ -380,7 +380,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       }
       $iter->next();
     }
-    if ($prevDataQuery && $prevDataQuery->collection()) $prevDataQuery->___retrieveData(); // TODO: determine if this is a speedup
+    //if ($prevDataQuery && $prevDataQuery->collection()) $prevDataQuery->___retrieveData(); // TODO: determine if this is a speedup
   }
   
   public function ___newContextIterator() {
@@ -457,7 +457,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
           $this->___addContext($context);
         }
       }
-      if ($this->collection()) $this->___retrieveData(); // TODO: determine if this is a speedup
+      //if ($this->collection()) $this->___retrieveData(); // TODO: determine if this is a speedup
     }
   }
   

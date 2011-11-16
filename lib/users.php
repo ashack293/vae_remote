@@ -15,7 +15,7 @@ function _vae_users_callback_forgot($tag) {
     $user = _vae_users_find($tag);
     if ($user) {
       $code = strtoupper(substr(base_convert(md5(rand() . time()), 16, 36), 0, 6));
-      _vae_store_files($_VAE['file_cache']["users:forgot-".$code], array('path' => $tag['attrs']['path'], 'id' => $user->id()));
+      _vae_store_files("users:forgot-".$code, array('path' => $tag['attrs']['path'], 'id' => $user->id()));
       $domain = $_SERVER['HTTP_HOST'];
       $msg = "You are receiving this E-Mail because a request was submitted to reset your password for $domain.  If you submitted this request, please go to the following URL to login and reset your password:\n\nhttp://$domain" . $_SERVER['PHP_SELF'] . _vae_qs("__v:users_forgot_code=$code&__v:users_forgot=" . _vae_tag_unique_id($tag, $context)) . "\n\nThanks,\n$domain Password Recovery";
       _vae_mail(_vae_fetch($tag['attrs']['email_field'], $user), "$domain Password Recovery", $msg, "From: $domain Password Recovery <noreply@$domain>");

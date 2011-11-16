@@ -426,7 +426,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     }
     $payment_method_id = ($_SESSION['__v:store']['payment_method'] ? $_SESSION['__v:store']['payment_method'] : "Test");
     $tax_rate = $_SESSION['__v:store']['tax_rate'];
-    $data = array("line_items" => $line_items, 'remote_addr' => $_SERVER['REMOTE_ADDR'], 'customer_id' => $current['id'], 'email' => $current['e_mail_address'], 'discount_code' => $_SESSION['__v:store']['discount_code'], 'discount' => _vae_store_compute_discount(), 'shipping' => _vae_store_compute_shipping(), 'tax' => _vae_store_compute_tax(), 'total' => _vae_store_compute_total(), 'shipping_method' => $shipping_method, 'tax_rate' => $tax_rate, 'payment_method' => $payment_method_id, 'weight' => $_SESSION['__v:store']['shipping']['weight']);
+    $data = array("line_items" => $line_items, 'remote_addr' => $_SERVER['REMOTE_ADDR'], 'customer_id' => $current['id'], 'email' => $current['e_mail_address'], 'discount_code' => $_SESSION['__v:store']['discount_code'], 'discount' => _vae_store_compute_discount(), 'shipping' => _vae_store_compute_shipping(), 'tax' => _vae_store_compute_tax(), 'total' => _vae_store_compute_total(), 'shipping_method' => $shipping_method, 'tax_rate' => $tax_rate, 'payment_method' => $payment_method_id, 'weight' => $_SESSION['__v:store']['shipping']['weight'], 'notes' => $_REQUEST['notes']);
     if ($_SESSION['__v:store']['paypal_without_vae_checkout']) {
       unset($data['total']);
     }
