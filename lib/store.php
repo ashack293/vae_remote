@@ -286,7 +286,16 @@ function _vae_store_callback_discount($tag) {
 }
 
 function _vae_store_callback_forgot($tag) {
-  if ($raw = _vae_rest(array(), "customers/forgot", "customer", $tag, null, true)) {
+  $data = array();
+  if ($tag['attrs']['email_template']) {
+    if (($html_template = _vae_find_source($tag['attrs']['email_template'])) && ($text_template = _vae_find_source($tag['attrs']['email_template'] . ".txt"))) {
+      if (($html = _vae_proxy($html_template, "", false, $html1)) == false) return _vae_error("Unable to build Forgot Password Template E-Mail (HTML version) file from <span class='c'>" . _vae_h($tag['attrs']['email_template']) . "</span>.  You can debug this by loading that file directly in your browser.");
+      if (($text = _vae_proxy($text_template, "", false, $text1)) == false) return _vae_error("Unable to build Forgot Password Template E-Mail (text version) file from <span class='c'>" . _vae_h($tag['attrs']['email_template']) . "</span>.  You can debug this by loading that file directly in your browser.");
+      $data['forgot_email_html'] = $html;
+      $data['forgot_email_text'] = $text;
+    }
+  }
+  if ($raw = _vae_rest($data, "customers/forgot", "customer", $tag, null, true)) {
     if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
     return _vae_callback_redirect($_SERVER['PHP_SELF']);
   }

@@ -65,6 +65,7 @@ function vae_destroy($id) {
 }
 
 function vae_disable_vaeml() {
+  if ($_VAE['store_files']) _vae_store_files_commit();
   ob_end_clean();
   return true;
 }

@@ -76,7 +76,7 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);
   $qs .= "&__proxy=" . $id;
-  $host = ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']);
+  $host = $_SERVER['HTTP_HOST'];
   $out = _vae_simple_rest("http://" . $host . "/" . $url . "?" . $qs);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
@@ -151,7 +151,7 @@ function _vae_send_rest($method, $data, &$errors) {
 
 function _vae_master_rest($method, $post_data = null) {
   global $_VAE;
-  _vae_tick("issuing a master rest of method " . $method);
+  _vae_tick("Sending Request for [" . $method . "] {" . serialize($post_data) . "}");
   if ($post_data == null) $post_data = array();
   $post_data['secret_key'] = $_VAE['config']['secret_key'];
   $post_data['method'] = $method;
@@ -165,18 +165,27 @@ function _vae_simple_rest($url, $post_data = null) {
     if (!isset($_VAE['mock_rest'])) return "";
     return array_shift($_VAE['mock_rest']);
   }
-  if (!strstr($url, "://")) $url = $_VAE['config']['backlot_url'] . $url;
-  if ($post_data) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-    $res = curl_exec($ch);
-    curl_close($ch); 
-    return $res;
+  if (!strstr($url, "://")) {
+    if (substr($url, 0, 5) == "/feed") {
+      $url = "http://vae0.***REMOVED***" . $url;
+      $header = true;
+    } else {
+      $url = $_VAE['config']['backlot_url'] . $url;
+    }
   }
-  return file_get_contents($url);
-}
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 600);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  if ($post_data) {
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+  }
+  if ($header) {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("http://", "/"), "", $_VAE['config']['backlot_url'])));
+  }
+  $res = curl_exec($ch);
+  curl_close($ch); 
+  return $res;
+  }
 
 function _vae_update($id, $data) {
   global $_VAE;

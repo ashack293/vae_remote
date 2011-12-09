@@ -564,7 +564,7 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
       if ($a['loadingposition'] == "before") $out = $loader . $out;
       else $out .= $loader;
     }
-    $script = "jQuery('#" . $a['id'] . "').ajaxForm({ success: function(data,status) { jQuery('#" . $a['id'] . "_loading').hide(); if (match = /^__err=(.*)/.exec(data)) {" . $a['ajaxfailure'] . " alert(match[1].replace(/\\\\n/g, \"\\n\")); } else { jQuery('#" . $a['ajax'] . "').html(data); if (!window.vRedirected) { " . $a['ajaxsuccess'] . " } " . ($a['animate'] ? "jQuery('#" . $a['ajax'] . "')." . $a['animate'] . "('slow');" : "") . "} }";
+    $script = "jQuery('#" . $a['id'] . "').ajaxForm({ success: function(data,status) { jQuery('#" . $a['id'] . "_loading').hide(); if (match = /^__err=(.*)/.exec(data)) { var error = match[1]; " . $a['ajaxfailure'] . " alert(match[1].replace(/\\\\n/g, \"\\n\")); } else { jQuery('#" . $a['ajax'] . "').html(data); if (!window.vRedirected) { " . $a['ajaxsuccess'] . " } " . ($a['animate'] ? "jQuery('#" . $a['ajax'] . "')." . $a['animate'] . "('slow');" : "") . "} }";
     if ($a['validateinline']) {
       _vae_needs_jquery('form','validate');
       _vae_on_dom_ready($script . ", beforeSubmit: function() {" . $a['ajaxbefore'] . " var t = jQuery('#" . $a['id'] . "').valid(); if (t) { jQuery('#" . $a['id'] . "_loading').show(); } else { " . $a['ajaxfailure'] . " } return t; } }); jQuery('#" . $a['id'] . "').validate();");

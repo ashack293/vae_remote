@@ -402,11 +402,11 @@ function _vae_handleob($vaeml) {
     $out = _vae_interpret_vaeml($vaeml);
     if ((strlen($_VAE['debug']) || $_REQUEST['__force']) && $_REQUEST['__debug']) _vae_error("Debugging Traces Available");
     if (isset($_VAE['run_hooks'])) {
-      _vae_update_feed(false);
       foreach ($_VAE['run_hooks'] as $to_run) {
         _vae_run_hooks($to_run[0], $to_run[1]);
       }
     }
+    if ($_VAE['store_files']) _vae_store_files_commit();
     if (isset($_VAE['ticks'])) return _vae_render_timer();
     if ($_SESSION['__v:pre_ssl_host'] && ($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
@@ -789,10 +789,19 @@ function _vae_load_cache($reload = false) {
   global $_VAE;
   if (isset($_VAE['file_cache']) && !$reload) return;
   $cache = array();
-  if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
-    $cache = unserialize(_vae_read_file("files.psz"));
+  if ($_VAE['settings']['subdomain'] == "gagosian") {
+    $q = _vae_sql_q("SELECT `k`,`v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
+    while ($r = _vae_sql_r($q)) {
+      $cache[$r['k']] = $r['v'];
+    }
+    _vae_sql_close();
+    _vae_tick("Load KVstore");
   } elseif (file_exists(_vae_conf_path() . "files.psz")) {
+    _vae_tick("Read local file data cache from conf path");
     $cache = unserialize(_vae_read_file("files.psz", _vae_conf_path()));
+  } elseif (file_exists($_VAE['config']['data_path'] . "files.psz")) {
+    _vae_tick("Read local file data cache from data path");
+    $cache = unserialize(_vae_read_file("files.psz"));
   }
   $_VAE['file_cache'] = $cache;
 }
@@ -907,8 +916,8 @@ function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one
   if (isset($_VAE[$which_lock . '_lock'])) return;
   if ($only_one_winner) {
     $waiting_lock = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".2.lock", "w+");
-    if (!flock($waiting_lock, LOCK_EX | LOCK_NB)) {
-      _vae_error("Gave up on trying to get this lock because someone else is already waiting for it. ");
+    if (!flock($waiting_lock, LOCK_EX | LOCK_NB, $wouldBlock) || $wouldBlock) {
+      _vae_error("", "Gave up on trying to get this lock because someone else is already waiting for it.");
     }
   }
   $_VAE[$which_lock . '_lock'] = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".lock", "w+");
@@ -1359,10 +1368,10 @@ function _vae_register_tag($name, $a) {
 function _vae_remote() {
   global $_VAE;
   if ($_REQUEST['secret_key'] == $_VAE['config']['secret_key']) {
+    _vae_load_settings();
     if ($_REQUEST['version']) {
       echo "201 Version " . $_VAE['version'];
     } elseif ($_REQUEST['update_feed'] || $_REQUEST['hook']) {
-      sleep(2);
       if ($_REQUEST['update_feed']) {
         if ($_REQUEST['hook'] == "settings:updated") {
           _vae_update_settings_feed();
@@ -1384,7 +1393,8 @@ function _vae_remote() {
     } elseif ($_REQUEST['method'] == "store_file") {
       echo _vae_store_file($_REQUEST['iden'], base64_decode($_REQUEST['file']), $_REQUEST['ext'], $_REQUEST['filename']);
     } elseif ($_REQUEST['method'] == "store_files") {
-      _vae_store_files($_REQUEST['key'], $_REQUEST['value']);
+      _vae_store_files($_REQUEST['key'], $_REQUEST['value'], true);
+      echo "200 Success";
     } else {
       _vae_error("","No action specified");
     }
@@ -1806,12 +1816,13 @@ function _vae_sql_n($q) {
   return mysql_num_rows($q);
 }
 
-function _vae_sql_q($q) {
+function _vae_sql_q($q, $ignore_errors = false) {
   global $_VAE;
   if (!isset($_VAE['shared_sql'])) {
     _vae_sql_connect();
   }
-  $ret = mysql_query($q, $_VAE['shared_sql']) or die("Error running $q: " . mysql_error($_VAE['shared_sql']));
+  $ret = mysql_query($q, $_VAE['shared_sql']);
+  if (!$ret and !$ignore_errors) die("Error running $q: " . mysql_error($_VAE['shared_sql']));
   return $ret;
 }
 
@@ -1891,19 +1902,43 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
   }
 }
 
-function _vae_store_files($key, $value) {
+function _vae_store_files($key, $value, $force = false) {
+  global $_VAE;
+  if ($value == null) {
+    unset($_VAE['file_cache'][$key]);
+  } else {
+    $_VAE['file_cache'][$key] = $value;
+  }
+  if (!isset($_VAE['store_files'])) $_VAE['store_files'] = array();
+  $_VAE['store_files'][$key] = $value;
+  if ($force || !_vae_in_ob()) {
+    _vae_store_files_commit();
+  }
+}
+
+function _vae_store_files_commit() {
   global $_VAE;
   if (_vae_prod()) {
     _vae_master_rest("store_files", array('key' => $key, 'value' => $value));
   } else {
-    _vae_lock_acquire();
-    if ($value == null) {
-      unset($_VAE['file_cache'][$key]);
+    if ($_VAE['settings']['subdomain'] == "gagosian") {
+      if (count($_VAE['store_files']) > 0) {
+        foreach ($_VAE['store_files'] as $k => $v) {
+          if ($v == null) {
+            _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($k) . "' LIMIT 1");
+          } else {
+            _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "')", true);
+          }
+        }
+        _vae_sql_close();
+        $_VAE['store_files'] = array();
+      }
     } else {
-      $_VAE['file_cache'][$key] = $value;
+      _vae_lock_acquire();
+      $data = serialize($_VAE['file_cache']);
+      _vae_write_file("files.psz", $data);
+      _vae_lock_release();
     }
-    _vae_write_file("files.psz", serialize($_VAE['file_cache']));
-    _vae_lock_release();
   }
 }
 
@@ -1934,12 +1969,13 @@ function _vae_update_feed($message = false) {
   global $_VAE;
   //if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian.verb")) return;
   if (strstr($_SERVER['DOCUMENT_ROOT'], "ht.verb")) return;
+  if (strstr($_SERVER['DOCUMENT_ROOT'], "htwedding.verb")) return;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {
     $retry++;
     $feed_data = _vae_simple_rest("/feed?secret_key=" . $_VAE['config']['secret_key']);
-  } while (!strstr($feed_data, "</website>") && $retry < 3);
+  } while (!strstr($feed_data, "</website>") && $retry < 0);
   if (strstr($feed_data, "</website>")) {
     _vae_store_feed($feed_data, $message);
     _vae_reset_site();
