@@ -1822,7 +1822,7 @@ function _vae_sql_q($q, $ignore_errors = false) {
     _vae_sql_connect();
   }
   $ret = mysql_query($q, $_VAE['shared_sql']);
-  if (!$ret and !$ignore_errors) die("Error running $q: " . mysql_error($_VAE['shared_sql']));
+  if (!$ret and !$ignore_errors) _vae_error("", "Error running $q: " . mysql_error($_VAE['shared_sql']));
   return $ret;
 }
 

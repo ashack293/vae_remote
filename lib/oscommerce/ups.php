@@ -59,6 +59,7 @@
 // class methods
     function quote($method = '') {
       global $HTTP_POST_VARS, $order, $shipping_weight, $shipping_num_boxes, $method;
+      if ($order->delivery['state'] == "PR") $order->delivery['country']['iso_code_2'] = "PR";
       if ($order->delivery['country']['iso_code_2'] == 'CA' && $country_name['countries_iso_code_2'] == "US") {
 	      $prod = 'STD';
       } else if ($order->delivery['country']['iso_code_2'] != "US") {
@@ -66,7 +67,7 @@
       } else {
         $prod = 'GNDRES';
       }
-
+      
       //if ($method) $this->_upsAction('3'); // return a single quote
 
       $this->_upsProduct($prod);
@@ -227,7 +228,6 @@
         return 'error';
       }
       $body_array = explode("\n", $body);
-
       $returnval = array();
       $errorret = 'error'; // only return error if NO rates returned
 
