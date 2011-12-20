@@ -308,7 +308,7 @@ function _vae_render_country_select($a, &$tag, $context, &$callback, $render_con
   _vae_needs_jquery();
   $a = _vae_form_prepare($a, $tag, $context, $render_context);
   if (!strlen($a['default'])) $a['default'] = "US";
-  $a['options'] = _vae_list_countries();
+  if (!$a['options']) $a['options'] = _vae_list_countries();
   $state_select_id = str_replace("country", "state", $a['id']);
   $a['onchange'] = _vae_append_js($a['onchange'], "
     jQuery('#" . $state_select_id . "').trigger('change');
