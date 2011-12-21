@@ -622,7 +622,7 @@ function _vae_store_compute_shipping($register_page = null) {
   if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
   $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $address, $handling);
   $_SESSION['__v:store']['shipping'] = array('hash' => $hash);
-  if ($register_page && (count($options) < 1) && count($_VAE['settings']['shipping_methods']) && ($_SESSION['__v:store']['total_weight'] || ($num_items > 0))) {
+  if ($register_page && (count($options) < 1) && count($_VAE['settings']['shipping_methods']) && ($_SESSION['__v:store']['total_weight'] || ($weight > 0))) {
     $_VAE['store_cached_shipping'] = false;
     if (_vae_store_usps_only($country, $state, $address)) {
       _vae_flash("We could not confirm shipping availability to this address, as it is either a PO Box or a Military address.  Please enter a street address to complete your order.", 'err');
