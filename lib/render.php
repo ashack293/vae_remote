@@ -1230,12 +1230,19 @@ function _vae_render_update($a, &$tag, $context, &$callback, $render_context) {
 
 function _vae_render_video($a, &$tag, $context, &$callback, $render_context) { 
   global $_VAE;
-  $video = _vae_fetch($a['path'], $context);
-  $src = vae_video($video, $a['size']);
+  if ($a['src']) {
+    $url = $a['src'];
+    if (substr($url, 0, 1) != "/")  $url = "/" . dirname($_VAE['filename']) . $url;
+    $url = _vae_cdn_timestamp_url($url);
+    $src = vae_cdn_url() . substr($url, 1);
+  } else {
+    $video = _vae_fetch($a['path'], $context);
+    $src = vae_video($video, $a['size']);
+    if ($src == "tryagain.flv") $src = $_VAE['config']['backlot_url'] . "/videos/" . $src;
+    else $src = _vae_absolute_data_url() . $src;
+  }
   $id = $a['id'];
   if (!$id) $id = _vae_global_id();
-  if ($src == "tryagain.flv") $src = $_VAE['config']['backlot_url'] . "/videos/" . $src;
-  else $src = _vae_absolute_data_url() . $src;
   $player_width = $a['width'];
   $player_height = $a['height'];
   if (!is_numeric($player_width)) $player_width = 400;
@@ -1252,6 +1259,7 @@ function _vae_render_video($a, &$tag, $context, &$callback, $render_context) {
     jwplayer("' . $id . '_container").setup({
       flashplayer: "' . $_VAE['config']['asset_url'] . 'player.swf",
       file: "' . $src . '",
+      image: "' . $a['image'] . '",
       height: ' . $player_height . ',
       width: ' . $player_width . $extra_params . '
     });
