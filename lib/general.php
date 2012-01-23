@@ -893,7 +893,7 @@ function _vae_local_exec($script) {
   preg_match_all("/\\$([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)/", $script, $matches);
   if (is_array($matches) && is_array($matches[0])) {
     foreach ($matches[0] as $key) {
-      $glbls .= (strlen($glbls) ? ", " : "") . $key;
+      if ($key != '$this') $glbls .= (strlen($glbls) ? ", " : "") . $key;
     }
     if (strlen($glbls)) $script = "<?php global " . $glbls . "; ?>" . $script;
   }
