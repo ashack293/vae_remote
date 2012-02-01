@@ -832,6 +832,10 @@ function _vae_load_settings() {
     }
     $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
   }
+  if (_vae_ssl() && $_SERVER['HTTP_HOST'] == "www.gagosian.com") {
+    $_VAE['config']['cdn_url'] = "https://" . $_VAE['settings']['subdomain'] . ".vaesite.com/";
+    $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
+  }
   $t = $_VAE['settings']['timezone'];
   if (strstr($t, "Central Time")) date_default_timezone_set("America/Chicago");
   if (strstr($t, "Mountain Time")) date_default_timezone_set("America/Denver");
