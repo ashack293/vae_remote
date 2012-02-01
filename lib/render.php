@@ -178,7 +178,7 @@ function _vae_render_captcha($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   $tag['callback']['_form_prepared'] = true;
   require_once(dirname(__FILE__) . "/../vendor/recaptchalib.php");
-  return recaptcha_get_html($_VAE['recaptcha']['public'], null, ($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']));
+  return recaptcha_get_html($_VAE['recaptcha']['public'], null, _vae_ssl());
 }
 
 function _vae_render_cdn($a, &$tag, $context, &$callback, $render_context) {
@@ -586,7 +586,7 @@ function _vae_render_formmail($a, &$tag, $context, &$callback, $render_context) 
 function _vae_render_fragment($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   if (!$a['cache']) return "";
-  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
+  if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $key = $_VAE['global_cache_key'] . $a['cache'];
     $cached = memcache_get($_VAE['memcached'], $key);
     if (is_array($cached) && $cached[0] == "chks") {

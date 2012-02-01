@@ -3,8 +3,7 @@
 function _vae_absolute_data_url($path = "") {
   global $_VAE;
   if (substr($_VAE['config']['data_url'], 0, 4) == "http") return $_VAE['config']['data_url'] . $path;
-  $proto = (($_REQUEST['__vae_ssl_router'] || $_SERVER['HTTPS']) ? "https" : "http");
-  return $proto . "://" . $_SERVER['HTTP_HOST'] . $_VAE['config']['data_url'] . $path;
+  return _vae_proto() . $_SERVER['HTTP_HOST'] . $_VAE['config']['data_url'] . $path;
 }
 
 function _vae_akismet($a) {
@@ -408,7 +407,7 @@ function _vae_handleob($vaeml) {
     }
     if ($_VAE['store_files']) _vae_store_files_commit();
     if (isset($_VAE['ticks'])) return _vae_render_timer();
-    if ($_SESSION['__v:pre_ssl_host'] && ($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
+    if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
@@ -767,7 +766,7 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_tick("can't cache because this one already came from the cache");
   } elseif (isset($_VAE['cant_cache'])) {
     _vae_tick("can't cache because my var says so: " . $_VAE['cant_cache']);
-  } elseif ($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) {
+  } elseif (_vae_ssl()) {
     _vae_tick("can't cache because we be ssl");
   } elseif (($out != false) && !isset($_VAE['force_redirect'])) {
     $dependencies = (isset($_VAE['dependencies']) ? $_VAE['dependencies'] : "");
@@ -824,7 +823,7 @@ function _vae_load_settings() {
     require_once($_VAE['config']['data_path'] . "settings.php");
   }
   if (isset($_VERB['settings'])) $_VAE['settings'] = $_VERB['settings'];
-  if (!$_VAE['config']['force_local_assets'] && !$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router']) {
+  if (!$_VAE['config']['force_local_assets'] && !_vae_ssl()) {
     if (strlen($_VAE['settings']['cdn_host'])) {
       $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['cdn_host'] . "/";
     } else {
@@ -1305,7 +1304,7 @@ function _vae_prod() {
 }
 
 function _vae_proto() {
-  return (($_REQUEST['__vae_ssl_router'] || $_SERVER['HTTPS']) ? "https" : "http") . "://";
+  return (_vae_ssl() ? "https" : "http") . "://";
 }
 
 function _vae_qs($out = "", $keep_current = true, $append_to_end = "") {
@@ -1477,6 +1476,9 @@ function _vae_render_error($e) {
   global $_VAE;
   @header("HTTP/1.1 500 Internal Server Error");
   @header("Status: 500 Internal Server Error");
+  if (!$_REQUEST['__debug'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
+    return @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html");
+  }
   if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr(get_class($e), "Vae"))) {
     $error_type = "Vae Error";
     if (get_class($e) == "VaeException" || get_class($e) == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
@@ -1599,9 +1601,11 @@ function _vae_require_ssl() {
   global $_VAE;
   $_VAE['ssl_required'] = true;
   $_VAE['cant_cache'] = "ssl_required";
-  if (!$_SERVER['HTTPS'] && !$_REQUEST['__vae_ssl_router'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
+  if (!vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
-    if ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
+    if ($_VAE['settings']['subdomain'] == "gagosian" && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
+      $domain = "www.gagosian.com";
+    } elseif ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_ssl'];
     } elseif ($_VAE['settings']['domain_ssl']) {
       $domain = $_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'];
@@ -1854,6 +1858,14 @@ function _vae_src($filename) {
   }
   _vae_dependency_add($filename, md5($vaeml));
   return array($filename, $vaeml);
+}
+
+function _vae_ssl() {
+  if ($_REQUEST['__vae_ssl_router'] || $_SERVER['HTTPS'] || ($_SERVER['HTTP_X_FORWARDED_PROTO'] == "https")) {
+  	return true;
+  } else {
+  	return false;
+  }
 }
 
 function _vae_start_ob() {

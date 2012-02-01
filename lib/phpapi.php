@@ -25,7 +25,7 @@ function vae_cdn_url() {
   global $_VAE;
   if (isset($_VAE['config']['cdn_url'])) return $_VAE['config']['cdn_url'];
   if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return "/";
-  return "http" . (($_SERVER['HTTPS'] || $_REQUEST['__vae_ssl_router']) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . "/";
+  return _vae_proto() . $_SERVER['HTTP_HOST'] . "/";
 }
 
 function vae_create($structure_id, $row_id, $data) {
