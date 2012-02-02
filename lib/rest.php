@@ -81,7 +81,7 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   } else {
     $host = $_SERVER['HTTP_HOST'];
   }
-  $out = _vae_simple_rest("http://" . $host . "/" . $url . "?" . $qs);
+  $out = _vae_simple_rest("http://" . $_SERVER['SERVER_ADDR'] . "/" . $url . "?" . $qs, null, $host);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
@@ -162,7 +162,7 @@ function _vae_master_rest($method, $post_data = null) {
   return _vae_simple_rest("http://" . $_VAE['settings']['subdomain'] . ".vaesite.com/", $post_data);
 }
 
-function _vae_simple_rest($url, $post_data = null) {
+function _vae_simple_rest($url, $post_data = null, $header = false) {
   global $_VAE;
   if ($_ENV['TEST'] && !$_SESSION['real_rest']) {
     $_VAE['rest_sent']++;
@@ -172,7 +172,7 @@ function _vae_simple_rest($url, $post_data = null) {
   if (!strstr($url, "://")) {
     if (substr($url, 0, 5) == "/feed") {
       $url = "http://vae0.***REMOVED***" . $url;
-      $header = true;
+      $header = $_VAE['config']['backlot_url'];
     } else {
       $url = $_VAE['config']['backlot_url'] . $url;
     }
@@ -184,7 +184,7 @@ function _vae_simple_rest($url, $post_data = null) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
   }
   if ($header) {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("http://", "/"), "", $_VAE['config']['backlot_url'])));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("http://", "/"), "", $header)));
   }
   $res = curl_exec($ch);
   curl_close($ch); 
