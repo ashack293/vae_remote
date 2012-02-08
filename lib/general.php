@@ -1699,7 +1699,7 @@ function _vae_session_handler_read($id) {
 
 function _vae_session_handler_write($id, $data) {
   global $_VAE;
-  if (!$data) return false;
+  if (!$data) return _vae_session_handler_destroy($id);
   $expire = time() + (86400 * 2);
   $data = _vae_sql_e(base64_encode($data));
   if (isset($_VAE['session_read'])) {
