@@ -29,6 +29,7 @@ function vae_cdn_url() {
 }
 
 function vae_create($structure_id, $row_id, $data) {
+  if (strstr($_SERVER['DOCUMENT_ROOT'], "fonyfw.verb")) return false;
   if (strlen($structure_id) && !is_numeric($structure_id)) {
     $createInfo = _vae_fetch_for_creating($structure_id);
     if ($createInfo && is_numeric($createInfo->structure_id)) {

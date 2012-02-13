@@ -476,6 +476,7 @@ $_VAE['store']['payment_methods'] = array(
   'realex' => array('name' => "Credit Card", 'credit_card' => true), 
   'sage' => array('name' => "Credit Card", 'credit_card' => true), 
   'secure_pay' => array('name' => "Credit Card", 'credit_card' => true), 
+  'solvers' => array('name' => "Credit Card", 'credit_card' => true), 
   'skip_jack' => array('name' => "Credit Card", 'credit_card' => true), 
   'trans_first' => array('name' => "Credit Card", 'credit_card' => true), 
   'trust_commerce' => array('name' => "Credit Card", 'credit_card' => true), 

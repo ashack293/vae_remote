@@ -1984,7 +1984,7 @@ function _vae_tick($desc, $userland = false) {
 function _vae_update_feed($message = false) {
   global $_VAE;
   //if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian.verb")) return;
-  if (strstr($_SERVER['DOCUMENT_ROOT'], "ht.verb")) return;
+  if (strstr($_SERVER['DOCUMENT_ROOT'], "fonyfw.verb")) return;
   if (strstr($_SERVER['DOCUMENT_ROOT'], "htwedding.verb")) return;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
