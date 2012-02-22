@@ -836,10 +836,7 @@ function _vae_load_settings() {
     $_VAE['config']['cdn_url'] = "https://" . $_VAE['settings']['subdomain'] . ".vaesite.com/";
     $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
   }
-  $t = $_VAE['settings']['timezone'];
-  if (strstr($t, "Central Time")) date_default_timezone_set("America/Chicago");
-  if (strstr($t, "Mountain Time")) date_default_timezone_set("America/Denver");
-  if (strstr($t, "Pacific Time")) date_default_timezone_set("America/Los_Angeles");
+  @date_default_timezone_set($_VAE['settings']['timezone']);
 }
 
 function _vae_local($filename = "") {

@@ -248,7 +248,7 @@ function vae_require_once($path) {
 }
 
 function vae_richtext($text, $options) {
-  return _vae_htmlarea($text, $options);
+  return _vae_htmlarea((string)$text, $options);
 }
 
 function vae_sizedimage($id, $size, $preserve_filename = false) {
