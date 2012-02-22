@@ -517,55 +517,57 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because there are not enough items in your order.  Minimum number of items needed for this coupon: " . $disc['min_order_items'], 'err', $flash_location);
     } elseif (($disc['country']) && $current['shipping_country'] != $disc['country']) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because your order is not being shipped to " . $disc['country'] . ".", 'err', $flash_location);
-    } elseif (($item == null) && (strlen($disc['included_classes']) || strlen($disc['excluded_classes']))) {
-      foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
-        $amount += _vae_store_compute_discount($r, ($disc['fixed_amount'] ? ($disc['fixed_amount'] - $amount) : null));
-      }
     } else {
-      if ($item) {
-        $item_discount_classes = explode(",", $item['discount_class']);
-        $item_discount_classes[] = $item['id'];
-        if (strlen($disc['included_classes'])) {
-          $included_classes = explode(",", $disc['included_classes']);
-          if (!count(array_intersect($item_discount_classes, $included_classes))) return 0;
-        }
-        if (strlen($disc['excluded_classes'])) {
-          $excluded_classes = explode(",", $disc['excluded_classes']);
-          if (count(array_intersect($item_discount_classes, $excluded_classes))) return 0;
-        }
-        $max = $item['total'];
-      } else {
-        $max = (($disc['discount_shipping'] && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());      
-      }
-      if (strlen($disc['required_classes'])) {
-        $found_one = false;
-        $required_classes = explode(",", $disc['required_classes']);
-        foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
-          $item_discount_classes = explode(",", $r['discount_class']);
-          if (count(array_intersect($item_discount_classes, $required_classes))) $found_one = true;
-        }
-        if ($found_one == false) return 0;
-      }
-      if (!$item || $remaining) {
-        if ($disc['fixed_amount']) {
-          $amount += ($remaining ? min($disc['fixed_amount'], $remaining) : $disc['fixed_amount']);
-        }
-      }
-      if ($disc['percentage_amount']) {
-        $amount += ($disc['percentage_amount'] / 100) * $max;
-      }
-      if ($amount > $max) {
-        $amount = $max;
-      }
-      if (!$item && $disc['free_shipping']) {
-        if (!strlen($disc['free_shipping_method']) || strstr($_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'], $disc['free_shipping_method'])) {
-          $amount += _vae_store_compute_shipping();
-        }
-      }
-      if ($amount == 0 && ($item == null) && $show_errors) {
-        _vae_flash("This coupon does not provide any discounts for your order.", 'err', $flash_location);
-      }
-    }
+	    if (($item == null) && (strlen($disc['included_classes']) || strlen($disc['excluded_classes']))) {
+	      foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
+	        $amount += _vae_store_compute_discount($r, ($disc['fixed_amount'] ? ($disc['fixed_amount'] - $amount) : null));
+	      }
+	    } else {
+	      if ($item) {
+	        $item_discount_classes = explode(",", $item['discount_class']);
+	        $item_discount_classes[] = $item['id'];
+	        if (strlen($disc['included_classes'])) {
+	          $included_classes = explode(",", $disc['included_classes']);
+	          if (!count(array_intersect($item_discount_classes, $included_classes))) return 0;
+	        }
+	        if (strlen($disc['excluded_classes'])) {
+	          $excluded_classes = explode(",", $disc['excluded_classes']);
+	          if (count(array_intersect($item_discount_classes, $excluded_classes))) return 0;
+	        }
+	        $max = $item['total'];
+	      } else {
+	        $max = (($disc['discount_shipping'] && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());      
+	      }
+	      if (strlen($disc['required_classes'])) {
+	        $found_one = false;
+	        $required_classes = explode(",", $disc['required_classes']);
+	        foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
+	          $item_discount_classes = explode(",", $r['discount_class']);
+	          if (count(array_intersect($item_discount_classes, $required_classes))) $found_one = true;
+	        }
+	        if ($found_one == false) return 0;
+	      }
+	      if (!$item || $remaining) {
+	        if ($disc['fixed_amount']) {
+	          $amount += ($remaining ? min($disc['fixed_amount'], $remaining) : $disc['fixed_amount']);
+	        }
+	      }
+	      if ($disc['percentage_amount']) {
+	        $amount += ($disc['percentage_amount'] / 100) * $max;
+	      }
+	      if ($amount > $max) {
+	        $amount = $max;
+	      }
+	      if (!$item && $disc['free_shipping']) {
+	        if (!strlen($disc['free_shipping_method']) || strstr($_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'], $disc['free_shipping_method'])) {
+	          $amount += _vae_store_compute_shipping();
+	        }
+	      }
+	    } 
+	    if ($amount == 0 && ($item == null) && $show_errors) {
+	      _vae_flash("This coupon does not provide any discounts for your order.", 'err', $flash_location);
+	    }
+	  }
     if ($amount == 0 && ($item == null) && $show_errors) {
       unset($_SESSION['__v:store']['discount_code']);
       _vae_run_hooks("store:discount:updated");
