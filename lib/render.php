@@ -897,7 +897,15 @@ function _vae_render_pagination($a, &$tag, $context, &$callback, $render_context
     $class = _vae_global_id($b['page_request_variable']);
     _vae_on_dom_ready('jQuery(".' . $class . '").click(function(e) { ' . $a['ajaxbefore'] . ' jQuery("#' . $class . '_loading").show(); jQuery.get(jQuery(this).attr("href")+"&__xhr_paginate=' . $b['page_request_variable'] . '", function(d){ ' . $a['ajaxsuccess'] . ' ' . $a['oncomplete'] . ' jQuery("#' . $a['ajax'] . '").html(d); jQuery("#' . $class . '_loading").hide(); }); e.preventDefault(); return false; });');
   }
-  for ($i = 1; $i <= $b['last_page']; $i++) {
+  $start_page = 1;
+  $end_page = $b['last_page'];
+  if (isset($a['max_to_show']) && ($b['last_page'] > $a['max_to_show'])) {
+    $max_pages = $a['max_to_show'];
+    if (($max_pages % 2) == 1) $max_pages -= 1;
+    $start_page = min($b['page'] - ($max_pages / 2), 1);
+    $end_page = $start_page + $max_pages;
+  }
+  for ($i = $start_page; $i <= $end_page; $i++) {
     $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . $_SERVER['PHP_SELF'] . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>'; 
     $out .= _vae_merge_dividers($data, $dividers, $i - 1, $context, $render_context) . ' ';
   }
