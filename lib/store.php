@@ -522,6 +522,11 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	      foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
 	        $amount += _vae_store_compute_discount($r, ($disc['fixed_amount'] ? ($disc['fixed_amount'] - $amount) : null));
 	      }
+	      if ($amount > 0 && $disc['free_shipping']) {
+	        if (!strlen($disc['free_shipping_method']) || strstr($_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'], $disc['free_shipping_method'])) {
+	          $amount += _vae_store_compute_shipping();
+	        }
+	      }
 	    } else {
 	      if ($item) {
 	        $item_discount_classes = explode(",", $item['discount_class']);
@@ -594,6 +599,7 @@ function _vae_store_compute_shipping($register_page = null) {
   $current = _vae_store_current_user();
   $country = $current['shipping_country'];
   $address = $current['shipping_address'];
+  $city = $current['shipping_city'];
   $state = $current['shipping_state'];
   $zip = $current['shipping_zip'];
   $sub = $_VAE['settings']['store_shipping_pad_pounds_per_order'];
@@ -622,7 +628,7 @@ function _vae_store_compute_shipping($register_page = null) {
   }
   $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $state . $address . $weight . serialize($_SESSION['__v:store']['total_weight']) . "d");
   if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
-  $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $address, $handling);
+  $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $city, $address, $handling);
   $_SESSION['__v:store']['shipping'] = array('hash' => $hash);
   if ($register_page && (count($options) < 1) && count($_VAE['settings']['shipping_methods']) && ($_SESSION['__v:store']['total_weight'] || ($weight > 0))) {
     $_VAE['store_cached_shipping'] = false;
@@ -690,7 +696,11 @@ function _vae_store_compute_tax() {
         }
         $discounted_subtotal = _vae_store_compute_subtotal() - _vae_store_compute_discount();
         if ($subtotal > $discounted_subtotal) $subtotal = $discounted_subtotal;
-        if ($rate['include_shipping'] && (($subtotal > 0) || !$rate['tax_class'])) {
+        if (_vae_store_shipping_tax_class()) {
+        	if ($rate['tax_class'] == _vae_store_shipping_tax_class()) {
+            $subtotal += _vae_store_compute_shipping();
+        	}
+        } elseif ($rate['include_shipping'] && (($subtotal > 0) || !$rate['tax_class'])) {
           $subtotal += _vae_store_compute_shipping();
         }
         if ($subtotal < 0) $subtotal = 0;
@@ -1579,6 +1589,11 @@ function _vae_store_set_default_payment_method() {
       }
     }
   }
+}
+
+function _vae_store_shipping_tax_class($val = null) {
+	if ($val) $_SESSION['__v:store']['shipping_tax_class'] = $val;
+	return $_SESSION['__v:store']['shipping_tax_class'];
 }
 
 function _vae_store_shipping_methods() {

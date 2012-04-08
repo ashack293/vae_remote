@@ -422,6 +422,10 @@ function vae_store_remove_from_cart($cart_id) {
   return true;
 }
 
+function vae_store_shipping_tax_class($val = null) {
+  return _vae_store_shipping_tax_class($val);
+}
+
 function vae_store_shipping_method() {
   _vae_store_compute_shipping();
   return $_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'];

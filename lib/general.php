@@ -1510,7 +1510,7 @@ function _vae_render_error($e) {
   }
   $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . get_class($e) . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
   if ($backtrace && (count($backtrace) > 1)) {
-    if ($_REQUEST['__debug'] || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
+    if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
   //if (!$_ENV['TEST'] && !$_REQUEST['__debug']) {

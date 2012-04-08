@@ -1,6 +1,6 @@
 <?php
 
-function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $zip, $country, $state, $address, $handling) {
+function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $zip, $country, $state, $city, $address, $handling) {
   global $shipping_weight, $shipping_num_boxes, $shipping_num_items, $shipping_subtotal, $order, $_VAE, $method;
   $shipping_weight = $weight;
   $shipping_subtotal = $subtotal;
@@ -10,7 +10,7 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
   if (!strlen($origin_country)) $origin_country = "US";
   $res = array();
   _vae_store_oscommerce_load();
-  $order = new tep_order($zip, $country, $state, $subtotal);
+  $order = new tep_order($zip, $country, $state, $city, $address, $subtotal);
   foreach (_vae_store_shipping_methods() as $method) {
     if (!$_VAE['no_shipping_restrictions']) {
       if (strlen($method['destination_country'])) {
@@ -93,6 +93,7 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
         $quotes = $class->quote();
       }
     }
+    //if ($quotes["error"]) _vae_error(ucwords($method["method_name"]) . " Shipping Integration Error: " . $quotes["error"]);
     foreach ($quotes["methods"] as $r) {
       if (is_numeric($_VAE['settings']['store_shipping_pad_dollars_per_order'])) $r['cost'] += $_VAE['settings']['store_shipping_pad_dollars_per_order'];
       if (is_numeric($_VAE['settings']['store_shipping_pad_percent_dollars'])) $r['cost'] = ($r['cost'] + $handling) * (1 + ($_VAE['settings']['store_shipping_pad_percent_dollars']/100));
@@ -153,6 +154,12 @@ function _vae_store_oscommerce_load() {
   define("SHIPPING_ORIGIN_ZIP", $_VAE['settings']['store_shipping_origin_zip']);
   define("MODULE_SHIPPING_FEDEX1_WEIGHT", "LBS");
   define("MODULE_SHIPPING_FEDEX1_DROPOFF", 1);
+  define('MODULE_SHIPPING_AIRBORNE_PACKAGE', "O");
+  define('MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY_TYPE', "Ship in x number of days");
+  define('MODULE_SHIPPING_AIRBORNE_DAYS_TO_SHIP', '2');
+  define('MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY', 'Monday');
+  define('MODULE_SHIPPING_AIRBORNE_CONTENTS_DESCRIPTION', 'Goods');
+  define('MODULE_SHIPPING_AIRBORNE_DUTY_PAYMENT_TYPE', 'R');
 }
 
 function _vae_store_usps_only($country, $state, $address) {
@@ -163,9 +170,9 @@ function _vae_store_usps_only($country, $state, $address) {
 }
 
 class tep_order {
-  function tep_order($zip, $country, $state, $total) {
+  function tep_order($zip, $country, $state, $city, $street_address, $total) {
     $this->info = array('total' => $total);
-    $this->delivery = array('state' => $state, 'postcode' => $zip, 'country' => array('id' => ($country == "US" ? 1 : "9999"), 'iso_code_2' => $country));
+    $this->delivery = array('state' => $state, 'city' => $city, 'street_address' => $street_address, 'postcode' => $zip, 'country' => array('id' => ($country == "US" ? 1 : "9999"), 'iso_code_2' => $country));
   }
 }
 function tep_get_countries($a, $b) {
