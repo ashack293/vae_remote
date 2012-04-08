@@ -1,6 +1,6 @@
 <?php
  
-$_VAE['local_newest_version'] = "0.5.0";
+$_VAE['local_newest_version'] = "0.5.2";
  
 function _vae_list_countries() {
   return array('AF' => 'Afghanistan',
