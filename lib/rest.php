@@ -193,11 +193,11 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
 
 function _vae_update($id, $data) {
   global $_VAE;
-  $_VAE['__vae_update_ct']++;
   $errors = array();
-  if (_vae_rest($data, "content/update/" . $id . (($_VAE['__vae_update_ct'] % 20) ? "?no_hook=true" : ""), "content", null, $errors, true) == false) {
+  if (_vae_rest($data, "content/update/" . $id, "content", null, $errors, true) == false) {
     return false;
   }
+  $_VAE['__vae_update_ct']++;
   if (!isset($_VAE['run_hooks'])) $_VAE['run_hooks'] = array();
   $_VAE['run_hooks'][] = array("content:updated", $id);
   return true;

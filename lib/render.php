@@ -902,8 +902,8 @@ function _vae_render_pagination($a, &$tag, $context, &$callback, $render_context
   if (isset($a['max_to_show']) && ($b['last_page'] > $a['max_to_show'])) {
     $max_pages = $a['max_to_show'];
     if (($max_pages % 2) == 1) $max_pages -= 1;
-    $start_page = min($b['page'] - ($max_pages / 2), 1);
-    $end_page = $start_page + $max_pages;
+    $start_page = max($b['page'] - ($max_pages / 2), 1);
+    $end_page = min($b['last_page'], $start_page + $max_pages);
   }
   for ($i = $start_page; $i <= $end_page; $i++) {
     $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . $_SERVER['PHP_SELF'] . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>'; 
