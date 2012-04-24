@@ -1,0 +1,12 @@
+
+# /
+/REVISION
+/pages.php
+/index.php
+
+# /tests/data/
+/tests/data/.verb.global.lock
+/tests/data/.verb.global.2.lock
+/tests/data/.verb.update.lock
+/tests/data/.verb.update.2.lock
+/tests/data/files.psz
