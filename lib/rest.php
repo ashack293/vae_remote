@@ -191,10 +191,10 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
   return $res;
   }
 
-function _vae_update($id, $data) {
+function _vae_update($id, $data, $update_frontend = true) {
   global $_VAE;
   $errors = array();
-  if (_vae_rest($data, "content/update/" . $id, "content", null, $errors, true) == false) {
+  if (_vae_rest($data, "content/update/" . $id . ($update_frontend ? "" : "?no_hook=true"), "content", null, $errors, true) == false) {
     return false;
   }
   $_VAE['__vae_update_ct']++;

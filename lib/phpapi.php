@@ -562,9 +562,9 @@ function vae_tick($desc) {
   return _vae_tick($desc, true);
 }
 
-function vae_update($id, $data) {
+function vae_update($id, $data, $update_frontend = true) {
   if (!is_numeric($id)) _vae_error("You called <span class='c'>vae_update()</span> but didn't provide a proper ID.");
-  return _vae_update($id, $data);
+  return _vae_update($id, $data, $update_frontend);
 }
 
 function vae_users_current_user() {

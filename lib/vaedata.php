@@ -302,10 +302,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
           if (!self::$sessionId) self::___openSession();
           return self::$client->get(self::$sessionId, $responseId, $query, $options);
         } catch (TSocketException $e) {
-          if (!$_REQUEST['__debug']) {
-            sleep(3);
-            unset($_VAE['vaedbd']);
-          }
+          self::___resetClient();
         }
       }
       throw new VaeException("", "Could not connect to VaeDBd to get()");
@@ -417,8 +414,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         $response = self::$client->data(self::$sessionId, $this->___responseId);
       } catch (TSocketException $e) {
-        unset($_VAE['vaedbd']);
-        sleep(3);
+        self::___resetClient();
       }
     }
     if (!$response) {
@@ -654,12 +650,21 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], $staging);
         return;
       } catch (TSocketException $e) {
-        sleep(3);
+        self::___resetClient();
       }
     }
     throw new VaeException("", "Could not connect to VaeDBd to openSession");
   }
-  
+
+  public static function ___resetClient() {
+    global $_VAE;
+    _vae_debug("-- resetting client --");
+    sleep(2);
+    unset($_VAE['vaedbd']);
+    unset(self::$client);
+    self::___openClient();
+  }
+ 
   public static function ___resetSite() {
     global $_VAE;
     self::___openClient();
