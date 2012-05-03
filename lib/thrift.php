@@ -26,12 +26,12 @@ function _vae_thrift_open($client_class, $port) {
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/VaeRubyd.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/../../../gen-php/vae/vae_types.php';
   $i = 0;
-  while ($i < 5) {
+  while ($i < 4) {
     try {
-      $host = 'localhost';
-      if (($i % 2) == 0) $host = 'vaedb0.***REMOVED***';
-      $socket = new TSocket($host, $port);
-      $socket->setRecvTimeout(30000);
+      $_VAE['thrift_host'] = 'localhost';
+      if (!_vae_prod() && (($i % 2) == 0)) $_VAE['thrift_host'] = 'vaedb0.***REMOVED***';
+      $socket = new TSocket($_VAE['thrift_host'], $port);
+      $socket->setRecvTimeout(10000);
       $transport = new TBufferedTransport($socket, 1024, 1024);
       $protocol = new TBinaryProtocol($transport);
       $client = new $client_class($protocol);
@@ -39,7 +39,7 @@ function _vae_thrift_open($client_class, $port) {
       return $client;
     } catch (TException $tx) {
     }
-    sleep(5);
+    sleep(1);
     $i++;
   }
   throw new VaeException("", $tx->getMessage());
