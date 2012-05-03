@@ -29,7 +29,7 @@ function _vae_thrift_open($client_class, $port) {
   while ($i < 5) {
     try {
       $host = 'localhost';
-      $host = 'vaedb0.***REMOVED***';
+      if (($i % 2) == 0) $host = 'vaedb0.***REMOVED***';
       $socket = new TSocket($host, $port);
       $socket->setRecvTimeout(30000);
       $transport = new TBufferedTransport($socket, 1024, 1024);
