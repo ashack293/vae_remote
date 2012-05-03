@@ -661,7 +661,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     _vae_debug("-- resetting client --");
     sleep(2);
     unset($_VAE['vaedbd']);
-    unset(self::$client);
+    self::$client = null;
     self::___openClient();
   }
  
