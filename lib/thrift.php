@@ -30,8 +30,12 @@ function _vae_vaedb_backends() {
 function _vae_thrift_open($client_class, $port) {
   global $_VAE;
 
-  $GLOBALS['CONFIG_ROOT'] = '/www/vae_remote/shared/config';
-  require_once $GLOBALS['CONFIG_ROOT'].'/config.php';
+  $_VAE['vaedbd_backend_tiers'] = array(
+    array(
+      'vaedb0.***REMOVED***',
+      'vaedb1.***REMOVED***'
+    )
+  );
 
   $GLOBALS['THRIFT_ROOT'] = '/www/vae_thrift/current/php/vendor/thrift';
   require_once $GLOBALS['THRIFT_ROOT'].'/Thrift.php';
