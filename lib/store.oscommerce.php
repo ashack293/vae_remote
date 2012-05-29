@@ -1,7 +1,7 @@
 <?php
 
 function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $zip, $country, $state, $city, $address, $handling) {
-  global $shipping_weight, $shipping_num_boxes, $shipping_num_items, $shipping_subtotal, $order, $_VAE, $method;
+  global $shipping_weight, $shipping_num_boxes, $shipping_num_items, $shipping_subtotal, $order, $_VAE, $method, $origin_country;
   $shipping_weight = $weight;
   $shipping_subtotal = $subtotal;
   $shipping_num_boxes = 1;
