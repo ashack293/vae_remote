@@ -1,7 +1,7 @@
 <?php
 
 class fedex {
-  var $code, $title, $description, $sort_order, $tax_class, $fedex_key, $fedex_pwd, $fedex_act_num, $fedex_meter_num, $country, $origin_country;
+  var $code, $title, $description, $sort_order, $tax_class, $fedex_key, $fedex_pwd, $fedex_act_num, $fedex_meter_num, $country;
 
   function fedex() {
     global $method, $origin_country;
@@ -42,7 +42,8 @@ class fedex {
     if (in_array('03', $vdomestic)) {
       $this->types['FEDEX_2_DAY'] = array();
     }
-    if ((in_array('92', $vdomestic) && $order->delivery['country']['iso_code_2'] == $origin_country) || (in_array('92', $vinternational) && $order->delivery['country']['iso_code_2'] != $origin_country)) {
+    _vae_debug("comparing " . $order->delivery['country']['iso_code_2'] . " to " . $this->country);
+    if ((in_array('92', $vdomestic) && $order->delivery['country']['iso_code_2'] == $this->country) || (in_array('92', $vinternational) && $order->delivery['country']['iso_code_2'] != $this->country)) {
       $this->types['FEDEX_GROUND'] = array();
       $this->types['GROUND_HOME_DELIVERY'] = array();
     }
