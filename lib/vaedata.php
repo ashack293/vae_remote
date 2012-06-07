@@ -171,7 +171,7 @@ class VaeContext implements ArrayAccess, Countable {
     } elseif (is_object($this->___query)) {
       $this->___query->___nestedQuery($query, $options, $raiseErrors);
     } elseif ($this->___context && $this->___context->id) {
-      if (!preg_match("/^[0-9]/", $query)) $query = $this->___context->id . "/" . $query;
+      if (!preg_match("/^[0-9]/", $query) && substr($query, 0, 1) != "/") $query = $this->___context->id . "/" . $query;
       return VaeQuery::___factory($query, $options, true);
     } elseif (preg_match("/^[0-9]/", $query)) {
       return VaeQuery::___factory($query, $options, true);

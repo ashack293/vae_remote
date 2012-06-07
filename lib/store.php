@@ -130,8 +130,9 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   if (!$cart_id || ($from_api && !$a['update_if_exists'])) {
     if (!isset($_SESSION['__v:store']['cart_id'])) $_SESSION['__v:store']['cart_id'] = 1;
     $cart_id = $_SESSION['__v:store']['cart_id']++;
-    $_SESSION['__v:store']['cart'][$cart_id] = array('name' => $name, 'qty' => $qty, 'option_id' => $option_id, 'option_value' => $option_value, 'id' => $id, 'notes' => $notes, 'price' => $price, 'digital' => $digital, 'discount_class' => $a['discount_class'], 'taxable' => $taxable, 'tax_class' => $tax_class, 'shipping_class' => $shipping_class, 'total' => _vae_decimalize($price * $qty, 2), 'inventory_field' => $a['inventory_field'], 'weight' => $weight, 'check_inventory' => $check_inventory, 'barcode' => $barcode, 'original_price' => $original_price, 'backstage_notes' => $backstage_notes, 'brand' => $brand, 'category' => $category, 'bundled_with' => $a['bundled_with']);
+    $_SESSION['__v:store']['cart'][$cart_id] = array('added_at' => time(), 'name' => $name, 'qty' => $qty, 'option_id' => $option_id, 'option_value' => $option_value, 'id' => $id, 'notes' => $notes, 'price' => $price, 'digital' => $digital, 'discount_class' => $a['discount_class'], 'taxable' => $taxable, 'tax_class' => $tax_class, 'shipping_class' => $shipping_class, 'total' => _vae_decimalize($price * $qty, 2), 'inventory_field' => $a['inventory_field'], 'weight' => $weight, 'check_inventory' => $check_inventory, 'barcode' => $barcode, 'original_price' => $original_price, 'backstage_notes' => $backstage_notes, 'brand' => $brand, 'category' => $category, 'bundled_with' => $a['bundled_with']);
   } else {
+    $_SESSION['__v:store']['cart'][$cart_id]['added_at'] = time();
     $_SESSION['__v:store']['cart'][$cart_id]['qty'] = $qty;
     $_SESSION['__v:store']['cart'][$cart_id]['total'] = _vae_decimalize($qty * $_SESSION['__v:store']['cart'][$cart_id]['price'], 2);
   }
@@ -1667,6 +1668,13 @@ function _vae_store_verify_available($flash = true) {
   _vae_session_deps_add('__v:store', '_vae_store_verify_available');
   if (count($_SESSION['__v:store']['cart'])) {
     foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
+      if (is_numeric($_VAE['settings']['store_expire_cart_items_after']) && is_numeric($r['added_at'])) {
+        if (((time() - $r['added_at']) / 3600) > $_VAE['settings']['store_expire_cart_items_after']) {
+          $errors[] = "Item " . _vae_store_cart_item_name($r) . " has been removed from your cart because it has been in your cart for more than " . $_VAE['settings']['store_expire_cart_items_after'] . " hours.  Please browse our store and add it to your cart again if it is still available.";
+          vae_store_remove_from_cart($id);
+          continue;
+        }
+      }
       if ($r['inventory_field'] && $r['check_inventory']) {
         $available_qty = (string)_vae_store_most_specific_field($r, $r['inventory_field']);
         if (strlen($available_qty)) {
