@@ -542,7 +542,7 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	        }
 	        $max = $item['total'];
 	      } else {
-	        $max = (($disc['discount_shipping'] && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());      
+	        $max = ((($disc['discount_shipping'] || $disc['voucher']) && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());      
 	      }
 	      if (strlen($disc['required_classes'])) {
 	        $found_one = false;

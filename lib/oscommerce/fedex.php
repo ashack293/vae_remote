@@ -42,7 +42,6 @@ class fedex {
     if (in_array('03', $vdomestic)) {
       $this->types['FEDEX_2_DAY'] = array();
     }
-    _vae_debug("comparing " . $order->delivery['country']['iso_code_2'] . " to " . $this->country);
     if ((in_array('92', $vdomestic) && $order->delivery['country']['iso_code_2'] == $this->country) || (in_array('92', $vinternational) && $order->delivery['country']['iso_code_2'] != $this->country)) {
       $this->types['FEDEX_GROUND'] = array();
       $this->types['GROUND_HOME_DELIVERY'] = array();
@@ -105,9 +104,7 @@ class fedex {
       $request['RequestedShipment']['ServiceOptionType'] = 'SATURDAY_DELIVERY';
     }
 
-		//_vae_debug($request);
     $response = $client->getRates($request);
-    //_vae_debug($response);
 
     if ($response->HighestSeverity != 'FAILURE' && $response->HighestSeverity != 'ERROR' && is_array($response->RateReplyDetails) || is_object($response->RateReplyDetails)) {
       if (is_object($response->RateReplyDetails)) {
