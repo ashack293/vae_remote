@@ -170,7 +170,6 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 		}
 	}
 //END INSURANCE MODULE
-
 	// usps doesn't accept zero weight
 	// Modified by Greg Deeth on May 27th 2008
 	//$shipping_weight = $shipping_weight - .15;
@@ -386,7 +385,6 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
       }
-
       $http = new httpClient();
       if ($http->Connect($usps_server, 80)) {
         $http->addHeader('Host', $usps_server);
@@ -406,7 +404,6 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       } else {
         return false;
       }
-      
       $response = array();
       while (true) {
         if ($start = strpos($body, '<Package ID=')) {

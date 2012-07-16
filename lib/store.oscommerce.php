@@ -59,17 +59,19 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       if (($method['method_name'] != "usps") && _vae_store_usps_only($country, $state, $address)) {
         continue; 
       }
+      $max_weight_per_box = 70;
       require_once(dirname(__FILE__) . "/oscommerce/" . $method['method_name'] . ".php");
       $ext = $method['method_name'];
       $class = new $ext();
       $box_weights = $_SESSION['__v:store']['total_weight'];
-      if (!$box_weights && ($shipping_weight > 70)) {
+      if (!$box_weights && ($weight > $max_weight_per_box )) {
+        $remaining_weight = $weight;
         $box_weights = array();
-        while ($shipping_weight > 70) {
-          $box_weights[] = 70;
-          $shipping_weight -= 70;
+        while ($remaining_weight > $max_weight_per_box) {
+          $box_weights[] = $max_weight_per_box;
+          $remaining_weight -= $max_weight_per_box;
         }
-        $box_weights[] = $shipping_weight;
+        $box_weights[] = $remaining_weight;
       }
       if ($box_weights) {
         $quotes = array('methods' => array());
@@ -79,14 +81,13 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
           foreach ($these_quotes["methods"] as $r) {
             $gotit = false;
             foreach ($quotes["methods"] as $id => $r2) {
-              if ($r2["display_name"] == $r['display_name']) {
+              if ($r2["title"] == $r['title']) {
                 $quotes["methods"][$id]['cost'] += $r['cost'];
                 $gotit = true;
                 break;
               }
             }
-            if ($gotit) break;
-            $quotes["methods"][] = $r;
+            if (!$gotit) $quotes["methods"][] = $r;
           }
         }
       } else {
