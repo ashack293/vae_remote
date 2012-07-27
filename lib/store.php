@@ -300,6 +300,8 @@ function _vae_store_callback_forgot($tag) {
     if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
     return _vae_callback_redirect($_SERVER['PHP_SELF']);
   }
+  _vae_flash("We could not find a record with that E-Mail address.
+  ", 'err', $tag['attrs']['flash']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
