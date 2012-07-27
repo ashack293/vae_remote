@@ -677,7 +677,7 @@ function _vae_cant_cache_because_of_cookies() {
   if ($count > 1) return true;
   if ($count > 0) {
     foreach ($_COOKIE as $k => $v) {
-      if ($k != "VerbSession") return true;
+      if ($k != "VerbSession" && substr($k, 0, 3) != "__u") return true;
     }
   }
   return false;
