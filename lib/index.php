@@ -59,7 +59,6 @@ if (_vae_should_load()) {
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
   if ($_REQUEST['set_login']) _vae_set_login();
-  if ($_REQUEST['secret_key']) _vae_remote();
   _vae_tick("Vae Startup", true);
   
   /* Dispatch request */
@@ -84,6 +83,8 @@ if (_vae_should_load()) {
   if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();  
   if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
   if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");  
+  
+  if ($_REQUEST['secret_key']) _vae_remote();
   
   _vae_page_check_domain();
   if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();

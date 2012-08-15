@@ -235,8 +235,8 @@ function vae_register_tag($name, $options) {
   return _vae_register_tag($name, $options);
 }
 
-function vae_render_tags($tag, $context, $true = true) {
-  return _vae_render_tags($tag, $context, null, $true);
+function vae_render_tags($tag, $context, $true = true, $render_context = null) {
+  return _vae_render_tags($tag, $context, $render_context, $true);
 }
 
 function vae_require($path) {
