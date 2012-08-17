@@ -1979,9 +1979,6 @@ function _vae_tick($desc, $userland = false) {
 
 function _vae_update_feed($message = false) {
   global $_VAE;
-  //if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian.verb")) return;
-  if (strstr($_SERVER['DOCUMENT_ROOT'], "fonyfw.verb")) return;
-  if (strstr($_SERVER['DOCUMENT_ROOT'], "htwedding.verb")) return;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {
@@ -1990,7 +1987,6 @@ function _vae_update_feed($message = false) {
   } while (!strstr($feed_data, "</website>") && $retry < 0);
   if (strstr($feed_data, "</website>")) {
     _vae_store_feed($feed_data, $message);
-    _vae_reset_site();
   }
   _vae_lock_release(null, "update");
 }

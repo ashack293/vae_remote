@@ -326,7 +326,7 @@ function _vae_store_callback_login($tag) {
 }
 
 function _vae_store_callback_logout($tag) {
-  unset($_SESSION['__v:store']['customer_id']);
+  unset($_SESSION['__v:store']['logged in']);
   unset($_SESSION['__v:store']['previous_orders']);
   if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
@@ -740,7 +740,7 @@ function _vae_store_create_customer($data, $newsletter_code = null, $from_php = 
       $data['shipping_city'] = $res;
     }
   }
-  if ($_SESSION['__v:store']['customer_id']) { 
+  if ($_SESSION['__v:store']['customer_id'] && $_SESSION['__v:store']['loggedin']) { 
     if ($raw = _vae_rest($data, "customers/update/" . $_SESSION['__v:store']['customer_id'], "customer")) {
       _vae_store_load_customer($raw);
       if ($newsletter_code) _vae_newsletter_subscribe($newsletter_code, $data['e_mail_address']);
@@ -816,7 +816,6 @@ function _vae_store_find_discount($code) {
   $code = trim($code);
   if (!strlen($code)) return false;
   $customer_id = $_SESSION['__v:store']['customer_id'];
-  if (!strlen($customer_id)) $customer_id = $_SESSION['__v:store']['customer_id_notloggedin'];
   if (isset($_SESSION['__v:store']['discount'][$code.$customer_id])) return $_SESSION['__v:store']['discount'][$code.$customer_id];
   if ($raw = _vae_rest(array(), "store_discount_codes/verify/" . $code . ($customer_id ? "?customer_id=" . $customer_id : ""), "customer")) {
     if (strstr($raw, "BAD")) {
@@ -901,11 +900,11 @@ function _vae_store_load_customer($raw, $logged_in = true) {
     return "The store owner has banned your customer account from making purchases.  Please contact the store for further assistance.";
   }
   if (!isset($_SESSION['__v:store']['user'])) $_SESSION['__v:store']['user'] = array();
+  $_SESSION['__v:store']['customer_id'] = (int)$data->id;
+  $_SESSION['__v:store']['user']['id'] = (int)$data->id;
   if ($logged_in) {
-    $_SESSION['__v:store']['customer_id'] = (int)$data->id;
+    $_SESSION['__v:store']['loggedin'] = 1;
     $_SESSION['__v:store']['customer_addresses'] = _vae_array_from_rails_xml($data->{'customer-addresses'}->{'customer-address'}, true);
-  } else {
-    $_SESSION['__v:store']['customer_id_notloggedin'] = (int)$data->id;
   }
   $_SESSION['__v:store']['user']['name'] = (string)$data->{'name'};
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
@@ -1119,7 +1118,7 @@ function _vae_store_render_address_delete($a, &$tag, $context, &$callback, $rend
 function _vae_store_render_address_select($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_address_select');
-  if (!$_SESSION['__v:store']['customer_id']) return "";
+  if (!$_SESSION['__v:store']['loggedin'] || !$_SESSION['__v:store']['customer_id']) return "";
   $a['options'] = array(0 => "--- Select a Saved Address ---");
   foreach ($_SESSION['__v:store']['customer_addresses'] as $id => $address) {
     if ($address['address_type'] == $a['type']) $a['options'][$id] = _vae_combine_array_keys($address, array('name','company','address','address_2','city','state','zip','country'));
@@ -1137,7 +1136,7 @@ function _vae_store_render_address_select($a, &$tag, $context, &$callback, $rend
 function _vae_store_render_addresses($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_addresses');
-  if (!$_SESSION['__v:store']['customer_id']) return "";
+  if (!$_SESSION['__v:store']['loggedin'] || !$_SESSION['__v:store']['customer_id']) return "";
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($_SESSION['__v:store']['customer_addresses']));
 }
 
@@ -1332,7 +1331,7 @@ function _vae_store_render_if_in_cart($a, &$tag, $context, &$callback, $render_c
 
 function _vae_store_render_if_logged_in($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_if_logged_in');
-  return _vae_render_tags($tag, $context, $render_context, $_SESSION['__v:store']['customer_id']);
+  return _vae_render_tags($tag, $context, $render_context, $_SESSION['__v:store']['logged in']);
 }
 
 function _vae_store_render_if_money_order($a, &$tag, $context, &$callback, $render_context) {
@@ -1509,7 +1508,7 @@ function _vae_store_render_previous_orders($a, &$tag, $context, &$callback, $ren
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_orders');
   if (isset($_SESSION['__v:store']['previous_orders'])) {
     $pdata = $_SESSION['__v:store']['previous_orders'];
-  } else {
+  } elseif ($_SESSION['__v:store']['loggedin']) {
     $raw = _vae_rest(array(), "store/previous_orders/" . $_SESSION['__v:store']['customer_id'], "order", $tag);
     $_SESSION['__v:store']['previous_orders'] = $pdata = _vae_store_transform_orders($raw);
   }

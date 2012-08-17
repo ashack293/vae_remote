@@ -658,7 +658,6 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___resetClient() {
     global $_VAE;
-    _vae_debug("-- resetting client --");
     sleep(2);
     unset($_VAE['vaedbd']);
     self::$client = null;
@@ -669,6 +668,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     global $_VAE;
     self::___openClient();
     self::$sessionId = self::$client->resetSite(self::___getSubdomain(), $_VAE['config']['secret_key']);
+    self::___resetClient();
   }
 
 }
