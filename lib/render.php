@@ -637,7 +637,7 @@ function _vae_render_if($a, &$tag, $context, &$callback, $render_context) {
     $true = ($q1 == $q2);
   }
   if ($true === "0.0" || (string)$true == "0") $true = 0;
-  if ($a['is'] && ($true != $a['is'])) $true = false; 
+  if (strlen($a['is']) && ($true != $a['is'])) $true = false; 
   if (is_object($true) && !$true->collection() && (string)$true == "") {
     $true = false;
   }
