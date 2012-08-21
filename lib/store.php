@@ -1331,7 +1331,7 @@ function _vae_store_render_if_in_cart($a, &$tag, $context, &$callback, $render_c
 
 function _vae_store_render_if_logged_in($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_if_logged_in');
-  return _vae_render_tags($tag, $context, $render_context, $_SESSION['__v:store']['logged in']);
+  return _vae_render_tags($tag, $context, $render_context, $_SESSION['__v:store']['loggedin']);
 }
 
 function _vae_store_render_if_money_order($a, &$tag, $context, &$callback, $render_context) {
