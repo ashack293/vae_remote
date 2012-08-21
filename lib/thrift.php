@@ -57,10 +57,6 @@ function _vae_thrift_open($client_class, $port) {
   $i = 0;
   while ($i < 4) {
     $_VAE['thrift_host'] = array_shift($backends);
-    if($_REQUEST['__flag']) {
-      $_VAE['thrift_host'] = 'localhost';
-      $port = 9092;
-    }
     try {
       $socket = new TSocket($_VAE['thrift_host'], $port);
       $socket->setRecvTimeout(30000);
