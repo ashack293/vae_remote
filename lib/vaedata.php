@@ -372,8 +372,6 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       $dataContext = $iter->current();
       if ($dataContext) {
         $dataContext->___addQuery($dataQuery);
-      } else {
-        throw new VaeException("", "vaedb returned more contexts than I was expecting?!");
       }
       $iter->next();
     }
