@@ -795,7 +795,9 @@ function _vae_store_currency_symbol() {
 
 function _vae_store_current_user() {
   _vae_session_deps_add('__v:store', '_vae_store_current_user');
-  return $_SESSION['__v:store']['user'];
+  $current = $_SESSION['__v:store']['user'];
+  if ($_SESSION['__v:store']['customer_id']) $current["id"] = $_SESSION['__v:store']['customer_id'];
+  return $current;
 }
 
 function _vae_store_exchange_rate($from, $to) {
