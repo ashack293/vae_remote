@@ -170,7 +170,12 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
     return array_shift($_VAE['mock_rest']);
   }
   if (!strstr($url, "://")) {
-    $url = $_VAE['config']['backlot_url'] . $url;
+    if (substr($url, 0, 5) == "/feed") {
+      $url = "http://vae0.***REMOVED***" . $url;
+      $header = $_VAE['config']['backlot_url'];
+    } else {
+      $url = $_VAE['config']['backlot_url'] . $url;
+    }
   }
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_TIMEOUT, 600);
