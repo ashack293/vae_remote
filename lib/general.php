@@ -787,7 +787,7 @@ function _vae_load_cache($reload = false) {
   global $_VAE;
   if (isset($_VAE['file_cache']) && !$reload) return;
   $cache = array();
-  if ($_VAE['settings']['subdomain'] == "gagosian") {
+  if ($_VAE['settings']['subdomain'] == "gagosian" || $_VAE['settings']['subdomain'] == "saturdaysnyc") {
     $q = _vae_sql_q("SELECT `k`,`v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
     while ($r = _vae_sql_r($q)) {
       $cache[$r['k']] = $r['v'];
@@ -1933,7 +1933,7 @@ function _vae_store_files_commit() {
   if (_vae_prod()) {
     _vae_master_rest("store_files", array('key' => $key, 'value' => $value));
   } else {
-    if ($_VAE['settings']['subdomain'] == "gagosian") {
+    if ($_VAE['settings']['subdomain'] == "gagosian" || $_VAE['settings']['subdomain'] == "saturdaysnyc") {
       if (count($_VAE['store_files']) > 0) {
         foreach ($_VAE['store_files'] as $k => $v) {
           if ($v == null) {

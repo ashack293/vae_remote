@@ -11,7 +11,7 @@ $_VAE['version'] = 100;
 require_once(dirname(__FILE__) . "/general.php");
 
 //strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/") && 
-if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian") || strstr($_SERVER['DOCUMENT_ROOT'], "fluent")) {
+if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian") || strstr($_SERVER['DOCUMENT_ROOT'], "fluent") || strstr($_SERVER['DOCUMENT_ROOT'], "saturdaysnyc")) {
   session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 }
 
