@@ -326,7 +326,7 @@ function _vae_store_callback_login($tag) {
 }
 
 function _vae_store_callback_logout($tag) {
-  unset($_SESSION['__v:store']['logged in']);
+  unset($_SESSION['__v:store']['loggedin']);
   unset($_SESSION['__v:store']['previous_orders']);
   if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);

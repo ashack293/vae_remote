@@ -59,7 +59,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
           $href = vae_data_url() . vae_file($new_context, $preserve_filename);
         } else {
           $href = $new_context;
-          if (substr($href, 0, 1) == "/") $href = _vae_proto() . $_SERVER['HTTP_HOST'] . $href;
+          if (substr($href, 0, 1) == "/" && !$_REQUEST['__vae_local']) $href = _vae_proto() . $_SERVER['HTTP_HOST'] . $href;
         }
       } else {
         $context = $new_context;
@@ -83,7 +83,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
     }
   }
   if (!strlen($href) && $context) {
-    if (strlen($url = $context->permalink())) $href = $url;
+    if (strlen($url = $context->permalink())) $href = ($_REQUEST['__vae_local'] ? "" : (_vae_proto() . $_SERVER['HTTP_HOST'])) . $url;
   }
   if ($a['autofollow'] && $render_context->get("total_items") == 1) _vae_render_redirect($href);
   if ($_VAE['hrefs'][$a['id']]) $href = $_VAE['hrefs'][$a['id']];
