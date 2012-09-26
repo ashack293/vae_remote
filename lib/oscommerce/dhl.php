@@ -269,6 +269,7 @@ if($cost!='0.00') {
     function _getQuote() {
       global $order;
 
+     
       // if it is an international order get an international quote
       if ($order->delivery['country']['iso_code_2'] != 'US') {
         $rates = $this->_getInternationalQuote();
@@ -397,7 +398,7 @@ if($cost!='0.00') {
           $api = "ApiLandingTest.asp";
           break;
       }
-        
+      
       // begin cURL engine & execute the request
       //if (function_exists('curl_init')) {
         $ch = curl_init();
@@ -419,6 +420,7 @@ if($cost!='0.00') {
           //$airborne_response .= "$value";
         //}//
      // }
+     
       // Debugging
       if ($this->debug) {
         $this->captureXML($request, $airborne_response);
@@ -568,7 +570,7 @@ if($cost!='0.00') {
           $api = "ApiLandingTest.asp";
           break;
       }
-        
+     
       // begin cURL engine & execute the request
       if (function_exists('curl_init')) {
         $ch = curl_init();
@@ -587,6 +589,7 @@ if($cost!='0.00') {
           $airborne_response .= "$value";
         }
       }
+        
       // Debugging
       if ($this->debug) {
         $this->captureXML($request, $airborne_response);

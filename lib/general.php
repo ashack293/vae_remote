@@ -1717,7 +1717,7 @@ function _vae_session_handler_destroy ($id) {
 }
  
 function _vae_session_handler_gc($expire) {
-  _vae_sql_q("DELETE FROM session_data WHERE expire<" . time());
+  _vae_sql_q("DELETE FROM session_data WHERE expires<" . time());
 }
 
 function _vae_set_default_config() {
