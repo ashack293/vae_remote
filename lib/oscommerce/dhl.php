@@ -249,7 +249,7 @@ if($cost!='0.00') {
       $this->destination_street_address = $street_address;
       $this->destination_city = $city;
       $this->destination_state = $state;
-      $this->destination_postal = substr($postal, 0, 5);
+      $this->destination_postal = $postal;
       $this->destination_country = $country;
     }
     
