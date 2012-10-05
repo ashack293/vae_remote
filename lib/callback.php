@@ -5,7 +5,7 @@ function _vae_callback_create($tag) {
   if ($tag['callback']['unpublished']) $url .= "?row[disabled]=1";
   if ($tag['callback']['structure_id'] && (_vae_rest(array(), $url, "content", $tag))) {
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
-    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field], $tag['attrs']['newsletter_confirm']);
+    if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $_REQUEST[$email_field], $tag['attrs']['newsletter_confirm']);
     unset($tag['attrs']['newsletter']);
     if ($tag['attrs']['formmail']) {
       $tag['attrs']['to'] = $tag['attrs']['formmail'];
