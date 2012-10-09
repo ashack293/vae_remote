@@ -1977,12 +1977,11 @@ function _vae_tick($desc, $userland = false) {
 
 function _vae_update_feed($message = false) {
   global $_VAE;
-  return false;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {
     $retry++;
-    $feed_data = _vae_simple_rest("http://data.verbcms.com/_feed_" . $_VAE['settings']['subdomain'] . "_" . $_VAE['config']['secret_key']);
+    $feed_data = _vae_simple_rest("http://data.verbcms.com/_feed_" . $_VAE['settings']['subdomain'] . "_" . $_VAE['config']['secret_key'] . ".xml");
   } while (!strstr($feed_data, "</website>") && $retry < 0);
   if (strstr($feed_data, "</website>")) {
     _vae_store_feed($feed_data, $message);

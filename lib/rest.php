@@ -169,7 +169,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
     if (!isset($_VAE['mock_rest'])) return "";
     return array_shift($_VAE['mock_rest']);
   }
-  if (!strstr($url, "://")) { 
+  if (!strstr($url, "://")) {
     $url = $_VAE['config']['backlot_url'] . $url;
   }
   $ch = curl_init($url);
