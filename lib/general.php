@@ -1587,7 +1587,7 @@ function _vae_report_error($subject, $message, $urgent = true) {
     if (!in_array($k, $bad)) $body .= $k . " => " . $v . "\n";
   }
   _vae_mail("kevin@actionverb.com", "Vae Remote Error : " . $subject, $body, "From: vaeerrors@actionverb.com");
-  if ($urgent) _vae_mail("2563376464@vtext.com", "REST ERROR", substr($message, 0, 120), "From: kevin@bombino.org");
+  //if ($urgent) _vae_mail("2563376464@vtext.com", "REST ERROR", substr($message, 0, 120), "From: kevin@bombino.org");
   return $body;
 }
 
