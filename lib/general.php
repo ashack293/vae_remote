@@ -1371,12 +1371,10 @@ function _vae_remote() {
     if ($_REQUEST['version']) {
       echo "201 Version " . $_VAE['version'];
     } elseif ($_REQUEST['update_feed'] || $_REQUEST['hook']) {
-      if ($_REQUEST['update_feed']) {
-        if ($_REQUEST['hook'] == "settings:updated") {
-          _vae_update_settings_feed();
-        } else {
-          _vae_update_feed(true);
-        }
+      if ($_REQUEST['hook'] == "settings:updated") {
+        _vae_update_settings_feed();
+      } elseif ($_REQUEST['update_feed']) {
+        _vae_update_feed(true);
       }
       if ($_REQUEST['hook']) {
         if (strstr($_REQUEST['hook_param'], ",")) {
@@ -1979,12 +1977,12 @@ function _vae_tick($desc, $userland = false) {
 
 function _vae_update_feed($message = false) {
   global $_VAE;
-  //if (strstr($_SERVER['DOCUMENT_ROOT'], "gagosian")) return false;
+  return false;
   _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {
     $retry++;
-    $feed_data = _vae_simple_rest("/feed?secret_key=" . $_VAE['config']['secret_key']);
+    $feed_data = _vae_simple_rest("http://data.verbcms.com/_feed_" . $_VAE['settings']['subdomain'] . "_" . $_VAE['config']['secret_key']);
   } while (!strstr($feed_data, "</website>") && $retry < 0);
   if (strstr($feed_data, "</website>")) {
     _vae_store_feed($feed_data, $message);
@@ -1999,6 +1997,7 @@ function _vae_update_settings_feed() {
   do {
     $retry++;
     $feed_data = _vae_simple_rest("/feed/settings?secret_key=" . $_VAE['config']['secret_key']);
+    $feed_data = html_entity_decode($feed_data);
   } while (!strstr($feed_data, "?>") && $retry < 3);
   if (strstr($feed_data, "?>")) {
     _vae_write_file("settings.php", $feed_data);
