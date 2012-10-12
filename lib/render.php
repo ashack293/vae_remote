@@ -1103,7 +1103,7 @@ function _vae_render_set_default($a, &$tag, $context, &$callback, $render_contex
 }
 
 function _vae_render_site_seal($a, &$tag, $context, &$callback, $render_context) {
-  return '<script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=zdJUgdXGseI5YSkqNAmusZPAraVRI08a8crQbnB0tkyeqKnICJT8dv7NOs"></script>';
+  return '<script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=tNtd4YGynD9R2H7FqDMOsQYQqYBAtTAJAuee36HrqYBLztygGlfANpCNcZ2o"></script>';
 }
 
 function _vae_render_state_select($a, &$tag, $context, &$callback, $render_context) {
