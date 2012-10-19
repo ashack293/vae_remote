@@ -83,7 +83,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
     }
   }
   if (!strlen($href) && $context) {
-    if (strlen($url = $context->permalink())) $href = ($_REQUEST['__vae_local'] ? "" : (_vae_proto() . $_SERVER['HTTP_HOST'])) . $url;
+    if (strlen($url = $context->permalink())) $href = (_vae_generate_relative_links() ? "" : (_vae_proto() . $_SERVER['HTTP_HOST'])) . $url;
   }
   if ($a['autofollow'] && $render_context->get("total_items") == 1) _vae_render_redirect($href);
   if ($_VAE['hrefs'][$a['id']]) $href = $_VAE['hrefs'][$a['id']];

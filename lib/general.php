@@ -358,6 +358,15 @@ function _vae_gd_handle($d) {
   return $tk;
 }
 
+function _vae_generate_relative_links() {
+  global $_VAE;
+  if ($_REQUEST['__vae_local'] || isset($_VAE['settings']['generate_relative_links'])) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function _vae_get_else(&$tag, $context, $render_context, $message = "") {
   global $_VAE;
   if (is_object($render_context)) {
