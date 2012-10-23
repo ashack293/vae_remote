@@ -1,6 +1,6 @@
 <?php
  
-require_once(dirname(__FILE__) . "/../vendor/dompdf-0.5.1/dompdf_config.inc.php");
+require_once(dirname(__FILE__) . "/../vendor/dompdf-0.6.0/dompdf_config.inc.php");
 
 function _vae_pdf() {
   $html = _vae_proxy($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'] . "&__skip_pdf=1", true);
