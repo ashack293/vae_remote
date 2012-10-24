@@ -244,6 +244,8 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
     while (!feof($fp)) $file .= fread($fp, 8192);
     fclose($fp);
   }
+  if ($file == "691 File not available") return _vae_debug("Couldn't fetch remote file " . $id);
+  if ($file == "692 Image not available") return _vae_debug("Couldn't fetch remote file " . $id);
   if ($file == "693 Not yet encoded") return "tryagain.flv";
   if (!strlen($file)) return _vae_debug("Couldn't fetch remote file " . $id);
   return _vae_store_file($iden, $file, $ext, $filename);
