@@ -145,7 +145,7 @@ function _vae_render_asset($a, &$tag, $context, &$callback, $render_context) {
     $proto = _vae_proto();
     return _vae_asset_html("js", $proto . 'ajax.googleapis.com/ajax/libs/'. $framework);
   }
-  if ($a['debug'] || $_VAE['local']) {
+  if (($a['debug'] || $_VAE['local']) && !_vae_prod()) {
     if (substr($a['src'], 0, 1) != "/") $a['src'] = "/" . $a['src'];
     return _vae_asset_html($type, $a['src']);
   } else {

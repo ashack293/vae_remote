@@ -150,6 +150,10 @@ function vae_store_cart_total() {
   return number_format(_vae_store_compute_total(), 2);
 }
 
+function vae_store_loggedin() {
+  return ($_SESSION['__v:store']['loggedin'] ? true : false);
+}
+
 function vae_top() {
   global $_VAE;
   return ($_VAE['context'] ? $_VAE['context']->id() : "");
