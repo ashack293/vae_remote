@@ -23,6 +23,7 @@ function _vae_page() {
 function _vae_page_404($message = "") {
   if (_vae_run_hooks("404", $_REQUEST['__page'])) {
     @header("HTTP/1.1 404 File Not Found");
+    @header("X-Vae-File-Not-Found: " . $message);
     @header("Status: 404 File Not Found");
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/not_found.html")) {
       echo @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/not_found.html");
@@ -102,6 +103,7 @@ function _vae_page_find($page) {
       if ($context = _vae_fetch("@permalink/" . $p)) {
         $_REQUEST['id'] = $context->id();
         $other_page_to_render = implode("/", array_slice($split, $i));
+        if ($other_page_to_render and str_replace($_SERVER['DOCUMENT_ROOT'] . "/", "", $_SERVER['SCRIPT_FILENAME']) == $page) continue; // skip $other_page_to_render if the URL actually exists in the FTP
         _vae_page_run($page, (strlen($other_page_to_render) ? $other_page_to_render : $context->structure()->permalink), $context);
         return;
       } 
