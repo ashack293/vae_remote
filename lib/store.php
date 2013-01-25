@@ -710,6 +710,7 @@ function _vae_store_compute_tax() {
         }
         if ($subtotal < 0) $subtotal = 0;
         $amt = $rate['rate'] * $subtotal / 100;
+        if (strlen($rate['minimum_subtotal']) && ($subtotal < $rate['minimum_subtotal'])) $amt = 0;
         if ($amt > 0) {
           if (strlen($_SESSION['__v:store']['tax_rate'])) $_SESSION['__v:store']['tax_rate'] .= "/";
           $_SESSION['__v:store']['tax_rate'] .= $rate['description'];
