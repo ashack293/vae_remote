@@ -14,7 +14,7 @@ function _vae_page() {
     @Header("Location: https://" . $_VAE['settings']['subdomain'] . ".vaeplatform.com/");
     _vae_die();
   }
-  if (vae_staging() && $_REQUEST['__page'] == "robots.txt") {
+  if (vae_staging() && !_vae_cdn_origin_pull() && $_REQUEST['__page'] == "robots.txt") {
     _vae_robots_txt();
   }
   _vae_page_404("Could not match URL.");

@@ -79,6 +79,10 @@ function _vae_callback_redirect($to, $trash_post_data = false) {
   return _vae_render_redirect($to, $trash_post_data);
 }
 
+function _vae_cdn_origin_pull() {
+  return ($_SERVER['HTTP_X_VAE_CDN'] ? true : false);
+}
+
 function _vae_cdn_timestamp_url($url) {
   if  (strstr($url, "://")) return $url;
   $timestamp = @filemtime($_SERVER['DOCUMENT_ROOT'] . $url);
