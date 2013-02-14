@@ -382,7 +382,7 @@ function vae_store_orders($finders = null) {
   if ($finders['ids'] && (is_array($finders['ids']))) {
     $finders['ids'] = implode(",", $finders['ids']);
   }
-  $raw = _vae_rest($finders, "store/orders", "order", array());
+  $raw = _vae_rest($finders, "store/orders", "order", array(), array(), true);
   return _vae_store_transform_orders($raw);
 }
 
