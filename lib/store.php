@@ -1531,6 +1531,9 @@ function _vae_store_render_recent_order($a, &$tag, $context, &$callback, $render
   $data = $_SESSION['__v:store']['recent_order_data'];
   $data['order_id'] = $data['id'];
   $data['subtotal'] = $data['total'] - $data['tax'] - $data['shipping'] + $data['discount'];
+  if (!strlen($data['shipping'])) $data['shipping'] = 0.00;
+  if (!strlen($data['tax'])) $data['tax'] = 0.00;
+  if (!strlen($data['discount'])) $data['discount'] = 0.00;
   return _vae_render_collection($a, $tag, $context, $callback, $render_context,  _vae_array_to_xml(array($_SESSION['__v:store']['recent_order_data']['id'] => $data)));
 }
 
