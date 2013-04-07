@@ -201,6 +201,9 @@ function _vae_store_banned_country($country) {
   global $_VAE;
   if (strlen($_VAE['settings']['store_banned_countries'])) {
     $banned = explode(",", $_VAE['settings']['store_banned_countries']);
+    foreach ($banned as $item) {
+      $banned[] = trim(strtoupper($item));
+    }
     if (in_array($country, $banned)) {
       $names = _vae_list_countries();
       return "We cannot ship to the country of " . $names[$country] . ".";

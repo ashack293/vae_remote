@@ -402,9 +402,11 @@ if($cost!='0.00') {
       // begin cURL engine & execute the request
       //if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://eCommerce.airborne.com/$api");
+        curl_setopt($ch, CURLOPT_URL, "http://eCommerce.airborne.com/$api");
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "$request");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	  //Added in 1.401 fix
