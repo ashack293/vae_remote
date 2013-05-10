@@ -629,6 +629,7 @@ function _vae_store_compute_shipping($register_page = null) {
     unset($_SESSION['__v:store']['shipping']);
     return $handling;
   }
+  $shipping_class_cache = "";
   foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
     if ($r['weight']) {
       $weight = $r['weight'];
@@ -637,12 +638,13 @@ function _vae_store_compute_shipping($register_page = null) {
       $num_items += $r['qty'];
       $handling += $r['qty'] * $_VAE['settings']['store_shipping_pad_dollars_per_item'];
     }
+    $shipping_class_cache .= $r['shipping_class'];
   }
   if ($num_items == 0 && !$_SESSION['__v:store']['total_weight']) {
     unset($_SESSION['__v:store']['shipping']);
     return $handling;
   }
-  $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $state . $address . $weight . serialize($_SESSION['__v:store']['total_weight']) . "d");
+  $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $state . $address . $weight . $shipping_class_cache . serialize($_SESSION['__v:store']['total_weight']) . "d");
   if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
   $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $city, $address, $handling);
   $_SESSION['__v:store']['shipping'] = array('hash' => $hash);
