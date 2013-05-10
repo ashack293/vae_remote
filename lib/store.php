@@ -55,6 +55,14 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   if (strlen($a['discount_field'])) {
     $discount = (string)_vae_fetch_without_errors($a['discount_field'], $item);
   }
+  if (strlen($a['image'])) {
+    $image = $a['image'];
+  } elseif ($a['image_field']) {
+    $image_id = (string)_vae_fetch_without_errors($a['image_field'], $item);
+    if ($image_id) {
+      $image = vae_data_url() . vae_image($image_id, 100, 100);
+    }
+  }
   if ($a['notes_field']) {
     $notes = (string)_vae_fetch_without_errors($a['notes_field'], $item);
   }
@@ -124,13 +132,13 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   if ($discount > 0) $price = _vae_decimalize($price * (100.0 - $discount) / 100.0, 2);
   if (count($_SESSION['__v:store']['cart'])) {
     foreach ($_SESSION['__v:store']['cart'] as $cid => $r) {
-      if (($r['name'] == $name) && ($r['child'] == false) && ($r['price'] == $price) && ($r['id'] == $id) && ($r['option_id'] == $option_id) && ($r['notes'] == $notes) && ($r['digital'] == $digital) && ($r['shipping_class'] == $shipping_class) && ($r['tax_class'] == $tax_class) && ($r['taxable'] == $taxable) && ($r['discount_class'] == $discount_class) && ($r['barcode'] == $barcode) && ($r['weight'] == $weight) && ($r['brand'] == $brand) && ($r['category'] == $category) && !$r['bundled_with']) $cart_id = $cid;
+      if (($r['name'] == $name) && ($r['child'] == false) && ($r['price'] == $price) && ($r['id'] == $id) && ($r['option_id'] == $option_id) && ($r['notes'] == $notes) && ($r['digital'] == $digital) && ($r['shipping_class'] == $shipping_class) && ($r['tax_class'] == $tax_class) && ($r['taxable'] == $taxable) && ($r['discount_class'] == $discount_class) && ($r['barcode'] == $barcode) && ($r['weight'] == $weight) && ($r['brand'] == $brand) && ($r['category'] == $category) && ($r['image'] == $image) && !$r['bundled_with']) $cart_id = $cid;
     }
   }
   if (!$cart_id || ($from_api && !$a['update_if_exists'])) {
     if (!isset($_SESSION['__v:store']['cart_id'])) $_SESSION['__v:store']['cart_id'] = 1;
     $cart_id = $_SESSION['__v:store']['cart_id']++;
-    $_SESSION['__v:store']['cart'][$cart_id] = array('added_at' => time(), 'name' => $name, 'qty' => $qty, 'option_id' => $option_id, 'option_value' => $option_value, 'id' => $id, 'notes' => $notes, 'price' => $price, 'digital' => $digital, 'discount_class' => $a['discount_class'], 'taxable' => $taxable, 'tax_class' => $tax_class, 'shipping_class' => $shipping_class, 'total' => _vae_decimalize($price * $qty, 2), 'inventory_field' => $a['inventory_field'], 'weight' => $weight, 'check_inventory' => $check_inventory, 'barcode' => $barcode, 'original_price' => $original_price, 'backstage_notes' => $backstage_notes, 'brand' => $brand, 'category' => $category, 'bundled_with' => $a['bundled_with']);
+    $_SESSION['__v:store']['cart'][$cart_id] = array('added_at' => time(), 'name' => $name, 'qty' => $qty, 'option_id' => $option_id, 'option_value' => $option_value, 'id' => $id, 'notes' => $notes, 'price' => $price, 'digital' => $digital, 'discount_class' => $a['discount_class'], 'taxable' => $taxable, 'tax_class' => $tax_class, 'shipping_class' => $shipping_class, 'total' => _vae_decimalize($price * $qty, 2), 'inventory_field' => $a['inventory_field'], 'weight' => $weight, 'check_inventory' => $check_inventory, 'barcode' => $barcode, 'original_price' => $original_price, 'backstage_notes' => $backstage_notes, 'brand' => $brand, 'image' => $image, 'category' => $category, 'bundled_with' => $a['bundled_with']);
   } else {
     $_SESSION['__v:store']['cart'][$cart_id]['added_at'] = time();
     $_SESSION['__v:store']['cart'][$cart_id]['qty'] = $qty;
