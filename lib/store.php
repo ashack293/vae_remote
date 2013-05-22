@@ -439,7 +439,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     _vae_store_compute_shipping();
     _vae_store_compute_tax();
     foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
-      $line_items[] = array('qty' => $r['qty'], 'inventory_field' => $r['inventory_field'], 'options' => $r['option_value'], 'option_id' => $r['option_id'], 'original_price' => $r['original_price'], 'row_id' => $r['id'], 'price' => $r['price'], 'notes' => $r['notes'], 'total' => $r['total'], 'tax' => 0, 'name' => $r['name'], 'barcode' => $r['barcode'], 'brand' => $r['brand'], 'category' => $r['category'], 'backstage_notes' => $r['backstage_notes'], 'position' => $id, 'bundled_with' => $r['bundled_with']);
+      $line_items[] = array('qty' => $r['qty'], 'inventory_field' => $r['inventory_field'], 'options' => $r['option_value'], 'option_id' => $r['option_id'], 'original_price' => $r['original_price'], 'row_id' => $r['id'], 'price' => $r['price'], 'notes' => $r['notes'], 'total' => $r['total'], 'tax' => 0, 'name' => $r['name'], 'barcode' => $r['barcode'], 'brand' => $r['brand'], 'category' => $r['category'], 'backstage_notes' => $r['backstage_notes'], 'position' => $id, 'bundled_with' => $r['bundled_with'], 'image' => $r['image']);
     }
     $shipping_method = $_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'];
     if (!_vae_store_if_shippable() && _vae_store_if_digital_downloads()) {
