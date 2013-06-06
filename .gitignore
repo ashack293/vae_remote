@@ -1,4 +1,7 @@
 
+.bundle
+vendor/bundle
+
 # /
 /REVISION
 /pages.php
