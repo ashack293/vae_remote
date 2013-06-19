@@ -41,7 +41,7 @@ function _vae_thrift_open($client_class, $port) {
     array_unshift($_VAE['vaedbd_backend_tiers'], array('localhost'));
   }
 
-  $GLOBALS['THRIFT_ROOT'] = '/www/vae_thrift/current/php/vendor/thrift';
+  $GLOBALS['THRIFT_ROOT'] = '/app/vaedb/deploy/current/php/vendor/thrift';
   require_once $GLOBALS['THRIFT_ROOT'].'/Thrift.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/protocol/TBinaryProtocol.php';
   require_once $GLOBALS['THRIFT_ROOT'].'/transport/TSocket.php';
