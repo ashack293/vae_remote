@@ -1,5 +1,15 @@
 <?php
 
+$_VAE['session_storage_path'] = '/var/lib/php/session'
+$_VAE['vaedb_backend_tiers'] = array(
+  array(
+    'vaedb0.***REMOVED***',
+    'vaedb1.***REMOVED***'
+  )
+);
+
+@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
+
 function _vae_absolute_data_url($path = "") {
   global $_VAE;
   if (substr($_VAE['config']['data_url'], 0, 4) == "http") return $_VAE['config']['data_url'] . $path;
@@ -114,6 +124,7 @@ function _vae_conf_path() {
 
 function _vae_configure_php() {
   global $_VAE;
+  session_save_path($_VAE['session_storage_path']);
   error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
   set_exception_handler("_vae_exception_handler");
   //set_error_handler('_vae_error_handler', E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);

@@ -30,13 +30,6 @@ function _vae_vaedb_backends() {
 function _vae_thrift_open($client_class, $port) {
   global $_VAE;
 
-  $_VAE['vaedbd_backend_tiers'] = array(
-    array(
-      'vaedb0.***REMOVED***',
-      'vaedb1.***REMOVED***'
-    )
-  );
-
   if(_vae_prod()) {
     array_unshift($_VAE['vaedbd_backend_tiers'], array('localhost'));
   }
