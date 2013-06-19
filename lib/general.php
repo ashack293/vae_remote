@@ -1,7 +1,7 @@
 <?php
 
 $_VAE['session_storage_path'] = '/var/lib/php/session';
-$_VAE['vaedb_backend_tiers'] = array(
+$_VAE['vaedbd_backend_tiers'] = array(
   array(
     'vaedb0.***REMOVED***',
     'vaedb1.***REMOVED***'
