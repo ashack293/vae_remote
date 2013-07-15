@@ -9,6 +9,7 @@ $_VAE['vaedbd_backend_tiers'] = array(
 );
 
 @(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
+@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../../vae-config/fs-settings.php')));
 
 function _vae_absolute_data_url($path = "") {
   global $_VAE;
