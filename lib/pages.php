@@ -3,8 +3,7 @@
 function _vae_page() {
   global $_VAE;
   if (!strlen($_REQUEST['__page'])) {
-    $client = _vae_thrift();
-    $client->fixDocRoot($_SERVER['DOCUMENT_ROOT']);
+    _vae_page_fix_document_root();
   }
   $a = explode(".", $_REQUEST['__page']);
   _vae_page_find($a[0]);
@@ -111,6 +110,14 @@ function _vae_page_find($page) {
     memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array());
   }
   return false;
+}
+
+function _vae_page_fix_document_root() {
+  $root = $_SERVER['DOCUMENT_ROOT'];
+  foreach (array(".html", ".haml", ".php") as $ext) {
+    if (file_exists($root . "/index" . $ext)) return;
+  }
+  file_put_contents($root . "/index.html", "<html><body></body></html>");
 }
 
 function _vae_page_locale_callback($matches) {
