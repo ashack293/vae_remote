@@ -1598,7 +1598,7 @@ function _vae_render_timer() {
   foreach ($_VAE['ticks'] as $r) {
     $ticks .= "<tr><td>" . $r[0] . "</td><td align='right'>" . number_format($r[1]*100/$sum, 3) . "%</td><td align='right'>" . number_format($r[1], 3) . "ms</td></tr>\n";
   }
-  return _vae_render_message("Vae Timer", "<h2>Vae Timer</h2><div class='b'><table style='width: 100%;'>" . $ticks . "</table></div>");
+  return _vae_render_message("Vae Timer on ".gethostname(), "<h2>Vae Timer</h2><div class='b'><table style='width: 100%;'>" . $ticks . "</table></div>");
 }
 
 function _vae_report_error($subject, $message, $urgent = true) {
