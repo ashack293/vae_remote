@@ -34,40 +34,30 @@ if (_vae_should_load()) {
 
   /* Connect to memcached */
   $_VAE['memcached'] = @memcache_pconnect('localhost', 11211);
-  _vae_tick("connect to memcached");
   
   //$_VAE['vaedbd_port'] = 9092;
   
   /* Bring in the rest of Vae */
   require_once(dirname(__FILE__) . "/vae_exception.php");
-  _vae_tick("load vae exp");
   _vae_configure_php();
-  _vae_tick("vae configure php");
+  _vae_tick("session startup");
   require_once(dirname(__FILE__) . "/callback.php");
-  _vae_tick("load callback");
   require_once(dirname(__FILE__) . "/compat.php");
-  _vae_tick("load compat");
   require_once(dirname(__FILE__) . "/constants.php");
-  _vae_tick("load constants");
   require_once(dirname(__FILE__) . "/context.php");
-  _vae_tick("load context");
   require_once(dirname(__FILE__) . "/func.php");
-  _vae_tick("load func");
   require_once(dirname(__FILE__) . "/pages.php");
   require_once(dirname(__FILE__) . "/parse.php");
   require_once(dirname(__FILE__) . "/phpapi.php");
   require_once(dirname(__FILE__) . "/render.php");
   require_once(dirname(__FILE__) . "/rest.php");
-  _vae_tick("load p-r");
   require_once(dirname(__FILE__) . "/store.php");
   require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/vaedata.php");
-  _vae_tick("load s-v");
   
   /* Initialize */
   _vae_set_default_config();
   unset($_SESSION['__v:flash_new']);
-  _vae_tick("initialize");
   
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
