@@ -40,13 +40,19 @@ if (_vae_should_load()) {
   
   /* Bring in the rest of Vae */
   require_once(dirname(__FILE__) . "/vae_exception.php");
+  _vae_tick("load vae exp");
   _vae_configure_php();
+  _vae_tick("vae configure php");
   require_once(dirname(__FILE__) . "/callback.php");
+  _vae_tick("load callback");
   require_once(dirname(__FILE__) . "/compat.php");
+  _vae_tick("load compat");
   require_once(dirname(__FILE__) . "/constants.php");
+  _vae_tick("load constants");
   require_once(dirname(__FILE__) . "/context.php");
+  _vae_tick("load context");
   require_once(dirname(__FILE__) . "/func.php");
-  _vae_tick("load c-f");
+  _vae_tick("load func");
   require_once(dirname(__FILE__) . "/pages.php");
   require_once(dirname(__FILE__) . "/parse.php");
   require_once(dirname(__FILE__) . "/phpapi.php");
