@@ -307,7 +307,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       }
       throw new VaeException("", "Could not connect to VaeDBd to get()");
     } catch (VaeDbInternalError $ie) {
-      if (stristr($ie->getMessage(), "XML file") && !_vae_prod()) {
+      if (stristr($ie->getMessage(), "XML file")) {
         _vae_update_feed(false);
       }
       if ($raiseErrors) throw new VaeException("", "VaeDB (" . $_VAE['thrift_host'] . ") Internal Error: " . $ie->getMessage());
