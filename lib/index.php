@@ -31,9 +31,10 @@ if (_vae_should_load()) {
     phpinfo();
     die();
   }
-  
+
   /* Connect to memcached */
   $_VAE['memcached'] = @memcache_pconnect('localhost', 11211);
+  _vae_tick("connect to memcached")
   
   //$_VAE['vaedbd_port'] = 9092;
   
@@ -53,10 +54,12 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/store.php");
   require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/vaedata.php");
+  _vae_tick("load includes")
   
   /* Initialize */
   _vae_set_default_config();
   unset($_SESSION['__v:flash_new']);
+  _vae_tick("initialize")
   
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
