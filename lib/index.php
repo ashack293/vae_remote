@@ -46,15 +46,17 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/constants.php");
   require_once(dirname(__FILE__) . "/context.php");
   require_once(dirname(__FILE__) . "/func.php");
+  _vae_tick("load c-f");
   require_once(dirname(__FILE__) . "/pages.php");
   require_once(dirname(__FILE__) . "/parse.php");
   require_once(dirname(__FILE__) . "/phpapi.php");
   require_once(dirname(__FILE__) . "/render.php");
   require_once(dirname(__FILE__) . "/rest.php");
+  _vae_tick("load p-r");
   require_once(dirname(__FILE__) . "/store.php");
   require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/vaedata.php");
-  _vae_tick("load includes");
+  _vae_tick("load s-v");
   
   /* Initialize */
   _vae_set_default_config();
