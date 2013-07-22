@@ -2,12 +2,12 @@
 
 function _vae_users_callback_forgot($tag) {
   global $_VAE;
-  _vae_load_cache();
   if ($_REQUEST['__v:users_forgot_code']) {
-    $u = $_VAE['file_cache']["users:forgot-".$_REQUEST['__v:users_forgot_code']];
-    if (isset($u)) {
-      _vae_store_files("users:forgot-".$_REQUEST['__v:users_forgot_code'], null);
-      $_SESSION['__v:logged_in'] = $u;
+    $u = _vae_kvstore_read("users:forgot-".$_REQUEST['__v:users_forgot_code']);
+    if ($u) {
+      _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], null);
+      $u = split("|", $u);
+      $_SESSION['__v:logged_in'] = array('path' => $u[1], 'id' => $u[0]);
       _vae_flash("You have been logged in.  Please take this time to change your password to something memorable.");
       if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
     }
@@ -15,7 +15,7 @@ function _vae_users_callback_forgot($tag) {
     $user = _vae_users_find($tag);
     if ($user) {
       $code = strtoupper(substr(base_convert(md5(rand() . time()), 16, 36), 0, 6));
-      _vae_store_files("users:forgot-".$code, array('path' => $tag['attrs']['path'], 'id' => $user->id()));
+      _vae_kvstore_write("users:forgot-".$code, $user->id() . "|" . $tag['attrs']['path']);
       $domain = $_SERVER['HTTP_HOST'];
       $msg = "You are receiving this E-Mail because a request was submitted to reset your password for $domain.  If you submitted this request, please go to the following URL to login and reset your password:\n\nhttp://$domain" . $_SERVER['PHP_SELF'] . _vae_qs("__v:users_forgot_code=$code&__v:users_forgot=" . _vae_tag_unique_id($tag, $context)) . "\n\nThanks,\n$domain Password Recovery";
       _vae_mail(_vae_fetch($tag['attrs']['email_field'], $user), "$domain Password Recovery", $msg, "From: $domain Password Recovery <noreply@$domain>");

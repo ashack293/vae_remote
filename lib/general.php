@@ -234,12 +234,11 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   global $_VAE;
   if (!strlen($id)) return "";
   if ($_ENV['TEST']) return array($iden, $id, $path, $qs, $preserve_filename);
-  _vae_load_cache();
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
-  if (isset($_VAE['file_cache'][$iden])) return $_VAE['file_cache'][$iden];
+  if ($cache = _vae_kvstore_read($iden)) return $cache;
   _vae_lock_acquire();
-  if (isset($_VAE['file_cache'][$iden])) return _vae_lock_release($_VAE['file_cache'][$iden]);
+  if ($cache = _vae_kvstore_read($iden)) return _vae_lock_release($cache);
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
   $fp = @fopen($url, 'rb');
   if ($fp) {
@@ -428,7 +427,6 @@ function _vae_handleob($vaeml) {
         _vae_run_hooks($to_run[0], $to_run[1]);
       }
     }
-    if ($_VAE['store_files']) _vae_store_files_commit();
     if (isset($_VAE['ticks'])) return _vae_render_timer();
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
@@ -608,7 +606,6 @@ function _vae_inject_assets($out) {
     }
   }
   if (count($_VAE['assets'])) {    
-    _vae_load_cache();
     foreach ($_VAE['assets'] as $group => $assets) {
       $iden = "";
       foreach ($assets as $asset) {
@@ -617,8 +614,8 @@ function _vae_inject_assets($out) {
         $iden .= $md5;
       }
       $iden = "asset" . md5($iden);
-      if (isset($_VAE['file_cache'][$iden])) {
-        $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $_VAE['file_cache'][$iden]);
+      if ($cache = _vae_kvstore_read($iden)) {
+        $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
         $raw = "";
         foreach ($assets as $asset) {
@@ -806,27 +803,33 @@ function _vae_jsesc($a) {
   return str_replace(array("\n", "\"", "'"), array("\\n", "\\\"", "&#39;"), trim($a));
 }
 
+function _vae_kvstore_read($iden) {
+  $q = _vae_sql_q("SELECT `v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
+  if ($r = _vae_sql_r($q)) {
+    return $r['v'];
+  }
+  return null;
+}
+
+function _vae_kvstore_write($key, $value) {
+  global $_VAE;
+  if ($v == null) {
+    _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "' LIMIT 1");
+  } else {
+    _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "')", true);
+  }
+}
+
 function _vae_load_cache($reload = false) {
   global $_VAE;
-  if (isset($_VAE['file_cache']) && !$reload) return;
-  $cache = array();
-  $q = _vae_sql_q("SELECT `k`,`v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
-  while ($r = _vae_sql_r($q)) {
-    $cache[$r['k']] = $r['v'];
-  }
-  _vae_sql_close();
-  _vae_tick("Load KVstore");
   if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
-    _vae_lock_acquire();
     _vae_tick("Read local file data cache from data path");
     $cache = unserialize(_vae_read_file("files.psz"));
     foreach ($cache as $k => $v) {
       _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "')", true);
     }
     unlink($_VAE['config']['data_path'] . "files.psz");
-    _vae_lock_release();
   }
-  $_VAE['file_cache'] = $cache;
 }
 
 function _vae_load_settings() {
@@ -938,7 +941,6 @@ function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one
   for ($i = 0; $i < 10; $i++) {
     if (flock($_VAE[$which_lock . '_lock'], LOCK_EX)) {
       if ($only_one_winner) fclose($waiting_lock);
-      if ($load_cache) _vae_load_cache(true);
       return;
     }
     usleep(200000);
@@ -1394,12 +1396,6 @@ function _vae_remote() {
           _vae_run_hooks($_REQUEST['hook'], $_REQUEST['hook_param']);
         }
       }
-    } elseif ($_REQUEST['method'] == "file") {
-      echo _vae_file($_REQUEST['iden'], $_REQUEST['id'], $_REQUEST['path'], $_REQUEST['qs'], $_REQUEST['preserve_filename']);
-    } elseif ($_REQUEST['method'] == "store_file") {
-      echo _vae_store_file($_REQUEST['iden'], base64_decode($_REQUEST['file']), $_REQUEST['ext'], $_REQUEST['filename']);
-    } elseif ($_REQUEST['method'] == "store_files") {
-      _vae_store_files($_REQUEST['key'], $_REQUEST['value'], true);
       echo "200 Success";
     } else {
       _vae_error("","No action specified");
@@ -1905,37 +1901,8 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
   } else {
     _vae_write_file($newname, $file);
   }
-  if ($iden) _vae_store_files($iden, $newname);
+  if ($iden) _vae_kvstore_write($iden, $newname);
   return $newname;
-}
-
-function _vae_store_files($key, $value, $force = false) {
-  global $_VAE;
-  if ($value == null) {
-    unset($_VAE['file_cache'][$key]);
-  } else {
-    $_VAE['file_cache'][$key] = $value;
-  }
-  if (!isset($_VAE['store_files'])) $_VAE['store_files'] = array();
-  $_VAE['store_files'][$key] = $value;
-  if ($force || !_vae_in_ob()) {
-    _vae_store_files_commit();
-  }
-}
-
-function _vae_store_files_commit() {
-  global $_VAE;
-  if (count($_VAE['store_files']) > 0) {
-    foreach ($_VAE['store_files'] as $k => $v) {
-      if ($v == null) {
-        _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($k) . "' LIMIT 1");
-      } else {
-        _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "')", true);
-      }
-    }
-    _vae_sql_close();
-    $_VAE['store_files'] = array();
-  }
 }
 
 function _vae_stringify_array($array) {
