@@ -817,12 +817,14 @@ function _vae_load_cache($reload = false) {
   _vae_sql_close();
   _vae_tick("Load KVstore");
   if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
+    _vae_lock_acquire();
     _vae_tick("Read local file data cache from data path");
     $cache = unserialize(_vae_read_file("files.psz"));
     foreach ($cache as $k => $v) {
       _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "')", true);
     }
     unlink($_VAE['config']['data_path'] . "files.psz");
+    _vae_lock_release();
   }
   $_VAE['file_cache'] = $cache;
 }
@@ -909,7 +911,7 @@ function _vae_local_exec($script) {
     }
     if (strlen($glbls)) $script = "<?php global " . $glbls . "; ?>" . $script;
   }
-  $temp = tempnam("/tmp", "VLOCAL");
+  $temp = tempnam($_VAE['config']['data_path'], "VLOCAL");
   file_put_contents($temp, $script);
   require_once($temp);
   unlink($temp);
