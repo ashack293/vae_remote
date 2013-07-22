@@ -911,7 +911,7 @@ function _vae_local_exec($script) {
     }
     if (strlen($glbls)) $script = "<?php global " . $glbls . "; ?>" . $script;
   }
-  $temp = tempnam($_VAE['config']['data_path'], "VLOCAL");
+  $temp = tempnam("/tmp", "VLOCAL");
   file_put_contents($temp, $script);
   require_once($temp);
   unlink($temp);
