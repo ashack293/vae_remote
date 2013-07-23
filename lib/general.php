@@ -804,6 +804,7 @@ function _vae_jsesc($a) {
 }
 
 function _vae_kvstore_read($iden) {
+  global $_VAE;
   $q = _vae_sql_q("SELECT `v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
   if ($r = _vae_sql_r($q)) {
     return $r['v'];
