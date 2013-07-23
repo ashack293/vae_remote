@@ -1928,6 +1928,7 @@ function _vae_sweep_data_dir() {
     unlink($_VAE['config']['data_path'] . $file);
   }
   echo "done";
+  flush();
   die();
 }
 
