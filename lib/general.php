@@ -814,7 +814,7 @@ function _vae_kvstore_read($iden) {
 
 function _vae_kvstore_write($key, $value) {
   global $_VAE;
-  if ($v == null) {
+  if ($value == null) {
     _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "' LIMIT 1");
   } else {
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "')", true);
