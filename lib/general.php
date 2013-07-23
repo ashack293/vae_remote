@@ -815,9 +815,8 @@ function _vae_kvstore_read($iden, $renew_expiry = null) {
 
 function _vae_kvstore_write($key, $value, $expire_interval = 90) {
   global $_VAE;
-  if ($value == null) {
-    _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "' LIMIT 1");
-  } else {
+  _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "' LIMIT 1");
+  if ($value != null) {
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY))", true);
   }
 }
