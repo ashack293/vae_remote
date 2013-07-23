@@ -57,13 +57,18 @@ if (_vae_should_load()) {
   if ($_REQUEST['set_login']) _vae_set_login();
   _vae_tick("Vae Startup", true);
   
+  /* Load Settings */
+  _vae_load_settings();  
+  
   /* Dispatch request */
   if ($_REQUEST['__status']) {
     require_once(dirname(__FILE__) . "/status.php");
     _vae_status();
   }
+  if ($_REQUEST['__sweep']) {
+    _vae_sweep_data_dir();
+  }
   
-  _vae_load_settings();  
   if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();  
   if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
   if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");  

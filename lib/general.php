@@ -1913,6 +1913,21 @@ function _vae_stringify_array($array) {
   return $array;
 }
 
+function _vae_sweep_data_dir() {
+  global $_VAE;
+  _vae_sql_q("DELETE FROM `kvstore` WHERE `expire_at`<NOW() AND `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
+  $q = _vae_sql_q("SELECT `v` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
+  while ($r = _vae_sql_r($q)) {
+    $save[$r['v']] = true;
+  }
+  $dh = opendir($_VAE['config']['data_path']);
+  while (($file = readdir($dh)) !== false) {
+    if (!isset($save[$file])) echo "deleting " . ($_VAE['config']['data_path']) . "$file<br />";
+    //unlink($_VAE['config']['data_path'] . $file);
+  }
+  die();
+}
+
 function _vae_tag_unique_id(&$tag, $context) {
   if (!isset($tag['unique_id'])) {
     $tag['unique_id'] = md5(serialize($tag['attrs']) . $tag['type'] . serialize($tag['callback']) . count($tag['tags']) . (($context && $context->id) ? $context->id : 0));
