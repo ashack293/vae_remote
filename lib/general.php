@@ -236,7 +236,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   if ($_ENV['TEST']) return array($iden, $id, $path, $qs, $preserve_filename);
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
-  if ($cache = _vae_kvstore_read($iden)) return $cache;
+  if ($cache = _vae_kvstore_read($iden, 90)) return $cache;
   _vae_lock_acquire();
   if ($cache = _vae_kvstore_read($iden)) return _vae_lock_release($cache);
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
@@ -803,10 +803,13 @@ function _vae_jsesc($a) {
   return str_replace(array("\n", "\"", "'"), array("\\n", "\\\"", "&#39;"), trim($a));
 }
 
-function _vae_kvstore_read($iden) {
+function _vae_kvstore_read($iden, $renew_expiry = null) {
   global $_VAE;
-  $q = _vae_sql_q("SELECT `v` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
+  $q = _vae_sql_q("SELECT `v`,`expire_at` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
   if ($r = _vae_sql_r($q)) {
+    if ($renew_expiry && (strtotime($r['expire_at']) < (time()+($renew_expiry - 10)*86400))) {
+      _vae_sql_q("UPDATE kvstore SET `expire_at`=DATE_ADD(NOW(),INTERVAL " . $renew_expiry . " DAY) WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
+    }
     return $r['v'];
   }
   return null;
