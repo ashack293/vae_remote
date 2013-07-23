@@ -1922,8 +1922,10 @@ function _vae_sweep_data_dir() {
   }
   $dh = opendir($_VAE['config']['data_path']);
   while (($file = readdir($dh)) !== false) {
-    if (!isset($save[$file])) echo "deleting " . ($_VAE['config']['data_path']) . "$file<br />";
-    //unlink($_VAE['config']['data_path'] . $file);
+    if (in_array($file, array(".", "..", "feed.xml", "settings.php"))) continue;
+    if (isset($save[$file])) continue;
+    echo "deleting $file<br />";
+    unlink($_VAE['config']['data_path'] . $file);
   }
   die();
 }
