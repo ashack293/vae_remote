@@ -64,14 +64,14 @@ function _vae_destroy($row_id) {
 function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) {
   global $_VAE;
   $id = md5(rand());
-  memcache_set($_VAE['memcached'], "_proxy_$id", serialize($_SESSION));
+  _vae_kvstore_write("_proxy_$id", serialize($_SESSION), 1);
   if ($yield) {
-    memcache_set($_VAE['memcached'], "_proxy_yield_$id", $yield);
+    _vae_kvstore_write("_proxy_yield_$id", $yield, 1);
     $qs .= "&__get_yield=1";
   }
   if ($send_request_data) {
-    memcache_set($_VAE['memcached'], "_proxy_post_$id", serialize($_POST));
-    memcache_set($_VAE['memcached'], "_proxy_request_$id", serialize($_REQUEST));
+    _vae_kvstore_write("_proxy_post_$id", serialize($_POST), 1);
+    _vae_kvstore_write("_proxy_request_$id", serialize($_REQUEST), 1);
     $qs .= "&__get_request_data=1";
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);

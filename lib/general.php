@@ -145,13 +145,13 @@ function _vae_configure_php() {
   }
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   if ($_REQUEST['__proxy']) {
-    $_SESSION = unserialize(memcache_get($_VAE['memcached'], "_proxy_" . $_REQUEST['__proxy']));
+    $_SESSION = unserialize(_vae_kvstore_read("_proxy_" . $_REQUEST['__proxy']));
     if ($_REQUEST['__get_request_data']) {
-      $_POST = unserialize(memcache_get($_VAE['memcached'], "_proxy_post_" . $_REQUEST['__proxy']));
-      $_REQUEST = unserialize(memcache_get($_VAE['memcached'], "_proxy_request_" . $_REQUEST['__proxy']));
+      $_POST = unserialize(_vae_kvstore_read("_proxy_post_" . $_REQUEST['__proxy']));
+      $_REQUEST = unserialize(_vae_kvstore_read("_proxy_request_" . $_REQUEST['__proxy']));
     }
     if ($_REQUEST['__get_yield']) {
-      $_VAE['yield'] = memcache_get($_VAE['memcached'], "_proxy_yield_" . $_REQUEST['__proxy']);
+      $_VAE['yield'] = _vae_kvstore_read("_proxy_yield_" . $_REQUEST['__proxy']);
     }
     $_VAE['from_proxy'] = true;
   }
@@ -812,12 +812,12 @@ function _vae_kvstore_read($iden) {
   return null;
 }
 
-function _vae_kvstore_write($key, $value) {
+function _vae_kvstore_write($key, $value, $expire_interval = 90) {
   global $_VAE;
   if ($value == null) {
     _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "' LIMIT 1");
   } else {
-    _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "')", true);
+    _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY))", true);
   }
 }
 
@@ -827,7 +827,7 @@ function _vae_load_cache($reload = false) {
     _vae_tick("Read local file data cache from data path");
     $cache = unserialize(_vae_read_file("files.psz"));
     foreach ($cache as $k => $v) {
-      _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "')", true);
+      _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "',DATE_ADD(NOW(), INTERVAL 90 DAY))", true);
     }
     unlink($_VAE['config']['data_path'] . "files.psz");
   }
@@ -859,31 +859,31 @@ function _vae_load_settings() {
 
 function _vae_local($filename = "") {
   global $_VAE;
-  $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'] . $_REQUEST['__verb_local'];
+  $base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'] . $_REQUEST['__verb_local'];
   if ($_REQUEST['__local_username']) {
-    echo _vae_local_authenticate($memcache_base_key);
+    echo _vae_local_authenticate($base_key);
     return _vae_die();
   }
-  $authorized = memcache_get($_VAE['memcached'], $memcache_base_key . "auth");
+  $authorized = _vae_kvstore_read($base_key . "auth");
   if ($authorized != "GOOD") {
     _vae_error("Your Local Development Session expired.  Please restart the Local Preview server and try again.");
   }
   ini_set('display_errors', true);
-  $memcache_base_key .= "f";
+  $base_key .= "f";
   if ($_REQUEST['__verb_local_files']) $_REQUEST['__vae_local_files'] = $_REQUEST['__verb_local_files'];
   if (count($_REQUEST['__vae_local_files'])) {
     foreach ($_REQUEST['__vae_local_files'] as $fname => $file) {
-      memcache_set($_VAE['memcached'], $memcache_base_key . $fname, $file);
+      _vae_kvstore_write($base_key . $fname, $file, 1);
     }
   }
-  $_VAE['local'] = $memcache_base_key;
+  $_VAE['local'] = $base_key;
   if (!strlen($filename)) $filename = $_SERVER['SCRIPT_NAME'];
   list($filename, $script) = _vae_src($filename);
   _vae_set_cache_key();
   $_VAE['filename'] = $filename;
-  $vae_php = memcache_get($_VAE['memcached'], $memcache_base_key . "/__vae.php");
+  $vae_php = _vae_kvstore_read($base_key . "/__vae.php");
   if (strlen($vae_php)) _vae_local_exec($vae_php);
-  $verb_php = memcache_get($_VAE['memcached'], $memcache_base_key . "/__verb.php");
+  $verb_php = _vae_kvstore_read($base_key . "/__verb.php");
   if (strlen($verb_php)) _vae_local_exec($verb_php);
   if (strstr($filename, ".sass") || strstr($filename, ".scss")) {
     require_once(dirname(__FILE__)."/haml.php");
@@ -895,11 +895,11 @@ function _vae_local($filename = "") {
   _vae_die();
 }
 
-function _vae_local_authenticate($memcache_base_key) {
+function _vae_local_authenticate($base_key) {
   global $_VAE;
   $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
-    memcache_set($_VAE['memcached'], $memcache_base_key . "auth", $out);
+    _vae_kvstore_write($base_key . "auth", $out, 1);
     if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\nNOTE: the latest version (0.5.0) updates Sass to version 3.  If your sites\ndependon Sass 2, DO NOT UPGRADE.  (Or better yet, upgrade and then update\nyour sites to use Sass 3.)\n*****\n\n";
     else return $out;
   }
@@ -1843,7 +1843,7 @@ function _vae_src($filename) {
   if ($filename == "/") $filename = "/index";
   foreach (array("", ".html", ".haml", ".php", ".sass", ".scss", ".xml", ".rss", ".pdf.html", ".pdf.haml", ".pdf.haml.php", ".haml.php") as $ext) {
     if ($_VAE['local']) {
-      $vaeml = memcache_get($_VAE['memcached'], $_VAE['local'] . $filename . $ext);
+      $vaeml = _vae_kvstore_read($_VAE['local'] . $filename . $ext);
       if (strlen($vaeml)) {
         $filename = $filename . $ext;
         break;

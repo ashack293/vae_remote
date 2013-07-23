@@ -182,7 +182,7 @@ function vae_include($path, $once = false) {
     $_VAE['required_once'][$path] = true;
   }
   if ($_VAE['local']) {
-    $php = memcache_get($_VAE['memcached'], $_VAE['local'] . $path);
+    $php = _vae_kvstore_read($_VAE['local'] . $path);
     if (strlen($php)) {
       return _vae_local_exec($php);
     } else {
