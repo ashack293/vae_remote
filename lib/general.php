@@ -722,7 +722,7 @@ function _vae_interpret_vaeml($vaeml) {
   } elseif (isset($_SESSION['__v:flash'])) {
     _vae_tick("can't use cached version because there is data in the flash bucket");
   } elseif (_vae_cant_cache_because_of_cookies()) {
-    _vae_tick("can't use cached version because there's a cookie and HERE it is:" . serialize($_COOKIE));
+    _vae_tick("can't use cached version because there's a cookie");
   } elseif (!isset($_REQUEST['__vae_local']) && !isset($_REQUEST['__verb_local'])) {
     $cached = memcache_get($_VAE['memcached'], $cache_key);
     if (is_array($cached) && $cached[0] == "c") {
