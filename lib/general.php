@@ -1693,7 +1693,6 @@ function _vae_session_handler_read($id) {
   } else {
     $ret = "";
   }
-  _vae_sql_close();
   return $ret;
 }
 
@@ -1803,7 +1802,7 @@ function _vae_sql_close() {
 function _vae_sql_connect() {
   global $_VAE;
   if (!isset($_VAE['shared_sql'])) {
-    $_VAE['shared_sql'] = mysql_connect("localhost", "verbshared", "DataData");
+    $_VAE['shared_sql'] = mysql_pconnect("localhost", "verbshared", "DataData");
     mysql_select_db("av_verbshared");
   }
 }
