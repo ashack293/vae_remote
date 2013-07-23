@@ -125,10 +125,8 @@ function _vae_conf_path() {
 
 function _vae_configure_php() {
   global $_VAE;
-  session_save_path($_VAE['session_storage_path']);
   error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
   set_exception_handler("_vae_exception_handler");
-  //set_error_handler('_vae_error_handler', E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
   date_default_timezone_set("America/New_York");
   ini_set('display_errors', isset($_REQUEST['__debug']));
   if ($_REQUEST['__router']) {
@@ -140,12 +138,9 @@ function _vae_configure_php() {
     @header("Location: " . $uri);
     _vae_die();
   }
-  if (!$_REQUEST['__v:store_payment_method_ipn']) {
-    session_start();
-  }
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   if ($_REQUEST['__proxy']) {
-    $_SESSION = unserialize(_vae_kvstore_read("_proxy_" . $_REQUEST['__proxy']));
+    session_id($_REQUEST['__proxy']);
     if ($_REQUEST['__get_request_data']) {
       $_POST = unserialize(_vae_kvstore_read("_proxy_post_" . $_REQUEST['__proxy']));
       $_REQUEST = unserialize(_vae_kvstore_read("_proxy_request_" . $_REQUEST['__proxy']));
@@ -156,6 +151,9 @@ function _vae_configure_php() {
     $_VAE['from_proxy'] = true;
   }
   if ($_REQUEST['__host']) $_SERVER['HTTP_HOST'] = $_REQUEST['__host'];
+  if (!$_REQUEST['__v:store_payment_method_ipn']) {
+    session_start();
+  }
 }
 
 function _vae_debug($msg) {

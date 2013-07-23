@@ -68,14 +68,6 @@ if (_vae_should_load()) {
     require_once(dirname(__FILE__) . "/test.php");
     _vae_test();
   }
-  if ($_REQUEST['__session']) {
-    session_start();
-    var_dump($_SESSION);
-    die();
-  }
-  if ($_REQUEST['__build_constants']) {
-    require_once(dirname(__FILE__) . "/constants_build.php");
-  }
   
   _vae_load_settings();  
   if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();  
