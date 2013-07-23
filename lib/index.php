@@ -29,9 +29,7 @@ if (_vae_should_load()) {
 
   /* Connect to memcached */
   $_VAE['memcached'] = @memcache_pconnect('localhost', 11211);
-  
-  //$_VAE['vaedbd_port'] = 9092;
-  
+    
   /* Bring in the rest of Vae */
   require_once(dirname(__FILE__) . "/vae_exception.php");
   _vae_configure_php();
@@ -63,10 +61,6 @@ if (_vae_should_load()) {
   if ($_REQUEST['__status']) {
     require_once(dirname(__FILE__) . "/status.php");
     _vae_status();
-  }
-  if ($_REQUEST['__test']) {
-    require_once(dirname(__FILE__) . "/test.php");
-    _vae_test();
   }
   
   _vae_load_settings();  

@@ -64,7 +64,6 @@ function _vae_destroy($row_id) {
 function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) {
   global $_VAE;
   $id = session_id();
-  _vae_kvstore_write("_proxy_$id", serialize($_SESSION), 1);
   if ($yield) {
     _vae_kvstore_write("_proxy_yield_$id", $yield, 1);
     $qs .= "&__get_yield=1";

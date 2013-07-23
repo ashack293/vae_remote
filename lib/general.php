@@ -470,7 +470,7 @@ function _vae_handleob($vaeml) {
         return "<script type='text/javascript'>window.location.href='" . $url . "'; window.vRedirected = true;</script>";
       }
       @header("Location: " . $url);
-      return "Redirecting to " . _vae_h($url) . " Debugging info: " . serialize($_REQUEST) . "---" . serialize($_SESSION);
+      return "Redirecting to " . _vae_h($url);
     }
     if (strtolower(substr($_SERVER['SCRIPT_FILENAME'], -4)) == ".xml") @header("Content-Type: application/xml");
     elseif (strtolower(substr($_SERVER['SCRIPT_FILENAME'], -4)) == ".rss" || $_VAE['serve_rss']) @header("Content-Type: application/rss+xml");
