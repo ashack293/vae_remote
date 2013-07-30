@@ -87,19 +87,19 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 		$this->FirstClassIntType = 'Package';  				//OPTIONS: 'Letters', 'Large Envelope', 'Package'
 
 	//PRIORITY FLAT-RATE BOX INTERNATIONAL OPTION:
-		$this->PriorityFlatRateBoxType = 'Flat-Rate Box';  		//OPTIONS: 'Flat-Rate Box', 'Large Flat-Rate Box'
+		$this->PriorityFlatRateBoxType = 'Flat-Rate Boxes';  		//OPTIONS: 'Flat-Rate Box', 'Large Flat-Rate Box'
 	/****************************************************************** */
 	
 
       $this->intl_types = array('GLOCAL EXPRESS' => 'Global Express Guaranteed (GXG)',
 								'GLOCAL EXPRESS NON-DOC RECT' => 'Global Express Guaranteed Non-Document Rectangular',
 								'GLOCAL EXPRESS NON-DOC NON-RECT' => 'Global Express Guaranteed Non-Document Non-Rectangular',
-								'EXPRESS MAIL INT' => 'Express Mail International',
-								'EXPRESS MAIL INT FLAT RATE ENV' => 'Express Mail International Flat-Rate Envelope',
-								'PRIORITY MAIL INT' => 'Priority Mail International',
-								'PRIORITY MAIL INT FLAT RATE ENV' => 'Priority Mail International Flat-Rate Envelope',
-								'PRIORITY MAIL INT FLAT RATE BOX' => 'Priority Mail International ' . $this->PriorityFlatRateBoxType,
-								'FIRST-CLASS MAIL INT' => 'First-Class Mail International ' . $this->FirstClassIntType);
+								'EXPRESS MAIL INT' => '/Express/',
+								'EXPRESS MAIL INT FLAT RATE ENV' => '/^Express.*Flat.*Envelope/',
+								'PRIORITY MAIL INT' => '/Priority Mail Express International$/',
+								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*Flat.*Envelope/',
+								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*Flat.*Box/',
+								'FIRST-CLASS MAIL INT' => '/First-Class/');
                        
 
       $this->countries = $this->country_list();
@@ -342,7 +342,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
         
         while (list($key, $value) = each($this->types)) {
         
-	        if ( !in_array($key, $allowed_types) ) continue;
+	        if (!in_array($key, $allowed_types) ) continue;
 
           $request .= '<Package ID="' . $services_count . '">' .
                       '<Service>' . $key . '</Service>' .
@@ -466,8 +466,10 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             }
           }
           $allowed_types = array();
+          $all_allowed = false
           foreach( explode(",", $method['types_intl']) as $value ) {
             $allowed_types[] = $this->intl_types[$value];
+            if ($value == "ALL") $all_allowed = true;
           }
           $size = sizeof($services);
           for ($i=0, $n=$size; $i<$n; $i++) {
@@ -485,7 +487,13 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
               $time = preg_replace('/Day$/', MODULE_SHIPPING_USPS_TEXT_DAY, $time);
 		  $time = ' (' . $time . ') ';
 
-              if( !in_array($service, $allowed_types) ) continue;
+              if (!$all_allowed) {
+                $ok = false;
+                foreach ($allowed_types as $pattern) {
+                  if (preg_match($pattern, $service)) $ok = true;
+                }
+                if (!$ok) continue;
+              }
               if (isset($this->service) && ($service != $this->service) ) {
                 continue;
               }
