@@ -466,7 +466,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             }
           }
           $allowed_types = array();
-          $all_allowed = false
+          $all_allowed = false;
           foreach( explode(",", $method['types_intl']) as $value ) {
             $allowed_types[] = $this->intl_types[$value];
             if ($value == "ALL") $all_allowed = true;
