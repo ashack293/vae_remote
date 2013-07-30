@@ -91,9 +91,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 	/****************************************************************** */
 	
 
-      $this->intl_types = array('GLOCAL EXPRESS' => 'Global Express Guaranteed (GXG)',
-								'GLOCAL EXPRESS NON-DOC RECT' => 'Global Express Guaranteed Non-Document Rectangular',
-								'GLOCAL EXPRESS NON-DOC NON-RECT' => 'Global Express Guaranteed Non-Document Non-Rectangular',
+      $this->intl_types = array('GLOCAL EXPRESS' => '/Global.*\(GXG\)/',
+								'GLOCAL EXPRESS NON-DOC RECT' => '/Global.*Non-Document.*Rectangular/',
+								'GLOCAL EXPRESS NON-DOC NON-RECT' => '/Global.*Non-Document.*Non-Rectangular/',
 								'EXPRESS MAIL INT' => '/Express/',
 								'EXPRESS MAIL INT FLAT RATE ENV' => '/^Express.*Flat.*Envelope/',
 								'PRIORITY MAIL INT' => '/Priority Mail Express International$/',
