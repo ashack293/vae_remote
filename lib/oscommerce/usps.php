@@ -94,11 +94,11 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       $this->intl_types = array('GLOCAL EXPRESS' => '/Global.*\(GXG\)/',
 								'GLOCAL EXPRESS NON-DOC RECT' => '/Global.*Non-Document.*Rectangular/',
 								'GLOCAL EXPRESS NON-DOC NON-RECT' => '/Global.*Non-Document.*Non-Rectangular/',
-								'EXPRESS MAIL INT' => '/Express/',
-								'EXPRESS MAIL INT FLAT RATE ENV' => '/^Express.*Flat.*Envelope/',
+								'EXPRESS MAIL INT' => '/^Express/',
+								'EXPRESS MAIL INT FLAT RATE ENV' => '/^Express.*International Flat.*Envelope/',
 								'PRIORITY MAIL INT' => '/Priority Mail Express International$/',
-								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*Flat.*Envelope/',
-								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*Flat.*Box/',
+								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*International Flat.*Envelope/',
+								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*International Flat.*Box/',
 								'FIRST-CLASS MAIL INT' => '/First-Class/');
                        
 
@@ -476,7 +476,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             if (strpos($services[$i], '<Postage>')) {
               $service = ereg('<SvcDescription>(.*)</SvcDescription>', $services[$i], $regs);
 		  $service = $regs[1];
-		  $service = str_replace("*", "", trim(str_replace("&reg;", "", strip_tags(html_entity_decode(html_entity_decode($service))))));
+		  $service = str_replace("*", "", trim(str_replace(array("&reg;", "&#8482;"), "", strip_tags(html_entity_decode(html_entity_decode($service))))));
               $postage = ereg('<Postage>(.*)</Postage>', $services[$i], $regs);
               $postage = $regs[1];
 
