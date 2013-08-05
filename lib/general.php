@@ -235,8 +235,6 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
   if ($cache = _vae_kvstore_read($iden, 90)) return $cache;
-  _vae_lock_acquire();
-  if ($cache = _vae_kvstore_read($iden)) return _vae_lock_release($cache);
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
   $fp = @fopen($url, 'rb');
   if ($fp) {
@@ -927,35 +925,6 @@ function _vae_local_needs($filename) {
   } elseif ($_REQUEST['__verb_local']) {
     return _vae_render_final("__verb_local_needs=" . $filename);
   }
-}
-
-function _vae_lock_acquire($load_cache = true, $which_lock = 'global', $only_one_winner = false) {
-  global $_VAE;
-  if (isset($_VAE[$which_lock . '_lock'])) return;
-  if ($only_one_winner) {
-    $waiting_lock = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".2.lock", "w+");
-    if (!flock($waiting_lock, LOCK_EX | LOCK_NB, $wouldBlock) || $wouldBlock) {
-      _vae_error("", "Gave up on trying to get this lock because someone else is already waiting for it.");
-    }
-  }
-  $_VAE[$which_lock . '_lock'] = fopen($_VAE['config']['data_path'] .".vae." . $which_lock . ".lock", "w+");
-  for ($i = 0; $i < 10; $i++) {
-    if (flock($_VAE[$which_lock . '_lock'], LOCK_EX)) {
-      if ($only_one_winner) fclose($waiting_lock);
-      return;
-    }
-    usleep(200000);
-  }
-  _vae_error("","Could not obtain Vae Lock.");
-}
-
-function _vae_lock_release($param = true, $which_lock = 'global') {
-  global $_VAE;
-  if (isset($_VAE[$which_lock . '_lock'])) {
-    flock($_VAE[$which_lock . '_lock'], LOCK_UN);
-    unset($_VAE[$which_lock . '_lock']);
-  }
-  return $param;
 }
 
 function _vae_log($msg) {
@@ -1947,23 +1916,8 @@ function _vae_tick($desc, $userland = false) {
   $_VAE['tick'] = $now;
 }
 
-function _vae_update_feed($message = false) {
-  global $_VAE;
-  _vae_lock_acquire(false, "update", true);
-  $retry = 0;
-  do {
-    $retry++;
-    $feed_data = _vae_simple_rest("http://data.verbcms.com/_feed_" . $_VAE['settings']['subdomain'] . "_" . $_VAE['config']['secret_key'] . ".xml");
-  } while (!strstr($feed_data, "</website>") && $retry < 0);
-  if (strstr($feed_data, "</website>")) {
-    _vae_store_feed($feed_data, $message);
-  }
-  _vae_lock_release(null, "update");
-}
-
 function _vae_update_settings_feed() {
   global $_VAE;
-  _vae_lock_acquire(false, "update", true);
   $retry = 0;
   do {
     $retry++;
@@ -1973,7 +1927,6 @@ function _vae_update_settings_feed() {
   if (strstr($feed_data, "?>")) {
     _vae_write_file("settings.php", $feed_data);
   }
-  _vae_lock_release(null, "update");
 }
 
 function _vae_urlize($r) {

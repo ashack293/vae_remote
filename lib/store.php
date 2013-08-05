@@ -1052,7 +1052,6 @@ function _vae_store_payment_paypal_ipn() {
     if (!strlen($res)) {
       $out .= "Couldn't connect to PayPal.\n";
     } else {
-      _vae_lock_acquire();
       if (true || $res == "VERIFIED") {
         $out .= "PayPal authenticity verified.\n";
         if ($_POST['payment_status'] == "Completed") {
@@ -1087,7 +1086,6 @@ function _vae_store_payment_paypal_ipn() {
           $report_error = false;
         }
       }
-      _vae_lock_release();
     }
   }
   $out .= "Messages : " . serialize($_SESSION['__v:flash_new']['messages']);
