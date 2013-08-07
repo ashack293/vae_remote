@@ -1351,11 +1351,9 @@ function _vae_remote() {
     _vae_load_settings();
     if ($_REQUEST['version']) {
       echo "201 Version " . $_VAE['version'];
-    } elseif ($_REQUEST['update_feed'] || $_REQUEST['hook']) {
+    } elseif ($_REQUEST['hook']) {
       if ($_REQUEST['hook'] == "settings:updated") {
         _vae_update_settings_feed();
-      } elseif ($_REQUEST['update_feed']) {
-        _vae_update_feed(true);
       }
       if ($_REQUEST['hook']) {
         if (strstr($_REQUEST['hook_param'], ",")) {

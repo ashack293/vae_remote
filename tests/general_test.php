@@ -1246,12 +1246,6 @@ class GeneralTest extends VaeUnitTestCase {
     unset($_VAE['ticks']);
   }
   
-  function testVaeUpdateFeed() {
-    $this->mockRest("<website>TEST</website>");
-    _vae_update_feed();
-    $this->pass();
-  }
-  
   function testVaeUpdateSettingsFeed() {
     $this->mockRest("<?php");
     _vae_update_settings_feed();
