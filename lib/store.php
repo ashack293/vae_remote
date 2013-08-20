@@ -386,7 +386,7 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
   } else {
     $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
     $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&__method=") : _vae_qs(""));
-    if ($url = _vae_rest(array('ip' => $_SERVER['REMOTE_ADDR'], 'return_url' => $return_url, 'cancel_return_url' => $cancel_url), "store/paypal_express_checkout", "order")) {
+    if ($url = _vae_rest(array('total' => _vae_store_compute_subtotal(), 'ip' => $_SERVER['REMOTE_ADDR'], 'return_url' => $return_url, 'cancel_return_url' => $cancel_url), "store/paypal_express_checkout", "order")) {
       return _vae_callback_redirect($url);
     } else {
       return _vae_callback_redirect($_SERVER['PHP_SELF']);
