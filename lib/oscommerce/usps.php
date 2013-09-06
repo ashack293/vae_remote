@@ -434,6 +434,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
           if (strpos($response[$i], '<Rate>')) {
             $service = ereg('<MailService>(.*)</MailService>', $response[$i], $regs);
             $service = $regs[1];
+		        $service = strip_tags(html_entity_decode(html_entity_decode($regs[1])));
             $postage = ereg('<Rate>(.*)</Rate>', $response[$i], $regs);
             $postage = $regs[1];
 		$insurance = ereg('<Insurance>(.*)</Insurance>', $response[$i], $regs);
@@ -475,9 +476,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
           for ($i=0, $n=$size; $i<$n; $i++) {
             if (strpos($services[$i], '<Postage>')) {
               $service = ereg('<SvcDescription>(.*)</SvcDescription>', $services[$i], $regs);
-		  $service = $regs[1];
-              _vae_debug($service);
-		  $service = trim(str_replace(array("&reg;", "&#8482;", "*"), "", strip_tags($service)));
+		          $service = strip_tags(html_entity_decode(html_entity_decode($regs[1])));
               $postage = ereg('<Postage>(.*)</Postage>', $services[$i], $regs);
               $postage = $regs[1];
 

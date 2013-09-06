@@ -611,7 +611,7 @@ function _vae_store_compute_number_of_items() {
 
 function _vae_store_compute_shipping($register_page = null) {
   global $_VAE;
-  if (isset($_VAE['store_cached_shipping']) && !$_REQUEST['__debug'] && !$register_page) return $_VAE['store_cached_shipping'];    
+  if (isset($_VAE['store_cached_shipping']) && !$register_page) return $_VAE['store_cached_shipping'];    
   $current = _vae_store_current_user();
   $country = $current['shipping_country'];
   $address = $current['shipping_address'];
@@ -645,7 +645,7 @@ function _vae_store_compute_shipping($register_page = null) {
     return $handling;
   }
   $hash = md5($sub . $subtotal . $num_items . $handling . $zip . $country . $state . $address . $weight . $shipping_class_cache . serialize($_SESSION['__v:store']['total_weight']) . "d");
-  if (($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
+  if (!$_REQUEST['__debug'] && ($hash == $_SESSION['__v:store']['shipping']['hash']) && isset($_SESSION['__v:store']['shipping']['selected'])) return $_SESSION['__v:store']['shipping']['selected'];
   $options = _vae_store_calculate_shipping_options($sub, $num_items, $subtotal, $zip, $country, $state, $city, $address, $handling);
   $_SESSION['__v:store']['shipping'] = array('hash' => $hash);
   if ($register_page && (count($options) < 1) && count($_VAE['settings']['shipping_methods']) && ($_SESSION['__v:store']['total_weight'] || ($weight > 0))) {
