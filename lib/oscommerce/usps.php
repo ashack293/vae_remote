@@ -476,7 +476,8 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             if (strpos($services[$i], '<Postage>')) {
               $service = ereg('<SvcDescription>(.*)</SvcDescription>', $services[$i], $regs);
 		  $service = $regs[1];
-		  $service = str_replace("*", "", trim(str_replace(array("&reg;", "&#8482;"), "", strip_tags($service))));
+              _vae_debug($service);
+		  $service = trim(str_replace(array("&reg;", "&#8482;", "*"), "", strip_tags($service)));
               $postage = ereg('<Postage>(.*)</Postage>', $services[$i], $regs);
               $postage = $regs[1];
 
