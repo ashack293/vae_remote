@@ -886,7 +886,7 @@ function _vae_local_authenticate($base_key) {
   $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
     _vae_kvstore_write($base_key . "auth", $out, 1);
-    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\nPlease download a new copy at:\nhttp://docs.vaeplatform.com/vae_local\n*****\nNOTE: the latest version (0.5.0) updates Sass to version 3.  If your sites\ndependon Sass 2, DO NOT UPGRADE.  (Or better yet, upgrade and then update\nyour sites to use Sass 3.)\n*****\n\n";
+    if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\n\nWe have changed distribution of the Vae Local Development Environment to use Ruby gems.\n\nThis will make installation of future updates much easier!\n\nTo get the new version, you should first remove your old version by doing the following:\n\nrm -rf /usr/local/bin/vae\nrm -rf /usr/local/vae\n\nThen, install the new version by following the instructions at:\nhttp://docs.vaeplatform.com/vae_local\n\n*****\n\n";
     else return $out;
   }
   return "BAD";
