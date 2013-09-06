@@ -103,7 +103,6 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       if (!$r['no_style']) $styled_ext = ($ext == "fedex" ? "FedEx" : strtoupper($ext));
       if (!isset($r['keep_titles'])) $r['title'] = ($styled_ext ? $styled_ext . " " : "") . $r['title'];
       if ($method['display_name']) $r['title'] = $method['display_name'];
-      $r['title'] = trim(str_replace(array("&reg;", "&amp;#8492;"), "", $r['title'])); // remove annoying USPS garbage
       $r['secondary'] = ($method['secondary'] ? true : false);
       if (strlen($method["free_shipping_threshold"]) && ($method["free_shipping_threshold"] < _vae_store_compute_subtotal())) {
         $r['free'] = true;
