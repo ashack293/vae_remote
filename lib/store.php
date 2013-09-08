@@ -193,6 +193,10 @@ function _vae_store_callback_add_to_cart($tag) {
     $id = _vae_store_add_item_to_cart($item, $_REQUEST['options'], $qty, $a);
     if (is_array($_REQUEST['bundle'])) {
       $a['bundled_with'] = $id;
+      if ($a['bundle_included_in_price']) {
+        $a['price_field'] = null;
+        $a['price'] = 0;
+      }
       foreach ($_REQUEST['bundle'] as $bid => $bqty) {
         if ($bqty < $qty) $bqty = $qty;
         _vae_store_add_item_to_cart($bid, $_REQUEST['options' . $bid], $bqty, $a);
