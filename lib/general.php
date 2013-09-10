@@ -751,7 +751,6 @@ function _vae_interpret_vaeml($vaeml) {
     $out = _vae_post_process($out);
     _vae_tick("render HTML (no cache)");
   }
-  //if (!isset($_REQUEST['__debug']) && !isset($_REQUEST['__time'])) @file_put_contents("/usr/local/vae/logs/slow.txt", str_replace(array("/var/www/vhosts/", "/httpdocs", "/releases/current"), "", $_SERVER['DOCUMENT_ROOT']) . $_VAE['filename'] . "=" . ((microtime(true)-$_VAE['start_tick'])*1000) . "=" . (isset($from_cache) ? "1" : "0") . "\n", FILE_APPEND|LOCK_EX);
   foreach ($_VAE['callback_stack'] as $name => $tag) {
     if (_vae_run_hooks($name) != false) { 
       $func = $_VAE['callbacks'][$name];
@@ -1478,9 +1477,6 @@ function _vae_render_error($e) {
     if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
-  //if (!$_ENV['TEST'] && !$_REQUEST['__debug']) {
-  //  @file_put_contents("/usr/local/vae/logs/errors.txt", $log_msg . "\n\n", FILE_APPEND|LOCK_EX);
-  //}
   return _vae_render_message($error_type, $out);
 }
 
