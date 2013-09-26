@@ -235,6 +235,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
   if ($cache = _vae_kvstore_read($iden, 90)) return $cache;
+  _vae_sql_lock();
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
   $fp = @fopen($url, 'rb');
   if ($fp) {
@@ -251,6 +252,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
     while (!feof($fp)) $file .= fread($fp, 8192);
     fclose($fp);
   }
+  _vae_sql_unlock();
   if ($file == "691 File not available") return _vae_debug("Couldn't fetch remote file " . $id);
   if ($file == "692 Image not available") return _vae_debug("Couldn't fetch remote file " . $id);
   if ($file == "693 Not yet encoded") return "tryagain.flv";
@@ -1777,6 +1779,20 @@ function _vae_sql_iid() {
   return mysql_insert_id($_VAE['shared_sql']);
 }
 
+function _vae_sql_lock() {
+  global $_VAE;
+  for ($i = 0; $i < 30; $i++) {
+    $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW()')", true);
+    if (!$ret) {
+      _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
+      sleep(2);
+    } else {
+      return true;
+    }
+  }
+  _vae_error("Couldn't obtain SQL lock to download files from Vae.");
+}
+
 function _vae_sql_n($q) {
   return mysql_num_rows($q);
 }
@@ -1793,6 +1809,11 @@ function _vae_sql_q($q, $ignore_errors = false) {
 
 function _vae_sql_r($q) {
   return mysql_fetch_assoc($q);
+}
+
+function _vae_sql_unlock() {
+  global $_VAE;
+  _vae_sql_q("DELETE FROM `locks` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
 }
 
 function _vae_src($filename) {
