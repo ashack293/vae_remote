@@ -1790,7 +1790,7 @@ function _vae_sql_lock() {
       return true;
     }
   }
-  _vae_error("Couldn't obtain SQL lock to download files from Vae.");
+  _vae_error("", "Couldn't obtain SQL lock to download files from Vae.");
 }
 
 function _vae_sql_n($q) {
