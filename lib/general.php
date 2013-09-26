@@ -1782,10 +1782,14 @@ function _vae_sql_iid() {
 function _vae_sql_lock() {
   global $_VAE;
   $LOCK_TIME = 100000;
+  $old_locks_removed = false;
   for ($i = 0; $i < 60*1000*1000/$LOCK_TIME; $i++) {
     $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW())", true);
     if (!$ret) {
-      _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
+      if (!$old_locks_removed) {
+        _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
+        $old_locks_removed = true;
+      }  
       usleep($LOCK_TIME);
     } else {
       return true;
