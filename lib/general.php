@@ -1785,7 +1785,7 @@ function _vae_sql_lock() {
     $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW())", true);
     if (!$ret) {
       _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 5 MINUTE)");
-      sleep(2);
+      usleep(100000);
     } else {
       return true;
     }
