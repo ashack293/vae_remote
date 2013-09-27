@@ -1781,7 +1781,7 @@ function _vae_sql_iid() {
 
 function _vae_sql_lock() {
   global $_VAE;
-  $LOCK_TIME = 100000;
+  $LOCK_TIME = 50000;
   $old_locks_removed = false;
   for ($i = 0; $i < 60*1000*1000/$LOCK_TIME; $i++) {
     $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW())", true);
@@ -1819,7 +1819,7 @@ function _vae_sql_r($q) {
 function _vae_sql_unlock() {
   global $_VAE;
   _vae_sql_q("DELETE FROM `locks` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
-  usleep(500);;
+  usleep(1000);
 }
 
 function _vae_src($filename) {
