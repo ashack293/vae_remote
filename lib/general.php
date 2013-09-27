@@ -1819,6 +1819,7 @@ function _vae_sql_r($q) {
 function _vae_sql_unlock() {
   global $_VAE;
   _vae_sql_q("DELETE FROM `locks` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
+  usleep(500);;
 }
 
 function _vae_src($filename) {
