@@ -132,7 +132,7 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   if ($discount > 0) $price = _vae_decimalize($price * (100.0 - $discount) / 100.0, 2);
   if (count($_SESSION['__v:store']['cart'])) {
     foreach ($_SESSION['__v:store']['cart'] as $cid => $r) {
-      if (($r['name'] == $name) && ($r['child'] == false) && ($r['price'] == $price) && ($r['id'] == $id) && ($r['option_id'] == $option_id) && ($r['notes'] == $notes) && ($r['digital'] == $digital) && ($r['shipping_class'] == $shipping_class) && ($r['tax_class'] == $tax_class) && ($r['taxable'] == $taxable) && ($r['discount_class'] == $discount_class) && ($r['barcode'] == $barcode) && ($r['weight'] == $weight) && ($r['brand'] == $brand) && ($r['category'] == $category) && ($r['image'] == $image) && !$r['bundled_with']) $cart_id = $cid;
+      if (($r['name'] == $name) && ($r['child'] == false) && ($r['price'] == $price) && ($r['id'] == $id) && ($r['option_id'] == $option_id) && ($r['notes'] == $notes) && ($r['digital'] == $digital) && ($r['shipping_class'] == $shipping_class) && ($r['tax_class'] == $tax_class) && ($r['taxable'] == $taxable) && ($r['discount_class'] == $discount_class) && ($r['barcode'] == $barcode) && ($r['weight'] == $weight) && ($r['brand'] == $brand) && ($r['category'] == $category) && ($r['image'] == $image) && !$r['bundled_with'] && !is_array($_REQUEST['bundle'])) $cart_id = $cid;
     }
   }
   if (!$cart_id || ($from_api && !$a['update_if_exists'])) {
