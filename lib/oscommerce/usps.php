@@ -99,7 +99,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 								'PRIORITY MAIL INT' => '/Priority Mail Express International$/',
 								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*International Flat.*Envelope/',
 								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*International Flat.*Box/',
-								'FIRST-CLASS MAIL INT' => '/First-Class/');
+								'FIRST-CLASS MAIL INT' => '/First-Class.*Package/');
                        
 
       $this->countries = $this->country_list();
