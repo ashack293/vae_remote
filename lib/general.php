@@ -23,7 +23,7 @@ function _vae_akismet($a) {
   $comment['comment_author_email'] = $_REQUEST[$a['akismet_email_field']];
   $comment['comment_author_url'] = $_REQUEST[$a['akismet_url_field']];
   $comment['comment_content'] = $_REQUEST[$a['akismet_comment_field']];
-	$comment['user_ip']    = preg_replace( '/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'] );
+	$comment['user_ip']    = preg_replace( '/[^0-9., ]/', '', _vae_remote_addr());
 	$comment['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 	$comment['referrer']   = $_SERVER['HTTP_REFERER'];
 	$comment['blog']       = "http://" . $_SERVER['HTTP_HOST'];
@@ -980,7 +980,7 @@ function _vae_merge_data_from_tags(&$tag, &$data, &$errors, $nested = false) {
   	    if (!strlen($name)) $name = $itag['attrs']['path'];
   	    if ($itag['type'] == "captcha") {
   	      if (isset($_VAE['recaptcha']['private'])) {
-            $resp = recaptcha_check_answer($_VAE['recaptcha']['private'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+            $resp = recaptcha_check_answer($_VAE['recaptcha']['private'], _vae_remote_addr(), $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
             if (!$resp->is_valid) $errors[] = "You entered the wrong word(s) in the reCAPTCHA window.  Please try again.";
             unset($_VAE['recaptcha']['private']);
           }
@@ -1368,6 +1368,13 @@ function _vae_remote() {
     _vae_error("","Secret Key Mismatch");
   }
   _vae_die();
+}
+
+function _vae_remote_addr() {
+  if (substr($_SERVER['REMOTE_ADDR'], 0, 3) == "10." && strlen($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    return $_SERVER['HTTP_X_FORWARDED_FOR'];
+  }
+  return $_SERVER['REMOTE_ADDR'];
 }
 
 function _vae_remove_file($name) {
