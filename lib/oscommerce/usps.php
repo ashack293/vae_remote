@@ -96,7 +96,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 								'GLOCAL EXPRESS NON-DOC NON-RECT' => '/Global.*Non-Document.*Non-Rectangular/',
 								'EXPRESS MAIL INT' => '/^Express/',
 								'EXPRESS MAIL INT FLAT RATE ENV' => '/^Express.*International Flat.*Envelope/',
-								'PRIORITY MAIL INT' => '/Priority Mail Express International$/',
+								'PRIORITY MAIL INT' => '/Priority.*International$/',
 								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*International Flat.*Envelope/',
 								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*International Flat.*Box/',
 								'FIRST-CLASS MAIL INT' => '/First-Class.*Package/');
