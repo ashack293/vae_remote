@@ -59,7 +59,7 @@ function _vae_store_calculate_shipping_options($weight, $num_items, $subtotal, $
       if (($method['method_name'] != "usps") && _vae_store_usps_only($country, $state, $address)) {
         continue; 
       }
-      $max_weight_per_box = 70;
+      $max_weight_per_box = 44;
       require_once(dirname(__FILE__) . "/oscommerce/" . $method['method_name'] . ".php");
       $ext = $method['method_name'];
       $class = new $ext();
