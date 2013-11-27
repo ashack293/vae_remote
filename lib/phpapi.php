@@ -166,7 +166,7 @@ function _vae_imagesize($d, $complain = false) {
   }
   $w = @imagesx($tk);
   $h = @imagesy($tk);
-  _vae_kvstore_write($iden, "$w,$h");
+  _vae_kvstore_write($iden, "$w,$h", 5);
   return array($w, $h);
 }
 
