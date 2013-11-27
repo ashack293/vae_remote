@@ -428,7 +428,7 @@ function _vae_handleob($vaeml) {
       }
     }
     if (isset($_VAE['ticks'])) return _vae_render_timer();
-    _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])/1000));
+    _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
     }
