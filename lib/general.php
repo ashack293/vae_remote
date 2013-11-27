@@ -234,7 +234,9 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   if ($_ENV['TEST']) return array($iden, $id, $path, $qs, $preserve_filename);
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
+  _vae_tick("Fetching $iden from the file cache");
   if ($cache = _vae_kvstore_read($iden, 90)) return $cache;
+  _vae_tick("Failed - looking for $id $path $qs from root machine");
   _vae_sql_lock();
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
   $fp = @fopen($url, 'rb');
@@ -1681,7 +1683,7 @@ function _vae_session_handler_close() {
   return true;
 }
  
-function _vae_session_handler_destroy ($id) {
+function _vae_session_handler_destroy($id) {
   _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
   return true;
 }
@@ -1791,6 +1793,7 @@ function _vae_sql_lock() {
   $LOCK_TIME = 50000;
   $old_locks_removed = false;
   for ($i = 0; $i < 60*1000*1000/$LOCK_TIME; $i++) {
+    _vae_tick("Attempting to acquire the SQL lock");
     $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW())", true);
     if (!$ret) {
       if (!$old_locks_removed) {
