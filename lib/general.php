@@ -428,7 +428,7 @@ function _vae_handleob($vaeml) {
       }
     }
     if (isset($_VAE['ticks'])) return _vae_render_timer();
-    _vae_statsd_timing("vaesite." . $_VAE['settings']['subdomain'] . ".render_time", microtime(true)-$_VAE['start_tick']);
+    _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])/1000));
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
     }
@@ -1880,8 +1880,9 @@ function _vae_start_ob() {
 }
 
 function _vae_statsd_send($value) {
+  global $_VAE;
   if ($fp = @fsockopen("udp://statsd.***REMOVED***", 8125, $errno, $errstr)) {
-    fwrite($fp, $value);
+    fwrite($fp, "vaesite." . $_VAE['settings']['subdomain'] . "." . $value);
     fclose($fp);
   }
 }
