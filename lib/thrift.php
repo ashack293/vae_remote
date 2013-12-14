@@ -56,7 +56,6 @@ function _vae_thrift_open($client_class, $port) {
       $transport->open();
       return $client;
     } catch (TException $tx) {
-        _vae_tick(' TException: '.$tx->why.' -- '.$tx->getMessage());
     }
 
     if(!$backends) { $backends = _vae_vaedb_backends(); }
