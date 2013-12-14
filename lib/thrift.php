@@ -46,7 +46,6 @@ function _vae_thrift_open($client_class, $port) {
   $i = 0;
   while ($i < 4) {
     $_VAE['thrift_host'] = array_shift($backends);
-    if($_REQUEST['__flag']) $_VAE['thrift_host'] = 'localhost';
     try {
       _vae_tick("Using " . $_VAE['thrift_host'] . " as VaeDB backend.");
       $socket = new TSocket($_VAE['thrift_host'], $port);
