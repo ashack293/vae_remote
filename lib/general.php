@@ -2008,10 +2008,20 @@ function _vae_valid_url($url) {
 function _vae_write_file($name, $data) {
   global $_VAE;
   $f = fopen($_VAE['config']['data_path'] . $name, "wb");
-  //if (!$f) { _vae_debug("Couldn't write local cache file " . _vae_h($_VAE['config']['data_path'] . $name)); return; }
-  if (!$f) { _vae_error("","Couldn't write local cache file " . _vae_h($name)); _vae_die(); }
-  fwrite($f, $data);
+  if (!$f) { 
+    _vae_error("","Couldn't fopen() local cache file " . _vae_h($name)); 
+  }
+  $ret = fwrite($f, $data);
+  if ($ret === false) {
+    _vae_error("","Couldn't fwrite() local cache file " . _vae_h($name)); 
+  }
   fclose($f);
+
+  // Check for consistency
+  $data_as_stored = file_get_contents($_VAE['config']['data_path'] . $name);
+  if ($data != $data_as_stored) {
+    _vae_error("","_vae_write_file() Consistency check failed on local cache file " . _vae_h($name)); 
+  }
   if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
 } 
 
