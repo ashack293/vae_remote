@@ -2012,16 +2012,7 @@ function _vae_write_file($name, $data) {
     _vae_error("","Couldn't fopen() local cache file " . _vae_h($name)); 
   }
   $ret = fwrite($f, $data);
-  if ($ret === false) {
-    _vae_error("","Couldn't fwrite() local cache file " . _vae_h($name)); 
-  }
   fclose($f);
-
-  // Check for consistency
-  $data_as_stored = file_get_contents($_VAE['config']['data_path'] . $name);
-  if ($data != $data_as_stored) {
-    _vae_error("","_vae_write_file() Consistency check failed on local cache file " . _vae_h($name)); 
-  }
   if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
 } 
 
