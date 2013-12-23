@@ -944,7 +944,7 @@ function _vae_mail($to, $subj, $body, $headers) {
 function _vae_make_filename($ext, $filename = null) {
   global $_VAE;
   if ($filename) {
-    $filename = substr(preg_replace("/[^A-Za-z0-9_\-]/", "", preg_replace('/\s/', "-", preg_replace('/\s\s+/', ' ', $filename))), 0, 55);
+    $filename = substr(preg_replace("/[^a-z0-9_\-]/", "", preg_replace('/\s/', "-", preg_replace('/\s\s+/', ' ', strtolower($filename)))), 0, 55);
     $i = 0;
   }
   do {
