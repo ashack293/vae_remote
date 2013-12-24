@@ -431,8 +431,6 @@ function _vae_handleob($vaeml) {
     _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . $_SESSION['__v:pre_ssl_host'] . $_SERVER['REQUEST_URI'];
-    } elseif (preg_match('/^.*-secure.vaesite.com/', $_SERVER['HTTP_HOST']) && !_vae_ssl() && !$_REQUEST['__xhr']) {
-      $_VAE['force_redirect'] = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
       if (isset($_SESSION['__v:flash']) && isset($_SESSION['__v:flash']['messages']) && count($_SESSION['__v:flash']['messages'])) {
