@@ -430,7 +430,6 @@ function _vae_handleob($vaeml) {
     if (isset($_VAE['ticks'])) return _vae_render_timer();
     _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
-      _vae_error($_SESSION['__v:pre_ssl_host']);
       $_VAE['force_redirect'] = "http://" . $_SESSION['__v:pre_ssl_host'] . $_SERVER['REQUEST_URI'];
     } elseif (preg_match('/^.*-secure.vaesite.com/', $_SERVER['HTTP_HOST']) && !_vae_ssl() && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -1579,7 +1578,7 @@ function _vae_require_ssl() {
   $_VAE['ssl_required'] = true;
   $_VAE['cant_cache'] = "ssl_required";
   if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
-    if (!substr($_SERVER['HTTP_HOST'], "-secure.vaesite.com")) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
+    if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com")) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if ($_VAE['settings']['subdomain'] == "gagosian" && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = "www.gagosian.com";
     } elseif ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
