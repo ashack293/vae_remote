@@ -432,6 +432,9 @@ function _vae_handleob($vaeml) {
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
     }
+    if (preg_match('/^.*-secure.vaesite.com', $_SERVER['HTTP_HOST'])) {
+      $_VAE['force_redirect'] = "http://" . $_VAE['settings']['subdomain'] . ".vaesite.com" . $_SERVER['REQUEST_URI'];
+    }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
       if (isset($_SESSION['__v:flash']) && isset($_SESSION['__v:flash']['messages']) && count($_SESSION['__v:flash']['messages'])) {
         foreach ($_SESSION['__v:flash']['messages'] as $m) {
