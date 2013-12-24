@@ -1578,7 +1578,7 @@ function _vae_require_ssl() {
   $_VAE['ssl_required'] = true;
   $_VAE['cant_cache'] = "ssl_required";
   if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
-    if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com")) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
+    if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com") && !$_SESSION['__v:pre_ssl_host']) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if ($_VAE['settings']['subdomain'] == "gagosian" && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = "www.gagosian.com";
     } elseif ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
