@@ -431,9 +431,8 @@ function _vae_handleob($vaeml) {
     _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
     if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
       $_VAE['force_redirect'] = "http://" . ($_SESSION['__v:pre_ssl_host'] ? $_SESSION['__v:pre_ssl_host'] : $_SERVER['HTTP_HOST']) . $_SERVER['REQUEST_URI'];
-    }
-    if (preg_match('/^.*-secure.vaesite.com', $_SERVER['HTTP_HOST'])) {
-      $_VAE['force_redirect'] = "http://" . $_VAE['settings']['subdomain'] . ".vaesite.com" . $_SERVER['REQUEST_URI'];
+    } elseif (preg_match('/^.*-secure.vaesite.com', $_SERVER['HTTP_HOST'])) {
+      $_VAE['force_redirect'] = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
       if (isset($_SESSION['__v:flash']) && isset($_SESSION['__v:flash']['messages']) && count($_SESSION['__v:flash']['messages'])) {
@@ -947,7 +946,7 @@ function _vae_mail($to, $subj, $body, $headers) {
 function _vae_make_filename($ext, $filename = null) {
   global $_VAE;
   if ($filename) {
-    $filename = substr(preg_replace("/[^A-Za-z0-9_\-]/", "", preg_replace('/\s/', "-", preg_replace('/\s\s+/', ' ', $filename))), 0, 55);
+    $filename = substr(preg_replace("/[^a-z0-9_\-]/", "", preg_replace('/\s/', "-", preg_replace('/\s\s+/', ' ', strtolower($filename)))), 0, 55);
     $i = 0;
   }
   do {
