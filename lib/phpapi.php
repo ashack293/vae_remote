@@ -249,6 +249,11 @@ function vae_richtext($text, $options) {
   return _vae_htmlarea((string)$text, $options);
 }
 
+function vae_secure_token($name) {
+  global $_VAE;
+  return $_VAE['settings']['secure_tokens'][$name];
+}
+
 function vae_sizedimage($id, $size, $preserve_filename = false) {
   $id = trim($id);
   if (!strlen($id)) return "";
