@@ -811,6 +811,14 @@ function _vae_kvstore_write($key, $value, $expire_interval = 90) {
   }
 }
 
+function _vae_kvstore_v_exists($v) {
+  $q = _vae_sql_q("SELECT `k` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "' and `v`='" . _vae_sql_e($v) . "'");
+  if ($r = _vae_sql_r($q)) {
+    return true;
+  }
+  return false;
+}
+
 function _vae_load_cache($reload = false) {
   global $_VAE;
   if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
@@ -954,7 +962,7 @@ function _vae_make_filename($ext, $filename = null) {
     } else {
       $newname = md5(mt_rand()) . "." . $ext;
     }
-  } while (file_exists($_VAE['config']['data_path'] . $newname));
+  } while (file_exists($_VAE['config']['data_path'] . $newname) || _vae_kvstore_v_exists($newname));
   return $newname;
 }
 
