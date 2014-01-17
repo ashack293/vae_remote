@@ -70,6 +70,12 @@ function vae_disable_vaeml() {
   return true;
 }
 
+function vae_enqueue_job() {
+  $data = json_encode(func_get_args());
+  $ret = _vae_rest($data, "feed/enqueue_job", "job");
+  return ($ret != false);
+}
+
 function vae_errors() {
   global $_VAE;
   return $_VAE['errors'];
