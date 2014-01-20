@@ -71,7 +71,9 @@ function vae_disable_vaeml() {
 }
 
 function vae_enqueue_job() {
-  $data = array('data' => json_encode(func_get_args()));
+  if(func_num_args() == 0 || !file_exists($_SERVER['DOCUMENT_ROOT'] . "/" . func_get_arg(0)))
+    _vae_error("Called vae_enqueue_job() with an invalid filename.");
+  $data = array('data' => json_encode(func_get_args()), 'docroot' => $_SERVER['DOCUMENT_ROOT']);
   $ret = _vae_rest($data, "feed/enqueue_job", "data");
   return ($ret != false);
 }
