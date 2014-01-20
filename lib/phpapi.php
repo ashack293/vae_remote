@@ -71,7 +71,7 @@ function vae_disable_vaeml() {
 }
 
 function vae_enqueue_job() {
-  $data = json_encode(func_get_args());
+  $data = array('data' => json_encode(func_get_args()));
   $ret = _vae_rest($data, "feed/enqueue_job", "data");
   return ($ret != false);
 }
