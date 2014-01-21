@@ -1679,6 +1679,7 @@ function _vae_session_handler_write($id, $data) {
   if (!$data) return _vae_session_handler_destroy($id);
   $expire = time() + (86400 * 2);
   $data = _vae_sql_e(base64_encode($data));
+  if (strlen($data) > 1048576) return false;
   if (isset($_VAE['session_read'])) {
     $query = "UPDATE session_data SET data='" . $data . "',expires='" . $expire . "',subdomain='" . $_VAE['settings']['subdomain'] . "' WHERE id='" . _vae_sql_e($id) . "'";// AND subdomain='" . $_VAE['settings']['subdomain'] . "'";
   } else {
