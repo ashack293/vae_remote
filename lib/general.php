@@ -1664,7 +1664,7 @@ function _vae_session_handler_open($s, $n) {
 
 function _vae_session_handler_read($id) {
   global $_VAE;
-  $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
+  $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
   if ($r = _vae_sql_r($q)) {
     $_VAE['session_read'] = true;
     $ret = base64_decode($r["data"]);
@@ -1680,9 +1680,9 @@ function _vae_session_handler_write($id, $data) {
   $expire = time() + (86400 * 2);
   $data = _vae_sql_e(base64_encode($data));
   if (isset($_VAE['session_read'])) {
-    $query = "UPDATE session_data SET data='" . $data . "', expires='" . $expire . "' WHERE id='" . _vae_sql_e($id) . "'";
+    $query = "UPDATE session_data SET data='" . $data . "', expires='" . $expire . "' WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'";
   } else {
-    $query = "INSERT INTO session_data (`id`,`data`,`expires`) VALUES('" . _vae_sql_e($id) . "','" . $data . "','" . $expire . "')";
+    $query = "INSERT INTO session_data (`id`,`subdomain`,`data`,`expires`) VALUES('" . _vae_sql_e($id) . "','" . $_VAE['settings']['sudomain'] . "','" . $data . "','" . $expire . "')";
   }
   _vae_sql_q($query);
   return true;
@@ -1693,7 +1693,8 @@ function _vae_session_handler_close() {
 }
  
 function _vae_session_handler_destroy($id) {
-  _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "'");
+  global $_VAE;
+  _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
   return true;
 }
  
