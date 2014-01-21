@@ -116,7 +116,7 @@ function vae_ssl() {
 function vae_staging() {
   global $_VAE;
   if (strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) return false;
-  if (strstr($_SERVER['SCRIPT_FILENAME'], ".verb/httpdocs/") && $_SERVER['DOCUMENT_ROOT'] == "") return false;
+  if (strstr($_SERVER['SCRIPT_FILENAME'], ".verb/httpdocs/") && $_SERVER['DOCUMENT_ROOT'] == "") return true;
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl']) return true;
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_site']) return true;
   if ($_SERVER['HTTP_HOST'] == $_VAE['settings']['subdomain'] . ".vaesite.com") return true;
