@@ -109,6 +109,10 @@ function vae_roman($num) {
   return $result;
 }
 
+function vae_ssl() {
+  return _vae_ssl();
+}
+
 function vae_staging() {
   global $_VAE;
   if (strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) return false;
