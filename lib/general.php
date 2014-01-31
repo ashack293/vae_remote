@@ -2023,6 +2023,9 @@ function _vae_write_file($name, $data) {
   }
   $ret = fwrite($f, $data);
   fclose($f);
+  if ($ret != strlen($data)) {
+    _vae_error("","Couldn't write enough data to local cache file " . _vae_h($name)); 
+  }
   if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
 } 
 
