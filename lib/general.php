@@ -1934,9 +1934,13 @@ function _vae_stringify_array($array) {
 function _vae_sweep_data_dir() {
   global $_VAE;
   _vae_sql_q("DELETE FROM `kvstore` WHERE `expire_at`<NOW() AND `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
-  $q = _vae_sql_q("SELECT `v` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
+  $q = _vae_sql_q("SELECT `k`,`v`,`is_filename` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
   while ($r = _vae_sql_r($q)) {
     $save[$r['v']] = true;
+    $filename = $_VAE['config']['data_path'].$r['v'];
+    if($r['is_filename'] and !file_exists($filename)) {
+      _vae_sql_q("DELETE FROM `kvstore` WHERE `k`='"._vae_sql_e($r['k'])."' AND `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
+    }
   }
   $dh = opendir($_VAE['config']['data_path']);
   while (($file = readdir($dh)) !== false) {
