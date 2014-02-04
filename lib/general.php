@@ -813,7 +813,7 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
 }
 
 function _vae_kvstore_v_exists($v) {
-  $q = _vae_sql_q("SELECT `k` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "' and `v`='" . _vae_sql_e($v) . "'");
+  $q = _vae_sql_q("SELECT `k` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "' AND `v`='" . _vae_sql_e($v) . "'");
   if ($r = _vae_sql_r($q)) {
     return true;
   }
@@ -1945,9 +1945,12 @@ function _vae_sweep_data_dir() {
   $dh = opendir($_VAE['config']['data_path']);
   while (($file = readdir($dh)) !== false) {
     if (in_array($file, array(".", "..", "feed.xml", "settings.php"))) continue;
-    if (isset($save[$file])) continue;
+    if (isset($save[$file])) continue; 
+    $filename = $_VAE['config']['data_path'] . $file;
+    $fileage = time() - filemtime($filename);
+    if ($fileage < 3*86400)) continue;
     echo "deleting $file<br />";
-    unlink($_VAE['config']['data_path'] . $file);
+    unlink();
   }
   echo "done";
   flush();
