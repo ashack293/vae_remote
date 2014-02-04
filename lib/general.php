@@ -1948,7 +1948,7 @@ function _vae_sweep_data_dir() {
     if (isset($save[$file])) continue; 
     $filename = $_VAE['config']['data_path'] . $file;
     $fileage = time() - filemtime($filename);
-    if ($fileage < 3*86400)) continue;
+    if ($fileage < 3*86400) continue;
     echo "deleting $file<br />";
     unlink();
   }
