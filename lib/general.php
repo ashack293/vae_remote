@@ -1988,8 +1988,8 @@ function _vae_update_settings_feed() {
 
 function _vae_urlize($r) {
   $r = preg_replace('/(^| )[a-zA-Z]+:\/\/([-]*[.]?[a-zA-Z0-9_\/\?&%=+])*/', '<a href="$0" target="_blank">$0</a>', str_replace("\n", "\n ", $r));
-  $r = preg_replace('/(^| |>)www[.](([a-zA-Z0-9.])*[.](com|net|org|au|jp|us|uk)([a-zA-Z0-9_\/\?&%=+])*)/', "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $r);
-  $r = preg_replace('/(^| |>)(([a-zA-Z0-9_.])*@([a-zA-Z0-9_\/\?&.%=+])*.(com|net|org|au|jp|us|uk))/', "\\1<a href=\"mailto:\\2\">\\2</a>", $r);
+  $r = preg_replace('/(^| |>)www[.](([a-zA-Z0-9.])*[.](com|net|org|au|jp|us|uk|no)([a-zA-Z0-9_\/\?&%=+])*)/', "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $r);
+  $r = preg_replace('/(^| |>)(([a-zA-Z0-9_.])*@([a-zA-Z0-9_\/\?&.%=+])*.(com|net|org|au|jp|us|uk|no))/', "\\1<a href=\"mailto:\\2\">\\2</a>", $r);
   return $r;
 }
 
