@@ -445,6 +445,7 @@ $_VAE['recaptcha'] = array(
 $_VAE['store']['payment_methods'] = array(
   'authorize_net' => array('name' => "Credit Card", 'credit_card' => true), 
   'braintree' => array('name' => "Credit Card", 'credit_card' => true), 
+  'braintree_blue' => array('name' => "Credit Card", 'credit_card' => true), 
   'card_stream' => array('name' => "Credit Card", 'credit_card' => true), 
   'cyber_source' => array('name' => "Credit Card", 'credit_card' => true), 
   'data_cash' => array('name' => "Credit Card", 'credit_card' => true), 
