@@ -20,7 +20,6 @@ function _vae_vaedb_backends() {
 
   $vaedb_backends = array();
   foreach($_VAE['vaedbd_backend_tiers'] as $tier) {
-    shuffle($tier);
     $vaedb_backends = array_merge($vaedb_backends, $tier);
   }
 
@@ -44,8 +43,9 @@ function _vae_thrift_open($client_class, $port) {
   }
   
   $i = 0;
+  $shift = hexdec(substr(md5($_VAE['settings']['subdomain']),0,15));
   while ($i < 4) {
-    $_VAE['thrift_host'] = array_shift($backends);
+    $_VAE['thrift_host'] = $backends[($shift + $i) % count($backends)];
     try {
       _vae_tick("Using " . $_VAE['thrift_host'] . " as VaeDB backend.");
       $socket = new TSocket($_VAE['thrift_host'], $port);
