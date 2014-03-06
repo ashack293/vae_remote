@@ -43,8 +43,6 @@ function _vae_thrift_open($client_class, $port) {
   $shift = hexdec(substr(md5($subdomain),0,15));
   while ($i < 4) {
     $_VAE['thrift_host'] = $backends[($shift + $i) % count($backends)];
-    if($subdomain == 'impose')
-        $_VAE['thrift_host'] = 'vaedb-2-test.***REMOVED***';
     try {
       _vae_tick("Using " . $_VAE['thrift_host'] . " as VaeDB backend.");
       $socket = new TSocket($_VAE['thrift_host'], $port);
