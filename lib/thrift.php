@@ -18,7 +18,7 @@ function _vae_dbd($port = 9091) {
 function _vae_vaedb_backends($subdomain) {
   global $_VAE;
   if (array_key_exists($subdomain, $_VAE['vaedbd_overrides']))
-      return $_VAE['vaedbd_overrides'][$subdomain];
+      return shuffle($_VAE['vaedbd_overrides'][$subdomain]);
   return $_VAE['vaedbd_backends'];
 };
 
