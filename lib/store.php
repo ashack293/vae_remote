@@ -539,7 +539,9 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
     } else {
 	    if (($item == null) && (strlen($disc['included_classes']) || strlen($disc['excluded_classes']))) {
 	      foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
-	        $amount += _vae_store_compute_discount($r, ($disc['fixed_amount'] ? ($disc['fixed_amount'] - $amount) : null));
+	        $this_item_discount = _vae_store_compute_discount($r, ($disc['fixed_amount'] ? ($disc['fixed_amount'] - $amount) : null));
+          $_SESSION['__v:store']['cart'][$id]['discount_amount'] = $this_item_discount;
+          $amount += $this_item_discount;
 	      }
 	      if ($amount > 0) {
 	        if ($disc['free_shipping'] && (!strlen($disc['free_shipping_method']) || strstr($_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'], $disc['free_shipping_method']))) {
