@@ -29,7 +29,6 @@ function vae_cdn_url() {
 }
 
 function vae_create($structure_id, $row_id, $data) {
-  if (strstr($_SERVER['DOCUMENT_ROOT'], "fonyfw.verb")) return false;
   if (strlen($structure_id) && !is_numeric($structure_id)) {
     $createInfo = _vae_fetch_for_creating($structure_id);
     if ($createInfo && is_numeric($createInfo->structure_id)) {
@@ -46,6 +45,34 @@ function vae_customer($id) {
   $raw = _vae_rest(array(), "customers/show/" . $id, "customer", array());
   if ($raw == false) return false;
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
+}
+
+function vae_customer_create_address($customer_id, $address) {
+  $raw = _vae_rest($address, "customer_addresses/create/$customer_id", "customer_address");
+  if ($raw == false) return false;
+  return _vae_array_from_rails_xml(simplexml_load_string($raw), true);
+}
+
+function vae_customer_destroy_address($id) {
+  $ret = _vae_rest(array(), "customer_addresses/destroy/$id");
+  return ($ret != false);
+}
+
+function vae_customer_list() {
+  $raw = _vae_rest(array(), "customers/list");
+  if ($raw == false) return false;
+  return _vae_array_from_rails_xml(simplexml_load_string($raw), true);
+}
+
+function vae_customer_create_or_update($data) {
+  $raw = _vae_rest($data, "customers/create_or_update", "customer");
+  if ($raw == false) return false;
+  return _vae_array_from_rails_xml(simplexml_load_string($raw));
+}
+
+function vae_customer_destroy($id) {
+  $ret = _vae_rest(array(), "customers/destroy/$id");
+  return ($ret != false);
 }
 
 function vae_data_path() {
