@@ -75,6 +75,13 @@ function vae_customer_destroy($id) {
   return ($ret != false);
 }
 
+function vae_customer_order_ids($id) {
+  $raw = _vae_rest(array(), "customers/orders/$id");
+  if ($raw == false) return false;
+  $arr = (array)simplexml_load_string($raw);
+  return $arr['fixnum'];
+}
+
 function vae_data_path() {
   global $_VAE;
   _vae_load_settings();
