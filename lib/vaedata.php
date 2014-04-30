@@ -298,15 +298,20 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         return $q->toVaeDbResponse();
       }
       for ($i = 0; $i < 10; $i++) {
+        $start = microtime(true);
+        $result = null;
         try {
           if (!self::$sessionId) self::___openSession();
-          $start = microtime(true);
           $result = self::$client->get(self::$sessionId, $responseId, $query, $options);
-          $time = microtime(true) - $start;
-          // if you want to log $time, log it here
-          return $result;
         } catch (TSocketException $e) {
           self::___resetClient();
+        }
+        if ($result) {
+          $time = microtime(true) - $start;
+          if ($time > 10) {
+            _vae_sql_q("INSERT INTO slow_queries (created_at,query,runtime) VALUES(NOW(),'" . _vae_sql_e($query) . "','" . $time . "')");
+          }
+          return $result;
         }
       }
       throw new VaeException("", "Could not connect to VaeDBd to get()");
