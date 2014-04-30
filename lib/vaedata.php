@@ -308,7 +308,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         }
         if ($result) {
           $time = microtime(true) - $start;
-          if ($time > 10) {
+          if ($time > 1) {
             _vae_sql_q("INSERT INTO slow_queries (subdomain,created_at,query,runtime) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "',NOW(),'" . _vae_sql_e($query) . "','" . $time . "')");
           }
           return $result;
