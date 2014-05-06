@@ -1088,8 +1088,11 @@ function _vae_minify_js($js) {
   return trim(str_replace(array("\r", "\n"), "", $js));
 }
 
-function _vae_multipart_mail($from, $to, $subject, $text, $html) {
+function _vae_multipart_mail($from, $to, $subject, $text, $html, $reply_to=false) {
   $headers  = 'From: ' . $from . "\n";
+  if ($reply_to) {
+    $headers .= 'Reply-To: ' . $reply_to . "\n";
+  }
   $headers .= 'Return-Path: ' . $from . "\n";
   if (!strlen($html)) {
     return _vae_mail($to, $subject, $text, $headers);
