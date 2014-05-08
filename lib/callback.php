@@ -61,11 +61,13 @@ function _vae_callback_formmail($tag) {
       if ($tag['attrs']['from']) $from = $tag['attrs']['from'];
       if (strstr($_POST['__v:to'], $tag['attrs']['to'])) $tag['attrs']['to'] = $_POST['__v:to'];
       $subject = ($tag['attrs']['subject'] ? $tag['attrs']['subject'] :  $_SERVER['HTTP_HOST'] . " Website Form Submission");
+
+      $reply_to = false;
       if ($tag['attrs']['from_field']) {
-        $from = $data[$tag['attrs']['from_field']];
-        $subject .= " - " . $from;
+        $reply_to = $data[$tag['attrs']['from_field']];
+        $subject .= " - " . $reply_to;
       }
-      _vae_multipart_mail($from, $tag['attrs']['to'], $subject, $text, $html);
+      _vae_multipart_mail($from, $tag['attrs']['to'], $subject, $text, $html, $reply_to);
     }
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
     if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field], $tag['attrs']['newsletter_confirm']);
