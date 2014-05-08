@@ -173,6 +173,7 @@ function _vae_store_callback_add_to_cart($tag) {
       foreach($_REQUEST[$a['multiple']] as $id => $item) {
         if (strlen($item)) {
           $qty = (is_numeric($_REQUEST['quantity'][$id]) ? $_REQUEST['quantity'][$id] : 1);
+          if ($qty < 1) continue;
           $option_id = (is_numeric($_REQUEST['options'][$id]) ? $_REQUEST['options'][$id] : "");
           $notes = (($a['notes_input'] && $_REQUEST[$a['notes_input']][$id]) ? $_REQUEST[$a['notes_input']][$id] : "");
           _vae_store_add_item_to_cart($item, $option_id, $qty, $a, $notes);
