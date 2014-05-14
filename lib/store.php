@@ -1064,6 +1064,7 @@ function _vae_store_payment_paypal_ipn() {
         $out .= "PayPal authenticity verified.\n";
         if ($_POST['payment_status'] == "Completed") {
           $alldata = unserialize(_vae_read_file($_POST['custom']));
+          $out .= "Alldata: " . serialize($alldata) . "\n\n";
           $data = $alldata['data'];
           session_id($alldata['session_id']);
           session_start();
