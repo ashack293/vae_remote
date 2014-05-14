@@ -1064,7 +1064,7 @@ function _vae_store_payment_paypal_ipn() {
         $out .= "PayPal authenticity verified.\n";
         if ($_POST['payment_status'] == "Completed") {
           $alldata = unserialize(_vae_read_file($_POST['custom']));
-          $out .= "Alldata: " . serialize($alldata) . "\n\n";
+          $out .= "Alldata: " . json_encode($alldata) . "\n\n";
           $data = $alldata['data'];
           session_id($alldata['session_id']);
           session_start();
@@ -1097,7 +1097,7 @@ function _vae_store_payment_paypal_ipn() {
       }
     }
   }
-  $out .= "Messages : " . serialize($_SESSION['__v:flash_new']['messages']);
+  $out .= "Messages : " . json_encode($_SESSION['__v:flash_new']['messages']);
   $out .= "\nRequest  : " . $req . "\nResponse : " . $res;
   _vae_log($out);
   if (!$good) {
