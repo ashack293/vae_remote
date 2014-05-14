@@ -1075,7 +1075,7 @@ function _vae_store_payment_paypal_ipn() {
           } else {
             $out .= "Payment Completed, submitting order.\n";
             $data['gateway_transaction_id'] = $_POST['txn_id'];
-            if (!strlen($data['email']) || !strlen($data['billing_name'])) {
+            if (!strlen($data['email']) || !strlen($data['billing_name']) || !strlen($data['total'])) {
               $_POST['name'] = $_POST['first_name'] . " " . $_POST['last_name'];
               foreach (array('total' => 'mc_gross', 'shipping' => 'mc_shipping', 'tax' => 'tax', 'shipping_method' => 'shipping_method', 'shipping_name' => 'address_name', 'shipping_country' => 'address_country_code', 'shipping_address' => 'address_street', 'shipping_city' => 'address_city', 'shipping_state' => 'address_state', 'shipping_zip' => 'address_zip', 'billing_company' => 'payer_business_name', 'email' => 'payer_email', 'billing_name' => 'name', 'billing_country' => 'address_country_code', 'billing_address' => 'address_street', 'billing_city' => 'address_city', 'billing_state' => 'address_state', 'billing_zip' => 'address_zip') as $vae => $paypal) {
                 if (strlen(trim($_POST[$paypal])) && (!strlen($data[$vae]) || (is_numeric($_POST[$paypal]) && is_numeric($data[$vae]) && ($data[$vae] == 0) && ($_POST[$paypal] > 0)) || ($data[$vae] == "N/A" && $paypal == "shipping_method"))) {
