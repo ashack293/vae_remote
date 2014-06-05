@@ -635,7 +635,7 @@ function _vae_inject_assets($out) {
           require_once(dirname(__FILE__) . "/../vendor/jsmin.php");
           $raw = JSMin::minify($raw);
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
-          require_once(dirname(__FILE__) . "/../vendor/csstidy/css_optimiser.php");
+          require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
           $css = new csstidy();
           $css->parse($raw);
           $raw = $css->print->plain();
