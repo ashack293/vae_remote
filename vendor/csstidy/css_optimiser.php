@@ -147,7 +147,7 @@ if (stristr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml')) {
 	$http_accept = 'text/html';
 }
 
-header('Content-Type: '.$http_accept.'; charset=utf-8');
+header('Content-Type: '.$http_accept); //.'; charset=utf-8');
 
 if ($http_accept === 'text/html') {
 
