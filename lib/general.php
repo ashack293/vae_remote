@@ -849,7 +849,7 @@ function _vae_load_settings() {
     }
     $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
   }
-  if (_vae_ssl() && $_SERVER['HTTP_HOST'] == "www.gagosian.com") {
+  if (_vae_ssl() && $_SERVER['HTTP_HOST'] == $_VAE['settings']['ssl_host']) {
     $_VAE['config']['cdn_url'] = "https://" . $_VAE['settings']['subdomain'] . ".vaesite.com/";
     $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
   }
@@ -1589,8 +1589,8 @@ function _vae_require_ssl() {
   $_VAE['cant_cache'] = "ssl_required";
   if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com") && !$_SESSION['__v:pre_ssl_host']) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
-    if ($_VAE['settings']['subdomain'] == "gagosian" && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
-      $domain = "www.gagosian.com";
+    if (strlen($_VAE['settings']['ssl_host']) && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
+      $domain = $_VAE['settings']['ssl_host'];
     } elseif ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_ssl'];
     } elseif ($_VAE['settings']['domain_ssl']) {
