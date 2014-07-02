@@ -632,8 +632,8 @@ function _vae_inject_assets($out) {
           $raw .= $content . "\n";
         }
         if ($_VAE['asset_types'][$group] == "js") {
-          require_once(dirname(__FILE__) . "/../vendor/jsmin.php");
-          $raw = JSMin::minify($raw);
+          require_once(dirname(__FILE__) . "/../vendor/JShrink-1.0.0/src/JShrink/Minifier.php");
+          $raw = \JShrink\Minifier::minify($raw);
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
           $css = new csstidy();
