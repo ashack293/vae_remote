@@ -966,6 +966,7 @@ function _vaeql_function($function, $args) {
 
 function _vaeql_path($path) {
   global $_VAE;
+  _vae_debug($path);
   $ret = (string)_vae_fetch($path, $_VAE['vaeql_context']);
   return $ret;
 }
