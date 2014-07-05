@@ -1063,6 +1063,7 @@ function _vae_render_select($a, &$tag, $context, &$callback, $render_context) {
     }
   }
   if (!strlen($a['value'])) $a['value'] = $a['default'];
+  _vae_debug($a);
   $out = _vae_render_tags($tag, $context, $render_context);
   if ((is_string($a['options']) && strstr($a['options'], "<option")) || count($a['options']) || strlen($out)) {
     if (is_string($a['options'])) {
