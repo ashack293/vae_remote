@@ -968,7 +968,7 @@ function _vaeql_path($path) {
   global $_VAE;
   _vae_debug($path);
   $ret = (string)_vae_fetch($path, $_VAE['vaeql_context']);
-  _vae_debug("and returning: " . $ret);
+  _vae_debug("and returning: " . $ret->totalItems());
   return $ret;
 }
 
