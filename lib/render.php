@@ -1074,7 +1074,7 @@ function _vae_render_select($a, &$tag, $context, &$callback, $render_context) {
           $k = $v[0];
           $v = $v[1];
         }
-        $o .= '<option value="' . $k . '"' . ($a['value'] == $k ? ' selected="selected"' : '') . '>' . $v . '</option>';
+        $o .= '<option value="' . $k . '"' . ((string)$a['value'] == $k ? ' selected="selected"' : '') . '>' . $v . '</option>';
       }
       $out = $o . $out;
     }
