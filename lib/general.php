@@ -643,6 +643,7 @@ function _vae_inject_assets($out) {
 
               $raw = stream_get_contents($pipes[1]);
               fclose($pipes[1]);
+              proc_close($process);
           }
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
