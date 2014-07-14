@@ -632,11 +632,11 @@ function _vae_inject_assets($out) {
           $raw .= $content . "\n";
         }
         if ($_VAE['asset_types'][$group] == "js") {
-            $js_out = _vae_rest($raw, "assets/compress", "js");
-            if ($out != "BAD" && $out != "") {
-              $raw=$js_out;
-            }
-            unset($js_out); // free up
+          $js_out = _vae_rest($raw, "assets/compress", "js");
+          if ($out != "BAD" && $out != "") {
+            $raw=$js_out;
+          }
+          unset($js_out); // free up
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
           $css = new csstidy();
