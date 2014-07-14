@@ -632,19 +632,11 @@ function _vae_inject_assets($out) {
           $raw .= $content . "\n";
         }
         if ($_VAE['asset_types'][$group] == "js") {
-          $descriptorspec = array(
-            0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-          );
-          $process = proc_open('uglifyjs', $descriptorspec, $pipes);
-          if (is_resource($process)) {
-              fwrite($pipes[0], $raw);
-              fclose($pipes[0]);
-
-              $raw = stream_get_contents($pipes[1]);
-              fclose($pipes[1]);
-              proc_close($process);
-          }
+            $js_out = _vae_rest($raw, "assets/compress", "js");
+            if ($out != "BAD" && $out != "") {
+              $raw=$js_out;
+            }
+            unset($js_out); // free up
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
           $css = new csstidy();
