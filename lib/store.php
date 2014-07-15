@@ -67,7 +67,8 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
     $notes = (string)_vae_fetch_without_errors($a['notes_field'], $item);
   }
   if (strlen($a['weight'])) {
-    $weight = (float)$a['weight'];
+    $weight = (string)$a['weight'];
+    $weight = (float)$weight;
   } elseif ($a['weight_field']) {
     $weight = (string)_vae_fetch_without_errors($a['weight_field'], $item);
   }
