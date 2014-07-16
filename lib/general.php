@@ -816,6 +816,7 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
 }
 
 function _vae_kvstore_empty() {
+  global $_VAE;
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
 }
 
