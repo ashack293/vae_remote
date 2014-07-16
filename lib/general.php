@@ -815,6 +815,10 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   }
 }
 
+function _vae_kvstore_empty() {
+  _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
+}
+
 function _vae_kvstore_v_exists($v) {
   $q = _vae_sql_q("SELECT `k` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "' AND `v`='" . _vae_sql_e($v) . "'");
   if ($r = _vae_sql_r($q)) {
@@ -1365,6 +1369,9 @@ function _vae_remote() {
     _vae_load_settings();
     if ($_REQUEST['version']) {
       echo "201 Version " . $_VAE['version'];
+    } elseif ($_REQUEST['kvstore_empty']) {
+      _vae_kvstore_empty();
+      echo "200 Success";
     } elseif ($_REQUEST['hook']) {
       if ($_REQUEST['hook'] == "settings:updated") {
         _vae_update_settings_feed();
