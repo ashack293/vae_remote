@@ -139,6 +139,8 @@ function _vae_configure_php() {
     _vae_die();
   }
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
+  _vae_set_default_config();
+  _vae_load_settings();
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
     if ($_REQUEST['__get_yield']) {

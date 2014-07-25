@@ -49,16 +49,12 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/vaedata.php");
   
   /* Initialize */
-  _vae_set_default_config();
   unset($_SESSION['__v:flash_new']);
   
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
   if ($_REQUEST['set_login']) _vae_set_login();
   _vae_tick("Vae Startup", true);
-  
-  /* Load Settings */
-  _vae_load_settings();  
   
   /* Dispatch request */
   if ($_REQUEST['__status']) {
