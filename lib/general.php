@@ -141,7 +141,6 @@ function _vae_configure_php() {
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
-    die(serialize($_REQUEST));
     if ($_REQUEST['__get_yield']) {
       $_VAE['yield'] = _vae_kvstore_read("_proxy_yield_" . $_REQUEST['__proxy']);
     }
