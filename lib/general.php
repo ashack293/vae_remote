@@ -141,12 +141,12 @@ function _vae_configure_php() {
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
+    if ($_REQUEST['__get_yield']) {
+      $_VAE['yield'] = _vae_kvstore_read("_proxy_yield_" . $_REQUEST['__proxy']);
+    }
     if ($_REQUEST['__get_request_data']) {
       $_POST = unserialize(_vae_kvstore_read("_proxy_post_" . $_REQUEST['__proxy']));
       $_REQUEST = unserialize(_vae_kvstore_read("_proxy_request_" . $_REQUEST['__proxy']));
-    }
-    if ($_REQUEST['__get_yield']) {
-      $_VAE['yield'] = _vae_kvstore_read("_proxy_yield_" . $_REQUEST['__proxy']);
     }
     $_VAE['from_proxy'] = true;
   }
