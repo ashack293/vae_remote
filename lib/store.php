@@ -1640,7 +1640,8 @@ function _vae_store_shipping_methods() {
 }
 
 function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {
-  if ($country != "US") return $city;
+  global $_VAE;
+  if ($country != "US" && $_VAE['settings']['subdomain'] != "gagosiandev") return $city;
   if ($state == "AE" || $state == "AP" || $state == "AA") return $city;
   $xml = '<?xml version="1.0"?>
   <AccessRequest>
