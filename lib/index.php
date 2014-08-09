@@ -32,8 +32,6 @@ if (_vae_should_load()) {
     
   /* Bring in the rest of Vae */
   require_once(dirname(__FILE__) . "/vae_exception.php");
-  _vae_configure_php();
-  _vae_tick("session startup");
   require_once(dirname(__FILE__) . "/callback.php");
   require_once(dirname(__FILE__) . "/compat.php");
   require_once(dirname(__FILE__) . "/constants.php");
@@ -47,7 +45,11 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/store.php");
   require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/vaedata.php");
-  
+
+  /* Configure PHP */
+  _vae_configure_php();
+  _vae_tick("session startup");
+
   /* Initialize */
   unset($_SESSION['__v:flash_new']);
   
