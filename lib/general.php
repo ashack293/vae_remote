@@ -634,7 +634,7 @@ function _vae_inject_assets($out) {
           $raw .= $content . "\n";
         }
         if ($_VAE['asset_types'][$group] == "js") {
-          $js_out = _vae_rest(array('raw' => $raw), "assets/compress", "js");
+          $js_out = _vae_rest(array('raw' => $raw), "api/site/v1/compress", "js");
           if ($out != "BAD" && $out != "") {
             $raw=$js_out;
           }
@@ -906,7 +906,7 @@ function _vae_local($filename = "") {
 
 function _vae_local_authenticate($base_key) {
   global $_VAE;
-  $out = _vae_rest(array(), "subversion/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
+  $out = _vae_rest(array(), "api/site/v1/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
     _vae_kvstore_write($base_key . "auth", $out, 1);
     if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) {
@@ -1753,14 +1753,14 @@ function _vae_set_initial_context() {
 
 function _vae_set_login() {
   global $_VAE;
-  $res = _vae_simple_rest("/feed/authenticate?secret_key=" . $_VAE['config']['secret_key'] . "&remote_access_key=" . $_REQUEST['remote_access_key']);
+  $res = _vae_simple_rest("/api/site/v1/authenticate?secret_key=" . $_VAE['config']['secret_key'] . "&remote_access_key=" . $_REQUEST['remote_access_key']);
   if (preg_match('/601 Authorized\. user_id=([0-9]*)/', $res, $output)) {
     foreach ($_SESSION as $k => $v) {
       unset($_SESSION[$k]);
     }
     $_SESSION['__v:user_id'] = $output[1];
     if ($_REQUEST['customer_id']) {
-      if ($raw = _vae_rest(array(), "customers/show/" . $_REQUEST['customer_id'], "customer", $tag, null, true)) {
+      if ($raw = _vae_rest(array(), "api/site/v1/customers/show/" . $_REQUEST['customer_id'], "customer", $tag, null, true)) {
         _vae_store_load_customer($raw);
       }
     }
@@ -1994,7 +1994,7 @@ function _vae_update_settings_feed() {
   $retry = 0;
   do {
     $retry++;
-    $feed_data = _vae_simple_rest("/feed/settings?secret_key=" . $_VAE['config']['secret_key']);
+    $feed_data = _vae_simple_rest("/api/site/v1/settings?secret_key=" . $_VAE['config']['secret_key']);
     $feed_data = html_entity_decode($feed_data);
   } while (!strstr($feed_data, "?>") && $retry < 3);
   if (strstr($feed_data, "?>")) {

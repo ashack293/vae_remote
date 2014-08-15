@@ -47,7 +47,7 @@ function _vae_users_callback_logout($tag) {
 }
 
 function _vae_users_callback_register($tag) {
-  $ret = _vae_rest(array(), "content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : ""), "content", $tag);
+  $ret = _vae_rest(array(), "api/site/v1/content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : ""), "content", $tag);
   if ($ret) {
     $data = _vae_array_from_rails_xml(simplexml_load_string($ret));
     $_SESSION['__v:logged_in'] = array('path' => $tag['attrs']['path'], 'id' => $data['id']);

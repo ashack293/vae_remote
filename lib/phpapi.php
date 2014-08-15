@@ -42,41 +42,41 @@ function vae_create($structure_id, $row_id, $data) {
 
 function vae_customer($id) {
   if (!is_numeric($id)) _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
-  $raw = _vae_rest(array(), "customers/show/" . $id, "customer", array());
+  $raw = _vae_rest(array(), "api/site/v1/customers/show/" . $id, "customer", array());
   if ($raw == false) return false;
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
 }
 
 function vae_customer_create_address($customer_id, $address) {
-  $raw = _vae_rest($address, "customer_addresses/create/$customer_id", "customer_address");
+  $raw = _vae_rest($address, "api/site/v1/customer_addresses/create/$customer_id", "customer_address");
   if ($raw == false) return false;
   return _vae_array_from_rails_xml(simplexml_load_string($raw), true);
 }
 
 function vae_customer_destroy_address($id) {
-  $ret = _vae_rest(array(), "customer_addresses/destroy/$id");
+  $ret = _vae_rest(array(), "api/site/v1/customer_addresses/destroy/$id");
   return ($ret != false);
 }
 
 function vae_customer_list() {
-  $raw = _vae_rest(array(), "customers/list");
+  $raw = _vae_rest(array(), "api/site/v1/customers");
   if ($raw == false) return false;
   return _vae_array_from_rails_xml(simplexml_load_string($raw), true);
 }
 
 function vae_customer_create_or_update($data) {
-  $raw = _vae_rest($data, "customers/create_or_update", "customer");
+  $raw = _vae_rest($data, "api/site/v1/customers/create_or_update", "customer");
   if ($raw == false) return false;
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
 }
 
 function vae_customer_destroy($id) {
-  $ret = _vae_rest(array(), "customers/destroy/$id");
+  $ret = _vae_rest(array(), "api/site/v1/customers/destroy/$id");
   return ($ret != false);
 }
 
 function vae_customer_order_ids($id) {
-  $raw = _vae_rest(array(), "customers/orders/$id");
+  $raw = _vae_rest(array(), "api/site/v1/customers/$id/orders");
   if ($raw == false) return false;
   $arr = (array)simplexml_load_string($raw);
   return $arr['fixnum'];
@@ -108,7 +108,7 @@ function vae_enqueue_job() {
   if(func_num_args() == 0 || !file_exists($_SERVER['DOCUMENT_ROOT'] . "/" . func_get_arg(0)))
     _vae_error("Called vae_enqueue_job() with an invalid filename.");
   $data = array('data' => json_encode(func_get_args()), 'docroot' => $_SERVER['DOCUMENT_ROOT']);
-  $ret = _vae_rest($data, "feed/enqueue_job", "data");
+  $ret = _vae_rest($data, "api/site/v1/enqueue_job", "data");
   return ($ret != false);
 }
 
@@ -345,17 +345,17 @@ function vae_store_clear_discount_code() {
 }
 
 function vae_store_create_coupon_code($data) {
-  $ret = _vae_rest($data, "store_discount_codes/create", "store_discount_code");
+  $ret = _vae_rest($data, "api/site/v1/store_discount_codes/create", "store_discount_code");
   return ($ret != false);
 }
 
 function vae_store_create_order_comment($order_id, $data) {
-  $ret = _vae_rest($data, "store/create_comment/" . $order_id, "comment");
+  $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/create_comment", "comment");
   return ($ret != false);
 }
 
 function vae_store_create_tax_rate($data) {
-  $ret = _vae_rest($data, "store_tax_rates/create", "store_tax_rate");
+  $ret = _vae_rest($data, "api/site/v1/store_tax_rates/create", "store_tax_rate");
   return ($ret != false);
 }
 
@@ -374,18 +374,18 @@ function vae_store_current_user_tags($tag = null) {
 
 function vae_store_destroy_coupon_code($id = "") {
   if (!strlen($id)) _vae_error("You called <span class='c'>vae_destroy_coupon_code()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest(array(), "store_discount_codes/destroy/" . $id, "store_discount_code");
+  $ret = _vae_rest(array(), "api/site/v1/store_discount_codes/destroy/" . $id, "store_discount_code");
   return ($ret != false);
 }
 
 function vae_store_destroy_tax_rate($id = "") {
   if (!strlen($id)) _vae_error("You called <span class='c'>vae_destroy_tax_rate()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest(array(), "store_tax_rates/destroy/" . $id, "store_tax_rate");
+  $ret = _vae_rest(array(), "api/site/v1/store_tax_rates/destroy/" . $id, "store_tax_rate");
   return ($ret != false);
 }
 
 function vae_store_destroy_all_tax_rates() {
-  $ret = _vae_rest(array(), "store_tax_rates/destroy_all", "store_tax_rate");
+  $ret = _vae_rest(array(), "api/site/v1/store_tax_rates/destroy_all", "store_tax_rate");
   return ($ret != false);
 }
 
@@ -408,7 +408,7 @@ function vae_store_discount_code($code = null, $force = false) {
 }
 
 function vae_store_find_coupon_code($code) {
-  if ($raw = _vae_rest(array(), "store_discount_codes/verify/" . trim($code), "customer")) {
+  if ($raw = _vae_rest(array(), "api/site/v1/store_discount_codes/verify/" . trim($code), "customer")) {
     if ($raw == "BAD") {
       $data = false;
     } else {
@@ -427,7 +427,7 @@ function vae_store_orders($finders = null) {
   if ($finders['ids'] && (is_array($finders['ids']))) {
     $finders['ids'] = implode(",", $finders['ids']);
   }
-  $raw = _vae_rest($finders, "store/orders", "order", array(), array(), true);
+  $raw = _vae_rest($finders, "api/site/v1/store/orders", "order", array(), array(), true);
   return _vae_store_transform_orders($raw);
 }
 
@@ -505,27 +505,27 @@ function vae_store_update_cart_item($id, $data) {
 
 function vae_store_update_coupon_code($id, $data) {
   if (!strlen($id)) _vae_error("You called <span class='c'>vae_store_update_coupon_code()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest($data, "store_discount_codes/update/" . $id, "store_discount_code");
+  $ret = _vae_rest($data, "api/site/v1/store_discount_codes/update/" . $id, "store_discount_code");
   return ($ret != false);
 }
 
 function vae_store_update_tax_rate($id, $data) {
   if (!strlen($id)) _vae_error("You called <span class='c'>vae_store_update_tax_rate()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest($data, "store_tax_rates/update/" . $id, "store_tax_rate");
+  $ret = _vae_rest($data, "api/site/v1/store_tax_rates/update/" . $id, "store_tax_rate");
   return ($ret != false);
 }
 
 function vae_store_update_order($order_id, $attributes = null) {
   if (!is_array($attributes)) return false;
   if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest($attributes, "store/update/" . $order_id, "store_order", array(), null, true);
+  $ret = _vae_rest($attributes, "api/site/v1/store/orders/$order_id/update", "store_order", array(), null, true);
   return ($ret != false);
 }
 
 function vae_store_update_order_status($order_id, $status) {
   if ($status != "Processing" && $status != "Ordered" && $status != "Shipped") return false;
   if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order_status()</span> but didn't provide a proper ID.");
-  $ret =_vae_rest(array(), "store/update_status/" . $order_id . "?status=" . $status, "order", null, null, true);
+  $ret =_vae_rest(array(), "api/site/v1/store/orders/$order_id/update_status?status=" . $status, "order", null, null, true);
   return ($ret != false);
 }
 

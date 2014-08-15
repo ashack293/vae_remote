@@ -46,7 +46,7 @@ function _vae_build_xml($parent, $data) {
 
 function _vae_create($structure_id, $row_id, $data, $hide_errors = false) {
   global $_VAE;
-  $url = "content/create/" . $structure_id . "/" . $row_id;
+  $url = "api/site/v1/content/create/" . $structure_id . "/" . $row_id;
   if ($data['publish'] === false) $url .= "?row[disabled]=1";
   $raw = _vae_rest($data, $url, "content", null, null, $hide_errors);
   if ($raw == false) return false;
@@ -56,7 +56,7 @@ function _vae_create($structure_id, $row_id, $data, $hide_errors = false) {
 }
 
 function _vae_destroy($row_id) {
-  $raw = _vae_rest(null, "content/destroy/" . $row_id, "content");
+  $raw = _vae_rest(null, "api/site/v1/content/destroy/" . $row_id, "content");
   if ($raw == false) return false;
   return true;
 }
@@ -188,7 +188,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
 function _vae_update($id, $data, $update_frontend = true) {
   global $_VAE;
   $errors = array();
-  if (_vae_rest($data, "content/update/" . $id . ($update_frontend ? "" : "?no_hook=true"), "content", null, $errors, true) == false) {
+  if (_vae_rest($data, "api/site/v1/content/update/" . $id . ($update_frontend ? "" : "?no_hook=true"), "content", null, $errors, true) == false) {
     return false;
   }
   $_VAE['__vae_update_ct']++;

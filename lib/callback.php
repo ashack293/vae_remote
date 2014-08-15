@@ -1,7 +1,7 @@
 <?php
 
 function _vae_callback_create($tag) {
-  $url = "content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : "");
+  $url = "api/site/v1/content/create/" . $tag['callback']['structure_id'] . ($tag['callback']['row_id'] > 0 ? "/" . $tag['callback']['row_id'] : "");
   if ($tag['callback']['unpublished']) $url .= "?row[disabled]=1";
   if ($tag['callback']['structure_id'] && (_vae_rest(array(), $url, "content", $tag))) {
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
@@ -94,7 +94,7 @@ function _vae_callback_newsletter($tag) {
 }
 
 function _vae_callback_update($tag) {
-  if (_vae_rest(array(), "content/update/" . $tag['callback']['row_id'], "content", $tag)) {
+  if (_vae_rest(array(), "api/site/v1/content/update/" . $tag['callback']['row_id'], "content", $tag)) {
     _vae_flash('Saved.', 'msg', $tag['attrs']['flash']);
     if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
   }
