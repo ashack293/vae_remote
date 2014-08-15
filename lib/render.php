@@ -526,7 +526,7 @@ function _vae_render_file_field($a, &$tag, $context, &$callback, $render_context
 function _vae_render_fileurl($a, &$tag, $context, &$callback, $render_context) {
   $file = (string)_vae_fetch($a['path'], $context);
   $e = explode("-", $file);
-  return (is_numeric($e[0]) ? vae_file($file) : $file);
+  return (is_numeric($e[0]) ? _vae_absolute_data_url() . vae_file($file) : $file);
 }
 
 function _vae_render_flash($a, &$tag, $context, &$callback = null, $render_context) {
