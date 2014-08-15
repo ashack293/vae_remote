@@ -4,7 +4,7 @@ function vae_asset($id, $width = "", $height = "", $quality = "", $preserve_file
   if (!strlen($id)) return "";
   $iden = $id . "-" . $width . "-" . $height;
   if ($quality) $iden .= "-qual-" . $quality;
-  return _vae_file($iden, $id, "assets/get/" . $id, "&direct=1" . ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($quality ? "&quality=" . $quality : ""), $preserve_filename);
+  return _vae_file($iden, $id, "api/site/v1/asset/" . $id, "&direct=2" . ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($quality ? "&quality=" . $quality : ""), $preserve_filename);
 }
 
 function vae_cache($key, $timeout = 3600, $function = "", $global = false) {
@@ -119,7 +119,7 @@ function vae_errors() {
 
 function vae_file($id, $preserve_filename = false) {
   if (!strlen($id)) return "";
-  return _vae_file($id . "-file", $id, "file/" . $id, "", $preserve_filename);
+  return _vae_file($id . "-file", $id, "api/site/v1/file/" . $id, "", $preserve_filename);
 }
 
 function vae_flash($message, $type = 'msg') {
@@ -134,7 +134,7 @@ function vae_image($id, $width = "", $height = "", $image_size = "", $grow = "",
   if ($image_size) $iden .= "-" . $image_size;
   if ($quality) $iden .= "-q" . $quality;
   if ($grow) $iden .= "-g";
-  return _vae_file($iden, $id, "image/" . $id, ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($image_size ? "&size=" . rawurlencode($image_size) : "") . ($quality ? "&quality=" . $quality : "") . ($grow ? "&grow=1" : ""), $preserve_filename);
+  return _vae_file($iden, $id, "api/site/v1/image/" . $id, ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($image_size ? "&size=" . rawurlencode($image_size) : "") . ($quality ? "&quality=" . $quality : "") . ($grow ? "&grow=1" : ""), $preserve_filename);
 }
 
 function _vae_image_filter_prepare($image, $iden_string, $func, $internal) {
@@ -299,7 +299,7 @@ function vae_secure_token($name) {
 function vae_sizedimage($id, $size, $preserve_filename = false) {
   $id = trim($id);
   if (!strlen($id)) return "";
-  return _vae_file($id . "-sized-" . $size, $id, "image/" . $id, "&size=" . urlencode($size), $preserve_filename);
+  return _vae_file($id . "-sized-" . $size, $id, "api/site/v1/image/" . $id, "&size=" . urlencode($size), $preserve_filename);
 }
 
 function vae_store_add_item_to_cart($id, $option_id = null, $qty = 1, $a = null, $notes = "") {
@@ -624,7 +624,7 @@ function vae_users_current_user() {
 }
 
 function vae_video($id, $video_size = "") {
-  return _vae_file($id . "-video-" . $video_size, $id, "file/" . $id, ($video_size ? "&size=" . urlencode($video_size) : ""));
+  return _vae_file($id . "-video-" . $video_size, $id, "api/site/v1/file/" . $id, ($video_size ? "&size=" . urlencode($video_size) : ""));
 }
 
 function vae_watermark($image, $watermark_image, $vertical_align = "", $align = "", $vertical_padding = "", $horizontal_padding = "") {
