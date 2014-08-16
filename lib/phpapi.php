@@ -408,6 +408,7 @@ function vae_store_discount_code($code = null, $force = false) {
 }
 
 function vae_store_find_coupon_code($code) {
+  if (!strlen($code)) return false;
   if ($raw = _vae_rest(array(), "api/site/v1/store_discount_codes/verify/" . trim($code), "customer")) {
     if ($raw == "BAD") {
       $data = false;
