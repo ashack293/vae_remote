@@ -1,6 +1,6 @@
 <?php
 
-$dir = "/app/vae-remote/deploy/current/lib";
+$dir = dirname(__FILE__);
 require($dir . "/general.php");
 
 if (!strlen($argv[1])) die("No subdomain provided");
