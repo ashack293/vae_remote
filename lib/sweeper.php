@@ -4,7 +4,6 @@ $dir = "/app/vae-remote/deploy/current/lib";
 require($dir . "/general.php");
 
 if (!strlen($argv[1])) die("No subdomain provided");
-var_dump($argv);
 if (!is_numeric($argv[2])) die("No fsnum provided");
 
 $fsnum = $argv[2];
