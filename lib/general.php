@@ -1818,6 +1818,7 @@ function _vae_sql_iid() {
 
 function _vae_sql_lock() {
   global $_VAE;
+  if ($_REQUEST['__debug']) return true;
   $LOCK_TIME = 1000000;
   $old_locks_removed = false;
   for ($i = 0; $i < 60*1000*1000/$LOCK_TIME; $i++) {
