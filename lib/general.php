@@ -620,6 +620,7 @@ function _vae_inject_assets($out) {
           require_once(dirname(__FILE__)."/haml.php");
           $deps = _vae_sass_deps($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset));
           foreach($deps as $filename => $hash){
+            _vae_dependency_add($filename, $hash);
             $iden .= $hash;
           }
         }
