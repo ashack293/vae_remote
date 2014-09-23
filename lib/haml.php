@@ -40,7 +40,7 @@ function _vae_sass_deps($sass, $include_directory) {
   preg_match_all('/@import (.*)/', $sass, $matches, PREG_SET_ORDER);
   if (count($matches)) {
     foreach ($matches as $match) {
-      $filename = str_replace(array("'", '"'), "", $match[1]);
+      $filename = str_replace(array("'", '"',';'), "", $match[1]);
       if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
         if (!strstr($filename, ".")) {
