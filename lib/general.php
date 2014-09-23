@@ -622,6 +622,7 @@ function _vae_inject_assets($out) {
           foreach($deps as $filename => $hash){
             _vae_dependency_add($filename, $hash);
             $iden .= $hash;
+            _vae_debug('dependency: '.$filename.' md5: '.$hash.' for: '.$asset);
           }
         }
       }
