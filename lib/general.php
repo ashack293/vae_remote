@@ -615,6 +615,14 @@ function _vae_inject_assets($out) {
         $md5 = @md5_file($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
         _vae_dependency_add($asset, $md5);
         $iden .= $md5;
+        if (strstr($asset, ".sass") || strstr($asset, ".scss")) {
+          $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
+          require_once(dirname(__FILE__)."/haml.php");
+          $deps = _vae_sass_deps($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset));
+          foreach($deps as $filename => $hash){
+            $iden .= $hash;
+          }
+        }
       }
       $iden = "asset" . md5($iden);
       if ($cache = _vae_kvstore_read($iden)) {
