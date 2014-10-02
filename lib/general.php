@@ -644,7 +644,7 @@ function _vae_inject_assets($out) {
         }
         if ($_VAE['asset_types'][$group] == "js") {
           $js_out = _vae_rest(array('raw' => $raw), "api/site/v1/compress", "js");
-          if ($out != "BAD" && $out != "") {
+          if ($js_out != "BAD" && $js_out != "") {
             $raw=$js_out;
           }
           unset($js_out); // free up
