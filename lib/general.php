@@ -1978,6 +1978,7 @@ function _vae_sweep_data_dir() {
     echo "deleting $file<br />";
     unlink();
   }
+  touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
   echo "done";
   flush();
   die();
