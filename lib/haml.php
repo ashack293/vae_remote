@@ -44,11 +44,10 @@ function _vae_sass_deps($sass, $include_directory) {
       if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
         if (!strstr($filename, ".")) {
-          /* $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
+          $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
           if (file_exists($inc_dir . $tmp_filename . ".scss")) {
             $filename = $tmp_filename . ".scss";
-          }else */
-          if (file_exists($inc_dir . $filename . ".scss")) {
+          }elseif (file_exists($inc_dir . $filename . ".scss")) {
             $filename = $filename . ".scss";
           } else {
             $filename = $filename . ".sass";
@@ -61,6 +60,28 @@ function _vae_sass_deps($sass, $include_directory) {
       }
     }
   }
+
+  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
+  $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
+  $deps = _vae_kvstore_write($cache_key,serialize($deps));
+
+  return $deps;
+}
+
+function _vae_sass_deps_check($sass, $include_directory){
+  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
+  $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
+  $deps = unserialize(_vae_kvstore_read($cache_key));
+  if (isset($deps) && count($deps)) {
+    foreach ($deps as $filename => $hash) {
+      if (@md5_file($filename) != $hash) {
+        return _vae_sass_deps($sass, $include_directory);
+      }
+    }
+  }else{
+    return _vae_sass_deps($sass, $include_directory);
+  }
+
   return $deps;
 }
 
