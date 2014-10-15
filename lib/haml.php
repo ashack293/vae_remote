@@ -27,7 +27,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
     } else {
       $css = $client->sass($sass, $include_directory);
     }
-    $deps = _vae_sass_deps($sass, $include_directory);
+    $deps = _vae_sass_deps_check($sass, $include_directory);
     memcache_set($_VAE['memcached'], $cache_key, array($css, $deps));
   }
   if ($header) Header("Content-Type: text/css");
@@ -36,6 +36,10 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
 
 function _vae_sass_deps($sass, $include_directory) {
   global $_VAE;
+  
+  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
+  $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
+
   $deps = array();
   preg_match_all('/@import (.*)/', $sass, $matches, PREG_SET_ORDER);
   if (count($matches)) {
@@ -43,14 +47,11 @@ function _vae_sass_deps($sass, $include_directory) {
       $filename = str_replace(array("'", '"',';'), "", $match[1]);
       if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
-        if (!strstr($filename, ".") && !stristr($filename,'vendor')) {
-          /*
+        if (!strstr($filename, ".") && !stristr($filename,'vendor/') && !stristr($filename,'vendors/')) {
           $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
           if (file_exists($inc_dir . $tmp_filename . ".scss")) {
             $filename = $tmp_filename . ".scss";
-          }else
-          */
-          if (file_exists($inc_dir . $filename . ".scss")) {
+          }elseif (file_exists($inc_dir . $filename . ".scss")) {
             $filename = $filename . ".scss";
           } else {
             $filename = $filename . ".sass";
@@ -64,8 +65,6 @@ function _vae_sass_deps($sass, $include_directory) {
     }
   }
 
-  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
-  $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
   _vae_kvstore_write($cache_key,serialize($deps));
 
   return $deps;
@@ -75,7 +74,8 @@ function _vae_sass_deps_check($sass, $include_directory){
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
   $deps = unserialize(_vae_kvstore_read($cache_key));
-  if (isset($deps) && count($deps)) {
+
+  if (isset($deps) && $deps && count($deps) > 0) {
     foreach ($deps as $filename => $hash) {
       if (@md5_file($filename) != $hash) {
         return _vae_sass_deps($sass, $include_directory);
