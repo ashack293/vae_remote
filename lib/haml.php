@@ -57,12 +57,13 @@ function _vae_sass_deps($sass, $include_directory, $root_item = false) {
           } else {
             $filename = $filename . ".sass";
           }
+
+          $filename = $inc_dir . $filename;
+          $sass = @file_get_contents($filename);
+          $deps[$filename] = md5($sass);
+          $nested_dir = dirname($filename);
+          $deps = array_merge($deps, _vae_sass_deps_check($sass, $nested_dir,false));
         }
-        $filename = $inc_dir . $filename;
-        $sass = @file_get_contents($filename);
-        $deps[$filename] = md5($sass);
-        $nested_dir = dirname($filename);
-        $deps = array_merge($deps, _vae_sass_deps_check($sass, $nested_dir,false));
       }
     }
   }
