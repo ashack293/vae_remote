@@ -618,7 +618,7 @@ function _vae_inject_assets($out) {
         if (strstr($asset, ".sass") || strstr($asset, ".scss")) {
           $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
           require_once(dirname(__FILE__)."/haml.php");
-          $deps = _vae_sass_deps_check($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset));
+          $deps = _vae_sass_deps_check($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset), true);
           foreach($deps as $filename => $hash){
             _vae_dependency_add($filename, $hash);
             $iden .= $hash;
