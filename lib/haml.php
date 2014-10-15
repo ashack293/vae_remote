@@ -43,7 +43,7 @@ function _vae_sass_deps($sass, $include_directory) {
       $filename = str_replace(array("'", '"',';'), "", $match[1]);
       if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
-        if (!strstr($filename, ".")) {
+        if (!strstr($filename, ".") && !stristr($filename,'vendor')) {
           $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
           if (file_exists($inc_dir . $tmp_filename . ".scss")) {
             $filename = $tmp_filename . ".scss";
@@ -63,7 +63,7 @@ function _vae_sass_deps($sass, $include_directory) {
 
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory).".map";
-  $deps = _vae_kvstore_write($cache_key,serialize($deps));
+  _vae_kvstore_write($cache_key,serialize($deps));
 
   return $deps;
 }
