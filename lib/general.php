@@ -620,20 +620,15 @@ function _vae_inject_assets($out) {
           require_once(dirname(__FILE__)."/haml.php");
           $deps = _vae_sass_deps_check($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset), true);
           foreach($deps as $filename => $hash){
-            _vae_debug('adding dependency: '.$filename.' md5: '.$hash.' asset: '.$asset);
             _vae_dependency_add($filename, $hash);
             $iden .= $hash;
           }
         }
       }
-      _vae_debug('iden cat: '.$iden);
       $iden = "asset" . md5($iden.$_VAE['settings']['subdomain']); // added subdomain to prevent cross domain conflicts
-      _vae_debug('= iden: '.$iden);
       if ($cache = _vae_kvstore_read($iden)) {
-        _vae_debug('+ cache hit ');
         $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
-        _vae_debug('- cache miss ');
         $raw = "";
         foreach ($assets as $asset) {
           $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
@@ -826,17 +821,13 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   global $_VAE;
   if($expire_interval == null) $expire_interval = 90;
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "'");
-  _vae_debug('_vae_kvstore_write calling delete for key:'.$key);
   if ($value != null) {
-    _vae_debug('_vae_kvstore_write calling insert for key:'.$key);
-    _vae_debug('insert: '."INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')");
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
   }
 }
 
 function _vae_kvstore_empty() {
   global $_VAE;
-  _vae_debug('empty keys');
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
 }
 
@@ -1956,7 +1947,6 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
     _vae_write_file($newname, $file);
   }
   if ($iden) {
-    _vae_debug('_vae_store_file calling _vae_kvstore_write for: '. $iden. ' newname: '. $newname);
     _vae_kvstore_write($iden, $newname, null, 1);
   }
   return $newname;
