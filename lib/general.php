@@ -826,7 +826,9 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   global $_VAE;
   if($expire_interval == null) $expire_interval = 90;
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "'");
+  _vae_debug('_vae_kvstore_write calling delete for key:'.$key);
   if ($value != null) {
+    _vae_debug('_vae_kvstore_write calling insert for key:'.$key);
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
   }
 }
@@ -1952,7 +1954,7 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
     _vae_write_file($newname, $file);
   }
   if ($iden) {
-    _vae_debug('_vae_store_file calling _vae_kvstore_write for: '. $iden);
+    _vae_debug('_vae_store_file calling _vae_kvstore_write for: '. $iden. ' newname: '. $newname);
     _vae_kvstore_write($iden, $newname, null, 1);
   }
   return $newname;
