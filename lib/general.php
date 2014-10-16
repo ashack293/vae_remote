@@ -626,10 +626,14 @@ function _vae_inject_assets($out) {
           }
         }
       }
+      _vae_debug('iden cat: '.$iden);
       $iden = "asset" . md5($iden);
+      _vae_debug('= iden: '.$iden);
       if ($cache = _vae_kvstore_read($iden)) {
+        _vae_debug('+ cache hit ');
         $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
+        _vae_debug('- cache miss ');
         $raw = "";
         foreach ($assets as $asset) {
           $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
