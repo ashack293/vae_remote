@@ -1951,7 +1951,10 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
   } else {
     _vae_write_file($newname, $file);
   }
-  if ($iden) _vae_kvstore_write($iden, $newname, null, 1);
+  if ($iden) {
+    _vae_debug('_vae_store_file calling _vae_kvstore_write for: '. $iden);
+    _vae_kvstore_write($iden, $newname, null, 1);
+  }
   return $newname;
 }
 
