@@ -627,7 +627,7 @@ function _vae_inject_assets($out) {
         }
       }
       _vae_debug('iden cat: '.$iden);
-      $iden = "asset" . md5($iden);
+      $iden = "asset" . md5($iden.$_VAE['settings']['subdomain']); // added subdomain to prevent cross domain conflicts
       _vae_debug('= iden: '.$iden);
       if ($cache = _vae_kvstore_read($iden)) {
         _vae_debug('+ cache hit ');
