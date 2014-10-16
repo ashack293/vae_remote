@@ -829,12 +829,14 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   _vae_debug('_vae_kvstore_write calling delete for key:'.$key);
   if ($value != null) {
     _vae_debug('_vae_kvstore_write calling insert for key:'.$key);
+    _vae_debug('insert: '."INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')");
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
   }
 }
 
 function _vae_kvstore_empty() {
   global $_VAE;
+  _vae_debug('empty keys');
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
 }
 
