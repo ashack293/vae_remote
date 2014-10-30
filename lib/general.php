@@ -618,14 +618,14 @@ function _vae_inject_assets($out) {
         if (strstr($asset, ".sass") || strstr($asset, ".scss")) {
           $content = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $asset);
           require_once(dirname(__FILE__)."/haml.php");
-          $deps = _vae_sass_deps($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset));
+          $deps = _vae_sass_deps_check($content,dirname($_SERVER['DOCUMENT_ROOT'] . "/" . $asset), true);
           foreach($deps as $filename => $hash){
             _vae_dependency_add($filename, $hash);
             $iden .= $hash;
           }
         }
       }
-      $iden = "asset" . md5($iden);
+      $iden = "asset" . md5($iden.$_VAE['settings']['subdomain']); // added subdomain to prevent cross domain conflicts
       if ($cache = _vae_kvstore_read($iden)) {
         $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
@@ -644,7 +644,7 @@ function _vae_inject_assets($out) {
         }
         if ($_VAE['asset_types'][$group] == "js") {
           $js_out = _vae_rest(array('raw' => $raw), "api/site/v1/compress", "js");
-          if ($out != "BAD" && $out != "") {
+          if ($js_out != "BAD" && $js_out != "") {
             $raw=$js_out;
           }
           unset($js_out); // free up
@@ -1946,7 +1946,9 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
   } else {
     _vae_write_file($newname, $file);
   }
-  if ($iden) _vae_kvstore_write($iden, $newname, null, 1);
+  if ($iden) {
+    _vae_kvstore_write($iden, $newname, null, 1);
+  }
   return $newname;
 }
 
@@ -1978,6 +1980,7 @@ function _vae_sweep_data_dir() {
     echo "deleting $file<br />";
     unlink();
   }
+  touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
   echo "done";
   flush();
   die();

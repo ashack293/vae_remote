@@ -321,10 +321,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       global $order, $transittime, $method;
       if(in_array('Display transit time', explode(', ', MODULE_SHIPPING_USPS_OPTIONS))) $transit = TRUE;
 
-//RateRequest changed to RateV3Request by Greg Deeth April 30, 2008
 	$Authentication = explode( ", ", MODULE_SHIPPING_USPS_USERID);  //0=>USERID, 1=>PASSWORD
       if ($order->delivery['country']['id'] == SHIPPING_ORIGIN_COUNTRY) {
-        $request  = '<RateV3Request USERID="' . $Authentication[0] . '" PASSWORD="' . $Authentication[1] . '">';
+        $request  = '<RateV4Request USERID="' . $Authentication[0] . '" PASSWORD="' . $Authentication[1] . '">';
         $services_count = 0;
 
         if (isset($this->service)) {
@@ -359,9 +358,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
           $services_count++;
         }
-        $request .= '</RateV3Request>'; //'</RateRequest>'; //Changed by Greg Deeth April 30, 2008
+        $request .= '</RateV4Request>'; //'</RateRequest>'; //Changed by Greg Deeth April 30, 2008
 
-        $request = 'API=RateV3&XML=' . urlencode($request);
+        $request = 'API=RateV4&XML=' . urlencode($request);
       } else {
         $request  = '<IntlRateRequest USERID="' . $Authentication[0] . '" PASSWORD="' . $Authentication[1] . '">' .
                     '<Package ID="0">' .

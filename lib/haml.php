@@ -20,6 +20,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
       }
     }
   }
+  
   if (!strlen($css)) {
     $client = _vae_thrift();
     if ($scss) {
@@ -27,15 +28,19 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
     } else {
       $css = $client->sass($sass, $include_directory);
     }
-    $deps = _vae_sass_deps($sass, $include_directory);
+    $deps = _vae_sass_deps_check($sass, $include_directory, true);
     memcache_set($_VAE['memcached'], $cache_key, array($css, $deps));
   }
   if ($header) Header("Content-Type: text/css");
   return $css;
 }
 
-function _vae_sass_deps($sass, $include_directory) {
+function _vae_sass_deps($sass, $include_directory, $root_item = false) {
   global $_VAE;
+  
+  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
+  $cache_key = "sass2".md5($sass . $include_directory).".map";
+
   $deps = array();
   preg_match_all('/@import (.*)/', $sass, $matches, PREG_SET_ORDER);
   if (count($matches)) {
@@ -43,20 +48,48 @@ function _vae_sass_deps($sass, $include_directory) {
       $filename = str_replace(array("'", '"',';'), "", $match[1]);
       if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
-        if (!strstr($filename, ".")) {
-          if (file_exists($inc_dir . $filename . ".scss")) {
+        if (!strstr($filename, ".") && !stristr($filename,'vendor/') && !stristr($filename,'vendors/') && !stristr($filename,'compass')) {
+          $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
+          if (file_exists($inc_dir . $tmp_filename . ".scss")) {
+            $filename = $tmp_filename . ".scss";
+          }elseif (file_exists($inc_dir . $filename . ".scss")) {
             $filename = $filename . ".scss";
           } else {
             $filename = $filename . ".sass";
           }
+
+          $filename = $inc_dir . $filename;
+          $sass = @file_get_contents($filename);
+          $deps[$filename] = md5($sass);
+          $nested_dir = dirname($filename);
+          $deps = array_merge($deps, _vae_sass_deps_check($sass, $nested_dir,false));
         }
-        $filename = $inc_dir . $filename;
-        $sass = @file_get_contents($filename);
-        $deps[$filename] = md5($sass);
-        $deps = array_merge($deps, _vae_sass_deps($sass, $include_directory));
       }
     }
   }
+
+  if($root_item){
+    _vae_kvstore_write($cache_key,serialize($deps));
+  }
+
+  return $deps;
+}
+
+function _vae_sass_deps_check($sass, $include_directory, $root_item = false){
+  if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
+  $cache_key = "sass2".md5($sass . $include_directory).".map";
+  $deps = unserialize(_vae_kvstore_read($cache_key));
+
+  if (isset($deps) && $deps && count($deps) > 0) {
+    foreach ($deps as $filename => $hash) {
+      if (@md5_file($filename) != $hash) {
+        return _vae_sass_deps($sass, $include_directory, $root_item);
+      }
+    }
+  }else{
+    return _vae_sass_deps($sass, $include_directory, $root_item);
+  }
+
   return $deps;
 }
 
