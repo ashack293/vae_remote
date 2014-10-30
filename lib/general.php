@@ -1808,7 +1808,7 @@ function _vae_sql_close() {
 function _vae_sql_connect() {
   global $_VAE;
   if (!isset($_VAE['shared_sql'])) {
-    $_VAE['shared_sql'] = mysql_pconnect("localhost", "verbshared", "DataData");
+    $_VAE['shared_sql'] = mysql_pconnect("localhost", "verbshared", "UztCZzeUxKGJQmkVKMrLCyUuG4W3WUiu");
     mysql_select_db("av_verbshared");
   }
 }
