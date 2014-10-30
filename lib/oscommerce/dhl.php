@@ -402,7 +402,7 @@ if($cost!='0.00') {
       // begin cURL engine & execute the request
       //if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://eCommerce.airborne.com/$api");
+        curl_setopt($ch, CURLOPT_URL, "https://xmlapi.dhl-usa.com/$api");
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_VERIFYPEER, false);
@@ -416,7 +416,7 @@ if($cost!='0.00') {
         curl_close($ch);
      // } //else {
         // cURL method using exec() // curl -d -k if you have SSL issues
-        //exec("/usr/bin/curl -d \"$request\" http://eCommerce.airborne.com/$api", $response);
+        //exec("/usr/bin/curl -d \"$request\" https://xmlapi.dhl-usa.com/$api", $response);
         //$airborne_response = '';
         //foreach ($response as $key => $value) {
           //$airborne_response .= "$value";
@@ -582,7 +582,7 @@ if($cost!='0.00') {
       // begin cURL engine & execute the request
       if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://eCommerce.airborne.com/$api");
+        curl_setopt($ch, CURLOPT_URL, "https://xmlapi.dhl-usa.com/$api");
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "$request");
@@ -591,7 +591,7 @@ if($cost!='0.00') {
         curl_close($ch);
       } else {
         // cURL method using exec() // curl -d -k if you have SSL issues
-        exec("/usr/bin/curl -d \"$request\" http://eCommerce.airborne.com/$api", $response);
+        exec("/usr/bin/curl -d \"$request\" https://xmlapi.dhl-usa.com/$api", $response);
         $airborne_response = '';
         foreach ($response as $key => $value) {
           $airborne_response .= "$value";
