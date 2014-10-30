@@ -430,7 +430,13 @@ if($cost!='0.00') {
 
       $airborne = _parsexml3254($airborne_response);
        
-      if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
+      if($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']){
+        $error_message = 'The following errors have occured:';
+        $i = 0;
+        if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->']) $error_message .= '<br>' . ($i+1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
+        if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
+        return array('error' => $error_message);
+      }elseif ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
         $error_message = 'The following errors have occured:';
         for($i=0; $i<5; $i++) {
           if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->']) $error_message .= '<br>' . ($i+1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
@@ -600,7 +606,13 @@ if($cost!='0.00') {
       $airborne = _parsexml3254($airborne_response);
       
       // Check for errors
-      if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
+      if($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']){
+        $error_message = 'The following errors have occured:';
+        $i = 0;
+        if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->']) $error_message .= '<br>' . ($i+1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
+        if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
+        return array('error' => $error_message);
+      }elseif ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
         $error_message = 'The following errors have occured:';
         for($i=0; $i<5; $i++) {
           if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->']) $error_message .= '<br>' . ($i+1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
