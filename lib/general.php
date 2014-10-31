@@ -431,7 +431,7 @@ function _vae_handleob($vaeml) {
     }
     if (isset($_VAE['ticks'])) return _vae_render_timer();
     _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
-    if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr']) {
+    if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr'] && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])!='xmlhttprequest') {
       $_VAE['force_redirect'] = "http://" . $_SESSION['__v:pre_ssl_host'] . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
