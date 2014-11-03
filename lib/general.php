@@ -1978,7 +1978,7 @@ function _vae_sweep_data_dir() {
     $fileage = time() - filemtime($filename);
     if ($fileage < 3*86400) continue;
     echo "deleting $file<br />";
-    unlink();
+    unlink($filename);
   }
   touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
   echo "done";
