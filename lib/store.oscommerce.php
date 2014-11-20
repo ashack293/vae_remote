@@ -145,6 +145,7 @@ function _vae_store_oscommerce_load() {
   global $_VAE;
   require_once(dirname(__FILE__) . "/oscommerce/http_client.php");
   define("SHIPPING_ORIGIN_COUNTRY", "1");
+  define("SHIPPING_ORIGIN_COUNTRY_CODE",$_VAE['settings']['store_shipping_origin_country']);
   define("MODULE_SHIPPING_USPS_USERID", "533MISHK7183");
   define("MODULE_SHIPPING_USPS_PASSWORD", "533MISHK7183");
   define("MODULE_SHIPPING_USPS_SERVER", "production");
