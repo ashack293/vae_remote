@@ -292,19 +292,18 @@ class dhl {
         //$airborne_response .= "$value";
         //}//
         // }
-
         // Debugging
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
-
+        _vae_debug($airborne_response);
         $airborne = _parsexml3254($airborne_response);
 
         if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
             $error_message = 'The following errors have occured:';
             $i = 0;
             // We dont want to return this type of error
-          return array('error' => $error_message);
+            return array('error' => $error_message);
         } elseif ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][0]['->']['ConditionData'][0]['->']) {
             $error_message = 'The following errors have occured:';
             for ($i = 0; $i < 5; $i++) {
@@ -374,6 +373,7 @@ class dhl {
         }
 
         // Debugging
+        _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
@@ -384,7 +384,7 @@ class dhl {
             $error_message = 'The following errors have occured:';
             $i = 0;
             // We dont want to return this type of error
-          return array('error' => $error_message);
+            return array('error' => $error_message);
         } elseif ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][0]['->']['ConditionData'][0]['->']) {
             $error_message = 'The following errors have occured:';
             for ($i = 0; $i < 5; $i++) {
@@ -419,17 +419,20 @@ class dhl {
 
             $filename = $folder . 'request.txt';
             if (!$fp = fopen($filename, "w"))
-                die("Failed opening file $filename");
+                _vae_debug("Failed opening file $filename");
             if (!fwrite($fp, $request))
-                die("Failed writing to file $filename");
+                _vae_debug("Failed writing to file $filename");
             fclose($fp);
 
             $filename = $folder . 'response.txt';
             if (!$fp = fopen($filename, "w"))
-                die("Failed opening file $filename");
+                _vae_debug("Failed opening file $filename");
             if (!fwrite($fp, $response))
-                die("Failed writing to file $filename");
+                _vae_debug("Failed writing to file $filename");
             fclose($fp);
+
+            _vae_debug($request);
+            _vae_debug($response);
         }
 
         return true;
@@ -587,7 +590,7 @@ class dhl {
                                     <Pieces>
                                     ' . ((isset($this->dimensions)) ? $this->pieceXml() : '<Piece><PieceID>1</PieceID><Weight>' . _xmlEnc1234($this->weight) . '</Weight></Piece>') . '
                                     </Pieces>
-                                    '.((MODULE_SHIPPING_AIRBORNE_ACCT_NBR)?'<PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>':'').'
+                                    ' . ((MODULE_SHIPPING_AIRBORNE_ACCT_NBR) ? '<PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>' : '') . '
                                     <IsDutiable>' . (($this->dutiable) ? 'Y' : 'N') . '</IsDutiable>
                                 </BkgDetails>
                                 <To>
