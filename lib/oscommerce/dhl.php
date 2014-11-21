@@ -20,7 +20,6 @@ define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_1030', 'Express 10:30 AM');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_SAT', 'Express Saturday');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_INTERNATIONAL_EXPRESS', 'International Express');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_CONTENTS_DESCRIPTION', 'Shipment Contents');
-define('MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD', 'Print to screen');
 
 define('MODULE_SHIPPING_AIRBORNE_TEXT_ERROR', 'An error occured with the DHL/Airborne shipping calculations.<br>If you prefer to use DHL/Airborne as your shipping method, please contact the store owner.');
 
