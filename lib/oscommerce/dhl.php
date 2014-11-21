@@ -20,7 +20,7 @@ define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_1030', 'Express 10:30 AM');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_SAT', 'Express Saturday');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_INTERNATIONAL_EXPRESS', 'International Express');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_CONTENTS_DESCRIPTION', 'Shipment Contents');
-define('MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD','Print to screen');
+define('MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD', 'Print to screen');
 
 define('MODULE_SHIPPING_AIRBORNE_TEXT_ERROR', 'An error occured with the DHL/Airborne shipping calculations.<br>If you prefer to use DHL/Airborne as your shipping method, please contact the store owner.');
 
@@ -257,94 +257,7 @@ class dhl {
 
             // basic shipment information
             $allowed_types[$key] = $value;
-            $request .= "<Shipment action='RateEstimate' version='1.0'>" .
-                    "<ShippingCredentials>" .
-                    "<ShippingKey>" . MODULE_SHIPPING_AIRBORNE_SHIP_KEY . "</ShippingKey>" .
-                    "<AccountNbr>" . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . "</AccountNbr>" .
-                    "</ShippingCredentials>" .
-                    "<ShipmentDetail>" .
-                    "<ShipDate>" . _makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd') . "</ShipDate>" .
-                    "<Service>" .
-                    "<Code>" . substr($key, 0, 1) . "</Code>" .
-                    "</Service>" .
-                    "<ShipmentType>" .
-                    "<Code>" . $this->container . "</Code>" .
-                    "</ShipmentType>";
-
-            // special Express services
-            if ($key == 'E SAT') {
-                $request .= "<SpecialServices>" .
-                        "<SpecialService>" .
-                        "<Code>SAT</Code>" .
-                        "</SpecialService>" .
-                        "</SpecialServices>";
-            } elseif ($key == 'E 10:30AM') {
-                $request .= "<SpecialServices>" .
-                        "<SpecialService>" .
-                        "<Code>1030</Code>" .
-                        "</SpecialService>" .
-                        "</SpecialServices>";
-            }
-
-            // package weight & dimensions
-            if ($this->container != 'L') {
-                $request .= "<Weight>" . $this->weight . "</Weight>";
-            }
-
-            if (isset($this->dimensions)) {
-                $request .= "<Dimensions>" .
-                        "<Length>" . $this->length . "</Length>" .
-                        "<Width>" . $this->width . "</Width>" .
-                        "<Height>" . $this->height . "</Height>" .
-                        "</Dimensions>";
-            }
-
-            // package additional protection
-            if (isset($this->additionalProtection)) {
-                $request .= "<AdditionalProtection>" .
-                        "<Code>" . MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_TYPE . "</Code>" .
-                        "<Value>" . $this->additionalProtection . "</Value>" .
-                        "</AdditionalProtection>";
-            }
-
-            // billing & shipping information        
-            $request .= "</ShipmentDetail>" .
-                    "<Billing>" .
-                    "<Party>" .
-                    "<Code>S</Code>" .
-                    "</Party>" .
-                    "</Billing>" .
-                    "<Receiver>" .
-                    "<Address>";
-            if (tep_not_null($this->destination_city)) {
-                $request .= "<City>" . _xmlEnc1234($this->destination_city) . "</City>";
-            }
-            // Lookup state if needed
-            if (tep_not_null($this->destination_state)) {
-                $request .= "<State>" . _xmlEnc1234($this->destination_state) . "</State>";
-            } else {
-                $request .= "<State>" . $this->zip_to_state($this->destination_postal) . "</State>";
-            }
-            $request .= "<Country>" . _xmlEnc1234($this->destination_country) . "</Country>" .
-                    "<PostalCode>" . $this->destination_postal . "</PostalCode>" .
-                    "</Address>" .
-                    "</Receiver>";
-
-            // shipment overrides
-            if ((MODULE_SHIPPING_AIRBORNE_OVERRIDE_EXP_SAT == 'true') && ($key == 'E SAT')) {
-                $request .= "<ShipmentProcessingInstructions>" .
-                        "<Overrides>" .
-                        "<Override>" .
-                        "<Code>ES</Code>" .
-                        "</Override>" .
-                        "</Overrides>" .
-                        "</ShipmentProcessingInstructions>";
-            }
-
-            $request .= "</Shipment>";
         }
-
-        $request .= "</eCommerce>";
 
         // select proper server
         switch (MODULE_SHIPPING_AIRBORNE_SERVER) {
@@ -449,96 +362,6 @@ class dhl {
 //  return(false);
         };
 
-        // start the XML request
-        $request = "<?xml version='1.0'?>" .
-                "<eCommerce action='Request' version='1.1' >" .
-                "<Requestor>" .
-                "<ID>" .
-                MODULE_SHIPPING_AIRBORNE_SYSTEMID .
-                "</ID>" .
-                "<Password>" .
-                MODULE_SHIPPING_AIRBORNE_PASS .
-                "</Password>" .
-                "</Requestor>" .
-                "<IntlShipment action='RateEstimate' version='1.0'>" .
-                "<ShippingCredentials>" .
-                "<ShippingKey>" .
-                MODULE_SHIPPING_AIRBORNE_SHIP_KEY_INTL .
-                "</ShippingKey>" .
-                "<AccountNbr>" .
-                MODULE_SHIPPING_AIRBORNE_ACCT_NBR .
-                "</AccountNbr>" .
-                "</ShippingCredentials>" .
-                "<ShipmentDetail>" .
-                "<ShipDate>" .
-                _makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd') .
-                "</ShipDate>" .
-                "<Service>" .
-                "<Code>" .
-                "IE" .
-                "</Code>" .
-                "</Service>" .
-                "<ShipmentType>" .
-                "<Code>" .
-                "O" .
-                "</Code>" .
-                "</ShipmentType>";
-        if ($this->container != 'L') {
-            $request .= "<Weight>" . $this->weight . "</Weight>";
-        }
-
-        if (isset($this->dimensions)) {
-            $request .= "<Dimensions>" .
-                    "<Length>" . $this->length . "</Length>" .
-                    "<Width>" . $this->width . "</Width>" .
-                    "<Height>" . $this->height . "</Height>" .
-                    "</Dimensions>";
-        }
-        $request .=
-                "<ContentDesc>" .
-                MODULE_SHIPPING_AIRBORNE_CONTENTS_DESCRIPTION .
-                "</ContentDesc>" .
-                "</ShipmentDetail>" .
-                "<Dutiable>" .
-                "<DutiableFlag>" .
-                ((MODULE_SHIPPING_AIRBORNE_DUTIABLE == 'Yes') ? "Y" : "N") .
-                "</DutiableFlag>" .
-                "<CustomsValue>" .
-                $order->info['total'] .
-                "</CustomsValue>" .
-                "</Dutiable>" .
-                "<Billing>" .
-                "<Party>" .
-                "<Code>" .
-                "S" .
-                "</Code>" .
-                "</Party>" .
-                "<DutyPaymentType>" .
-                MODULE_SHIPPING_AIRBORNE_DUTY_PAYMENT_TYPE .
-                "</DutyPaymentType>" .
-                "</Billing>" .
-                "<Receiver>" .
-                "<Address>" .
-                "<Street>" .
-                _xmlEnc1234($this->destination_street_address) .
-                "</Street>" .
-                "<City>" .
-                _xmlEnc1234($this->destination_city) .
-                "</City>" .
-                "<State>" .
-                _xmlEnc1234($this->destination_state) .
-                "</State>" .
-                "<Country>" .
-                _xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country) .
-                "</Country>" .
-                "<PostalCode>" .
-                _xmlEnc1234($this->destination_postal) .
-                "</PostalCode>" .
-                "</Address>" .
-                "</Receiver>" .
-                "</IntlShipment>" .
-                "</eCommerce>";
-
         // select proper server
         switch (MODULE_SHIPPING_AIRBORNE_SERVER) {
             case 'production':
@@ -579,7 +402,7 @@ class dhl {
         }
 
         $airborne = _parsexml3254($airborne_response);
-_vae_debug($airborne);
+        _vae_debug($airborne);
         // Check for errors
         if ($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']) {
             $error_message = 'The following errors have occured:';
@@ -615,11 +438,11 @@ _vae_debug($airborne);
             return array('error' => $error_message);
         } else {
             _vae_debug('-----------');
-            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']);
+            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']);
             _vae_debug('-----------');
-            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']);
+            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']);
             _vae_debug('-----------');
-            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->']);
+            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->']);
             $rates = array();
             $i = 0;
 
@@ -776,77 +599,61 @@ _vae_debug($airborne);
         }
     }
 
-    function pieceXml(){
+    function pieceXml() {
         return '<Piece>
                <PieceID>1</PieceID>
-               <Height>'._xmlEnc1234($this->height).'</Height>
-               <Depth>'._xmlEnc1234($this->length).'</Depth>
-               <Width>'._xmlEnc1234($this->width).'</Width>
-               <Weight>'._xmlEnc1234($this->weight).'</Weight>
+               <Height>' . _xmlEnc1234($this->height) . '</Height>
+               <Depth>' . _xmlEnc1234($this->length) . '</Depth>
+               <Width>' . _xmlEnc1234($this->width) . '</Width>
+               <Weight>' . _xmlEnc1234($this->weight) . '</Weight>
             </Piece>';
     }
 
-    function populateXmlDocument(){
+    function populateXmlDocument() {
         global $order, $shipping_weight, $shipping_num_boxes, $method;
 
         $returnXml = '<?xml version="1.0" encoding="UTF-8"?>
-<p:DCTRequest xmlns:p="http://www.dhl.com" xmlns:p1="http://www.dhl.com/datatypes" xmlns:p2="http://www.dhl.com/DCTRequestdatatypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com DCT-req.xsd ">
-    <GetQuote>
-        <Request>
-            <ServiceHeader>
-                <SiteID>'. _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_SYSTEMID) .'</SiteID>
-                <Password>'. _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_PASS) .'</Password>
-            </ServiceHeader>
-        </Request>
-        <From>
-            <CountryCode>'._xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE).'</CountryCode>
-            <Postalcode>'._xmlEnc1234(SHIPPING_ORIGIN_ZIP).'</Postalcode>
-            '.((SHIPPING_ORIGIN_CITY)?'<City>'._xmlEnc1234(SHIPPING_ORIGIN_CITY).'</City>':'').'
-        </From>
-        <BkgDetails>
-            <PaymentCountryCode>'._xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE).'</PaymentCountryCode>
-            <Date>'._makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd').'</Date>
-            <ReadyTime>PT9H</ReadyTime>
-            <ReadyTimeGMTOffset>+00:00</ReadyTimeGMTOffset>
-            <DimensionUnit>IN</DimensionUnit>
-            <WeightUnit>LB</WeightUnit>
-            <Pieces>
-            '.((isset($this->dimensions))?$this->pieceXml():'<Piece><PieceID>1</PieceID><Weight>'._xmlEnc1234($this->weight).'</Weight></Piece>').'
-            </Pieces>
-            <PaymentAccountNumber>'.MODULE_SHIPPING_AIRBORNE_ACCT_NBR.'</PaymentAccountNumber>
-            <IsDutiable>'.(($this->dutiable)?'Y':'N').'</IsDutiable>';
-/*
-*             <% if special_services.size>0 -%>
-                <QtdShp>
-                    <% special_services.each do |special_service_type_code| -%>
-                        <QtdShpExChrg>
-                            <SpecialServiceType><%= special_service_type_code %></SpecialServiceType>
-                        </QtdShpExChrg>
-                     <% end -%>
-                </QtdShp>
-            <% end -%>
-*/
-_vae_debug($returnXml);
-
-
-            $returnXml .= '
-        </BkgDetails>
-        <To>
-            <CountryCode>'._xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country).'</CountryCode>
-            <Postalcode>'._xmlEnc1234($this->destination_postal).'</Postalcode>
-            '.(($this->destination_city)?'<City>'._xmlEnc1234($this->destination_city).'</City>':'').'
-        </To>
-        '.(($this->dutiable)?'<Dutiable>
-                <DeclaredCurrency>USD</DeclaredCurrency>
-                <DeclaredValue>'.$order->info['total'].'</DeclaredValue>
-            </Dutiable>':'').'
-    </GetQuote>
-</p:DCTRequest>';
-
-        _vae_debug($returnXml);
+                        <p:DCTRequest xmlns:p="http://www.dhl.com" xmlns:p1="http://www.dhl.com/datatypes" xmlns:p2="http://www.dhl.com/DCTRequestdatatypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com DCT-req.xsd ">
+                            <GetQuote>
+                                <Request>
+                                    <ServiceHeader>
+                                        <SiteID>' . _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_SYSTEMID) . '</SiteID>
+                                        <Password>' . _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_PASS) . '</Password>
+                                    </ServiceHeader>
+                                </Request>
+                                <From>
+                                    <CountryCode>' . _xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE) . '</CountryCode>
+                                    <Postalcode>' . _xmlEnc1234(SHIPPING_ORIGIN_ZIP) . '</Postalcode>
+                                    ' . ((SHIPPING_ORIGIN_CITY) ? '<City>' . _xmlEnc1234(SHIPPING_ORIGIN_CITY) . '</City>' : '') . '
+                                </From>
+                                <BkgDetails>
+                                    <PaymentCountryCode>' . _xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE) . '</PaymentCountryCode>
+                                    <Date>' . _makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd') . '</Date>
+                                    <ReadyTime>PT9H</ReadyTime>
+                                    <ReadyTimeGMTOffset>+00:00</ReadyTimeGMTOffset>
+                                    <DimensionUnit>IN</DimensionUnit>
+                                    <WeightUnit>LB</WeightUnit>
+                                    <Pieces>
+                                    ' . ((isset($this->dimensions)) ? $this->pieceXml() : '<Piece><PieceID>1</PieceID><Weight>' . _xmlEnc1234($this->weight) . '</Weight></Piece>') . '
+                                    </Pieces>
+                                    <PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>
+                                    <IsDutiable>' . (($this->dutiable) ? 'Y' : 'N') . '</IsDutiable>
+                                </BkgDetails>
+                                <To>
+                                    <CountryCode>' . _xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country) . '</CountryCode>
+                                    <Postalcode>' . _xmlEnc1234($this->destination_postal) . '</Postalcode>
+                                    ' . (($this->destination_city) ? '<City>' . _xmlEnc1234($this->destination_city) . '</City>' : '') . '
+                                </To>
+                                ' . (($this->dutiable) ? '<Dutiable>
+                                        <DeclaredCurrency>USD</DeclaredCurrency>
+                                        <DeclaredValue>' . $order->info['total'] . '</DeclaredValue>
+                                    </Dutiable>' : '') . '
+                            </GetQuote>
+                        </p:DCTRequest>';
 
         return $returnXml;
     }
+
     // End of class
 }
 
