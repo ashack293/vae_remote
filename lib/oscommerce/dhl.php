@@ -802,7 +802,7 @@ class dhl {
             <DimensionUnit>IN</DimensionUnit>
             <WeightUnit>LB</WeightUnit>
             <Pieces>
-            '.((isset($this->dimensions))?$this->pieceXml():'').'
+            '.((isset($this->dimensions))?$this->pieceXml():'<Piece><PieceID>1</PieceID><Weight>'._xmlEnc1234($this->weight).'</Weight></Piece>').'
             </Pieces>
             <PaymentAccountNumber>'.MODULE_SHIPPING_AIRBORNE_ACCT_NBR.'</PaymentAccountNumber>
             <IsDutiable>'.(($this->dutiable)?'Y':'N').'</IsDutiable>';
