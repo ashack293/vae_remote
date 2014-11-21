@@ -56,7 +56,6 @@ class dhl {
         $this->icon = DIR_WS_ICONS . MODULE_SHIPPING_AIRBORNE_ICON;
         $this->tax_class = MODULE_SHIPPING_AIRBORNE_TAX_CLASS;
         $this->debug = ((MODULE_SHIPPING_AIRBORNE_DEBUG == 'True') ? true : false);
-        $this->debug = true;
         $this->enabled = ((MODULE_SHIPPING_AIRBORNE_STATUS == 'True') ? true : false);
 
         $this->types = array('G' => MODULE_SHIPPING_AIRBORNE_TEXT_GROUND,
@@ -294,44 +293,25 @@ class dhl {
         //$airborne_response .= "$value";
         //}//
         // }
+
         // Debugging
-        // _vae_debug($request);
-        // _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
 
         $airborne = _parsexml3254($airborne_response);
 
-        _vae_debug('===== DHL Domestic ========');
-
-        if ($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']) {
+        if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
             $error_message = 'The following errors have occured:';
             $i = 0;
-            if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->'])
-                $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
-            if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->'])
-                $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-            return array('error' => $error_message);
-        }elseif ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
+            // We dont want to return this type of error
+          return array('error' => $error_message);
+        } elseif ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][0]['->']['ConditionData'][0]['->']) {
             $error_message = 'The following errors have occured:';
             for ($i = 0; $i < 5; $i++) {
-                if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->'])
-                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
-                if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->'])
-                    $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-                if (!$airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i + 1]['->'][Code][0]['->'])
-                    break;
-            }
-            return array('error' => $error_message);
-        } elseif ($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
-            $error_message = 'The following errors have occured:';
-            for ($i = 0; $i < 5; $i++) {
-                if ($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->'])
-                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Desc][0]['->'];
-                if ($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->'])
-                    $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-                if (!$airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i + 1]['->'][Code][0]['->'])
+                if ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i]['->']['ConditionData'][0]['->'])
+                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i]['->']['ConditionData'][0]['->'];
+                if (!$airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i + 1]['->']['ConditionData'][0]['->'])
                     break;
             }
             return array('error' => $error_message);
@@ -395,54 +375,27 @@ class dhl {
         }
 
         // Debugging
-        // _vae_debug($request);
-        // _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
 
         $airborne = _parsexml3254($airborne_response);
-        _vae_debug($airborne);
         // Check for errors
-        if ($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']) {
+        if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
             $error_message = 'The following errors have occured:';
             $i = 0;
-            if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->'])
-                $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
-            if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->'])
-                $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-            return array('error' => $error_message);
-        }elseif ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
+            // We dont want to return this type of error
+          return array('error' => $error_message);
+        } elseif ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][0]['->']['ConditionData'][0]['->']) {
             $error_message = 'The following errors have occured:';
             for ($i = 0; $i < 5; $i++) {
-                if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->'])
-                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Description][0]['->'];
-                if ($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->'])
-                    $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-                if (!$airborne[eCommerce]['->'][Faults][0]['->'][Fault][$i + 1]['->'][Code][0]['->'])
-                    break;
-            }
-            return array('error' => $error_message);
-        } elseif ($airborne[eCommerce]['->'][IntlShipment][0]['->'][Faults][0]['->'][Fault][0]['->'][Code][0]['->']) {
-            $error_message = 'The following errors have occured:';
-            for ($i = 0; $i < 5; $i++) {
-                if ($airborne[eCommerce]['->']['IntlShipment'][0]['->'][Faults][0]['->'][Fault][$i]['->'][Code][0]['->']) {
-                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne[eCommerce]['->']['IntlShipment'][0]['->'][Faults][0]['->'][Fault][$i]['->'][Desc][0]['->'];
-                }
-                if ($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) {
-                    $error_message .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>(' . htmlspecialchars($airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i]['->'][Context][0]['->']) . ')</em>';
-                }
-                if (!$airborne[eCommerce]['->'][Shipment][0]['->'][Faults][0]['->'][Fault][$i + 1]['->'][Code][0]['->'])
+                if ($airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i]['->']['ConditionData'][0]['->'])
+                    $error_message .= '<br>' . ($i + 1) . '.&nbsp;' . $airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i]['->']['ConditionData'][0]['->'];
+                if (!$airborne['res:DCTResponse']['->']['GetQuoteResponse'][0]['->']['Note'][0]['->']['Condition'][$i + 1]['->']['ConditionData'][0]['->'])
                     break;
             }
             return array('error' => $error_message);
         } else {
-            _vae_debug('-----------');
-            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']);
-            _vae_debug('-----------');
-            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']);
-            _vae_debug('-----------');
-            _vae_debug($airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->']);
             $rates = array();
             $i = 0;
 
@@ -630,13 +583,12 @@ class dhl {
                                     <PaymentCountryCode>' . _xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE) . '</PaymentCountryCode>
                                     <Date>' . _makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd') . '</Date>
                                     <ReadyTime>PT9H</ReadyTime>
-                                    <ReadyTimeGMTOffset>+00:00</ReadyTimeGMTOffset>
                                     <DimensionUnit>IN</DimensionUnit>
                                     <WeightUnit>LB</WeightUnit>
                                     <Pieces>
                                     ' . ((isset($this->dimensions)) ? $this->pieceXml() : '<Piece><PieceID>1</PieceID><Weight>' . _xmlEnc1234($this->weight) . '</Weight></Piece>') . '
                                     </Pieces>
-                                    <PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>
+                                    '.((MODULE_SHIPPING_AIRBORNE_ACCT_NBR)?'<PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>':'').'
                                     <IsDutiable>' . (($this->dutiable) ? 'Y' : 'N') . '</IsDutiable>
                                 </BkgDetails>
                                 <To>
