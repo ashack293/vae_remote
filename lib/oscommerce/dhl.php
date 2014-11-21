@@ -382,13 +382,15 @@ class dhl {
         //}//
         // }
         // Debugging
-        _vae_debug($request);
-        _vae_debug($airborne_response);
+        // _vae_debug($request);
+        // _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
 
         $airborne = _parsexml3254($airborne_response);
+
+        _vae_debug('===== DHL Domestic ========');
 
         if ($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']) {
             $error_message = 'The following errors have occured:';
@@ -424,10 +426,11 @@ class dhl {
             $rates = array();
             $i = 0;
             foreach ($allowed_types as $key => $value) {
-                if ($airborne[eCommerce]['->'][Shipment][$i]['->'][EstimateDetail][0]['->'][Service][0]['->'][Code][0]['->']) {
+                // $postage = $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->'];
+                if ($airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp'][$i]['->']['GlobalProductCode'][0]['->']) {
                     $service = $key;
-                    $postage = $airborne[eCommerce]['->'][Shipment][$i]['->'][EstimateDetail][0]['->'][RateEstimate][0]['->'][TotalChargeEstimate][0]['->'];
-                    $description = (MODULE_SHIPPING_AIRBORNE_EST_DELIVERY == 'true') ? '&nbsp;<span class="smallText"><em>(' . $airborne[eCommerce]['->'][Shipment][$i]['->'][EstimateDetail][0]['->'][ServiceLevelCommitment][0]['->'][Desc][0]['->'] . ')</em></span>' : '';
+                    $postage = $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp'][$i]['->']['ShippingCharge']['0']['->'];
+                    $description = (MODULE_SHIPPING_AIRBORNE_EST_DELIVERY == 'true') ? '&nbsp;<span class="smallText"><em>(' . $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp'][$i]['->']['ProductShortName']['0']['->'] . ')</em></span>' : '';
                     $rates[] = array($service => $postage, 'description' => $description);
                 }
                 $i++;
@@ -569,14 +572,14 @@ class dhl {
         }
 
         // Debugging
-        _vae_debug($request);
-        _vae_debug($airborne_response);
+        // _vae_debug($request);
+        // _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
 
         $airborne = _parsexml3254($airborne_response);
-
+_vae_debug($airborne);
         // Check for errors
         if ($airborne[eCommerce]['->'][Fault][0]['->'][Code][0]['->']) {
             $error_message = 'The following errors have occured:';
@@ -611,13 +614,19 @@ class dhl {
             }
             return array('error' => $error_message);
         } else {
+            _vae_debug('-----------');
+            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']);
+            _vae_debug('-----------');
+            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']);
+            _vae_debug('-----------');
+            _vae_debug( $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->']);
             $rates = array();
             $i = 0;
 
             $service = 'IE';
-            $postage = $airborne['eCommerce']['->']['IntlShipment']['0']['->']['EstimateDetail']['0']['->']['RateEstimate']['0']['->']['TotalChargeEstimate']['0']['->'];
+            $postage = $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ShippingCharge']['0']['->'];
             if (strcmp(MODULE_SHIPPING_AIRBORNE_EST_DELIVERY, "true") == 0) {
-                $description = ' (' . $airborne['eCommerce']['->']['IntlShipment']['0']['->']['EstimateDetail']['0']['->']['ServiceLevelCommitment']['0']['->']['Desc']['0']['->'] . ')';
+                $description = ' (' . $airborne['res:DCTResponse']['->']['GetQuoteResponse']['0']['->']['BkgDetails']['0']['->']['QtdShp']['0']['->']['ProductShortName']['0']['->'] . ')';
             } else {
                 $description = '';
             }
