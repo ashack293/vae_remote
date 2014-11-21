@@ -77,6 +77,10 @@ class dhl {
         define('MODULE_SHIPPING_AIRBORNE_SHIP_KEY_INTL', $method['apikintl']);
         define('MODULE_SHIPPING_AIRBORNE_SERVER', ($method["test_mode"] == "1" ? 'test' : 'production'));
 
+        if(MODULE_SHIPPING_AIRBORNE_SERVER == 'test'){
+            $this->debug = true;
+        }
+
         $this->_setMethods($method['types']);
 
         $this->_setDestination($order->delivery['street_address'], $order->delivery['city'], $order->delivery['state'], $order->delivery['postcode'], $order->delivery['country']['iso_code_2']);
@@ -296,7 +300,7 @@ class dhl {
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
-        _vae_debug($airborne_response);
+
         $airborne = _parsexml3254($airborne_response);
 
         if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
@@ -373,7 +377,6 @@ class dhl {
         }
 
         // Debugging
-        _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
@@ -431,8 +434,8 @@ class dhl {
                 _vae_debug("Failed writing to file $filename");
             fclose($fp);
 
-            _vae_debug($request);
-            _vae_debug($response);
+            _vae_debug(preg_replace('/<Password>(.*)<\/Password>/','<Password>[REDACTED]</Password>',$request));
+            _vae_debug(preg_replace('/<Password>(.*)<\/Password>/','<Password>[REDACTED]</Password>',$response));
         }
 
         return true;
