@@ -20,6 +20,7 @@ define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_1030', 'Express 10:30 AM');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_EXPRESS_SAT', 'Express Saturday');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_INTERNATIONAL_EXPRESS', 'International Express');
 define('MODULE_SHIPPING_AIRBORNE_TEXT_CONTENTS_DESCRIPTION', 'Shipment Contents');
+define('MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD','Print to screen');
 
 define('MODULE_SHIPPING_AIRBORNE_TEXT_ERROR', 'An error occured with the DHL/Airborne shipping calculations.<br>If you prefer to use DHL/Airborne as your shipping method, please contact the store owner.');
 
@@ -41,6 +42,8 @@ class dhl {
     var $destination_postal;
     var $destination_country;
     var $additionalProtection;
+    var $live_url = 'https://xmlpi-ea.dhl.com/XMLShippingServlet';
+    var $test_url = 'https://xmlpitest-ea.dhl.com/XMLShippingServlet';
 
     function dhl() {
         global $order;
@@ -53,6 +56,7 @@ class dhl {
         $this->icon = DIR_WS_ICONS . MODULE_SHIPPING_AIRBORNE_ICON;
         $this->tax_class = MODULE_SHIPPING_AIRBORNE_TAX_CLASS;
         $this->debug = ((MODULE_SHIPPING_AIRBORNE_DEBUG == 'True') ? true : false);
+        $this->debug = true;
         $this->enabled = ((MODULE_SHIPPING_AIRBORNE_STATUS == 'True') ? true : false);
 
         $this->types = array('G' => MODULE_SHIPPING_AIRBORNE_TEXT_GROUND,
@@ -134,53 +138,10 @@ class dhl {
         return $this->_check;
     }
 
-    function install() {
-//
-// Add in config variable for International Shipping key
-//
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable DHL/Airborne Shipping', 'MODULE_SHIPPING_AIRBORNE_STATUS', 'True', 'Do you want to offer DHL/Airborne shipping?<p><a onClick=\"javascript:window.open(\'dhlairborne_docs.html\',\'dhlairborne_docs\',\'height=375,width=550,toolbar=no,statusbar=no,scrollbars=yes,screenX=150,screenY=150,top=150,left=150\');\"><u>Help</u> [?]</a>', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DHL/Airborne system ID', 'MODULE_SHIPPING_AIRBORNE_SYSTEMID', '', 'Enter your DHL/Airborne system ID.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DHL/Airborne password', 'MODULE_SHIPPING_AIRBORNE_PASS', '', 'Enter your DHL/Airborne password.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DHL/Airborne domestic shipping key', 'MODULE_SHIPPING_AIRBORNE_SHIP_KEY', '', 'Enter the DHL/Airborne domestic shipping key assigned to you.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DHL/Airborne international shipping key', 'MODULE_SHIPPING_AIRBORNE_SHIP_KEY_INTL', '', 'Enter the DHL/Airborne international shipping key assigned to you.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DHL/Airborne account number', 'MODULE_SHIPPING_AIRBORNE_ACCT_NBR', '', 'Enter your DHL/Airborne customer/account number.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Which server to use', 'MODULE_SHIPPING_AIRBORNE_SERVER', 'test', 'An account with DHL/Airborne is needed to use the Production server', '6', '0', 'tep_cfg_select_option(array(\'test\', \'production\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ( 'Shipping Methods', 'MODULE_SHIPPING_AIRBORNE_TYPES', 'G, S, N, E, IE', 'Select the DHL/Airborne shipping services to be offered.<p>Available Methods:<br>G - Ground<br>S - Second Day Service<br>N - Next Afternoon<br>E - Express<br>E 10:30AM - Express 10:30 AM<br>E SAT - Express Saturday<br>IE - International Express', '6', '0', '_selectOptions3254(array(\'G\',\'S\', \'N\', \'E\', \'E 10:30AM\', \'E SAT\', \'IE\'), ', now() )");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Estimated Delivery Time', 'MODULE_SHIPPING_AIRBORNE_EST_DELIVERY', 'true', 'Display the estimated delivery time beside the shipment method in checkout?', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-// Wi-Gear Added in v2.2 - Append SHIP_WEIGHT
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Show shipping Weight ', 'MODULE_SHIPPING_AIRBORNE_SHIP_WEIGHT', 'true', 'Display the Shipping Total weight', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Shipment Type', 'MODULE_SHIPPING_AIRBORNE_PACKAGE', 'O', 'Select the type of shipment:<br><br>O - Own Packaging<br>P - DHL Package<br>L - Letter', '6', '0', 'tep_cfg_select_option(array(\'O\', \'P\', \'L\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Shipment Type', 'MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY_TYPE', 'Ship in x number of days', 'Select whether you usually ship on a certain day (ex: every Monday) or usually in x number of days (ship out in 2 days).  Then set either the x number of days or set day below.', '6', '0', 'tep_cfg_select_option(array(\'Ship in x number of days\', \'Ship on certain day\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Days to Shipment', 'MODULE_SHIPPING_AIRBORNE_DAYS_TO_SHIP', '2', 'If using \"Ship in x number of days,\" how many days do you estimate it will be from when a customers orders until you ship the packages? (0 = ship same day, 1 = ship the following day, etc)', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Shipment Day', 'MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY', 'Monday', 'Select the day you ship on if using \"Ship on certain day\"', '6', '0', 'tep_cfg_select_option(array(\'Monday\', \'Tuesday\', \'Wednesday\', \'Thursday\', \'Friday\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Override Express Saturday Shipping', 'MODULE_SHIPPING_AIRBORNE_OVERRIDE_EXP_SAT', 'false', 'If you want to enable shipping an Express Saturday shipment on a day that is not Friday, use this override to generate the shipping quote.', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Dimensional Weight', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_WEIGHT', 'false', 'Do you want to use dimensions in the rate request? (dimensions set below)', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Average Dimensions', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_TABLE', '1:12x8x2,3:24x10x3', 'Setup your average dimensions as follows: <em>number of products ordered<b>:</b>length<b>x</b>width<b>x</b>height</em> with a comma seperating each entry.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Dimensional Exclusive Option', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_EXCLUSIVE', 'false', 'Do you want the dimensions to be exclusive the number of products in the cart?<p>Example: If this is true, and you have a dimensional table setup for 1 product and 3 products, only dimensions will be used if 1 product or 3 products are ordered.', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-// Wi-Gear Added in v2.2 - Added DUTIABLE, and DUTY_PAYMENT_TYPE
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Dutiable', 'MODULE_SHIPPING_AIRBORNE_DUTIABLE', 'Yes', 'Indicates the Shipment is Dutiable/non-dutiable', '6', '0', 'tep_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ( 'Duty Payment Type', 'MODULE_SHIPPING_AIRBORNE_DUTY_PAYMENT_TYPE', 'R', 'Select the Duty Payment Type:<br>S - Sender<br>R - Receiver<br>3 - Third Party<br>', '6', '0', 'tep_cfg_select_option(array(\'S\', \'R\', \'3\'), ', now() )");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Package Description', 'MODULE_SHIPPING_AIRBORNE_CONTENTS_DESCRIPTION', 'Merchandise', 'What will you be shipping?.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Additional Protection', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION', 'false', 'Do you want to quote the rate with additional protection against potential loss or damage?', '6', '0', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Additional Protection Type', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_TYPE', 'NR', 'If you have additional protection enabled, select the type of additional protection you want to use.<p>AP - Shipment Value Protection<br>NR - No Additional Protection', '6', '0', 'tep_cfg_select_option(array(\'AP\', \'NR\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Additional Protection Value', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_VALUE', '', 'If you have additional protection enabled, by default the cart subtotal is used as the protection value.  Use this to add additional protection value on top of cart subtotal.<p>Example:<br>10 - adds $10 to cart subtotal<br>10% - adds 10% to cart subtotal', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Handling Fee', 'MODULE_SHIPPING_AIRBORNE_HANDLING', '0', 'Handling fee for this shipping method.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_AIRBORNE_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_AIRBORNE_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_AIRBORNE_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Module Debugging', 'MODULE_SHIPPING_AIRBORNE_DEBUG', 'False', 'Do you want to debug the domestic DHL/Airborne shipping module (will save the XML request and response to a file in the directory specified below)?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Method', 'MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD', 'Print to screen', 'Method of debugging', '6', '0', 'tep_cfg_select_option(array(\'Print to screen\', \'Save to file\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug Directory', 'MODULE_SHIPPING_AIRBORNE_DEBUG_DIRECTORY', '', 'Absolute path to the directory where to save XML requests and responses when in debug mode of \"Save to file\"<br /><em>Note:  Directory must be CHMOD to 777</em>', '6', '0', now())");
-    }
-
-    function remove() {
-        tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
-    }
-
     function keys() {
-//
-// Add in International Shipping Key
-//
+        //
+        // Add in International Shipping Key
+        //
         return array('MODULE_SHIPPING_AIRBORNE_STATUS', 'MODULE_SHIPPING_AIRBORNE_SYSTEMID', 'MODULE_SHIPPING_AIRBORNE_PASS', 'MODULE_SHIPPING_AIRBORNE_SHIP_KEY', 'MODULE_SHIPPING_AIRBORNE_SHIP_KEY_INTL', 'MODULE_SHIPPING_AIRBORNE_ACCT_NBR', 'MODULE_SHIPPING_AIRBORNE_SERVER', 'MODULE_SHIPPING_AIRBORNE_TYPES', 'MODULE_SHIPPING_AIRBORNE_DUTIABLE', 'MODULE_SHIPPING_AIRBORNE_DUTY_PAYMENT_TYPE', 'MODULE_SHIPPING_AIRBORNE_CONTENTS_DESCRIPTION', 'MODULE_SHIPPING_AIRBORNE_EST_DELIVERY', 'MODULE_SHIPPING_AIRBORNE_SHIP_WEIGHT', 'MODULE_SHIPPING_AIRBORNE_PACKAGE', 'MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY_TYPE', 'MODULE_SHIPPING_AIRBORNE_DAYS_TO_SHIP', 'MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY', 'MODULE_SHIPPING_AIRBORNE_OVERRIDE_EXP_SAT', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_WEIGHT', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_TABLE', 'MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_EXCLUSIVE', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_TYPE', 'MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_VALUE', 'MODULE_SHIPPING_AIRBORNE_HANDLING', 'MODULE_SHIPPING_AIRBORNE_TAX_CLASS', 'MODULE_SHIPPING_AIRBORNE_ZONE', 'MODULE_SHIPPING_AIRBORNE_SORT_ORDER', 'MODULE_SHIPPING_AIRBORNE_DEBUG', 'MODULE_SHIPPING_AIRBORNE_DEBUG_METHOD', 'MODULE_SHIPPING_AIRBORNE_DEBUG_DIRECTORY');
     }
 
@@ -244,8 +205,6 @@ class dhl {
         global $order;
 
         $postal = str_replace(' ', '', $postal);
-        //$state_query = tep_db_query("select zone_code from " . TABLE_ZONES . " where zone_name = '" . $state . "' and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'");
-        //$state_info = tep_db_fetch_array($state_query);
 
         $this->destination_street_address = $street_address;
         $this->destination_city = $city;
@@ -278,12 +237,7 @@ class dhl {
         }
 
         // start the XML request
-        $request = "<?xml version='1.0' ?>" .
-                "<eCommerce action='Request' version='1.1'>" .
-                "<Requestor>" .
-                "<ID>" . MODULE_SHIPPING_AIRBORNE_SYSTEMID . "</ID>" .
-                "<Password>" . MODULE_SHIPPING_AIRBORNE_PASS . "</Password>" .
-                "</Requestor>";
+        $request = $this->populateXmlDocument();
 
         if (isset($this->service)) {
             $this->types = array($this->service => $this->types[$this->service]);
@@ -395,18 +349,19 @@ class dhl {
         // select proper server
         switch (MODULE_SHIPPING_AIRBORNE_SERVER) {
             case 'production':
-                $api = "ApiLanding.asp";
+                $api = $this->live_url;
                 break;
             case 'test':
             default:
-                $api = "ApiLandingTest.asp";
+                $api = $this->test_url;
                 break;
         }
 
+        $request = $this->populateXmlDocument();
         // begin cURL engine & execute the request
         //if (function_exists('curl_init')) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://xmlapi.dhl-usa.com/$api");
+        curl_setopt($ch, CURLOPT_URL, "$api");
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_VERIFYPEER, false);
@@ -414,7 +369,7 @@ class dhl {
         curl_setopt($ch, CURLOPT_POSTFIELDS, "$request");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         //Added in 1.401 fix
-//	  curl_setopt($ch, CURLOPT_CAINFO, 'C:/apache/bin/curl-ca-bundle.crt');
+//    curl_setopt($ch, CURLOPT_CAINFO, 'C:/apache/bin/curl-ca-bundle.crt');
 
         $airborne_response = curl_exec($ch);
         curl_close($ch);
@@ -427,6 +382,8 @@ class dhl {
         //}//
         // }
         // Debugging
+        _vae_debug($request);
+        _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
@@ -486,7 +443,7 @@ class dhl {
         // Check that 'IE' is a selected method
         if (!in_array('IE', $this->allowed_methods)) {
             return(array('error' => 'Error - In order to use DHL International Express Shipping the shipping zone must be enabled (which has been completed) and IE must be checked off as an available shipping method (which has not been completed)'));
-//	return(false);
+//  return(false);
         };
 
         // start the XML request
@@ -582,18 +539,20 @@ class dhl {
         // select proper server
         switch (MODULE_SHIPPING_AIRBORNE_SERVER) {
             case 'production':
-                $api = "ApiLanding.asp";
+                $api = $this->live_url;
                 break;
             case 'test':
             default:
-                $api = "ApiLandingTest.asp";
+                $api = $this->test_url;
                 break;
         }
+
+        $request = $this->populateXmlDocument();
 
         // begin cURL engine & execute the request
         if (function_exists('curl_init')) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://xmlapi.dhl-usa.com/$api");
+            curl_setopt($ch, CURLOPT_URL, "$api");
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, "$request");
@@ -602,7 +561,7 @@ class dhl {
             curl_close($ch);
         } else {
             // cURL method using exec() // curl -d -k if you have SSL issues
-            exec("/usr/bin/curl -d \"$request\" https://xmlapi.dhl-usa.com/$api", $response);
+            exec("/usr/bin/curl -d \"$request\" $api", $response);
             $airborne_response = '';
             foreach ($response as $key => $value) {
                 $airborne_response .= "$value";
@@ -610,6 +569,8 @@ class dhl {
         }
 
         // Debugging
+        _vae_debug($request);
+        _vae_debug($airborne_response);
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
         }
@@ -806,6 +767,77 @@ class dhl {
         }
     }
 
+    function pieceXml(){
+        return '<Piece>
+               <PieceID>1</PieceID>
+               <Height>'._xmlEnc1234($this->height).'</Height>
+               <Depth>'._xmlEnc1234($this->length).'</Depth>
+               <Width>'._xmlEnc1234($this->width).'</Width>
+               <Weight>'._xmlEnc1234($this->weight).'</Weight>
+            </Piece>';
+    }
+
+    function populateXmlDocument(){
+        global $order, $shipping_weight, $shipping_num_boxes, $method;
+
+        $returnXml = '<?xml version="1.0" encoding="UTF-8"?>
+<p:DCTRequest xmlns:p="http://www.dhl.com" xmlns:p1="http://www.dhl.com/datatypes" xmlns:p2="http://www.dhl.com/DCTRequestdatatypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com DCT-req.xsd ">
+    <GetQuote>
+        <Request>
+            <ServiceHeader>
+                <SiteID>'. _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_SYSTEMID) .'</SiteID>
+                <Password>'. _xmlEnc1234(MODULE_SHIPPING_AIRBORNE_PASS) .'</Password>
+            </ServiceHeader>
+        </Request>
+        <From>
+            <CountryCode>'._xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE).'</CountryCode>
+            <Postalcode>'._xmlEnc1234(SHIPPING_ORIGIN_ZIP).'</Postalcode>
+            '.((SHIPPING_ORIGIN_CITY)?'<City>'._xmlEnc1234(SHIPPING_ORIGIN_CITY).'</City>':'').'
+        </From>
+        <BkgDetails>
+            <PaymentCountryCode>'._xmlEnc1234(SHIPPING_ORIGIN_COUNTRY_CODE).'</PaymentCountryCode>
+            <Date>'._makedate3254($this->shipping_day, 'day', 'yyyy-mm-dd').'</Date>
+            <ReadyTime>PT9H</ReadyTime>
+            <ReadyTimeGMTOffset>+00:00</ReadyTimeGMTOffset>
+            <DimensionUnit>IN</DimensionUnit>
+            <WeightUnit>LB</WeightUnit>
+            <Pieces>
+            '.((isset($this->dimensions))?$this->pieceXml():'').'
+            </Pieces>
+            <PaymentAccountNumber>'.MODULE_SHIPPING_AIRBORNE_ACCT_NBR.'</PaymentAccountNumber>
+            <IsDutiable>'.(($this->dutiable)?'Y':'N').'</IsDutiable>';
+/*
+*             <% if special_services.size>0 -%>
+                <QtdShp>
+                    <% special_services.each do |special_service_type_code| -%>
+                        <QtdShpExChrg>
+                            <SpecialServiceType><%= special_service_type_code %></SpecialServiceType>
+                        </QtdShpExChrg>
+                     <% end -%>
+                </QtdShp>
+            <% end -%>
+*/
+_vae_debug($returnXml);
+
+
+            $returnXml .= '
+        </BkgDetails>
+        <To>
+            <CountryCode>'._xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country).'</CountryCode>
+            <Postalcode>'._xmlEnc1234($this->destination_postal).'</Postalcode>
+            '.(($this->destination_city)?'<City>'._xmlEnc1234($this->destination_city).'</City>':'').'
+        </To>
+        '.(($this->dutiable)?'<Dutiable>
+                <DeclaredCurrency>USD</DeclaredCurrency>
+                <DeclaredValue>'.$order->info['total'].'</DeclaredValue>
+            </Dutiable>':'').'
+    </GetQuote>
+</p:DCTRequest>';
+
+        _vae_debug($returnXml);
+
+        return $returnXml;
+    }
     // End of class
 }
 
