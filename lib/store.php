@@ -1089,7 +1089,7 @@ function _vae_store_payment_paypal_ipn() {
             $out .= $retrdata;
             if ($retrdata !== false) {
               $good = true;
-              _vae_remove_file($_POST['custom']);
+              _vae_remove_file($_POST['custom']); // Delete the local IPN file
             }
           }
         } else {
@@ -1641,7 +1641,7 @@ function _vae_store_shipping_methods() {
 
 function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {
   global $_VAE;
-  if ($country != "US" && $_VAE['settings']['subdomain'] != "gagosiandev") return $city;
+  if ($country != "US") return $city;
   if ($state == "AE" || $state == "AP" || $state == "AA") return $city;
   $xml = '<?xml version="1.0"?>
   <AccessRequest>

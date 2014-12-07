@@ -43,6 +43,7 @@ class dhl {
     var $additionalProtection;
     var $live_url = 'https://xmlpi-ea.dhl.com/XMLShippingServlet';
     var $test_url = 'https://xmlpitest-ea.dhl.com/XMLShippingServlet';
+    var $order_total;
 
     function dhl() {
         global $order;
@@ -87,6 +88,7 @@ class dhl {
         $this->_setContainer(MODULE_SHIPPING_AIRBORNE_PACKAGE);
         $this->_setWeight($shipping_weight);
         $this->_setShippingDay(MODULE_SHIPPING_AIRBORNE_DAYS_TO_SHIP, MODULE_SHIPPING_AIRBORNE_SHIPMENT_DAY);
+        $this->_setTotal($order->info['total']);
         //if (MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_WEIGHT == 'true') $this->_setDimensions(MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_EXCLUSIVE);
         //if (MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION == 'true') $this->_setAdditionalProtection(MODULE_SHIPPING_AIRBORNE_ADDITIONAL_PROTECTION_VALUE);
 
@@ -177,6 +179,10 @@ class dhl {
         // Wi-Gear Changed in v2.2 - round up weight
         $shipping_pounds = ceil($shipping_weight);
         $this->weight = $shipping_pounds;
+    }
+
+    function _setTotal($order_total) {
+        $this->order_total = $order_total;
     }
 
     function _setDimensions($exclusive) {
@@ -288,14 +294,7 @@ class dhl {
 
         $airborne_response = curl_exec($ch);
         curl_close($ch);
-        // } //else {
-        // cURL method using exec() // curl -d -k if you have SSL issues
-        //exec("/usr/bin/curl -d \"$request\" https://xmlapi.dhl-usa.com/$api", $response);
-        //$airborne_response = '';
-        //foreach ($response as $key => $value) {
-        //$airborne_response .= "$value";
-        //}//
-        // }
+        
         // Debugging
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
@@ -569,6 +568,12 @@ class dhl {
 
     function populateXmlDocument() {
         global $order, $shipping_weight, $shipping_num_boxes, $method;
+        if(!isset($this->order_total)){
+            $this->order_total = 0.00;
+        }
+        if(MODULE_SHIPPING_AIRBORNE_DUTY_PAYMENT_TYPE == 'R'){
+          $this->dutiable = 'Y';
+        }
 
         $returnXml = '<?xml version="1.0" encoding="UTF-8"?>
                         <p:DCTRequest xmlns:p="http://www.dhl.com" xmlns:p1="http://www.dhl.com/datatypes" xmlns:p2="http://www.dhl.com/DCTRequestdatatypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dhl.com DCT-req.xsd ">
@@ -603,7 +608,7 @@ class dhl {
                                 </To>
                                 ' . (($this->dutiable) ? '<Dutiable>
                                         <DeclaredCurrency>USD</DeclaredCurrency>
-                                        <DeclaredValue>' . $order->info['total'] . '</DeclaredValue>
+                                        <DeclaredValue>' . _xmlEnc1234($this->order_total) . '</DeclaredValue>
                                     </Dutiable>' : '') . '
                             </GetQuote>
                         </p:DCTRequest>';
