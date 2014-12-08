@@ -189,7 +189,7 @@ function tep_not_null($a) {
 function tep_round_up($amount, $places) {
   if ($places < 0) { $places = 0; }
   $mult = pow(10, $places);
-	return (ceil($amount * $mult) / $mult);
+  return (ceil($amount * $mult) / $mult);
 }
 
 
