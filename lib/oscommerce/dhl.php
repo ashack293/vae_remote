@@ -610,7 +610,7 @@ class dhl {
                                     </QtdShp>':'') . '
                                 </BkgDetails>
                                 <To>
-                                    <CountryCode>' . _xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country) . '</CountryCode>
+                                    <CountryCode>' . _xmlEnc1234($this->destination_country) . '</CountryCode>
                                     <Postalcode>' . _xmlEnc1234($this->destination_postal) . '</Postalcode>
                                     ' . (($this->destination_city) ? '<City>' . _xmlEnc1234($this->destination_city) . '</City>' : '') . '
                                 </To>
