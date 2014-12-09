@@ -601,6 +601,15 @@ class dhl {
                                     </Pieces>
                                     ' . ((MODULE_SHIPPING_AIRBORNE_ACCT_NBR) ? '<PaymentAccountNumber>' . MODULE_SHIPPING_AIRBORNE_ACCT_NBR . '</PaymentAccountNumber>' : '') . '
                                     <IsDutiable>' . (($this->dutiable) ? 'Y' : 'N') . '</IsDutiable>
+                                    ' . ((SHIPPING_ORIGIN_COUNTRY_CODE != $this->destination_country)?'
+                                    <QtdShp>
+                                        <GlobalProductCode>P</GlobalProductCode>
+                                        <LocalProductCode>P</LocalProductCode>
+                                        ' . (($this->dutiable) ? '
+                                        <QtdShpExChrg>
+                                            <SpecialServiceType>DD</SpecialServiceType>
+                                        </QtdShpExChrg>' : '') . '
+                                    </QtdShp>':'') . '
                                 </BkgDetails>
                                 <To>
                                     <CountryCode>' . _xmlEnc1234($this->destination_country == "GB" ? "UK" : $this->destination_country) . '</CountryCode>
