@@ -1971,7 +1971,7 @@ function _vae_sweep_data_dir() {
   }
   $dh = opendir($_VAE['config']['data_path']);
   while (($file = readdir($dh)) !== false) {
-    if (in_array($file, array(".", "..", "feed.xml", "settings.php"))) continue;
+    if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
     if (isset($save[$file])) continue; 
     $filename = $_VAE['config']['data_path'] . $file;
     $fileage = time() - filemtime($filename);
