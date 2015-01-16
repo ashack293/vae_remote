@@ -21,6 +21,25 @@ function vae_cache($key, $timeout = 3600, $function = "", $global = false) {
   return $out;
 }
 
+function vae_cached_contingency($key, $timeout = 86400, $function = "", $global = false) {
+  global $_VAE;
+  if (!strlen($key)) _vae_error("You called <span class='c'>vae_cached_contingency()</span> but didn't provide a cache key.");
+  if ($function == "") $function = $key;
+  $key = ($global ? $_VAE['global_cache_key'] : $_VAE['cache_key']) . $key;
+  $out = $function();
+  if (is_null($out)) {
+    $cached = memcache_get($_VAE['memcached'], $key);
+    if (is_array($cached) && $cached[0] == "chks") {
+      return $cached[1];
+    }
+    else {
+      return NULL;
+    }
+  }
+  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
+  return $out;
+}
+
 function vae_cdn_url() {
   global $_VAE;
   if (isset($_VAE['config']['cdn_url'])) return $_VAE['config']['cdn_url'];
@@ -654,6 +673,18 @@ function vae_watermark($image, $watermark_image, $vertical_align = "", $align = 
 	}
 	imagecopy($tk, $tlogo, $alinks, $aoben, 0, 0, $logowidth, $logoheight);
   return _vae_store_file($iden, $tk, "jpg", null, "jpeg");
+}
+
+function vae_weak_cache($key, $timeout = 3600, $weak_timeout = 86400, $function = "", $global = false) {
+  if (!strlen($key)) _vae_error("You called <span class='c'>vae_weak_cache()</span> but didn't provide a cache key.");
+  if ($function == "") $function = $key;
+  $weak_key = "weak:591debff:$key"; // Just need a key that won't conflict with other keys.
+  // Uncomment the closure later in some future version of PHP or Vae where it works.
+  //$mid_function = function() use($weak_key, $weak_timeout, $function, $global) {
+  //  return vae_cached_contingency($weak_key, $weak_timeout, $function, $global);
+  //};
+  $mid_function = create_function("", "return vae_cached_contingency('$weak_key', $weak_timeout, '$function', $global);");
+  return vae_cache($key, $timeout, $mid_function, $global);
 }
 
 function vae_zip_distance($from, $to, $zip_field = "zip") {
