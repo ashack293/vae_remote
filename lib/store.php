@@ -1473,7 +1473,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
         if ($method['accept_check']) $a['options']['check'] = $_VAE['store']['payment_methods']['check']['name'];
         if ($method['accept_mo']) $a['options']['money_order'] = $_VAE['store']['payment_methods']['money_order']['name'];
         if ($method['accept_bank_transfer']) $a['options']['bank_transfer'] = $_VAE['store']['payment_methods']['bank_transfer']['name'];
-        if ($method['accept_mo']) $a['options']['in_store'] = $_VAE['store']['payment_methods']['in_store']['name'];
+        if ($method['accept_in_store']) $a['options']['in_store'] = $_VAE['store']['payment_methods']['in_store']['name'];
       } elseif ($method['method_name'] != "google_checkout") {
         $a['options'][$method['method_name']] = $_VAE['store']['payment_methods'][$method['method_name']]['name'];
       }
