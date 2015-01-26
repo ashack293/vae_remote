@@ -1410,7 +1410,7 @@ function _vae_store_render_if_recent_order_money_order($a, &$tag, $context, &$ca
 
 function _vae_store_render_if_recent_order_pay_in_store($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', 'if');
-  return _vae_render_tags($tag, $context, $render_context, ($_SESSION['__v:store']['recent_order_data']['payment_method'] == "pay_in_store"));
+  return _vae_render_tags($tag, $context, $render_context, ($_SESSION['__v:store']['recent_order_data']['payment_method'] == "in_store"));
 }
 
 function _vae_store_render_if_recent_order_paypal($a, &$tag, $context, &$callback, $render_context) {
