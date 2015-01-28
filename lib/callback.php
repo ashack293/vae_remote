@@ -47,8 +47,8 @@ function _vae_callback_formmail($tag) {
     }
     if (strlen($text1)) {
       $html = "<div id=\"vmail\" style='font-size: 0.95em; font-family: Arial, \"Lucida Grande\", \"Myriad\", \"Lucida Sans Unicode\", \"Bitstream Vera Sans\", Helvetica, Arial, sans-serif;'>";
-      $text = "On " . strftime("%B %d, %Y at %H:%M") . ", the following form was submitted to your website at http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ":\n\n";
-      $html .= "<p style='color: #333; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #ddd;'>On <strong>" . strftime("%B %d, %Y</strong> at <strong>%H:%M") . "</strong>, the following form was submitted to your website at <strong>http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "</strong></p><table border='0' style='font-size: 1.0em; font-family: Arial, \"Lucida Grande\", \"Myriad\", \"Lucida Sans Unicode\", \"Bitstream Vera Sans\", Helvetica, Arial, sans-serif;' cellspacing='0' cellpadding='0'>";
+      $text = "On " . strftime("%B %d, %Y at %H:%M") . " from " . $_SERVER["REMOTE_ADDR"] . ", the following form was submitted to your website at http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ":\n\n";
+      $html .= "<p style='color: #333; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #ddd;'>On <strong>" . strftime("%B %d, %Y</strong> at <strong>%H:%M") . "</strong> from " . $_SERVER["REMOTE_ADDR"] . ", the following form was submitted to your website at <strong>http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "</strong></p><table border='0' style='font-size: 1.0em; font-family: Arial, \"Lucida Grande\", \"Myriad\", \"Lucida Sans Unicode\", \"Bitstream Vera Sans\", Helvetica, Arial, sans-serif;' cellspacing='0' cellpadding='0'>";
       $html .= $html1 . "</table>";
       $text .= $text1 . "\n\n";
       if ($tag['attrs']['email_template']) {
