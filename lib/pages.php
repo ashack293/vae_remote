@@ -59,7 +59,7 @@ function _vae_page_check_redirects() {
   $page = substr($_SERVER['REQUEST_URI'], 1);
   $page_without_query_string = substr($e[0], 1);
   $http = "http://" . $_SERVER['HTTP_HOST'] . "/";
-  foreach (array($page, $page_without_query_string, $http . $page, $http . $page_without_query_string) as $try) {
+  foreach (array($page, strtolower($page), $page_without_query_string, strtolower($page_without_query_string), $http . $page, $http . strtolower($page), $http . $page_without_query_string, $http . strtolower($page_without_query_string)) as $try) {
     if (isset($_VAE['settings']['redirects'][$try])) {
       $new_url = $_VAE['settings']['redirects'][$try];
       foreach (explode("&", $e[1]) as $param) {
