@@ -499,6 +499,10 @@ function vae_store_remove_from_cart($cart_id) {
   return true;
 }
 
+function vae_store_set_tax($value) {
+  $_SESSION['__v:store']['tax_override'] = $value;
+}
+
 function vae_store_shipping_tax_class($val = null) {
   return _vae_store_shipping_tax_class($val);
 }

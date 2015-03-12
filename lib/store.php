@@ -689,6 +689,7 @@ function _vae_store_compute_subtotal() {
 function _vae_store_compute_tax() {
   global $_VAE;
   if (isset($_VAE['store_cached_tax'])) return $_VAE['store_cached_tax'];
+  if (isset($_SESSION['__v:store']['tax_override'])) return $_SESSION['__v:store']['tax_override'];
   _vae_session_deps_add('__v:store', '_vae_store_compute_tax');
   $_SESSION['__v:store']['tax_rate'] = "";
   $totamt = 0;
