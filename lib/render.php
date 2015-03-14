@@ -1288,11 +1288,11 @@ function _vae_render_yield($a, &$tag, $context, &$callback, $render_context) {
 
 function _vae_render_newsletter_yield($body, $context, $a) {
   if (strpos($body, "&lt;v") !== false) {
-    preg_match_all('/&lt;v=(.*)&gt;/', $body, $matches, PREG_SET_ORDER);
+    preg_match_all('/&lt;v=(.*)&gt;/U', $body, $matches, PREG_SET_ORDER);
     foreach ($matches as $regs) {
       $body = str_replace($regs[0], "<v=" . $regs[1] . ">", $body);
     }
-    preg_match_all('/&lt;v\\?=(.*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
+    preg_match_all('/&lt;v\\?=(.*)\\?&gt;/U', $body, $matches, PREG_SET_ORDER);
     foreach ($matches as $regs) {
       $body = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $body);
     }
