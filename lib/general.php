@@ -1495,7 +1495,7 @@ function _vae_render_error($e) {
   }
   if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr(get_class($e), "Vae"))) {
     $error_type = "Vae Error";
-    if (get_class($e) == "VaeException" || get_class($e) == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = _vae_h($e->getMessage());
+    if (get_class($e) == "VaeException" || get_class($e) == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
   } else {
     $error_type = "Exception Thrown";
     $msg = get_class($e) . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
