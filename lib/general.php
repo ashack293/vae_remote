@@ -1527,7 +1527,7 @@ function _vae_render_error($e) {
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
   if ($_REQUEST['secret_key']) {
-    return json_encode(array('error' => $msg));
+    return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }
   return _vae_render_message($error_type, $out);
 }
