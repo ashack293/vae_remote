@@ -1398,6 +1398,8 @@ function _vae_remote() {
         }
       }
       echo "200 Success";
+    } elseif ($_REQUEST['newsletter_yield']) {
+      echo _vae_render_newsletter_yield($_REQUEST['newsletter_yield'], null, array());
     } else {
       _vae_error("","No action specified");
     }

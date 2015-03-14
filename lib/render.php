@@ -1281,20 +1281,24 @@ function _vae_render_yield($a, &$tag, $context, &$callback, $render_context) {
     return $y;
   }
   if ($context && (!$render_context->get("nestedRendering")) && ($body = (string)_vae_fetch_without_errors("yield", $context))) {
-    if (strpos($body, "&lt;v") !== false) {
-      preg_match_all('/&lt;v=(.*)&gt;/', $body, $matches, PREG_SET_ORDER);
-      foreach ($matches as $regs) {
-        $body = str_replace($regs[0], "<v=" . $regs[1] . ">", $body);
-      }
-      preg_match_all('/&lt;v\\?=(.*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
-      foreach ($matches as $regs) {
-        $body = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $body);
-      }
-      $body = _vae_render_oneline($body, $context, false);
-    }
-    return _vae_htmlarea($body, $a);
+    return _vae_render_newsletter_yield($body, $context, $a);
   }
   return _vae_render_tags($tag, $context, $render_context);
+}
+
+function _vae_render_newsletter_yield($body, $context, $a) {
+  if (strpos($body, "&lt;v") !== false) {
+    preg_match_all('/&lt;v=(.*)&gt;/', $body, $matches, PREG_SET_ORDER);
+    foreach ($matches as $regs) {
+      $body = str_replace($regs[0], "<v=" . $regs[1] . ">", $body);
+    }
+    preg_match_all('/&lt;v\\?=(.*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
+    foreach ($matches as $regs) {
+      $body = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $body);
+    }
+    $body = _vae_render_oneline($body, $context, false);
+  }
+  return _vae_htmlarea($body, $a);
 }
 
 function _vae_render_zip($a, &$tag, $context, &$callback, $render_context) {
