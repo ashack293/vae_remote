@@ -1280,15 +1280,15 @@ function _vae_render_yield($a, &$tag, $context, &$callback, $render_context) {
     unset($_VAE['yield']);
     return $y;
   }
-  if ($context && (!$render_context->get("nestedRendering")) && ($body = _vae_fetch_without_errors("yield", $context))) {
+  if ($context && (!$render_context->get("nestedRendering")) && ($body = (string)_vae_fetch_without_errors("yield", $context))) {
     if (strpos($body, "&lt;v") !== false) {
-      preg_match_all('/&lt;v=([^>]*)&gt;/', $body, $matches, PREG_SET_ORDER);
+      preg_match_all('/&lt;v=(.*)&gt;/', $body, $matches, PREG_SET_ORDER);
       foreach ($matches as $regs) {
-        $out = str_replace($regs[0], "<v=" . $regs[1] . ">", $out);
+        $body = str_replace($regs[0], "<v=" . $regs[1] . ">", $body);
       }
-      preg_match_all('/&lt;v\\?=([^>]*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
+      preg_match_all('/&lt;v\\?=(.*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
       foreach ($matches as $regs) {
-        $out = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $out);
+        $body = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $body);
       }
       $body = _vae_render_oneline($body, $context, false);
     }
