@@ -1525,6 +1525,9 @@ function _vae_render_error($e) {
     if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
+  if ($_REQUEST['secret_key']) {
+    return json_encode(array('error' => $msg));
+  }
   return _vae_render_message($error_type, $out);
 }
 
