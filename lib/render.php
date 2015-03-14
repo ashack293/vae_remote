@@ -43,7 +43,11 @@ function _vae_render(&$tag, $context, $render_context) {
     }
     if (isset($return_value)) return $return_value;
   }
-  return ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context, false));;
+  $innerhtml = ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context, false));;
+  if (is_object($render_context) && $render_context->get("htmlarea")) {
+    return _vae_htmlarea($innerhtml, $render_context->get("htmlarea"));
+  }
+  return $innerhtml;
 }
 
 function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
@@ -1142,7 +1146,7 @@ function _vae_render_tags(&$parent_tag, $context = null, $render_context = null,
   if (is_object($render_context)) $render_context = $render_context->unsett("else");
   if (count($parent_tag['tags'])) {
     for ($i = 0; $i < count($parent_tag['tags']); $i++) {
-      $out .= _vae_render($parent_tag['tags'][$i], $context, $render_context);      
+      $out .= _vae_render($parent_tag['tags'][$i], $context, $render_context);
     }
   }
   if (is_object($render_context) && $render_context->get("else")) {
@@ -1281,7 +1285,9 @@ function _vae_render_yield($a, &$tag, $context, &$callback, $render_context) {
     return $y;
   }
   if ($context && (!$render_context->get("nestedRendering")) && ($body = _vae_fetch_without_errors("yield", $context))) {
-    return _vae_htmlarea($body, $a);
+    list($parse_tree, $render_context) = _vae_parse_vaeml($body, "yield", $tag, $render_context);
+    $render_context = $render_context->set("htmlarea", $a);
+    return _vae_render_tags($parse_tree, $context, $render_context);
   }
   return _vae_render_tags($tag, $context, $render_context);
 }
