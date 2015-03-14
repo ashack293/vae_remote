@@ -207,6 +207,7 @@ function _vae_exception_handler($e) {
   if ($_ENV['TEST']) return;
   ob_end_clean();
   echo _vae_render_error($e);
+  _vae_die();
 }
 
 function _vae_fetch_multiple($path = "*", $context = null) {
