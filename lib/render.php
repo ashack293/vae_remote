@@ -43,11 +43,7 @@ function _vae_render(&$tag, $context, $render_context) {
     }
     if (isset($return_value)) return $return_value;
   }
-  $innerhtml = ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context, false));;
-  if (is_object($render_context) && $render_context->get("htmlarea")) {
-    return _vae_htmlarea($innerhtml, $render_context->get("htmlarea"));
-  }
-  return $innerhtml;
+  return ((strpos($tag['innerhtml'], "<v") === false) ? $tag['innerhtml'] : _vae_render_oneline($tag['innerhtml'], $context, false));;
 }
 
 function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
@@ -1285,9 +1281,18 @@ function _vae_render_yield($a, &$tag, $context, &$callback, $render_context) {
     return $y;
   }
   if ($context && (!$render_context->get("nestedRendering")) && ($body = _vae_fetch_without_errors("yield", $context))) {
-    list($parse_tree, $render_context) = _vae_parse_vaeml($body, "yield", $tag, $render_context);
-    $render_context = $render_context->set("htmlarea", $a);
-    return _vae_render_tags($parse_tree, $context, $render_context);
+    if (strpos($body, "&lt;v") !== false) {
+      preg_match_all('/&lt;v=([^>]*)&gt;/', $body, $matches, PREG_SET_ORDER);
+      foreach ($matches as $regs) {
+        $out = str_replace($regs[0], "<v=" . $regs[1] . ">", $out);
+      }
+      preg_match_all('/&lt;v\\?=([^>]*)\\?&gt;/', $body, $matches, PREG_SET_ORDER);
+      foreach ($matches as $regs) {
+        $out = str_replace($regs[0], "<v?=" . $regs[1] . "?>", $out);
+      }
+      $body = _vae_render_oneline($body, $context, false);
+    }
+    return _vae_htmlarea($body, $a);
   }
   return _vae_render_tags($tag, $context, $render_context);
 }
