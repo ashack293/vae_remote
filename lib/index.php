@@ -73,25 +73,28 @@ if (_vae_should_load()) {
   
   if ($_REQUEST['secret_key']) _vae_remote();
   
-  _vae_page_check_domain();
-  if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();
-  _vae_page_check_redirects();
-  _vae_parse_path();
-  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
-
   if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass" || substr($_SERVER['SCRIPT_FILENAME'], -5) == ".scss") {
     require_once(dirname(__FILE__) . "/haml.php");
     ob_start('_vae_sass_ob');
-  } elseif (strstr($_SERVER['SCRIPT_FILENAME'], ".pdf") && !isset($_VAE['skip_pdf'])) {
-    require_once(dirname(__FILE__) . "/pdf.php");
-    _vae_pdf();  
-  } elseif (!$_ENV['TEST']) {  
-    /* Normal Request */
-    if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
-    _vae_set_cache_key();
-    _vae_start_ob();
+
+  } else {
+
+    _vae_page_check_domain();
+    if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();
+    _vae_page_check_redirects();
+    _vae_parse_path();
+    if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
+
+    if (strstr($_SERVER['SCRIPT_FILENAME'], ".pdf") && !isset($_VAE['skip_pdf'])) {
+      require_once(dirname(__FILE__) . "/pdf.php");
+      _vae_pdf();  
+    } elseif (!$_ENV['TEST']) {  
+      /* Normal Request */
+      if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
+      _vae_set_cache_key();
+      _vae_start_ob();
+    }
   }
-  
 }
 
 ?>
