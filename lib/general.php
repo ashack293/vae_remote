@@ -808,7 +808,7 @@ function _vae_jsesc($a) {
 
 function _vae_kvstore_read($iden, $renew_expiry = null) {
   global $_VAE;
-  $memcache_key = "kvs-" . $_VAE['settings']['subdomain'] . "-" . $key;
+  $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $iden;
   if ($cache = memcache_get($_VAE['memcached'], $memcache_key)) {
     return $cache;
   }
