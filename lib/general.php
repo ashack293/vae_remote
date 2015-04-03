@@ -815,6 +815,7 @@ function _vae_kvstore_read($iden, $renew_expiry = null) {
   $q = _vae_sql_q("SELECT `v`,`expire_at` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
   if ($r = _vae_sql_r($q)) {
     if ($renew_expiry && (strtotime($r['expire_at']) < (time()+($renew_expiry - 10)*86400))) {
+      _vae_tick(" - updating kvstore exiry date");
       _vae_sql_q("UPDATE kvstore SET `expire_at`=DATE_ADD(NOW(),INTERVAL " . $renew_expiry . " DAY) WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
     }
     memcache_set($_VAE['memcached'], $memcache_key, $r['v'], 0, 86400);
