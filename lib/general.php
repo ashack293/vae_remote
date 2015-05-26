@@ -843,9 +843,8 @@ function _vae_kvstore_empty() {
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
 }
 
-function _vae_kvstore_v_exists($v) {
-  $q = _vae_sql_q("SELECT `k` FROM `kvstore` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "' AND `v`='" . _vae_sql_e($v) . "'");
-  if ($r = _vae_sql_r($q)) {
+function _vae_kvstore_v_exists($iden) {
+  if (_vae_kvstore_read($iden)) {
     return true;
   }
   return false;
