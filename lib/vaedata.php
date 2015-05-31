@@ -38,7 +38,7 @@ class VaeContext implements ArrayAccess, Countable {
     if ($formId) $this->___formId = $formId;
     if ($clone) {
       VaeQuery::___openClient();
-      $this->___context = new VaeDbContext(array('id' => $data['id']));
+      $this->___context = new Thrift\VaeDbContext(array('id' => $data['id']));
     }
   }
   

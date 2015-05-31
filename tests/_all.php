@@ -26,20 +26,20 @@ class AllTests extends TestSuite {
     $this->addFile(dirname(__FILE__) . '/constants_test.php');
     $this->addFile(dirname(__FILE__) . '/context_test.php');
     $this->addFile(dirname(__FILE__) . '/func_test.php');
-    //$this->addFile(dirname(__FILE__) . '/general_test.php');
-    //$this->addFile(dirname(__FILE__) . '/haml_test.php');
+    $this->addFile(dirname(__FILE__) . '/general_test.php');
+    $this->addFile(dirname(__FILE__) . '/haml_test.php');
     $this->addFile(dirname(__FILE__) . '/pages_test.php');
     $this->addFile(dirname(__FILE__) . '/parse_test.php');
     $this->addFile(dirname(__FILE__) . '/pdf_test.php');
-    //$this->addFile(dirname(__FILE__) . '/phpapi_test.php');
+    $this->addFile(dirname(__FILE__) . '/phpapi_test.php');
     $this->addFile(dirname(__FILE__) . '/rest_test.php');
-    //$this->addFile(dirname(__FILE__) . '/render_test.php');
+    $this->addFile(dirname(__FILE__) . '/render_test.php');
     $this->addFile(dirname(__FILE__) . '/status_test.php');
-    //$this->addFile(dirname(__FILE__) . '/store_test.php');
-    //$this->addFile(dirname(__FILE__) . '/store.oscommerce_test.php');
-    //$this->addFile(dirname(__FILE__) . '/users_test.php');
+    $this->addFile(dirname(__FILE__) . '/store_test.php');
+    $this->addFile(dirname(__FILE__) . '/store.oscommerce_test.php');
+    $this->addFile(dirname(__FILE__) . '/users_test.php');
     $this->addFile(dirname(__FILE__) . '/vae_exception_test.php');
-    //$this->addFile(dirname(__FILE__) . '/vaedata_test.php');
+    $this->addFile(dirname(__FILE__) . '/vaedata_test.php');
   }
   
 }
