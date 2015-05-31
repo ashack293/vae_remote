@@ -302,6 +302,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         $result = null;
         try {
           if (!self::$sessionId) self::___openSession();
+          if ($options == null) $options = array();
           $result = self::$client->get(self::$sessionId, $responseId, $query, $options);
         } catch (TSocketException $e) {
           self::___resetClient();
