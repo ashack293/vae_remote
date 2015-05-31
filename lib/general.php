@@ -627,7 +627,7 @@ function _vae_inject_assets($out) {
           }
         }
       }
-      $iden = "asset" . md5($iden.$_VAE['settings']['subdomain']); // added subdomain to prevent cross domain conflicts
+      $iden = "asset" . md5($iden);
       if ($cache = _vae_long_term_cache_get($iden)) {
         $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
@@ -647,9 +647,8 @@ function _vae_inject_assets($out) {
         if ($_VAE['asset_types'][$group] == "js") {
           $js_out = _vae_rest(array('raw' => $raw), "api/site/v1/compress", "js");
           if ($js_out != "BAD" && $js_out != "") {
-            $raw=$js_out;
+            $raw = $js_out;
           }
-          unset($js_out); // free up
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
           require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
           $css = new csstidy();
@@ -693,20 +692,6 @@ function _vae_inject_assets_css_callback($a) {
   if ((substr($url, 0, 1) != "/") && !strstr($url, "://")) $url = $_VAE['assets_css_callback'] . "/" . $url;
   $url = _vae_cdn_timestamp_url($url);
   return "url(" . $a[1] . $url . $a[3] . ")";
-}
-
-function _vae_inject_cdn($out) {
-  //$out = preg_replace_callback("/(\"|'|url\\()http:\\/\\/(www\\.|)" . preg_replace("/^www\\./", "", $_SERVER['HTTP_HOST']) . "\\/([^\"')]*\\/|)wp-(content|photos)\\/([^\"')]*)(\"|'|\\))/", "_vae_inject_cdn_callback", $out);
-  $out = preg_replace('/verbsite\.com\.lg1([a-z0-9]*)\.simplecdn\.net/', "vaesite.net", $out);
-  $out = str_replace("verbcms.com", "vaeplatform.com", $out);
-  return $out;
-}
-
-function _vae_inject_cdn_callback($a) {
-  if (strstr($a[0], "wp-content/plugins")) return $a[0];
-  $url = $a[3] . "wp-" . $a[4] . "/" . $a[5];
-  $url = _vae_cdn_timestamp_url("/" . $url);
-  return $a[1] . vae_cdn_url() . substr($url, 1) . $a[6]; 
 }
 
 function _vae_interpret_vaeml($vaeml) {
@@ -809,8 +794,8 @@ function _vae_jsesc($a) {
 
 function _vae_long_term_cache_get($iden, $renew_expiry = null) {
   global $_VAE;
-  $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $iden;
-  if ($cache = _vae_short_term_cache_get($memcache_key)) {
+  $memcache_key = "LongTermCache:" . $iden;
+  if (!$_ENV['TEST'] && $cache = _vae_short_term_cache_get($memcache_key)) {
     return $cache;
   }
   $q = _vae_sql_q("SELECT `v`,`expire_at` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
@@ -836,12 +821,12 @@ function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_fil
   _vae_short_term_cache_set($memcache_key, $value, 0, 86400);
 }
 
-function _vae_kvstore_empty() {
+function _vae_long_term_cache_empty() {
   global $_VAE;
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
 }
 
-function _vae_kvstore_v_exists($iden) {
+function _vae_long_term_cache_exists($iden) {
   if (_vae_long_term_cache_get($iden)) {
     return true;
   }
@@ -979,7 +964,7 @@ function _vae_make_filename($ext, $filename = null) {
     } else {
       $newname = md5(mt_rand()) . "." . $ext;
     }
-  } while (file_exists($_VAE['config']['data_path'] . $newname) || _vae_kvstore_v_exists($newname));
+  } while (file_exists($_VAE['config']['data_path'] . $newname) || _vae_long_term_cache_exists($newname));
   return $newname;
 }
 
@@ -1307,7 +1292,10 @@ function _vae_placeholder($which) {
 
 function _vae_post_process($out) {
   global $_VAE;
-  if (isset($_VAE['config']['cdn_url'])) $out = _vae_inject_cdn($out);
+  if (isset($_VAE['config']['cdn_url'])) {
+    $out = preg_replace('/verbsite\.com\.lg1([a-z0-9]*)\.simplecdn\.net/', "vaesite.net", $out);
+    $out = str_replace("verbcms.com", "vaeplatform.com", $out);
+  }
   return $out;
 }
 
@@ -1379,7 +1367,7 @@ function _vae_remote() {
     if ($_REQUEST['version']) {
       echo "201 Version " . $_VAE['version'];
     } elseif ($_REQUEST['kvstore_empty']) {
-      _vae_kvstore_empty();
+      _vae_long_term_cache_empty();
       echo "200 Success";
     } elseif ($_REQUEST['hook']) {
       if ($_REQUEST['hook'] == "settings:updated") {
@@ -2067,7 +2055,9 @@ function _vae_write_file($name, $data) {
   if ($ret != strlen($data)) {
     _vae_error("","Couldn't write enough data to local cache file " . _vae_h($name)); 
   }
-  if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
+  if ($_ENV['TEST']) {
+    $_VAE['files_written'][] = $name;
+  }
 } 
 
 ?>

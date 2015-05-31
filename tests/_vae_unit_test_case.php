@@ -27,6 +27,7 @@ class VaeUnitTestCase extends UnitTestCase {
     $this->oldSession = $_SESSION;
     $this->oldVae = $_VAE;
     $_VAE['files_written'] = array();
+    _vae_long_term_cache_empty();
   }
   
   function tearDown() {

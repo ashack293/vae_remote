@@ -39,10 +39,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertRedirect($url);
   }
   
-  function testVaeCdnTimestampUrl() {
-    $this->assertPattern('/^\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg/', _vae_cdn_timestamp_url("/wp-content/sample-nala.jpg"));
-  }
-  
   function testVaeClearLogin() {
     $_SESSION['__v:logged_in'] = true;
     _vae_clear_login();
@@ -438,12 +434,11 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertEqual("Section dividers removed", _vae_htmlarea("Section dividers<hr /> removed", array()));
     $this->assertEqual("Section 3Section 4", _vae_htmlarea("Section 1<hr />Section 2<hr />Section 3<hr />Section 4", array('section' => '2+')));
     $this->assertEqual("Section 2", _vae_htmlarea("Section 1<hr />Section 2<hr />Section 3<hr />Section 4", array('section' => '1')));
-    $this->assertPattern('/audioplayer/', _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array(), true));
-    $this->assertPattern('/foo=man/', _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array('audio_player_vars' => "foo=man&bar=woman"), true));
-    $this->assertEqual("", _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array(), false));
-    $this->assertPattern('/\/player/', _vae_htmlarea("<img src='/VAE_HOSTED_VIDEO/123' />", array(), true));
-    $this->assertEqual("", _vae_htmlarea("<img src='/VAE_HOSTED_VIDEO/123' />", array(), false));
-    $this->assertEqual("<img src=\"http://btg.vaesite.net/__data/Array\" />", _vae_htmlarea("<img src='/VAE_HOSTED_IMAGE/123' />", array(), true));
+    $this->assertPattern('/audioplayer/', _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array(), false));
+    $this->assertPattern('/foo=man/', _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array('audio_player_vars' => "foo=man&bar=woman"), false));
+    $this->assertEqual("", _vae_htmlarea("<img src='/VAE_HOSTED_AUDIO/123' />", array(), true));
+    $this->assertPattern('/\/player/', _vae_htmlarea("<img src='/VAE_HOSTED_VIDEO/123' />", array(), false));
+    $this->assertEqual("", _vae_htmlarea("<img src='/VAE_HOSTED_VIDEO/123' />", array(), true));
     $this->assertEqual("<img src=\"http://btg.vaesite.net/__data/Array\" />", _vae_htmlarea("<img src='/VAE_HOSTED_IMAGE/123' />", array(), false));
   }
   
@@ -465,7 +460,7 @@ class GeneralTest extends VaeUnitTestCase {
     $base_html = "<html><body></body></html>";
     $out = _vae_inject_assets($base_html);
     $this->assertPattern('/<script(.*)jquery.js(.*)<\/script>/', $out);
-    $this->assertEqual('<html><body></body></html><script type="text/javascript" src="/__assets/jquery.js"></script>', $out);
+    $this->assertEqual('<script type="text/javascript" src="/__assets/jquery.js"></script><html><body></body></html>', $out);
     $preexisting_jquery_html = "<html><head><script type='text/javascript' src='/mylib/jquery.min.js'></script></head><body></body></html>";
     $this->assertEqual($preexisting_jquery_html, _vae_inject_assets($preexisting_jquery_html));
     _vae_needs_jquery('ui');
@@ -476,18 +471,23 @@ class GeneralTest extends VaeUnitTestCase {
   
   function testVaeInjectAssetsCssAssets() {
     global $_VAE;
-    $base_html = "<html><head></head><body></body></html>";
+    $base_html = "<html><head><_VAE_ASSET_screen1></head><body></body></html>";
     $_VAE['assets'] = array('screen' => array('assets/testscreen1.css'));
+    $_VAE['asset_inject_points'] = array('screen' => 1);
+    $_VAE['asset_types'] = array('screen' => 'screen');
     $out = _vae_inject_assets($base_html);
     $this->assertTrue(preg_match('/<link rel="stylesheet" type="text\/css" media="screen" href="http:\/\/btg.vaesite.net\/__data\/([0-9a-f]*).css" \/>/', $out, $matches));
-    $this->assertPattern('/html {\nbackground:red;\n}\n\nbody {\nbackground:url\(\/__cache\/a([0-9]*)\/assets\/images\/cow.jpg\);\n}/', _vae_read_file($matches[1] . ".css"));
+    $this->assertPattern('/body {\nbackground:url\(\/__cache\/a([0-9]*)\/assets\/images\/cow.jpg\)\n}/', _vae_read_file($matches[1] . ".css"));
     $this->assertDep("assets/testscreen1.css", "bb146644dd28815d5b78fc2bd1262472");
   }
   
   function testVaeInjectAssetsJsAssets() {
     global $_VAE;
-    $base_html = "<html><head></head><body></body></html>";
+    $this->mockRest("\nalert('test');alert('cow');");
+    $base_html = "<html><head><_VAE_ASSET_js1></head><body></body></html>";
     $_VAE['assets'] = array('js' => array('assets/test1.js'));
+    $_VAE['asset_inject_points'] = array('js' => 1);
+    $_VAE['asset_types'] = array('js' => 'js');
     $out = _vae_inject_assets($base_html);
     $this->assertTrue(preg_match('/<html><head><script type="text\/javascript" src="http:\/\/btg.vaesite.net\/__data\/([0-9a-f]*).js"><\/script>/', $out, $matches));
     $this->assertEqual(_vae_read_file($matches[1] . ".js"), "\nalert('test');alert('cow');");
@@ -496,11 +496,13 @@ class GeneralTest extends VaeUnitTestCase {
   
   function testVaeInjectAssetsSassAssets() {
     global $_VAE;
-    $base_html = "<html><head></head><body></body></html>";
+    $base_html = "<html><head><_VAE_ASSET_screen1></head><body></body></html>";
     $_VAE['assets'] = array('screen' => array('assets/test1.sass'));
+    $_VAE['asset_inject_points'] = array('screen' => 1);
+    $_VAE['asset_types'] = array('screen' => 'screen');
     $out = _vae_inject_assets($base_html);
     $this->assertTrue(preg_match('/<link rel="stylesheet" type="text\/css" media="screen" href="http:\/\/btg.vaesite.net\/__data\/([0-9a-f]*).css" \/>/', $out, $matches));
-    $this->assertPattern('/html {\nbackground:red;\n}\n\nbody {\nbackground:url\(\/__cache\/a([0-9]*)\/assets\/images\/cow.jpg\);\n}/', _vae_read_file($matches[1] . ".css"));
+    $this->assertPattern('/background:url\(\/__cache\/a([0-9]*)\/assets\/images\/cow.jpg\)\n}/', _vae_read_file($matches[1] . ".css"));
     $this->assertDep("assets/test1.sass", "01e55d4c56cd71e8f77cd8c8d9133268");
   }
   
@@ -529,34 +531,12 @@ class GeneralTest extends VaeUnitTestCase {
     // Tested as part of _vae_inject_assets()
   }
   
-  function testVaeInjectCdn() {
-    // no rewrite
-    $this->assertEqual("<img src='/wp-content/sample-nala.jpg' />", _vae_post_process("<img src='/wp-content/sample-nala.jpg' />"));
-    $this->assertEqual("<img src='http://btg.vaesite.com/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/sample-nala.jpg' />"));
-    $this->assertEqual("<img src='http://btg.vaesite.com/w-content/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/w-content/sample-nala.jpg' />"));
-    $this->assertEqual("<img src='http://btg.vaesite.com/wp-admin/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/wp-admin/sample-nala.jpg' />"));
-    $this->assertEqual("<img src=http://btg.vaesite.com/wp-content/sample-nala.jpg />", _vae_post_process("<img src=http://btg.vaesite.com/wp-content/sample-nala.jpg />"));
-    $this->assertEqual("<img src='http://btg.vaesite.com/wp-content/plugins/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/wp-content/plugins/sample-nala.jpg' />"));
-    // cdn rewrite conditions - wordpress assets
-    $this->assertPattern('/src=\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'/', _vae_post_process("<img src='http://btg.vaesite.com/wp-content/sample-nala.jpg' />"));
-    $this->assertPattern('/src="http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg"/', _vae_post_process("<img src=\"http://btg.vaesite.com/wp-content/sample-nala.jpg\" />"));
-    $this->assertPattern('/style=\'background: url\("http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg"\);\'/', _vae_post_process("<div style='background: url(\"http://btg.vaesite.com/wp-content/sample-nala.jpg\");'></div>"));
-    $this->assertPattern('/style="background: url\(\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'\);"/', _vae_post_process("<div style=\"background: url('http://btg.vaesite.com/wp-content/sample-nala.jpg');\"></div>"));
-    $this->assertPattern('/style="background: url\(http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\);"/', _vae_post_process("<div style=\"background: url(http://btg.vaesite.com/wp-content/sample-nala.jpg);\"></div>"));
-  }
-  
-  function testVaeInjectCdnCallback() {
-    // covered as part of testVaeInjectCdn
-  }
-  
   function testVaeInterpretVaeml() {
     global $_VAE;
     $_REQUEST['id'] = 13421;
     $this->assertEqual("<html>", _vae_interpret_vaeml("<html>"));
-    $this->assertPattern('/src=\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'/', _vae_interpret_vaeml("<img src='http://btg.vaesite.com/wp-content/sample-nala.jpg' />"));
     $this->assertEqual("Freefall", _vae_interpret_vaeml("<v:text path='name' />"));
     $this->assertEqual("Freefall", _vae_interpret_vaeml("<v:text path='name' />"));
-    $this->assertPattern('/Freefall(.*)src=\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'/', _vae_interpret_vaeml("<v:text path='name' /><img src='http://btg.vaesite.com/wp-content/sample-nala.jpg' />"));
     _vae_needs_jquery('ui');
     $this->assertPattern('/<script(.*)jquery.js(.*)<\/script>(.*)Freefall/', _vae_interpret_vaeml("<html><head></head><v:text path='name' />"));
   }
@@ -588,8 +568,8 @@ class GeneralTest extends VaeUnitTestCase {
   function helperVaeLocalAuthorize($status = "GOOD") {
     $_REQUEST['__vae_local'] = "cow";
     $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'];
-    $this->short_term_cache_set($memcache_base_key . "auth", $status);
-    $this->short_term_cache_set($memcache_base_key . "f/__vae.php", '<?php $_VAE["VaeLocalPhpTest"] = 42; ?>');
+    _vae_long_term_cache_set($memcache_base_key . "auth", $status);
+    _vae_long_term_cache_set($memcache_base_key . "f/__vae.php", '<?php $_VAE["VaeLocalPhpTest"] = 42; ?>');
     return $memcache_base_key . "f";
   }
   
@@ -906,11 +886,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_placeholder("something_else"), "(something_else)");
     $_VAE['from_proxy'] = true;
     $this->assertEqual(_vae_placeholder("shipment_company"), "%SHIPMENT_COMPANY%");
-  }
-  
-  function testVaePostProcess() {
-    // defer mostly to testVaeInjectCdn.  do 1 test here for backup
-    $this->assertPattern('/src=\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'/', _vae_post_process("<img src='http://btg.vaesite.com/wp-content/sample-nala.jpg' />"));
   }
   
   function testVaeQs() {
