@@ -32,7 +32,7 @@ class AllTests extends TestSuite {
     $this->addFile(dirname(__FILE__) . '/parse_test.php');
     $this->addFile(dirname(__FILE__) . '/pdf_test.php');
     //$this->addFile(dirname(__FILE__) . '/phpapi_test.php');
-    //$this->addFile(dirname(__FILE__) . '/rest_test.php');
+    $this->addFile(dirname(__FILE__) . '/rest_test.php');
     //$this->addFile(dirname(__FILE__) . '/render_test.php');
     $this->addFile(dirname(__FILE__) . '/status_test.php');
     //$this->addFile(dirname(__FILE__) . '/store_test.php');

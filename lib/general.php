@@ -192,6 +192,7 @@ function _vae_escape_for_js($html) {
 function _vae_error($msg, $debugging_info = "", $filename = null) {
   global $_VAE;
   if (_vae_in_ob() || $_REQUEST['__v:store_payment_method_ipn']) {
+    if ($_ENV['TEST'] && !$_VAE['expected_exception']) echo $msg . "\n" . $debugging_info;
     throw new VaeException($msg, $debugging_info, $filename);
   } else {
     echo _vae_render_error(new VaeException($msg, $debugging_info, $filename));
@@ -829,13 +830,10 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $key;
   if($expire_interval == null) $expire_interval = 90;
   _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "'");
-  $memcache_key_exists = memcache_delete($_VAE['memcached'], $memcache_key);
   if ($value != null) {
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
-    if($memcache_key_exists){
-      memcache_set($_VAE['memcached'], $memcache_key, $value, 0, 86400);
-    }
   }
+  memcache_set($_VAE['memcached'], $memcache_key, $value, 0, 86400);
 }
 
 function _vae_kvstore_empty() {

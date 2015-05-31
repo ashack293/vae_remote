@@ -15,6 +15,7 @@ class ContextTest extends VaeUnitTestCase {
   }
   
   function testRequiredAttr() {
+    $this->expectException();
     try {
       $this->context->required_attr("cow", array(), "test");
       $this->fail("expected VaeException");

@@ -36,7 +36,8 @@ class RestTest extends VaeUnitTestCase {
   
   function testVaeCreate() {
     global $_VAE;
-    $this->assertNotEqual(false, _vae_create(12345, 0, array('name' => "Freefall2")));
+    $this->mockrest("<row><id>123</id></row>");
+    $this->assertEqual(123, _vae_create(12345, 0, array('name' => "Freefall2")));
     $this->assertRest();
   }
   
@@ -44,12 +45,11 @@ class RestTest extends VaeUnitTestCase {
     global $_VAE;
     $this->mockRestError();
     $this->assertFalse(_vae_create(12345, 0, array('name' => "Freefall2")));
-    $this->assertRestError();
   }
   
   function testVaeProxy() {
     $this->mockRest("<img src=\"image.jpg\" /><img src=\"http://google.com/image.jpg\" /><img src='/image.jpg' /><img src='http://google.com/image.jpg' />");
-    $this->assertEqual("<img src=\"http://btg.vaesite.com/image.jpg\" /><img src=\"http://google.com/image.jpg\" /><img src='http://btg.vaesite.com//image.jpg' /><img src='http://google.com/image.jpg' />", _vae_proxy("cow", "apple=orange", true));
+    $this->assertEqual("<img src=\"http://btg.vaesite.com/image.jpg\" /><img src=\"http://google.com/image.jpg\" /><img src='http://btg.vaesite.com//image.jpg' /><img src='http://google.com/image.jpg' />", _vae_proxy("fruit", "apple=orange", true));
   }
   
   function testVaeRest() {
@@ -113,7 +113,6 @@ class RestTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(_vae_update(13421, array('name' => "Freefall2")));
     $this->assertNull($_VAE['run_hooks']);
-    $this->assertRestError();
   }
   
 }

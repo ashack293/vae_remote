@@ -175,6 +175,11 @@ class VaeUnitTestCase extends UnitTestCase {
   function dontMockRest() {
     $_SESSION['real_rest'] = true;
   }
+
+  function expectException() {
+    global $_VAE;
+    $_VAE['expected_exception'] = true;
+  }
   
   function export($var) {
     echo var_export($var, true) . ";\n";

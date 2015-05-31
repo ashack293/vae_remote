@@ -71,6 +71,7 @@ class ParseTest extends VaeUnitTestCase {
   }
   
   function testVaeParseVaemlErrors() {
+    $this->expectException();
     try {
       $this->assertFalse(_vae_parse_vaeml("<v:template>"));
     } catch (VaeException $e) {
@@ -79,6 +80,7 @@ class ParseTest extends VaeUnitTestCase {
   }
   
   function testVaeParseVaemlMissingRequiredAttribute() {
+    $this->expectException();
     try {
       $this->assertFalse(_vae_parse_vaeml("<v:template></v:template>"));
     } catch (VaeException $e) {
