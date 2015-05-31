@@ -1,3 +1,3 @@
 <v:store:logout>Logout</v:store:logout>
 >
-<a href="/page?__v:store_logout=15cbd867cae383aa6b57a27ef932c675">Logout</a>
+<a href="/page?__v%3Astore_logout=15cbd867cae383aa6b57a27ef932c675">Logout</a>

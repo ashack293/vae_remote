@@ -1,6 +1,6 @@
 <v:store:discount><v:else>out</v:else></v:store:discount>
 >
-<form action="/page?__v:store_discount=0d377718c23b0ed83d2f97268b5c9d84" method="post"></form>
+<form action="/page?__v%3Astore_discount=0d377718c23b0ed83d2f97268b5c9d84" method="post"></form>
 =
 <?php $this->populateCart(); $this->populateDiscount(); ?>
 <v:store:discount><v:else>out</v:else></v:store:discount>

@@ -87,13 +87,13 @@ class RenderTest extends VaeUnitTestCase {
   function testVaeRenderCallback() {
     $tag = array('type' => 'rock', 'tags' => array(array('type' => "text_field", 'attrs' => array("name" => "mp3"))));
     $out = _vae_render_callback("rock", array('path' => "/artists/name"), $tag, null, $this->callback, $this->render_context);
-    $this->assertEqual($out, '<form action="/page?__v:rock=a4eb1ae1924960e2dce7fa5b57957df8" method="post"><input name="mp3" type="text" /></form>');
+    $this->assertEqual($out, '<form action="/page?__v%3Arock=a4eb1ae1924960e2dce7fa5b57957df8" method="post"><input name="mp3" type="text" /></form>');
   }
 
   function testVaeRenderCallbackLink() {
     $tag = array('type' => 'rock', 'tags' => array(array('innerhtml' => 'linkcaption')));
     $out = _vae_render_callback_link("rock", array('path' => "/artists/name"), $tag, null, $this->callback, $this->render_context);
-    $this->assertEqual($out, '<a href="/page?__v:rock=a4eb1ae1924960e2dce7fa5b57957df8">linkcaption</a>');
+    $this->assertEqual($out, '<a href="/page?__v%3Arock=a4eb1ae1924960e2dce7fa5b57957df8">linkcaption</a>');
   }
 
   function testVaeRenderCreate() {
@@ -112,7 +112,7 @@ class RenderTest extends VaeUnitTestCase {
     $this->assertEqual($this->callback['filename'], "EP");
     $this->assertEqual($this->callback['src'][0], '28616-file');
     $this->assertEqual($this->callback['src'][1]->id, _vae_fetch("13425/mp3")->id);
-    $this->assertEqual($this->callback['src'][2], 'file/28616');
+    $this->assertEqual($this->callback['src'][2], 'api/site/v1/file/28616');
   }
 
   function testVaeRenderFileUrl() {
@@ -195,7 +195,7 @@ class RenderTest extends VaeUnitTestCase {
     $tag = array('tags' => array(array('type' => "file", 'attrs' => array("path" => "13425/mp3"))));
     _vae_render_zip(array( "filename" => "Songs"), $tag, null, $this->callback, $this->render_context);
     $this->assertEqual($this->callback['filename'], "Songs");
-    $this->assertEqual($this->callback['files'], array(array('src' => array('28616-file', '28616', 'file/28616', '', false), 'filename' => NULL)));
+    $this->assertEqual($this->callback['files'], array(array('src' => array('28616-file', '28616', 'api/site/v1/file/28616', '', false), 'filename' => NULL)));
   }
 
 }

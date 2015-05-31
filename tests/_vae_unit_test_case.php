@@ -213,6 +213,7 @@ class VaeUnitTestCase extends UnitTestCase {
   
   function populateCustomer($options = null) {
     $_SESSION['__v:store']['customer_id'] = 123;
+    $_SESSION['__v:store']['loggedin'] = 1;
     if ($options == null) $options = array();
     $_SESSION['__v:store']['user'] = array_merge(array('billing_name' => "Kevin Bombino", 'id' => 123), $options);
   }

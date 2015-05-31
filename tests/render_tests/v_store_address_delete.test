@@ -1,3 +1,3 @@
 <v:store:address_delete>Delete</v:store:address_delete>
 >
-<a href="/page?__v:store_address_delete=fe891ebd922063bcf53f6a93371c8344">Delete</a>
+<a href="/page?__v%3Astore_address_delete=fe891ebd922063bcf53f6a93371c8344">Delete</a>

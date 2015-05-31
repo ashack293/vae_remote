@@ -2,17 +2,17 @@
 >
 <?php $this->assertSessionDep('__v:store'); ?>
 =
-<?php $_SESSION['__v:store']['previous_orders'] = array(1 => array('total' => '7.00'), 4 => array('total' => '19.50')); ?>
+<?php $_SESSION['__v:store']['previous_orders'] = array(1 => array('total' => '8.00'), 4 => array('total' => '19.50')); ?>
 <v:store:previous_orders>-<v:text path="total" />~</v:store:previous_orders>
 >
--7.00~-19.50~
+-8.00~-19.50~
 =
 <?php $_SESSION['__v:store']['previous_orders'] = array(); ?>
 <v:store:previous_orders>-<v:text path="total" />~<v:else>out</v:else></v:store:previous_orders>
 >
 out
 =
-<?php $this->mockRest("<store-orders><store-order><id>1</id><total>7.00</total></store-order><store-order><id>4</id><total>19.50</total></store-order></store-orders>"); ?>
+<?php $_SESSION['__v:store']['loggedin'] = true; $this->mockRest("<store-orders><store-order><id>1</id><total>7.00</total></store-order><store-order><id>4</id><total>19.50</total></store-order></store-orders>"); ?>
 <v:store:previous_orders>-<v:text path="total" />~</v:store:previous_orders>
 >
 -7.00~-19.50~

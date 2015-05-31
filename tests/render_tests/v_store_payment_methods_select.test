@@ -6,9 +6,9 @@
 <?php $this->populateCart(); ?>
 <v:store:payment_methods_select />
 >
-<select onchange=" window.location.href='/page?__v:store_payment_methods_select=5a43a0886a75729dc47242c82d4e8554&amp;method='+this.value"><option value="test" selected="selected">Credit Card</option><option value="paypal_express_checkout">PayPal Express Checkout</option><option value="testeuro"></option><option value="paypal">PayPal</option><option value="money_order">Money Order</option></select>
+<select onchange=" window.location.href='/page?__v:store_payment_methods_select=5a43a0886a75729dc47242c82d4e8554&amp;__method='+this.value"><option value="test" selected="selected">Credit Card</option><option value="paypal_express_checkout">PayPal Express Checkout</option><option value="testeuro"></option><option value="paypal">PayPal</option><option value="money_order">Money Order</option></select>
 =
 <?php $this->populateCart(); $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout"; ?>
 <v:store:payment_methods_select />
 >
-<select onchange=" window.location.href='/page?__v:store_payment_methods_select=5a43a0886a75729dc47242c82d4e8554&amp;method='+this.value"><option value="test">Credit Card</option><option value="paypal_express_checkout" selected="selected">PayPal Express Checkout</option><option value="testeuro"></option><option value="paypal">PayPal</option><option value="money_order">Money Order</option></select>
+<select onchange=" window.location.href='/page?__v:store_payment_methods_select=5a43a0886a75729dc47242c82d4e8554&amp;__method='+this.value"><option value="test">Credit Card</option><option value="paypal_express_checkout" selected="selected">PayPal Express Checkout</option><option value="testeuro"></option><option value="paypal">PayPal</option><option value="money_order">Money Order</option></select>

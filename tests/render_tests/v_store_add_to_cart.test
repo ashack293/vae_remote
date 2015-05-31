@@ -1,12 +1,12 @@
 <v:store:add_to_cart redirect="/cart"></v:store:add_to_cart>
 >
-<form action="/page?__v:store_add_to_cart=248540dc13e2468a6e0f84a77718da7d" method="post"></form>
+<form action="/page?__v%3Astore_add_to_cart=248540dc13e2468a6e0f84a77718da7d" method="post"></form>
 =
 <v:section path="13433">
 <v:store:add_to_cart inventory_field="inventory" options_collection="inventory" redirect="/cart"><v:else>out</v:else></v:store:add_to_cart>
 </v:section>
 >
-<form action="/page?__v:store_add_to_cart=e0ca6235f7d96772f556e36056436456" method="post"></form>
+<form action="/page?__v%3Astore_add_to_cart=e0ca6235f7d96772f556e36056436456" method="post"></form>
 =
 <v:section path="13435">
 <v:store:add_to_cart inventory_field="inventory" options_collection="inventory" redirect="/cart"><v:else>out</v:else></v:store:add_to_cart>

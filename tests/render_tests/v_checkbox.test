@@ -4,4 +4,4 @@
 =
 <v:checkbox name="toggle" value="mahoney" />
 >
-<input name="toggle" value="1" checked="checked" type="checkbox" />
+<input name="toggle" value="mahoney" checked="checked" type="checkbox" />

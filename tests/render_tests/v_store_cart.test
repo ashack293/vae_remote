@@ -10,4 +10,4 @@ out
 <?php $this->populateCart(); ?>
 <v:store:cart><v:else>out</v:else></v:store:cart>
 >
-<form action="/page?__v:store_cart=0dc36dc6d78cb5ade166f7f60cf5c20c" method="post"></form>
+<form action="/page?__v%3Astore_cart=0dc36dc6d78cb5ade166f7f60cf5c20c" method="post"></form>

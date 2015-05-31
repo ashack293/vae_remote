@@ -1,3 +1,3 @@
 <v:store:paypal_express_checkout />
 >
-<a href="/page?__v:store_paypal_express_checkout=dfefef95251a748559957fe735e3b32c"><img src="http://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" /></a>
+<a href="/page?__v%3Astore_paypal_express_checkout=dfefef95251a748559957fe735e3b32c"><img src="http://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" /></a>

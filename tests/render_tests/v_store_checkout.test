@@ -24,4 +24,4 @@ Eregister_page
 =
 <?php $_SERVER['HTTPS'] = true; $this->populateCart(); $this->populateCustomer(); ?>
 <v:store:checkout redirect="/order_placed" register_page="/register"></v:store:checkout>
-<form action="/page?__v:store_checkout=1" id="vae_generated_might_change_1" method="post"></form>
+<form action="/page?__v%3Astore_checkout=1" id="vae_generated_might_change_1" method="post"></form>

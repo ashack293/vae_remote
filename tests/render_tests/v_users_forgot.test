@@ -3,7 +3,7 @@
 <v:text_field path="password" />
 </v:users:forgot>
 >
-<form action="/page?__v:users_forgot=be962afb00504a45dd0d0cdd021ab55f" method="post">
+<form action="/page?__v%3Ausers_forgot=be962afb00504a45dd0d0cdd021ab55f" method="post">
 <input value="" name="name" id="name" type="text" />
 <input value="" name="password" id="password" type="text" />
 </form>

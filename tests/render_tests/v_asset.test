@@ -1,16 +1,16 @@
 <v:asset src="kevin.css" />
 >
-<_VAE_ASSET_1>
+<_VAE_ASSET_all1>
 <?php $this->assertEqual($_VAE['assets'], array('all' => array('kevin.css'))); ?>
 =
 <v:asset href="kevin.css" media="screen" />
 >
-<_VAE_ASSET_1>
+<_VAE_ASSET_screen1>
 <?php $this->assertEqual($_VAE['assets'], array('screen' => array('kevin.css'))); ?>
 =
 <v:asset src="kevin.js" />
 >
-<_VAE_ASSET_1>
+<_VAE_ASSET_js1>
 <?php $this->assertEqual($_VAE['assets'], array('js' => array('kevin.js'))); ?>
 =
 <v:asset src="kevin.js" debug="true" />

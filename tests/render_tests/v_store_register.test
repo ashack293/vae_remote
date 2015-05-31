@@ -3,7 +3,7 @@ Eredirect
 =
 <v:store:register redirect="/checkout"></v:store:register>
 >
-<form action="/page?__v:store_register=ba43bd96fc7de9eab48462bb116dec8d" method="post"></form>
+<form action="/page?__v%3Astore_register=ba43bd96fc7de9eab48462bb116dec8d" method="post"></form>
 <?php $this->assertSessionDep('__v:store'); ?>
 =
 <?php $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout"; ?>
