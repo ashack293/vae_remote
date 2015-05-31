@@ -69,7 +69,7 @@ function _vae_sass_deps($sass, $include_directory, $root_item = false) {
   }
 
   if($root_item){
-    _vae_kvstore_write($cache_key,serialize($deps));
+    _vae_long_term_cache_set($cache_key,serialize($deps));
   }
 
   return $deps;
@@ -78,7 +78,7 @@ function _vae_sass_deps($sass, $include_directory, $root_item = false) {
 function _vae_sass_deps_check($sass, $include_directory, $root_item = false){
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2".md5($sass . $include_directory).".map";
-  $deps = unserialize(_vae_kvstore_read($cache_key));
+  $deps = unserialize(_vae_long_term_cache_get($cache_key));
 
   if (isset($deps) && $deps && count($deps) > 0) {
     foreach ($deps as $filename => $hash) {

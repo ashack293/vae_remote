@@ -65,12 +65,12 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   global $_VAE;
   $id = session_id();
   if ($yield) {
-    _vae_kvstore_write("_proxy_yield_$id", $yield, 1);
+    _vae_long_term_cache_set("_proxy_yield_$id", $yield, 1);
     $qs .= "&__get_yield=1";
   }
   if ($send_request_data) {
-    _vae_kvstore_write("_proxy_post_$id", serialize($_POST), 1);
-    _vae_kvstore_write("_proxy_request_$id", serialize($_REQUEST), 1);
+    _vae_long_term_cache_set("_proxy_post_$id", serialize($_POST), 1);
+    _vae_long_term_cache_set("_proxy_request_$id", serialize($_REQUEST), 1);
     $qs .= "&__get_request_data=1";
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);

@@ -144,11 +144,11 @@ function _vae_configure_php() {
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
     if ($_REQUEST['__get_yield']) {
-      $_VAE['yield'] = _vae_kvstore_read("_proxy_yield_" . $_REQUEST['__proxy']);
+      $_VAE['yield'] = _vae_long_term_cache_get("_proxy_yield_" . $_REQUEST['__proxy']);
     }
     if ($_REQUEST['__get_request_data']) {
-      $_POST = unserialize(_vae_kvstore_read("_proxy_post_" . $_REQUEST['__proxy']));
-      $_REQUEST = unserialize(_vae_kvstore_read("_proxy_request_" . $_REQUEST['__proxy']));
+      $_POST = unserialize(_vae_long_term_cache_get("_proxy_post_" . $_REQUEST['__proxy']));
+      $_REQUEST = unserialize(_vae_long_term_cache_get("_proxy_request_" . $_REQUEST['__proxy']));
     }
     $_VAE['from_proxy'] = true;
   }
@@ -239,7 +239,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   $filename = null;
   if ($preserve_filename) $iden .= ($preserve_filename === true ? "-p" : "-" . $preserve_filename);
   _vae_tick("Fetching $iden from the file cache");
-  if ($cache = _vae_kvstore_read($iden, 90)) return $cache;
+  if ($cache = _vae_long_term_cache_get($iden, 90)) return $cache;
   _vae_tick("Failed - looking for $id $path $qs from root machine");
   _vae_sql_lock();
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
@@ -628,7 +628,7 @@ function _vae_inject_assets($out) {
         }
       }
       $iden = "asset" . md5($iden.$_VAE['settings']['subdomain']); // added subdomain to prevent cross domain conflicts
-      if ($cache = _vae_kvstore_read($iden)) {
+      if ($cache = _vae_long_term_cache_get($iden)) {
         $html[$group] = _vae_asset_html($_VAE['asset_types'][$group], _vae_absolute_data_url() . $cache);
       } else {
         $raw = "";
@@ -807,7 +807,7 @@ function _vae_jsesc($a) {
   return str_replace(array("\n", "\"", "'"), array("\\n", "\\\"", "&#39;"), trim($a));
 }
 
-function _vae_kvstore_read($iden, $renew_expiry = null) {
+function _vae_long_term_cache_get($iden, $renew_expiry = null) {
   global $_VAE;
   $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $iden;
   if ($cache = _vae_short_term_cache_get($memcache_key)) {
@@ -825,7 +825,7 @@ function _vae_kvstore_read($iden, $renew_expiry = null) {
   return null;
 }
 
-function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=0) {
+function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_filename=0) {
   global $_VAE;
   $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $key;
   if($expire_interval == null) $expire_interval = 90;
@@ -842,7 +842,7 @@ function _vae_kvstore_empty() {
 }
 
 function _vae_kvstore_v_exists($iden) {
-  if (_vae_kvstore_read($iden)) {
+  if (_vae_long_term_cache_get($iden)) {
     return true;
   }
   return false;
@@ -879,7 +879,7 @@ function _vae_local($filename = "") {
     echo _vae_local_authenticate($base_key);
     return _vae_die();
   }
-  $authorized = _vae_kvstore_read($base_key . "auth");
+  $authorized = _vae_long_term_cache_get($base_key . "auth");
   if ($authorized != "GOOD") {
     _vae_error("Your Local Development Session expired.  Please restart the Local Preview server and try again.");
   }
@@ -888,7 +888,7 @@ function _vae_local($filename = "") {
   if ($_REQUEST['__verb_local_files']) $_REQUEST['__vae_local_files'] = $_REQUEST['__verb_local_files'];
   if (count($_REQUEST['__vae_local_files'])) {
     foreach ($_REQUEST['__vae_local_files'] as $fname => $file) {
-      _vae_kvstore_write($base_key . $fname, $file, 1);
+      _vae_long_term_cache_set($base_key . $fname, $file, 1);
     }
   }
   $_VAE['local'] = $base_key;
@@ -896,9 +896,9 @@ function _vae_local($filename = "") {
   list($filename, $script) = _vae_src($filename);
   _vae_set_cache_key();
   $_VAE['filename'] = $filename;
-  $vae_php = _vae_kvstore_read($base_key . "/__vae.php");
+  $vae_php = _vae_long_term_cache_get($base_key . "/__vae.php");
   if (strlen($vae_php)) _vae_local_exec($vae_php);
-  $verb_php = _vae_kvstore_read($base_key . "/__verb.php");
+  $verb_php = _vae_long_term_cache_get($base_key . "/__verb.php");
   if (strlen($verb_php)) _vae_local_exec($verb_php);
   if (strstr($filename, ".sass") || strstr($filename, ".scss")) {
     require_once(dirname(__FILE__)."/haml.php");
@@ -914,7 +914,7 @@ function _vae_local_authenticate($base_key) {
   global $_VAE;
   $out = _vae_rest(array(), "api/site/v1/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
   if ($out == "GOOD") {
-    _vae_kvstore_write($base_key . "auth", $out, 1);
+    _vae_long_term_cache_set($base_key . "auth", $out, 1);
     if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) {
       if (str_replace(".", "", $_REQUEST['__local_version']) < 60) {
         return "MSG\n*****\nYour copy of the Vae Local Development Environment is out of date.\n\nWe have changed distribution of the Vae Local Development Environment to use Ruby gems.\n\nThis will make installation of future updates much easier!\n\nTo get the new version, you should first remove your old version by doing the following:\n\nrm -rf /usr/local/bin/vae\nrm -rf /usr/local/vae\n\nThen, install the new version by following the instructions at:\nhttp://docs.vaeplatform.com/vae_local\n\n*****\n\n";
@@ -1880,7 +1880,7 @@ function _vae_src($filename) {
   if ($filename == "/") $filename = "/index";
   foreach (array("", ".html", ".haml", ".php", ".sass", ".scss", ".xml", ".rss", ".pdf.html", ".pdf.haml", ".pdf.haml.php", ".haml.php") as $ext) {
     if ($_VAE['local']) {
-      $vaeml = _vae_kvstore_read($_VAE['local'] . $filename . $ext);
+      $vaeml = _vae_long_term_cache_get($_VAE['local'] . $filename . $ext);
       if (strlen($vaeml)) {
         $filename = $filename . $ext;
         break;
@@ -1951,7 +1951,7 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
     _vae_write_file($newname, $file);
   }
   if ($iden) {
-    _vae_kvstore_write($iden, $newname, null, 1);
+    _vae_long_term_cache_set($iden, $newname, null, 1);
   }
   return $newname;
 }

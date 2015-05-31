@@ -171,7 +171,7 @@ function vae_image($id, $width = "", $height = "", $image_size = "", $grow = "",
 function _vae_image_filter_prepare($image, $iden_string, $func, $internal) {
   global $_VAE;
   $iden = $image . "-" . $iden_string;
-  if ($cache = _vae_kvstore_read($iden)) return $cache;
+  if ($cache = _vae_long_term_cache_get($iden)) return $cache;
   $old = _vae_gd_handle($image);
   if (!$old) {
     if (!$internal) {
@@ -229,7 +229,7 @@ function _vae_imagesize($d, $complain = false) {
   global $_VAE;
   if (!strlen($d)) return;
   $iden = $d."size";
-  if ($cache = _vae_kvstore_read($iden)) return explode(",", $cache);
+  if ($cache = _vae_long_term_cache_get($iden)) return explode(",", $cache);
   $tk = _vae_gd_handle($d);
   if ($tk == null) {
     if ($complain && !file_exists($_VAE['config']['data_path'] . $d)) {
@@ -239,7 +239,7 @@ function _vae_imagesize($d, $complain = false) {
   }
   $w = @imagesx($tk);
   $h = @imagesy($tk);
-  _vae_kvstore_write($iden, "$w,$h", 5);
+  _vae_long_term_cache_set($iden, "$w,$h", 5);
   return array($w, $h);
 }
 
@@ -255,7 +255,7 @@ function vae_include($path, $once = false) {
     $_VAE['required_once'][$path] = true;
   }
   if ($_VAE['local']) {
-    $php = _vae_kvstore_read($_VAE['local'] . $path);
+    $php = _vae_long_term_cache_get($_VAE['local'] . $path);
     if (strlen($php)) {
       return _vae_local_exec($php);
     } else {
@@ -586,7 +586,7 @@ function vae_text($text, $font_name = "", $font_size = "22", $color = "#000000",
   if (!is_numeric($padding)) $padding = 5;
   if (!is_numeric($max_width)) $max_width = 10000;
   $iden = "TEXT-$text-$font_name-$font_size-$color-$kerning-$max_width";
-  if ($cache = _vae_kvstore_read($iden)) {
+  if ($cache = _vae_long_term_cache_get($iden)) {
     $file_name = $cache;
   } else {
     setlocale(LC_CTYPE, "ge");
@@ -668,7 +668,7 @@ function vae_watermark($image, $watermark_image, $vertical_align = "", $align = 
   if ($vertical_padding == "") $vertical_padding = 5;
   if ($horizontal_padding == "") $horizontal_padding = 5;
   $iden = "$image-$watermark_image-$vertical_align-$align-$vertical_padding-$horizontal_padding";
-  if ($cache = _vae_kvstore_read($iden)) return $cache;
+  if ($cache = _vae_long_term_cache_get($iden)) return $cache;
   $tk = _vae_gd_handle($image);
   if ($tk == null || !file_exists($_SERVER['DOCUMENT_ROOT'] . "/" . $watermark_image)) return null;
   $tlogo = @imagecreatefrompng($_SERVER['DOCUMENT_ROOT'] . "/" . $watermark_image);

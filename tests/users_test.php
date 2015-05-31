@@ -37,7 +37,7 @@ class UsersTest extends VaeUnitTestCase {
   function testVaeUsersCallbackForgotRetunAction() {
     global $_VAE;
     $_REQUEST['__v:users_forgot_code'] = "code123";
-    _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
+    _vae_long_term_cache_set("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
     $this->assertNull($_SESSION['__v:logged_in']);
     $tag = $this->callbackTag('<v:users:forgot email_field="genre" required="name" path="/artists" />');
     _vae_users_callback_forgot($tag);
@@ -50,7 +50,7 @@ class UsersTest extends VaeUnitTestCase {
   function testVaeUsersCallbackForgotRetunActionRedirect() {
     global $_VAE;
     $_REQUEST['__v:users_forgot_code'] = "code123";
-    _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
+    _vae_long_term_cache_set("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
     $this->assertNull($_SESSION['__v:logged_in']);
     $tag = $this->callbackTag('<v:users:forgot email_field="genre" required="name" path="/artists" redirect="/loggedin" />');
     _vae_users_callback_forgot($tag);

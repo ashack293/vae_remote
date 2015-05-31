@@ -90,8 +90,8 @@ class GeneralTest extends VaeUnitTestCase {
     $test_request = array("c" => "d");
     $_SESSION['e'] = 'f';
     $test_session = $_SESSION;
-    _vae_kvstore_write("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post), 1);
-    _vae_kvstore_write("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request), 1);
+    _vae_long_term_cache_set("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post), 1);
+    _vae_long_term_cache_set("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request), 1);
     _vae_configure_php();
     $this->assertEqual($_POST, $test_post);
     $this->assertEqual($_REQUEST, $test_request);
@@ -1178,7 +1178,7 @@ class GeneralTest extends VaeUnitTestCase {
     $this->setLocal();
     $this->assertEqual(_vae_src("notfound1"), "");
     $this->assertFinal("__vae_local_needs=/notfound1");
-    _vae_kvstore_write("local/found1.html", "<html>a file</html>");
+    _vae_long_term_cache_set("local/found1.html", "<html>a file</html>");
     $this->assertEqual(_vae_src("/found1"), array("/found1.html", "<html>a file</html>"));
     $this->clearLocal();
   }
