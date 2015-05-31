@@ -38,7 +38,7 @@ class VaeUnitTestCase extends UnitTestCase {
     }
     if ($this->memcache_keys) {
       foreach ($this->memcache_keys as $key) {
-        $this->memcache_set($key, null);
+        $this->short_term_cache_set($key, null);
       }
       unset($this->memcache_keys);
     }
@@ -185,9 +185,9 @@ class VaeUnitTestCase extends UnitTestCase {
     echo var_export($var, true) . ";\n";
   }
   
-  function memcache_set($key, $value) {
+  function short_term_cache_set($key, $value) {
     global $_VAE;
-    memcache_set($_VAE['memcached'], $key, $value);
+    _vae_short_term_cache_set($key, $value);
     if (!isset($this->memcache_keys)) $this->memcache_keys = array();
     $this->memcache_keys[] = $key;
   }

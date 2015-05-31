@@ -926,7 +926,7 @@ function _vae_short_term_cache_get($key, $flags = 0) {
   return VaeQuery::___shortTermCacheGet($key, $flags);
 }
 
-function _vae_long_term_cache_set($key, $value, $flags = 0, $expires = 0) {
+function _vae_short_term_cache_set($key, $value, $flags = 0, $expires = 0) {
   return VaeQuery::___shortTermCacheSet($key, $value, $flags, $expires);
 }
 

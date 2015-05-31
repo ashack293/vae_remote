@@ -74,7 +74,7 @@ class GeneralTest extends VaeUnitTestCase {
     $request_old = $_REQUEST;
     $post_old = $_POST;
     $test_session = array("a" => "b");
-    $this->memcache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
+    $this->short_term_cache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
     _vae_configure_php();
     $this->assertEqual($_POST, $post_old);
     $this->assertEqual($_REQUEST, $request_old);
@@ -89,9 +89,9 @@ class GeneralTest extends VaeUnitTestCase {
     $test_post = array("a" => "b");
     $test_request = array("c" => "d");
     $test_session = array("e" => "f");
-    $this->memcache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
-    $this->memcache_set("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post));
-    $this->memcache_set("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request));
+    $this->short_term_cache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
+    $this->short_term_cache_set("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post));
+    $this->short_term_cache_set("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request));
     _vae_configure_php();
     $this->assertEqual($_POST, $test_post);
     $this->assertEqual($_REQUEST, $test_request);
@@ -593,8 +593,8 @@ class GeneralTest extends VaeUnitTestCase {
   function helperVaeLocalAuthorize($status = "GOOD") {
     $_REQUEST['__vae_local'] = "cow";
     $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'];
-    $this->memcache_set($memcache_base_key . "auth", $status);
-    $this->memcache_set($memcache_base_key . "f/__vae.php", '<?php $_VAE["VaeLocalPhpTest"] = 42; ?>');
+    $this->short_term_cache_set($memcache_base_key . "auth", $status);
+    $this->short_term_cache_set($memcache_base_key . "f/__vae.php", '<?php $_VAE["VaeLocalPhpTest"] = 42; ?>');
     return $memcache_base_key . "f";
   }
   
@@ -1181,7 +1181,7 @@ class GeneralTest extends VaeUnitTestCase {
     $this->setLocal();
     $this->assertEqual(_vae_src("notfound1"), "");
     $this->assertFinal("__vae_local_needs=/notfound1");
-    $this->memcache_set("local/found1.html", "<html>a file</html>");
+    $this->short_term_cache_set("local/found1.html", "<html>a file</html>");
     $this->assertEqual(_vae_src("/found1"), array("/found1.html", "<html>a file</html>"));
     $this->clearLocal();
   }
