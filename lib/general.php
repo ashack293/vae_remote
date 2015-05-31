@@ -125,7 +125,7 @@ function _vae_conf_path() {
 
 function _vae_configure_php() {
   global $_VAE;
-  error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING & ~E_STRICT);
+  error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING | E_STRICT));
   set_exception_handler("_vae_exception_handler");
   date_default_timezone_set("America/New_York");
   if (!$_ENV['TEST']) ini_set('display_errors', isset($_REQUEST['__debug']));

@@ -87,7 +87,7 @@ class FuncTest extends VaeUnitTestCase {
   }
   
   function testVaeStoreCartCount() {
-    $this->assertEqual(1, vae_store_add_item_to_cart(13423, null, 6));
+    $this->assertEqual(1, vae_store_add_item_to_cart(13423, null, 6, array('name' => 'foo', 'price' => 1)));
     $this->assertEqual(6, vae_store_cart_count());
   }
   
