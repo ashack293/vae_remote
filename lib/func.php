@@ -70,7 +70,10 @@ function vae_now() {
 }
 
 function vae_path() {
-  return substr($_SERVER['PATH_INFO'], 1);
+  if (strlen($_SERVER['PATH_INFO']) > 1) {
+    return substr($_SERVER['PATH_INFO'], 1);
+  }
+  return "";
 }
 
 function vae_prevday($d) {

@@ -4,13 +4,14 @@ class PhpapiTest extends VaeUnitTestCase {
 
   function testVaeAsset() {
     $this->assertEqual(vae_asset(false), "");
-    $this->assertEqual(vae_asset(123), array("123--", 123, "assets/get/123", "&direct=1", false));
-    $this->assertEqual(vae_asset(123, 450, 500), array("123-450-500", 123, "assets/get/123", "&direct=1&width=450&height=500", false));
-    $this->assertEqual(vae_asset(123, 450, 500, 70), array("123-450-500-qual-70", 123, "assets/get/123", "&direct=1&width=450&height=500&quality=70", false));
-    $this->assertEqual(vae_asset(123, false, false, 70), array("123---qual-70", 123, "assets/get/123", "&direct=1&quality=70", false));
+    $this->assertEqual(vae_asset(123), array("123--", 123, "api/site/v1/asset/123", "&direct=2", false));
+    $this->assertEqual(vae_asset(123, 450, 500), array("123-450-500", 123, "api/site/v1/asset/123", "&direct=2&width=450&height=500", false));
+    $this->assertEqual(vae_asset(123, 450, 500, 70), array("123-450-500-qual-70", 123, "api/site/v1/asset/123", "&direct=2&width=450&height=500&quality=70", false));
+    $this->assertEqual(vae_asset(123, false, false, 70), array("123---qual-70", 123, "api/site/v1/asset/123", "&direct=2&quality=70", false));
   }
   
   function testVaeCacheOnEmptyKey() {
+    $this->expectException();
     try {
       vae_cache("");
       $this->fail("expected VaeException");
@@ -33,7 +34,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertEqual(vae_cdn_url(), "http://btg.vaesite.com/");
     $_VAE['config']['cdn_url'] = $old;
   }
-  
+ 
   function textVaeContext() {
     $data = array(123 => array('cow' => "test", 'other' => "something else"));
     $res = vae_context($data);
@@ -46,11 +47,13 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeCreate() {
-    $this->assertTrue(vae_create(123, 0, array('name' => "New Band")));
+    $this->mockrest("<row><id>123</id></row>");
+    $this->assertEqual(123, vae_create(123, 0, array('name' => "New Band")));
     $this->assertNoErrors();
     $this->mockRestError();
     $this->assertFalse(vae_create(123, 0, array('name' => "New Band")));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_create("bad", 0, array('name' => "New Band"));
       $this->fail("expected VaeException");
@@ -64,6 +67,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertEqual(vae_customer(123), array('name' => "Kevin"));
     $this->mockRestError();
     $this->assertFalse(vae_customer(123));
+    $this->expectException();
     try {
       vae_customer("bad");
       $this->fail("expected VaeException");
@@ -88,12 +92,13 @@ class PhpapiTest extends VaeUnitTestCase {
   
   function testVaeFile() {
     $this->assertEqual(vae_file(false), "");
-    $this->assertEqual(vae_file(123), array("123-file", 123, "file/123", "", false));
+    $this->assertEqual(vae_file(123), array("123-file", 123, "api/site/v1/file/123", "", false));
   }
   
   function testVaeFlash() {
     vae_flash("test");
     $this->assertFlash("test");
+    $this->expectException();
     try {
       vae_flash("");
       $this->fail("expected VaeException");
@@ -104,15 +109,15 @@ class PhpapiTest extends VaeUnitTestCase {
   
   function testVaeImage() {
     $this->assertEqual(vae_image(false), "");
-    $this->assertEqual(vae_image(123), array("123--", 123, "image/123", "", false));
-    $this->assertEqual(vae_image(123, 450, 500), array("123-450-500", 123, "image/123", "&width=450&height=500", false));
-    $this->assertEqual(vae_image(123, 450, 500, "Main"), array("123-450-500-Main", 123, "image/123", "&width=450&height=500&size=Main", false));
-    $this->assertEqual(vae_image(123, "", "", "Main"), array("123---Main", 123, "image/123", "&size=Main", false));
-    $this->assertEqual(vae_image(123, "", "", "Main", true), array("123---Main-g", 123, "image/123", "&size=Main&grow=1", false));
-    $this->assertEqual(vae_image(123, "", "", "Main", false, "80"), array("123---Main-q80", 123, "image/123", "&size=Main&quality=80", false));
-    $this->assertEqual(vae_image(123, "", "", "Main", true, "70"), array("123---Main-q70-g", 123, "image/123", "&size=Main&quality=70&grow=1", false));
-    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70"), array("123-480-320-Main-q70-g", 123, "image/123", "&width=480&height=320&size=Main&quality=70&grow=1", false));
-    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70", true), array("123-480-320-Main-q70-g", 123, "image/123", "&width=480&height=320&size=Main&quality=70&grow=1", true));
+    $this->assertEqual(vae_image(123), array("123--", 123, "api/site/v1/image/123", "", false));
+    $this->assertEqual(vae_image(123, 450, 500), array("123-450-500", 123, "api/site/v1/image/123", "&width=450&height=500", false));
+    $this->assertEqual(vae_image(123, 450, 500, "Main"), array("123-450-500-Main", 123, "api/site/v1/image/123", "&width=450&height=500&size=Main", false));
+    $this->assertEqual(vae_image(123, "", "", "Main"), array("123---Main", 123, "api/site/v1/image/123", "&size=Main", false));
+    $this->assertEqual(vae_image(123, "", "", "Main", true), array("123---Main-g", 123, "api/site/v1/image/123", "&size=Main&grow=1", false));
+    $this->assertEqual(vae_image(123, "", "", "Main", false, "80"), array("123---Main-q80", 123, "api/site/v1/image/123", "&size=Main&quality=80", false));
+    $this->assertEqual(vae_image(123, "", "", "Main", true, "70"), array("123---Main-q70-g", 123, "api/site/v1/image/123", "&size=Main&quality=70&grow=1", false));
+    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70"), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&grow=1", false));
+    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70", true), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&grow=1", true));
   }
   
   function testVaeImageFilterPrepare() {
@@ -123,6 +128,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeImageFilterPrepareOnEmptyKey() {
+    $this->expectException();
     try {
       _vae_image_filter_prepare("", "grey2", "vae_image_grey", false);
       $this->fail("expected VaeException");
@@ -132,6 +138,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeImageGrey() {
+    $this->expectException();
     try {
       vae_image_grey("");
       $this->fail("expected VaeException");
@@ -143,6 +150,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeImageGreyOnEmptyKey() {
+    $this->expectException();
     try {
       vae_image_grey("");
       $this->fail("expected VaeException");
@@ -152,6 +160,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeImageReflect() {
+    $this->expectException();
     try {
       vae_image_reflect("");
       $this->fail("expected VaeException");
@@ -163,6 +172,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeImageReflectOnEmptyKey() {
+    $this->expectException();
     try {
       vae_image_reflect("", "reflect2", "vae_image_reflect");
       $this->fail("expected VaeException");
@@ -180,6 +190,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_imagesize(""), null);
     $this->assertEqual(_vae_imagesize("bad.jpg"), null);
     $this->assertEqual(vae_imagesize(""), null);
+    $this->expectException();
     try {
       vae_imagesize("bad.jpg");
       $this->fail("expected VaeException");
@@ -189,11 +200,11 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeLoggedin() {
-    $this->assertFalse($_SESSION['logged_in']);
+    $this->assertFalse($_SESSION['__v:logged_in']);
     $this->assertFalse(vae_loggedin());
-    $this->assertSessionDep("logged_in");
-    $_SESSION['logged_in'] = true;
-    $this->assertTrue(vae_loggedin());
+    $this->assertSessionDep("__v:logged_in");
+    $_SESSION['__v:logged_in'] = array('id' => 456, 'path' => 'foo');
+    $this->assertEqual(456, vae_loggedin());
   }
   
   function testVaeMultipartMail() {
@@ -244,7 +255,7 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeRichtext() {
-    $this->assertEqual("All Html has <br />\nbeen<br />\nstrippedout", vae_richtext("<html>All <p><strong>Html</strong> has </p>been<br />stripped<script type='text/javascript'>out</script></html>", array('nohtml' => true)));
+    $this->assertEqual("All Html has \nbeen\nstrippedout", vae_richtext("<html>All <p><strong>Html</strong> has </p>been<br />stripped<script type='text/javascript'>out</script></html>", array('nohtml' => true)));
     $this->assertEqual(vae_richtext("www.google.com", array()), '<a href="http://google.com" target="_blank">google.com</a>');
     $this->assertEqual(vae_richtext("http://www.google.com", array()), '<a href="http://www.google.com" target="_blank">http://www.google.com</a>');
     $this->assertEqual(vae_richtext("<a href=\"http://www.google.com\">http://www.google.com</a>", array('links_to_new_window' => 'all')), '<a target="_blank" href="http://www.google.com">http://www.google.com</a>');
@@ -254,19 +265,18 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertEqual("Section dividers removed", vae_richtext("Section dividers<hr /> removed", array()));
     $this->assertEqual("Section 3Section 4", vae_richtext("Section 1<hr />Section 2<hr />Section 3<hr />Section 4", array('section' => '2+')));
     $this->assertEqual("Section 2", vae_richtext("Section 1<hr />Section 2<hr />Section 3<hr />Section 4", array('section' => '1')));
-    $this->assertEqual("", vae_richtext("<img src='/VAE_HOSTED_AUDIO/123' />", array()));
-    $this->assertEqual("", vae_richtext("<img src='/VAE_HOSTED_VIDEO/123' />", array()));
     $this->assertEqual("<img src=\"http://btg.vaesite.net/__data/Array\" />", vae_richtext("<img src='/VAE_HOSTED_IMAGE/123' />", array()));
   }
   
   function testVaeSizedImage() {
     $this->assertEqual(vae_sizedimage(false, "Size"), "");
-    $this->assertEqual(vae_sizedimage(123, "Size"), array("123-sized-Size", 123, "image/123", "&size=Size", false));
-    $this->assertEqual(vae_sizedimage(123, "Size", true), array("123-sized-Size", 123, "image/123", "&size=Size", true));
+    $this->assertEqual(vae_sizedimage(123, "Size"), array("123-sized-Size", 123, "api/site/v1/image/123", "&size=Size", false));
+    $this->assertEqual(vae_sizedimage(123, "Size", true), array("123-sized-Size", 123, "api/site/v1/image/123", "&size=Size", true));
   }
   
   function testVaeStoreAddItemToCart() {
     $this->assertEqual(1, vae_store_add_item_to_cart(13423, null));
+    $this->expectException();
     try {
       vae_store_add_item_to_cart(13423, null, 0);
       $this->fail("expected VaeException");
@@ -320,6 +330,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(vae_store_destroy_coupon_code("ABC123"));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_store_destroy_coupon_code();
       $this->fail("expected VaeException");
@@ -342,6 +353,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(vae_store_destroy_tax_rate("123"));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_store_destroy_tax_rate();
       $this->fail("expected VaeException");
@@ -367,9 +379,9 @@ class PhpapiTest extends VaeUnitTestCase {
   }
   
   function testVaeStoreOrders() {
-    $this->mockRest('<store-orders><store-order><created-at>December 1, 2008 12:12:12</created-at><email>kevin@actionverb.com</email><discount>5.00</discount><tax>1.00</tax><shipping>1.50</shipping><total>43.75</total></store-order></store-orders>');
+    $this->mockRest('<store-orders><store-order><id>234</id><created-at>December 1, 2008 12:12:12</created-at><email>kevin@actionverb.com</email><discount>5.00</discount><tax>1.00</tax><shipping>1.50</shipping><total>43.75</total></store-order></store-orders>');
     $out = vae_store_orders();
-    $this->assertEqual($out, array(array('created_at' => 'December 1, 2008 12:12:12', 'e_mail_address' => 'kevin@actionverb.com', 'discount' => '5.00', 'tax' => '1.00', 'shipping' => '1.50', 'total' => '43.75', 'date' => 'December 01, 2008', 'subtotal' => '46.25')));
+    $this->assertEqual($out, array(234 => array('created_at' => 'December 1, 2008 12:12:12', 'e_mail_address' => 'kevin@actionverb.com', 'discount' => '5.00', 'tax' => '1.00', 'shipping' => '1.50', 'total' => '43.75', 'date' => 'December 01, 2008', 'subtotal' => '46.25', 'order_id' => 234, 'id' => 234)));
   }
   
   function testVaeStoreRecentOrder() {
@@ -407,6 +419,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(vae_store_update_coupon_code("ABC123", array('fixed_amount' => 1)));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_store_update_coupon_code("", array('fixed_amount' => 1));
       $this->fail("expected VaeException");
@@ -421,6 +434,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(vae_store_update_tax_rate("123", array('rate' => 8)));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_store_update_coupon_code("", array('rate' => 8));
       $this->fail("expected VaeException");
@@ -469,6 +483,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->mockRestError();
     $this->assertFalse(vae_update(13421, array('name' => "New Band")));
     $this->assertNoErrors();
+    $this->expectException();
     try {
       vae_update("bad", array('name' => "New Band"));
       $this->fail("expected VaeException");
@@ -485,8 +500,8 @@ class PhpapiTest extends VaeUnitTestCase {
   
   function testVaeVideo() {
     $this->assertEqual(vae_video(false), "");
-    $this->assertEqual(vae_video(123), array("123-video-", 123, "file/123", "", false));
-    $this->assertEqual(vae_video(123, "Main"), array("123-video-Main", 123, "file/123", "&size=Main", false));
+    $this->assertEqual(vae_video(123), array("123-video-", 123, "api/site/v1/file/123", "", false));
+    $this->assertEqual(vae_video(123, "Main"), array("123-video-Main", 123, "api/site/v1/file/123", "&size=Main", false));
   }
   
   function testVaeWatermark() {
@@ -498,6 +513,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertNull(vae_watermark("bad.jpg", "watermark.jpg"));
     $this->assertNull(vae_watermark("sample-nala.jpg", "watermark.jpg"));
   }
+
 }
 
 /* Helpers */

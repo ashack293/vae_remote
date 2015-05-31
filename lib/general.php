@@ -848,18 +848,6 @@ function _vae_kvstore_v_exists($iden) {
   return false;
 }
 
-function _vae_load_cache($reload = false) {
-  global $_VAE;
-  if (file_exists($_VAE['config']['data_path'] . "files.psz")) {
-    _vae_tick("Read local file data cache from data path");
-    $cache = unserialize(_vae_read_file("files.psz"));
-    foreach ($cache as $k => $v) {
-      _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($k) . "','" . _vae_sql_e($v) . "',DATE_ADD(NOW(), INTERVAL 90 DAY))", true);
-    }
-    unlink($_VAE['config']['data_path'] . "files.psz");
-  }
-}
-
 function _vae_load_settings() {
   global $_VAE, $_VERB;
   if (isset($_VAE['settings'])) return;
@@ -1822,6 +1810,9 @@ function _vae_sql_connect() {
   global $_VAE;
   if (!isset($_VAE['shared_sql'])) {
     $_VAE['shared_sql'] = mysql_pconnect("localhost", "verbshared", "UztCZzeUxKGJQmkVKMrLCyUuG4W3WUiu");
+    if (!$_VAE['shared_sql']) {
+      _vae_error("", "Error connecting to Shared SQL:" . mysql_error($_VAE['shared_sql']));
+    }
     mysql_select_db("av_verbshared");
   }
 }

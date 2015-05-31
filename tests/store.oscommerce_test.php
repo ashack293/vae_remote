@@ -16,9 +16,11 @@ class StoreOscommerceTest extends VaeUnitTestCase {
   }
   
   function testTepOrder() {
-    $order = new tep_order("10001", "US", "NY", 102.54);
+    $order = new tep_order("10001", "US", "NY", "New York", "123 Main Street", 102.54);
     $this->assertEqual($order->info['total'], 102.54);
     $this->assertEqual($order->delivery['state'], "NY");
+    $this->assertEqual($order->delivery['city'], "New York");
+    $this->assertEqual($order->delivery['street_address'], "123 Main Street");
     $this->assertEqual($order->delivery['postcode'], "10001");
     $this->assertEqual($order->delivery['country'], array('id' => 1, 'iso_code_2' => "US"));
   }

@@ -6,7 +6,7 @@ function _vae_users_callback_forgot($tag) {
     $u = _vae_kvstore_read("users:forgot-".$_REQUEST['__v:users_forgot_code']);
     if ($u) {
       _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], null);
-      $u = split("|", $u);
+      $u = explode("|", $u);
       $_SESSION['__v:logged_in'] = array('path' => $u[1], 'id' => $u[0]);
       _vae_flash("You have been logged in.  Please take this time to change your password to something memorable.");
       if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);

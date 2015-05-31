@@ -37,7 +37,7 @@ class UsersTest extends VaeUnitTestCase {
   function testVaeUsersCallbackForgotRetunAction() {
     global $_VAE;
     $_REQUEST['__v:users_forgot_code'] = "code123";
-    $_VAE['file_cache']["users:forgot-".$_REQUEST['__v:users_forgot_code']] = array('path' => "/artists", 'id' => 13421);
+    _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
     $this->assertNull($_SESSION['__v:logged_in']);
     $tag = $this->callbackTag('<v:users:forgot email_field="genre" required="name" path="/artists" />');
     _vae_users_callback_forgot($tag);
@@ -50,7 +50,7 @@ class UsersTest extends VaeUnitTestCase {
   function testVaeUsersCallbackForgotRetunActionRedirect() {
     global $_VAE;
     $_REQUEST['__v:users_forgot_code'] = "code123";
-    $_VAE['file_cache']["users:forgot-".$_REQUEST['__v:users_forgot_code']] = array('path' => "/artists", 'id' => 13421);
+    _vae_kvstore_write("users:forgot-".$_REQUEST['__v:users_forgot_code'], "13421|/artists");
     $this->assertNull($_SESSION['__v:logged_in']);
     $tag = $this->callbackTag('<v:users:forgot email_field="genre" required="name" path="/artists" redirect="/loggedin" />');
     _vae_users_callback_forgot($tag);
@@ -109,7 +109,7 @@ class UsersTest extends VaeUnitTestCase {
   }
   
   function testVaeUsersCallbackRegister() {
-    $this->mockRest(55555);
+    $this->mockRest("<user><id>55555</id></user>");
     $this->assertNull($_SESSION['__v:logged_in']);
     $tag = $this->callbackTag('<v:users:register path="/artists" redirect="/loggedin" />');
     _vae_users_callback_register($tag);

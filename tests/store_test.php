@@ -66,6 +66,7 @@ class StoreTest extends VaeUnitTestCase {
   }
     
   function testVaeStoreAddItemToCartProperAttributes() {
+    $this->expectException();
     try {
       _vae_store_add_item_to_cart(13421, null, 3, array());
       $this->fail();
@@ -439,6 +440,7 @@ class StoreTest extends VaeUnitTestCase {
     $_VAE['store']['payment_methods']['unittest'] = array('name' => "Unit Test Payment Method", 'callback' => array($this, 'helperStoreCallbackData1'));
     $tag = $this->callbackTag('<v:store:checkout redirect="/done" register_page="/register" email_confirmation="emails/bad_email_confirmation" />');
     $this->populateCart();
+    $this->expectException();
     try {
       _vae_store_callback_checkout($tag);
       $this->fail();

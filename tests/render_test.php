@@ -36,6 +36,7 @@ class RenderTest extends VaeUnitTestCase {
             }
             $sep = explode("\n>\n", $test . "\n");
             $input = preg_replace_callback('/<\?php(.*)\?>/', array($this, "helperRunRenderTestsFromTestFilesCallback"), $sep[0]);
+            if ($expected_exception) $this->expectException();
             try {
               list($parse_tree, $render_context) = _vae_parse_vaeml($input, $file . "." . $i, null, new Context());
               $out = _vae_render_tags($parse_tree, $_VAE['context'], $render_context);

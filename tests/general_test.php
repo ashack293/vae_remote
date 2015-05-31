@@ -44,9 +44,9 @@ class GeneralTest extends VaeUnitTestCase {
   }
   
   function testVaeClearLogin() {
-    $_SESSION['logged_in'] = true;
+    $_SESSION['__v:logged_in'] = true;
     _vae_clear_login();
-    $this->assertFalse($_SESSION['logged_in']);
+    $this->assertFalse($_SESSION['__v:logged_in']);
   }
   
   function testVaeCombineArrayKeys() {
@@ -71,14 +71,14 @@ class GeneralTest extends VaeUnitTestCase {
   function testVaeConfigurePhpProxy() {
     global $_VAE;
     $_REQUEST['__proxy'] = "testproxy";
+    $_SESSION['a'] = 'b';
     $request_old = $_REQUEST;
     $post_old = $_POST;
-    $test_session = array("a" => "b");
-    $this->short_term_cache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
+    $session_old = $_SESSION;
     _vae_configure_php();
     $this->assertEqual($_POST, $post_old);
     $this->assertEqual($_REQUEST, $request_old);
-    $this->assertEqual($_SESSION, $test_session);
+    $this->assertEqual($_SESSION, $session_old);
     $this->assertTrue($_VAE['from_proxy']);
   }
   
@@ -88,10 +88,10 @@ class GeneralTest extends VaeUnitTestCase {
     $_REQUEST['__get_request_data'] = true;
     $test_post = array("a" => "b");
     $test_request = array("c" => "d");
-    $test_session = array("e" => "f");
-    $this->short_term_cache_set("_proxy_" . $_REQUEST['__proxy'], serialize($test_session));
-    $this->short_term_cache_set("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post));
-    $this->short_term_cache_set("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request));
+    $_SESSION['e'] = 'f';
+    $test_session = $_SESSION;
+    _vae_kvstore_write("_proxy_post_" . $_REQUEST['__proxy'], serialize($test_post), 1);
+    _vae_kvstore_write("_proxy_request_" . $_REQUEST['__proxy'], serialize($test_request), 1);
     _vae_configure_php();
     $this->assertEqual($_POST, $test_post);
     $this->assertEqual($_REQUEST, $test_request);
@@ -139,6 +139,7 @@ class GeneralTest extends VaeUnitTestCase {
   }
   
   function testVaeError() {
+    $this->expectException();
     try {
       _vae_error("message", "debugging", "filename");
       $this->fail("expected VaeException");
@@ -228,7 +229,7 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertTrue(_vae_flash_are_errors());
     $this->assertEqual(array('name' => 'gradelevel', 'value' => 6, '_vae_form_prepared' => true), _vae_form_prepare(array('name' => 'gradelevel'), $tag, null, $render_context));
     $this->assertEqual(array('name' => 'gradelevel', 'value' => 6, 'path' => 'gradelevel', 'id' => 'gradelevel', '_vae_form_prepared' => true), _vae_form_prepare(array('path' => 'gradelevel'), $tag, null, $render_context));
-    $this->assertEqual(array('name' => 'confirm_gradelevel', 'value' => 6, 'path' => 'confirm_gradelevel', 'id' => 'confirm_gradelevel', '_vae_form_prepared' => true), _vae_form_prepare(array('path' => 'confirm_gradelevel'), $tag, null, $render_context));
+    $this->assertEqual(array('name' => 'confirm_gradelevel', 'value' => false, 'path' => 'confirm_gradelevel', 'id' => 'confirm_gradelevel', '_vae_form_prepared' => true), _vae_form_prepare(array('path' => 'confirm_gradelevel'), $tag, null, $render_context));
     $this->assertEqual(array('name' => 'name', 'value' => "Freefall", 'path' => 'name', 'id' => 'name', '_vae_form_prepared' => true), _vae_form_prepare(array('path' => 'name'), $tag, $context, $render_context));
     $render_context->set_in_place("form_create_mode", true);
     $this->assertEqual(array('name' => 'name', 'path' => 'name', 'id' => 'name', '_vae_form_prepared' => true), _vae_form_prepare(array('path' => 'name'), $tag, $context, $render_context));
@@ -282,6 +283,7 @@ class GeneralTest extends VaeUnitTestCase {
   function testVaeHandleObDebug() {
     $_REQUEST['__debug'] = true;
     _vae_debug("test");
+    $this->expectException();
     $this->assertPattern('/Debugging Traces Available/', _vae_handleob("<html>test</html>"));
   }
   
@@ -386,8 +388,6 @@ class GeneralTest extends VaeUnitTestCase {
     global $_VAE;
     $this->assertFalse($_VAE['ssl_required']);
     $_SERVER['HTTPS'] = true;
-    _vae_handleob("<html>test</html>");
-    $this->assertRedirect("http://btg.vaesite.com/page");
     $_SESSION['__v:pre_ssl_host'] = "btgrecords.com";
     _vae_handleob("<html>test</html>");
     $this->assertRedirect("http://btgrecords.com/page");
@@ -405,8 +405,9 @@ class GeneralTest extends VaeUnitTestCase {
     global $_VAE;
     $this->assertFalse($_VAE['ssl_required']);
     $_REQUEST['__vae_ssl_router'] = true;
+    $_SESSION['__v:pre_ssl_host'] = "btgrecords.com";
     _vae_handleob("<html>test</html>");
-    $this->assertRedirect("http://btg.vaesite.com/page");
+    $this->assertRedirect("http://btgrecords.com/page");
   }
   
   function testVaeHandleObSslRedirectionsLocal() {
@@ -427,7 +428,7 @@ class GeneralTest extends VaeUnitTestCase {
   }
   
   function testVaeHtmlArea() {
-    $this->assertEqual("All Html has <br />\nbeen<br />\nstrippedout", _vae_htmlarea("<html>All <p><strong>Html</strong> has </p>been<br />stripped<script type='text/javascript'>out</script></html>", array('nohtml' => true)));
+    $this->assertEqual("All Html has \nbeen\nstrippedout", _vae_htmlarea("<html>All <p><strong>Html</strong> has </p>been<br />stripped<script type='text/javascript'>out</script></html>", array('nohtml' => true)));
     $this->assertEqual(_vae_htmlarea("www.google.com", array()), '<a href="http://google.com" target="_blank">google.com</a>');
     $this->assertEqual(_vae_htmlarea("http://www.google.com", array()), '<a href="http://www.google.com" target="_blank">http://www.google.com</a>');
     $this->assertEqual(_vae_htmlarea("<a href=\"http://www.google.com\">http://www.google.com</a>", array('links_to_new_window' => 'all')), '<a target="_blank" href="http://www.google.com">http://www.google.com</a>');
@@ -529,14 +530,14 @@ class GeneralTest extends VaeUnitTestCase {
   }
   
   function testVaeInjectCdn() {
-    /* no rewrite */
+    // no rewrite
     $this->assertEqual("<img src='/wp-content/sample-nala.jpg' />", _vae_post_process("<img src='/wp-content/sample-nala.jpg' />"));
     $this->assertEqual("<img src='http://btg.vaesite.com/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/sample-nala.jpg' />"));
     $this->assertEqual("<img src='http://btg.vaesite.com/w-content/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/w-content/sample-nala.jpg' />"));
     $this->assertEqual("<img src='http://btg.vaesite.com/wp-admin/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/wp-admin/sample-nala.jpg' />"));
     $this->assertEqual("<img src=http://btg.vaesite.com/wp-content/sample-nala.jpg />", _vae_post_process("<img src=http://btg.vaesite.com/wp-content/sample-nala.jpg />"));
     $this->assertEqual("<img src='http://btg.vaesite.com/wp-content/plugins/sample-nala.jpg' />", _vae_post_process("<img src='http://btg.vaesite.com/wp-content/plugins/sample-nala.jpg' />"));
-    /* cdn rewrite conditions - wordpress assets */
+    // cdn rewrite conditions - wordpress assets
     $this->assertPattern('/src=\'http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg\'/', _vae_post_process("<img src='http://btg.vaesite.com/wp-content/sample-nala.jpg' />"));
     $this->assertPattern('/src="http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg"/', _vae_post_process("<img src=\"http://btg.vaesite.com/wp-content/sample-nala.jpg\" />"));
     $this->assertPattern('/style=\'background: url\("http:\/\/btg.vaesite.net\/__cache\/a([0-9]*)\/wp-content\/sample-nala.jpg"\);\'/', _vae_post_process("<div style='background: url(\"http://btg.vaesite.com/wp-content/sample-nala.jpg\");'></div>"));
@@ -584,12 +585,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertEqual("alert(\\\"kevin\\n\\\");", _vae_jsesc("  alert(\"kevin\n\");  \n  "));
   }
   
-  function testVaeLoadCache() {
-    global $_VAE;
-    _vae_load_cache();
-    $this->assertEqual($_VAE['file_cache'], array());
-  }
-  
   function helperVaeLocalAuthorize($status = "GOOD") {
     $_REQUEST['__vae_local'] = "cow";
     $memcache_base_key = "__vae_local" . $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['__vae_local'];
@@ -613,6 +608,7 @@ class GeneralTest extends VaeUnitTestCase {
   
   function testVaeLocalFailedToAuthorizeFromMemcache() {
     $this->helperVaeLocalAuthorize("BAD");
+    $this->expectException();
     try {
       _vae_local();
       $this->fail("expected VaeException");
@@ -964,6 +960,7 @@ class GeneralTest extends VaeUnitTestCase {
   }
   
   function testVaeRemote() {
+    $this->expectException();
     try {
       _vae_remote();
     } catch (VaeException $e) {
@@ -1007,7 +1004,7 @@ class GeneralTest extends VaeUnitTestCase {
   
   function testVaeReportError() {
     $this->assertNotNull(_vae_report_error("subj", "msg"));
-    $this->assertMail(2);
+    $this->assertMail(1);
   }
   
   function testVaeRequestParam() {
@@ -1181,7 +1178,7 @@ class GeneralTest extends VaeUnitTestCase {
     $this->setLocal();
     $this->assertEqual(_vae_src("notfound1"), "");
     $this->assertFinal("__vae_local_needs=/notfound1");
-    $this->short_term_cache_set("local/found1.html", "<html>a file</html>");
+    _vae_kvstore_write("local/found1.html", "<html>a file</html>");
     $this->assertEqual(_vae_src("/found1"), array("/found1.html", "<html>a file</html>"));
     $this->clearLocal();
   }

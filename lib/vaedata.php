@@ -18,7 +18,7 @@ class VaeContext implements ArrayAccess, Countable {
     $this->___context = $context;
     $this->___query = $query;
     $this->___singleData = $singleData;
-    if ($context && get_class($context) == "VaeDbContext" && $context->dataMap) {
+    if ($context && get_class($context) == "Thrift\\VaeDbContext" && $context->dataMap) {
       $this->___addData($context->dataMap);
       if ($context->dataSource) $dataSource = $context->dataSource;
     } 
@@ -94,7 +94,7 @@ class VaeContext implements ArrayAccess, Countable {
   
   public function __toString() {
     if (strlen($this->___singleData)) return (string)$this->___singleData;
-    if ($this->___context && (get_class($this->___context) != "VaeDbContext")) return "";
+    if ($this->___context && (get_class($this->___context) != "Thrift\\VaeDbContext")) return "";
     if (strlen($this->___context->data)) return $this->___context->data;
     return "";
   }
@@ -316,10 +316,10 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         }
       }
       throw new VaeException("", "Could not connect to VaeDBd to get()");
-    } catch (VaeDbInternalError $ie) {
+    } catch (Thrift\VaeDbInternalError $ie) {
       if ($raiseErrors) throw new VaeException("", "VaeDB (" . $_VAE['thrift_host'] . ") Internal Error: " . $ie->getMessage());
       return false;
-    } catch (VaeDbQueryError $qe) {
+    } catch (Thrift\VaeDbQueryError $qe) {
       if ($raiseErrors) throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
       return false;
     }
@@ -398,7 +398,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     if (!self::$sessionId) self::___openSession();
     try {
       $response = self::$client->createInfo(self::$sessionId, $this->___responseId, $query);
-    } catch (VaeDbQueryError $qe) {
+    } catch (Thrift\VaeDbQueryError $qe) {
       throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
     }
     $iter = new VaeQueryIterator($this);
@@ -664,12 +664,13 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___shortTermCacheGet($key, $flags) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheGet(self::$sessionId, $key, $flags);
+    $ret = self::$client->shortTermCacheGet(self::$sessionId, $key, $flags);
+    return unserialize($ret);
   }
 
   public static function ___shortTermCacheSet($key, $value, $flags, $expires) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheSet(self::$sessionId, $key, $value, $flags, $expires);
+    return self::$client->shortTermCacheSet(self::$sessionId, $key, serialize($value), $flags, $expires);
   }
 
   public static function ___resetClient() {
@@ -764,7 +765,7 @@ class VaeSqlQuery {
     $this->response->contexts = array();
     if (false && $responseId) {
       if (!isset(self::$responses[$responseId])) {
-        throw new VaeDbInternalError("Invalid responseId");
+        throw new Thrift\VaeDbInternalError("Invalid responseId");
       }
       $responseNumber = count(self::$responses[$responseId]->contexts);
     } else {
