@@ -649,7 +649,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     if ($_VAE['settings']['subdomain'] . ".vaesite.com" == $_SERVER['HTTP_HOST']) $staging = true;
     if ($_VAE['settings']['subdomain'] . ".verbsite.com" == $_SERVER['HTTP_HOST']) $staging = true;
     if ($_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_site'] == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VAE['staging'] == true) $staging = true;
+    if ($_VAE['staging'] == true && !$_ENV['TEST']) $staging = true;
     for ($i = 0; $i < 5; $i++) {
       try {
         self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], $staging, mt_rand());
@@ -687,7 +687,6 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   }
 
 }
-
 
 class VaeQueryIterator implements Iterator {
   
