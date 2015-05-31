@@ -12,12 +12,12 @@ function vae_cache($key, $timeout = 3600, $function = "", $global = false) {
   if (!strlen($key)) _vae_error("You called <span class='c'>vae_cache()</span> but didn't provide a cache key.");
   if ($function == "") $function = $key;
   $key = ($global ? $_VAE['global_cache_key'] : $_VAE['cache_key']) . $key;
-  $cached = memcache_get($_VAE['memcached'], $key);
+  $cached = _vae_short_term_cache_get($key);
   if (is_array($cached) && $cached[0] == "chks") {
     return $cached[1];
   }
   $out = $function();
-  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
+  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) _vae_short_term_cache_set($key, array("chks", $out), 0, $timeout);
   return $out;
 }
 
@@ -28,7 +28,7 @@ function vae_cached_contingency($key, $timeout = 86400, $function = "", $global 
   $key = ($global ? $_VAE['global_cache_key'] : $_VAE['cache_key']) . $key;
   $out = $function();
   if (is_null($out)) {
-    $cached = memcache_get($_VAE['memcached'], $key);
+    $cached = _vae_short_term_cache_get($key);
     if (is_array($cached) && $cached[0] == "chks") {
       return $cached[1];
     }
@@ -36,7 +36,7 @@ function vae_cached_contingency($key, $timeout = 86400, $function = "", $global 
       return NULL;
     }
   }
-  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, $timeout);
+  if (!$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) _vae_short_term_cache_set($key, array("chks", $out), 0, $timeout);
   return $out;
 }
 

@@ -12,7 +12,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
   global $_VAE;
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2" . $_SERVER['DOCUMENT_ROOT'] . md5($sass . $include_directory);
-  list($css, $deps) = memcache_get($_VAE['memcached'], $cache_key);
+  list($css, $deps) = _vae_short_term_cache_get($cache_key);
   if (isset($deps) && count($deps)) {
     foreach ($deps as $filename => $hash) {
       if (@md5_file($filename) != $hash) {
@@ -29,7 +29,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
       $css = $client->sass($sass, $include_directory);
     }
     $deps = _vae_sass_deps_check($sass, $include_directory, true);
-    memcache_set($_VAE['memcached'], $cache_key, array($css, $deps));
+    _vae_short_term_cache_set($cache_key, array($css, $deps));
   }
   if ($header) Header("Content-Type: text/css");
   return $css;

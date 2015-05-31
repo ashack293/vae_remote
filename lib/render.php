@@ -588,14 +588,14 @@ function _vae_render_fragment($a, &$tag, $context, &$callback, $render_context) 
   if (!$a['cache']) return "";
   if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     $key = $_VAE['global_cache_key'] . $a['cache'];
-    $cached = memcache_get($_VAE['memcached'], $key);
+    $cached = _vae_short_term_cache_get($key);
     if (is_array($cached) && $cached[0] == "chks") {
       return $cached[1];
     }
   }
   $out = _vae_render_tags($tag, $context, $render_context);
   if ($key) {
-    memcache_set($_VAE['memcached'], $key, array("chks", $out), 0, 3600);
+    _vae_short_term_cache_set($key, array("chks", $out), 0, 3600);
   }
   return $out;
 }

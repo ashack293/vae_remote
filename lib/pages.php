@@ -82,7 +82,7 @@ function _vae_page_find($page) {
   $_SERVER['PHP_SELF'] = "/" . $page;
   $_REQUEST['path'] = (isset($_SERVER['PATH_INFO']) ? preg_replace("/\/locale\/([a-z]*)/", "", preg_replace("/\/([a-z0-9]*_)?page\/([0-9]*)/", "", substr($_SERVER['PATH_INFO'], 1))) : "");
   if (!strlen($page)) return false;
-  $cached = memcache_get($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page);
+  $cached = _vae_short_term_cache_get($_VAE['global_cache_key'] . "path2" . $page);
   if (is_array($cached)) {
     if ($cached['id']) {
       $_REQUEST['id'] = $cached['id'];
@@ -104,7 +104,7 @@ function _vae_page_find($page) {
         return;
       } 
     }
-    memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array());
+    _vae_short_term_cache_set($_VAE['global_cache_key'] . "path2" . $page, array());
   }
   return false;
 }
@@ -133,7 +133,7 @@ function _vae_page_run($page, $template, $context, $from_cache = false) {
   if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local($template);
   list($filename, $vaeml) = _vae_src($template);
   if (!strlen($vaeml)) return _vae_page_404("Could not find Permalink HTML page.  We were looking for $template or $template.html or $template.haml or $template.php.");
-  if ($from_cache == false) memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array('id' => $_REQUEST['id'], 'template' => (string)$template));
+  if ($from_cache == false) _vae_short_term_cache_set($_VAE['global_cache_key'] . "path2" . $page, array('id' => $_REQUEST['id'], 'template' => (string)$template));
   $_VAE['filename'] = $filename;
   _vae_set_cache_key();
   if ($_ENV['TEST']) return $filename;

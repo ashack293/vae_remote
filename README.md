@@ -27,19 +27,6 @@ You should have these from other Vae projects, but if not:
     brew install memcached
     brew install mysql
 
-I recommend using Homebrew for PHP so your VaeQL will play nice, assuming it was
-also compiled with libraries from Homebrew.
-
-    brew tap homebrew/dupes
-    brew tap homebrew/versions
-    brew tap homebrew/homebrew-php
-    brew install php53
-
-As part of installing PHP 5.3 from Homebrew, you'll need to update your
-$PATH in your shell to use their PHP 5.3 as the default PHP binaries.
-This is key because VaeQL uses the "php-config" binary for its
-installation process.
-
 
 ### Create Local MySQL Database for Vae Remote
 

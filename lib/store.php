@@ -827,12 +827,12 @@ function _vae_store_current_user() {
 function _vae_store_exchange_rate($from, $to) {
   global $_VAE;
   $key = "currency" . $from . "_" . $to;
-  if ($rate = memcache_get($_VAE['memcached'], $key)) return $rate;
+  if ($rate = _vae_short_term_cache_get($key)) return $rate;
   $feed = _vae_simple_rest("http://coinmill.com/rss/" . $from . "_" . $to . ".xml");
   if (!strlen($feed)) return false;
   preg_match("/ = ([0-9\.]*) /", $feed, $matches);
   $rate = $matches[1];
-  memcache_set($_VAE['memcached'], $key, $rate, 0, 3600);
+  _vae_short_term_cache_set($key, $rate, 0, 3600);
   return $rate;
 }
 

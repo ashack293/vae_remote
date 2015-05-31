@@ -61,7 +61,7 @@ function _vae_parse_vaeml($vaeml, $filename = null, $nested_tags = null, $render
   $cache_key = "vaeml" . $filename . $_SERVER['DOCUMENT_ROOT'] . md5($vaeml);
   if ($render_context == null) $render_context = new Context();
   if (isset($_VAE['vaeml_cache'][$cache_key])) $cached = $_VAE['vaeml_cache'][$cache_key];
-  elseif ($_REQUEST['__debug'] != "parse") $cached = memcache_get($_VAE['memcached'], $cache_key);
+  elseif ($_REQUEST['__debug'] != "parse") $cached = _vae_short_term_cache_get($cache_key);
   if ($cached) return _vae_merge_yield($cached, $nested_tags, $render_context);
   if (substr($filename, -5) == ".haml" || substr($filename, -9) == ".haml.php") {
     require_once(dirname(__FILE__) . "/haml.php");
@@ -72,7 +72,7 @@ function _vae_parse_vaeml($vaeml, $filename = null, $nested_tags = null, $render
   $res = $parser->parse();
   if ($res === false) return false;
   $par_tag = array('tags' => $res);
-  memcache_set($_VAE['memcached'], $cache_key, $par_tag);
+  _vae_short_term_cache_set($cache_key, $par_tag);
   $_VAE['vaeml_cache'][$cache_key] = $par_tag;
   return _vae_merge_yield($par_tag, $nested_tags, $render_context);
 }

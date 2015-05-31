@@ -729,7 +729,7 @@ function _vae_interpret_vaeml($vaeml) {
   } elseif (isset($_SESSION['__v:flash'])) {
     _vae_tick("can't use cached version because there is data in the flash bucket");
   } elseif (!isset($_REQUEST['__vae_local']) && !isset($_REQUEST['__verb_local'])) {
-    $cached = memcache_get($_VAE['memcached'], $cache_key);
+    $cached = _vae_short_term_cache_get($cache_key);
     if (is_array($cached) && $cached[0] == "c") {
       $out = $cached[1];
       if (is_array($cached[2]) && count($cached[2])) {
@@ -793,7 +793,7 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_tick("can't cache because we be ssl");
   } elseif (($out != false) && !isset($_VAE['force_redirect'])) {
     $dependencies = (isset($_VAE['dependencies']) ? $_VAE['dependencies'] : "");
-    memcache_set($_VAE['memcached'], $cache_key, array("c", $out, $_VAE['dependencies'], $_VAE['session_cookies']), 0, 1800);
+    _vae_short_term_cache_set($cache_key, array("c", $out, $_VAE['dependencies'], $_VAE['session_cookies']), 0, 1800);
     _vae_tick("cached page");
   }
   return $out;
@@ -810,7 +810,7 @@ function _vae_jsesc($a) {
 function _vae_kvstore_read($iden, $renew_expiry = null) {
   global $_VAE;
   $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $iden;
-  if ($cache = memcache_get($_VAE['memcached'], $memcache_key)) {
+  if ($cache = _vae_short_term_cache_get($memcache_key)) {
     return $cache;
   }
   $q = _vae_sql_q("SELECT `v`,`expire_at` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
@@ -819,7 +819,7 @@ function _vae_kvstore_read($iden, $renew_expiry = null) {
       _vae_tick(" - updating kvstore exiry date");
       _vae_sql_q("UPDATE kvstore SET `expire_at`=DATE_ADD(NOW(),INTERVAL " . $renew_expiry . " DAY) WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
     }
-    memcache_set($_VAE['memcached'], $memcache_key, $r['v'], 0, 86400);
+    _vae_short_term_cache_set($memcache_key, $r['v'], 0, 86400);
     return $r['v'];
   }
   return null;
@@ -833,7 +833,7 @@ function _vae_kvstore_write($key, $value, $expire_interval = null, $is_filename=
   if ($value != null) {
     _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
   }
-  memcache_set($_VAE['memcached'], $memcache_key, $value, 0, 86400);
+  _vae_short_term_cache_set($memcache_key, $value, 0, 86400);
 }
 
 function _vae_kvstore_empty() {

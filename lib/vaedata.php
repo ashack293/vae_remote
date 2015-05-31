@@ -922,11 +922,11 @@ function vae_sql_credentials($username, $password) {
   VaeSqlQuery::setConnection("localhost", $username, $username, $password);
 }
 
-function memcache_get($conn, $key, $flags = 0) {
+function _vae_short_term_cache_get($key, $flags = 0) {
   return VaeQuery::___shortTermCacheGet($key, $flags);
 }
 
-function memcache_set($conn, $key, $value, $flags = 0, $expires = 0) {
+function _vae_long_term_cache_set($key, $value, $flags = 0, $expires = 0) {
   return VaeQuery::___shortTermCacheSet($key, $value, $flags, $expires);
 }
 
