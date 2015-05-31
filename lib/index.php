@@ -10,10 +10,10 @@ $_VAE['version'] = 100;
 
 require_once(dirname(__FILE__) . "/general.php");
 
-session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
+if (!$_ENV['TEST']) session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 
 if (_vae_should_load()) {
-  
+
   /* Store start times */
   $_VAE['start_tick'] = microtime(true);
   if ($_REQUEST['__time']) {
@@ -27,9 +27,6 @@ if (_vae_should_load()) {
     die();
   }
 
-  /* Connect to memcached */
-  $_VAE['memcached'] = @memcache_pconnect('localhost', 11211);
-    
   /* Bring in the rest of Vae */
   require_once(dirname(__FILE__) . "/vae_exception.php");
   require_once(dirname(__FILE__) . "/callback.php");
@@ -52,7 +49,7 @@ if (_vae_should_load()) {
 
   /* Initialize */
   unset($_SESSION['__v:flash_new']);
-  
+
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
   if ($_REQUEST['set_login']) _vae_set_login();

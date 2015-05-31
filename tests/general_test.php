@@ -660,30 +660,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertFinal("__vae_local_needs=/notfound1");
   }
   
-  function testVaeLockAcquire() {
-    global $_VAE;
-    $this->assertNull($_VAE['global_lock']);
-    _vae_lock_acquire();
-    $this->assertIsA($_VAE['global_lock'], "Resource");
-    _vae_lock_release();
-    $this->assertNull($_VAE['global_lock']);
-    _vae_lock_acquire(true, "global", true);
-    $this->assertIsA($_VAE['global_lock'], "Resource");
-    _vae_lock_release();
-    $this->assertNull($_VAE['global_lock']);
-  }
-  
-  function testVaeLockRelease() {
-    global $_VAE;
-    $this->assertNull($_VAE['global_lock']);
-    _vae_lock_release();
-    $this->assertNull($_VAE['global_lock']);
-    _vae_lock_acquire();
-    $this->assertIsA($_VAE['global_lock'], "Resource");
-    _vae_lock_release();
-    $this->assertNull($_VAE['global_lock']);
-  }
-  
   function testVaeMakeFilename() {
     $this->assertEqual("kevin-bombino-1-is-superhero-cow-emancipation-proclamat.pdf", _vae_make_filename("pdf", "Kevin Bombino ++1 Is Superhero\n\n\n Cow   Emancipation Proclamation Devastation RI0T!!"));
     $this->assertEqual("sample-nala.1.jpg", _vae_make_filename("jpg", "SAMPLE NALA"));
@@ -1022,10 +998,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertPattern('/<html>/', _vae_render_message("a", "b"));
   }
   
-  function testVaeRenderMessageFooter() {
-    $this->assertPattern('/div>/', _vae_render_message_footer());
-  }
-  
   function testVaeRenderTimer() {
     $_REQUEST['__time'] = true;
     vae_tick("test");
@@ -1221,11 +1193,6 @@ class GeneralTest extends VaeUnitTestCase {
   
   function testVaeStoreFile() {
     $this->assertNotNull(_vae_store_file("TESTIDEN2", "testfile.txt", "some data"));
-  }
-  
-  function testVaeStoreFiles() {
-    _vae_store_files("TESTIDEN", "testvalue");
-    $this->pass();
   }
   
   function testVaeStringifyArray() {

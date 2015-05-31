@@ -150,17 +150,6 @@ class UsersTest extends VaeUnitTestCase {
     $this->assertNull(_vae_users_find($tag));
   }
   
-  function testVaeUsersFuncLoggedin() {
-    $_SESSION['__v:logged_in']['id'] = 13421;
-    $this->assertEqual(_vae_users_func_loggedin(), 13421);
-    $this->assertSessionDep('__v:logged_in');
-  }
-  
-  function testVaeUsersFuncLoggedinNotLoggedIn() {
-    _vae_users_func_loggedin();
-    $this->assertRedirect('/');
-  }
-  
 }
 
 ?>

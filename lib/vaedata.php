@@ -355,7 +355,8 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     if (!$this->valid()) $this->rewind();
     return false;
   }
-  
+    
+
   public function ___nestedQuery($query = null, $options = null, $raiseErrors = false) {
     if ($this->___responseId < 0) return;
     $response = $this->___executeQuery($this->___responseId, $query, $options, $raiseErrors);
@@ -660,6 +661,16 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     throw new VaeException("", "Could not connect to VaeDBd to openSession");
   }
 
+  public static function ___shortTermCacheGet($key, $flags) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->shortTermCacheGet(self::$sessionId, $key, $flags);
+  }
+
+  public static function ___shortTermCacheSet($key, $value, $flags, $expires) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->shortTermCacheSet(self::$sessionId, $key, $value, $flags, $expires);
+  }
+
   public static function ___resetClient() {
     global $_VAE;
     sleep(2);
@@ -909,6 +920,14 @@ function vae_find($query = null, $options = null, $context = null) {
 
 function vae_sql_credentials($username, $password) {
   VaeSqlQuery::setConnection("localhost", $username, $username, $password);
+}
+
+function memcache_get($conn, $key, $flags = 0) {
+  return VaeQuery::___shortTermCacheGet($key, $flags);
+}
+
+function memcache_set($conn, $key, $value, $flags = 0, $expires = 0) {
+  return VaeQuery::___shortTermCacheSet($key, $value, $flags, $expires);
 }
 
 /**** Internal API ****/

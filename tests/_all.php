@@ -2,7 +2,8 @@
 
 // set this to false to disable slow tests
 $_ENV['slow_tests'] = false;
-$_VAE['vaedbd_port'] = 9092;
+$_VAE['vaedbd_port'] = 9091;
+$_VAE['vaedbd_backends'] = array('127.0.0.1');
 
 $_ENV['TEST'] = true;
 require_once(dirname(__FILE__) . '/../vendor/simpletest/autorun.php');
