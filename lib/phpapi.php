@@ -690,52 +690,5 @@ function vae_watermark($image, $watermark_image, $vertical_align = "", $align = 
 	imagecopy($tk, $tlogo, $alinks, $aoben, 0, 0, $logowidth, $logoheight);
   return _vae_store_file($iden, $tk, "jpg", null, "jpeg");
 }
-
-function vae_zip_distance($from, $to, $zip_field = "zip") {
-  $zips = array($from);
-  if (is_array($to) || is_object($to)) {
-    foreach ($to as $zip) {
-      if (is_object($zip)) $zip = (string)$zip->$zip_field;
-      $zips[] = $zip;
-    }
-  } else {
-    $zips[] = $to;
-  }
-  $to_zips = vae_zip_lookup($zips);
-  $answers = array();
-  $lat1 = $to_zips[$from][0];
-  $lon1 = $to_zips[$from][1];
-  foreach ($to_zips as $zip => $point) {
-    if ($zip == $from) continue;
-    $lat2 = $point[0];
-    $lon2 = $point[1];
-    $answers[$zip] = acos(sin($lat1)*sin($lat2)+cos($lat1)*cos($lat2)*cos($lon2-$lon1)) * 3958.75;
-  }
-  if (is_array($to) || is_object($to)) {
-    foreach ($to as $obj) {
-      if (is_object($obj)) {
-        $obj->distance = $answers[(string)$obj->$zip_field];
-      }
-    }
-  } else {
-    return $answers[$to];
-  }
-  return $answers;
-}
-
-function vae_zip_lookup($zips) {
-  if (!is_array($zips)) $zips = array($zips);
-  _vae_sql_connect();
-  $realzips = array();
-  foreach ($zips as $zip) {
-    $realzips[] = _vae_sql_e($zip);
-  }
-  $data = array();
-  $q = _vae_sql_q("SELECT `zip`,`latitude`,`longitude` FROM `zcta` WHERE `zip` IN ('" . implode("','", $realzips) . "')");
-  while ($r = _vae_sql_r($q)) {
-    $data[$r['zip']] = array(deg2rad($r['latitude']), deg2rad($r['longitude']));
-  }
-  return $data;
-}
  
 ?>
