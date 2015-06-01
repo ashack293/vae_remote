@@ -12,6 +12,16 @@ require_once(dirname(__FILE__) . "/general.php");
 
 if (!$_ENV['TEST']) session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 
+$_VAE['vaedbd_backend_tiers'] = array(
+  array(
+    'vaedb0.***REMOVED***',
+    'vaedb1.***REMOVED***'
+  )
+);
+
+@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
+@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../../vae-config/fs-settings.php')));
+
 if (_vae_should_load()) {
 
   /* Store start times */

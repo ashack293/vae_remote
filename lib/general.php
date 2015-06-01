@@ -1,15 +1,5 @@
 <?php
 
-$_VAE['session_storage_path'] = '/var/lib/php/session';
-$_VAE['vaedbd_backend_tiers'] = array(
-  array(
-    'vaedb0.***REMOVED***',
-    'vaedb1.***REMOVED***'
-  )
-);
-
-@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
-@(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../../vae-config/fs-settings.php')));
 
 function _vae_absolute_data_url($path = "") {
   global $_VAE;
