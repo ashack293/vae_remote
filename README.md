@@ -28,24 +28,6 @@ You should have these from other Vae projects, but if not:
     brew install mysql
 
 
-### Create Local MySQL Database for Vae Remote
-
-Create a local mysql database called vaedb.  Then create a user
-called vaedb and give that user a password.  
-
-TODO: users are currently assumed to actually be called verbshared and
-db called av_verbshared.  This will change.
-
-TODO: MOVE THE USERNAME/PASSWORD TO A CONFIG VARIABLE.
-
-Import the schema as follows:
-
-    mysql -uvaedb < db/schema.sql
-
-TODO: Actually make the above file exist.  Currently the file is
-MISSING, please generate one from production.
-
-
 ## Test Suite
 
 Vae Remote includes a large test suite that tests both Vae Remote as

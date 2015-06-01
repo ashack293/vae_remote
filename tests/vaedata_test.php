@@ -1,7 +1,7 @@
 <?php
 
 class VaeDataTest extends VaeUnitTestCase {
-    
+
   function testVae() {
     $songs = vae("13421/albums/13423/songs");
     $this->assertEqual($songs->id(), 13425);
@@ -289,6 +289,41 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('6<7+2'), true);
   }
 
+  function testShortTermCache() {
+    $this->assertEqual(_vae_short_term_cache_get("badkey"), "");
+    _vae_short_term_cache_set("st1", "v1");
+    $this->assertEqual(_vae_short_term_cache_get("st1"), "v1");
+    _vae_short_term_cache_set("st1", "v2");
+    $this->assertEqual(_vae_short_term_cache_get("st1"), "v2");
+    _vae_short_term_cache_set("st1", "v2", 600, 1);
+    _vae_short_term_cache_set("st2", "v2", 600, 1);
+    $this->assertEqual(_vae_short_term_cache_get("st1"), "v2");
+    _vae_short_term_cache_delete("st1");
+    $this->assertEqual(_vae_short_term_cache_get("st1"), "");
+    $this->assertEqual(_vae_short_term_cache_get("st2"), "v2");
+  }
+    
+  function testLongTermCache() {
+    $this->assertEqual(_vae_long_term_cache_get("badkey"), "");
+    _vae_long_term_cache_set("t1", "v1", 600, 0);
+    $this->assertEqual(_vae_long_term_cache_get("t1", false), "v1");
+    _vae_long_term_cache_set("t1", "v2", 600, 0);
+    $this->assertEqual(_vae_long_term_cache_get("t1", false), "v2");
+    $this->assertEqual(_vae_long_term_cache_get("t1", true), "v2");
+    _vae_long_term_cache_set("t1", "v2", 600, 1);
+    _vae_long_term_cache_set("t2", "v2", 600, 1);
+    $this->assertEqual(_vae_long_term_cache_get("t1"), "v2");
+    _vae_long_term_cache_delete("t1");
+    $this->assertEqual(_vae_long_term_cache_get("t1"), "");
+    $this->assertEqual(_vae_long_term_cache_get("t2"), "v2");
+    _vae_long_term_cache_set("t1", "v2", 600, 1);
+    _vae_long_term_cache_set("t2", "v2", 600, 1);
+    $this->assertEqual(_vae_long_term_cache_get("t1"), "v2");
+    _vae_long_term_cache_empty();
+    $this->assertEqual(_vae_long_term_cache_get("t1"), "");
+    $this->assertEqual(_vae_long_term_cache_get("t2"), "");
+  }
+    
 }
 
 ?>
