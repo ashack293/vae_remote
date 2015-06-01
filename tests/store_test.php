@@ -29,7 +29,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['total'], 37.02);
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['notes'], "notEE");
     unset($_SESSION);
-    $this->assertEqual(1, _vae_store_add_item_to_cart(13433, 13434, 3, array('name_field' => "name", 'price_field' => "price", 'notes_field' => 'description', 'barcode' => "123ABC", "weight" => 4, 'inventory_field' => 'inventory', 'disable_inventory_check' => true, 'option_field' => 'size', 'tax_class' => 'services', 'discount_class' => 'cheap!', 'shipping_class' => "big"), "ignored"));
+    $this->assertEqual(1, _vae_store_add_item_to_cart(13433, 13434, 3, array('name_field' => "name", 'price_field' => "price", 'notes_field' => 'description', 'barcode' => "123ABC", "weight" => 4, 'inventory_field' => 'inventory', 'option_field' => 'size', 'tax_class' => 'services', 'discount_class' => 'cheap!', 'shipping_class' => "big"), "ignored"));
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['name'], "Freefall 11x17\" Full Color Poster");
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 3);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['price'], 2.99);
@@ -45,8 +45,12 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['option_id'], 13434);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['option_value'], "One Size");
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['inventory_field'], 'inventory');
-    $this->assertEqual($_SESSION['__v:store']['cart'][1]['check_inventory'], false);
+    $this->assertEqual($_SESSION['__v:store']['cart'][1]['check_inventory'], true);
     $this->assertPattern('/Get this limited edition/', $_SESSION['__v:store']['cart'][1]['notes']);
+    unset($_SESSION);
+    $this->assertEqual(1, _vae_store_add_item_to_cart(13433, 13434, 3, array('name_field' => "name", 'price_field' => "price", 'notes_field' => 'description', 'barcode' => "123ABC", "weight" => 4, 'inventory_field' => 'inventory', 'disable_inventory_check' => true, 'option_field' => 'size', 'tax_class' => 'services', 'discount_class' => 'cheap!', 'shipping_class' => "big"), "ignored"));
+    $this->assertNull($_SESSION['__v:store']['cart'][1]['inventory_field']);
+    $this->assertEqual($_SESSION['__v:store']['cart'][1]['check_inventory'], false);
     unset($_SESSION);
     $this->assertEqual(1, _vae_store_add_item_to_cart(13433, null, 3, array('name_field' => "name", 'price_field' => "price", 'weight_field' => 'weight', 'discount_field' => 'discount', 'barcode_field' => 'description', 'option_value' => "RED")));
     $this->assertPattern('/Get this limited edition/', $_SESSION['__v:store']['cart'][1]['barcode']);
@@ -247,7 +251,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(count($_SESSION['__v:store']['cart']), 1);
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['total'], 1049.93);
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['qty'], 7);
-    $this->assertEqual($_VAE['__test_hooked'], 1);
+    $this->assertEqual($_VAE['__test_hooked'], 2);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
   
@@ -311,6 +315,12 @@ class StoreTest extends VaeUnitTestCase {
           'tax' => 0,
           'name' => 'Item 1',
           'barcode' => 'abc123',
+          'brand' => '',
+          'category' => '',
+          'backstage_notes' => '',
+          'position' => 1,
+          'bundled_with' => '',
+          'image' => '',
         ),
         1 => 
         array (
@@ -326,6 +336,12 @@ class StoreTest extends VaeUnitTestCase {
           'tax' => 0,
           'name' => 'Item 2',
           'barcode' => 'abc123',
+          'brand' => '',
+          'category' => '',
+          'backstage_notes' => '',
+          'position' => 2,
+          'bundled_with' => '',
+          'image' => '',
         ),
         2 => 
         array (
@@ -341,6 +357,12 @@ class StoreTest extends VaeUnitTestCase {
           'tax' => 0,
           'name' => 'Freefall 11x17" Full Color Poster',
           'barcode' => NULL,
+          'brand' => '',
+          'category' => '',
+          'backstage_notes' => '',
+          'position' => 3,
+          'bundled_with' => '',
+          'image' => '',
         ),
       ),
       'remote_addr' => '66.0.12.12',
@@ -355,6 +377,9 @@ class StoreTest extends VaeUnitTestCase {
       'tax_rate' => 'New York State 8.375%',
       'payment_method' => 'unittest',
       'weight' => 4,
+      'notes' => "",
+      'store_name' => "",
+      'store_logo' => "",
       'token' => "Ptok",
       'payer_id' => "Pid",
       'billing_name' => 'Kevin Bombino',
@@ -562,7 +587,7 @@ class StoreTest extends VaeUnitTestCase {
   }
   
   function testVaeStoreCallbackPaymentMethodsSelect() {
-    $_REQUEST['method'] = "testeuro";
+    $_REQUEST['__method'] = "testeuro";
     $this->assertNull($_SESSION['__v:store']['payment_method']);
     $tag = $this->callbackTag('<v:store:payment_methods_select />');
     _vae_store_callback_payment_methods_select($tag);
@@ -571,7 +596,7 @@ class StoreTest extends VaeUnitTestCase {
   }
   
   function testVaeStoreCallbackPaymentMethodsSelectExpressCheckout() {
-    $_REQUEST['method'] = "paypal_express_checkout";
+    $_REQUEST['__method'] = "paypal_express_checkout";
     $this->mockRest("http://cow.com/");
     $tag = $this->callbackTag('<v:store:payment_methods_select />');
     _vae_store_callback_payment_methods_select($tag);
@@ -641,7 +666,7 @@ class StoreTest extends VaeUnitTestCase {
   }
   
   function testVaeStoreCallbackShippingMethodsSelect() {
-    $_REQUEST['method'] = 1;
+    $_REQUEST['__method'] = 1;
     $tag = $this->callbackTag('<v:store:shipping_methods_select />');
     $_SESSION['__v:store']['shipping']['options'] = array(array('cost' => '7.00'), array('cost' => '15.00'));
     $this->assertNull($_SESSION['__v:store']['shipping']['selected_index']);
@@ -851,8 +876,8 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(63.70, _vae_store_compute_shipping());
     $this->assertEqual(63.70, $_VAE['store_cached_shipping']);
     $this->assertSessionDep('__v:store');
+    unset($_SESSION['__v:store']['shipping']['hash']);
     $this->assertEqual($_SESSION['__v:store']['shipping'], array (
-      'hash' => 'e16f02f1c0e13b92d90c9ad68563db12',
       'weight' => 4,
       'options' => 
         array(
@@ -860,6 +885,7 @@ class StoreTest extends VaeUnitTestCase {
             'title' => 'Standard Shipping',
             'cost' => '63.70',
             'keep_titles' => true,
+            'secondary' => false,
             'rate_group' => NULL,
           )
         ),
@@ -1090,7 +1116,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_VAE['__test_hooked']);
     $this->assertTrue(_vae_store_create_customer(array('e_mail_address' => 'kevin@actionverb.com')));
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney"));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com'));
     $this->assertRest();
     $this->assertEqual($_VAE['__test_hooked'], 1);
   }
