@@ -669,6 +669,52 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     return self::$client->shortTermCacheSet(self::$sessionId, $key, serialize($value), $flags, $expires);
   }
 
+  public static function ___shortTermCacheDelete($key) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->shortTermCacheDelete(self::$sessionId, $key);
+  }
+
+  public static function ___longTermCacheGet($key, $renew) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->longTermCacheGet(self::$sessionId, $key, $renew);
+  }
+
+  public static function ___longTermCacheSet($key, $value, $expireInterval, $isFilename) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->longTermCacheSet(self::$sessionId, $key, $value, $expireInterval, $isFilename);
+  }
+
+  public static function ___longTermCacheEmpty() {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->longTermCacheEmpty(self::$sessionId);
+  }
+
+  public static function ___sessionCacheGet($key) {
+    if (!self::$sessionId) self::___openSession();
+    $ret = self::$client->sessionCacheGet(self::$sessionId, $key);
+    return unserialize($ret);
+  }
+
+  public static function ___sessionCacheSet($key, $value) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->sessionCacheSet(self::$sessionId, $key, $value);
+  }
+
+  public static function ___sessionCacheDelete($key) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->sessionCacheDelete(self::$sessionId, $key);
+  }
+
+  public static function ___sitewideLock() {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->sitewideLock(self::$sessionId);
+  }
+
+  public static function ___sitewideUnlock() {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->sitewideUnlock(self::$sessionId);
+  }
+
   public static function ___resetClient() {
     global $_VAE;
     sleep(2);
@@ -919,13 +965,6 @@ function vae_sql_credentials($username, $password) {
   VaeSqlQuery::setConnection("localhost", $username, $username, $password);
 }
 
-function _vae_short_term_cache_get($key, $flags = 0) {
-  return VaeQuery::___shortTermCacheGet($key, $flags);
-}
-
-function _vae_short_term_cache_set($key, $value, $flags = 0, $expires = 0) {
-  return VaeQuery::___shortTermCacheSet($key, $value, $flags, $expires);
-}
 
 /**** Internal API ****/
 
@@ -963,6 +1002,7 @@ function _vae_array_to_xml($array, $clone = false) {
 function _vae_to_xml($array, $clone = false, $formId = null) {
   return VaeContext::___fromArray($array, $formId, $clone);
 }
+
 
 /**** VaeQL API ****/
 
@@ -1027,6 +1067,86 @@ function _vaeql_range_function($function, $args) {
 
 function _vaeql_variable($name) {
   return $_REQUEST[$name];
+}
+
+
+/*** Cache APIs ***/
+
+function _vae_short_term_cache_get($key, $flags = 0) {
+  return VaeQuery::___shortTermCacheGet($key, $flags);
+}
+
+function _vae_short_term_cache_set($key, $value, $flags = 0, $expires = 0) {
+  return VaeQuery::___shortTermCacheSet($key, $value, $flags, $expires);
+}
+
+function _vae_short_term_cache_delete($key) {
+  return VaeQuery::___shortTermCacheDelete($key);
+}
+
+function _vae_long_term_cache_get($iden, $renew_expiry = null) {
+  return VaeQuery::___longTermCacheGet($iden, $renew_expiry, !$_ENV['TEST']);
+}
+
+function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_filename = 0) {
+  if ($expire_interval == null) $expire_interval = 90;
+  return VaeQuery::___longTermCacheSet($key, $value, $expire_interval, $is_filename);
+}
+
+function _vae_long_term_cache_empty() {
+  return VaeQuery::___longTermCacheEmpty();
+}
+
+function _vae_long_term_cache_exists($iden) {
+  if (_vae_long_term_cache_get($iden)) {
+    return true;
+  }
+  return false;
+}
+
+function _vae_session_handler_open($s, $n) {
+  return true;
+}
+
+function _vae_session_handler_read($id) {
+  global $_VAE;
+  $data = VaeQuery::___sessionCacheGet($id);
+  if (strlen($data)) {
+    $_VAE['session_read'] = true;
+    return base64_decode($data);
+  }
+  return "";
+}
+
+function _vae_session_handler_write($id, $data) {
+  if (!$data) return _vae_session_handler_destroy($id);
+  $data = base64_encode($data);
+  if (strlen($data) > 1048576) return false;
+  return VaeQuery::___sessionCacheSet($id, $data);
+}
+ 
+function _vae_session_handler_close() {
+  return true;
+}
+ 
+function _vae_session_handler_destroy($id) {
+  VaeQuery::___sessionCacheDestroy($id);
+  return true;
+}
+ 
+function _vae_session_handler_gc($expire) {
+  return true;
+}
+
+function _vae_sitewide_lock() {
+  if ($_REQUEST['__debug']) return true;
+  if (VaeQuery::___sitewideLock() != 1) {
+    _vae_error("", "Couldn't obtain Sitewide lock to download files from Vae.");
+  }
+}
+
+function _vae_sitewide_unlock() {
+  return VaeQuery::___sitewideUnlock();
 }
 
 ?>

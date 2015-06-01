@@ -231,7 +231,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
   _vae_tick("Fetching $iden from the file cache");
   if ($cache = _vae_long_term_cache_get($iden, 90)) return $cache;
   _vae_tick("Failed - looking for $id $path $qs from root machine");
-  _vae_sql_lock();
+  _vae_sitewide_lock();
   $url = $_VAE['config']['backlot_url'] . "/"  . $path . "?secret_key=" . $_VAE['config']['secret_key'] . $qs;
   $fp = @fopen($url, 'rb');
   if ($fp) {
@@ -248,7 +248,7 @@ function _vae_file($iden, $id, $path, $qs = "", $preserve_filename = false) {
     while (!feof($fp)) $file .= fread($fp, 8192);
     fclose($fp);
   }
-  _vae_sql_unlock();
+  _vae_sitewide_unlock();
   if ($file == "691 File not available") return _vae_debug("Couldn't fetch remote file " . $id);
   if ($file == "692 Image not available") return _vae_debug("Couldn't fetch remote file " . $id);
   if ($file == "693 Not yet encoded") return "tryagain.flv";
@@ -782,46 +782,6 @@ function _vae_jsesc($a) {
   return str_replace(array("\n", "\"", "'"), array("\\n", "\\\"", "&#39;"), trim($a));
 }
 
-function _vae_long_term_cache_get($iden, $renew_expiry = null) {
-  global $_VAE;
-  $memcache_key = "LongTermCache:" . $iden;
-  if (!$_ENV['TEST'] && $cache = _vae_short_term_cache_get($memcache_key)) {
-    return $cache;
-  }
-  $q = _vae_sql_q("SELECT `v`,`expire_at` FROM kvstore WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
-  if ($r = _vae_sql_r($q)) {
-    if ($renew_expiry && (strtotime($r['expire_at']) < (time()+($renew_expiry - 10)*86400))) {
-      _vae_tick(" - updating kvstore exiry date");
-      _vae_sql_q("UPDATE kvstore SET `expire_at`=DATE_ADD(NOW(),INTERVAL " . $renew_expiry . " DAY) WHERE subdomain='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($iden) . "'");
-    }
-    _vae_short_term_cache_set($memcache_key, $r['v'], 0, 86400);
-    return $r['v'];
-  }
-  return null;
-}
-
-function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_filename=0) {
-  global $_VAE;
-  $memcache_key = "kv2-" . $_VAE['settings']['subdomain'] . "-" . $key;
-  if($expire_interval == null) $expire_interval = 90;
-  _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "' AND `k`='" . _vae_sql_e($key) . "'");
-  if ($value != null) {
-    _vae_sql_q("INSERT INTO kvstore(`subdomain`,`k`,`v`,`expire_at`, `is_filename`) VALUES('" . _vae_sql_e($_VAE['settings']['subdomain']) . "','" . _vae_sql_e($key) . "','" . _vae_sql_e($value) . "',DATE_ADD(NOW(), INTERVAL " . $expire_interval . " DAY),'"._vae_sql_e($is_filename)."')", true);
-  }
-  _vae_short_term_cache_set($memcache_key, $value, 0, 86400);
-}
-
-function _vae_long_term_cache_empty() {
-  global $_VAE;
-  _vae_sql_q("DELETE FROM kvstore WHERE `subdomain`='" . _vae_sql_e($_VAE['settings']['subdomain']) . "'");
-}
-
-function _vae_long_term_cache_exists($iden) {
-  if (_vae_long_term_cache_get($iden)) {
-    return true;
-  }
-  return false;
-}
 
 function _vae_load_settings() {
   global $_VAE, $_VERB;
@@ -1663,50 +1623,6 @@ function _vae_session_cookie($name, $val) {
   $_VAE['session_cookies'][$name] = $val;
 }
 
-function _vae_session_handler_open($s, $n) {
-  return true;
-}
-
-function _vae_session_handler_read($id) {
-  global $_VAE;
-  $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "'");// AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
-  if ($r = _vae_sql_r($q)) {
-    $_VAE['session_read'] = true;
-    $ret = base64_decode($r["data"]);
-  } else {
-    $ret = "";
-  }
-  return $ret;
-}
-
-function _vae_session_handler_write($id, $data) {
-  global $_VAE;
-  if (!$data) return _vae_session_handler_destroy($id);
-  $expire = time() + (86400 * 2);
-  $data = _vae_sql_e(base64_encode($data));
-  if (strlen($data) > 1048576) return false;
-  if (isset($_VAE['session_read'])) {
-    $query = "UPDATE session_data SET data='" . $data . "',expires='" . $expire . "',subdomain='" . $_VAE['settings']['subdomain'] . "' WHERE id='" . _vae_sql_e($id) . "'";// AND subdomain='" . $_VAE['settings']['subdomain'] . "'";
-  } else {
-    $query = "INSERT INTO session_data (`id`,`subdomain`,`data`,`expires`) VALUES('" . _vae_sql_e($id) . "','" . $_VAE['settings']['sudomain'] . "','" . $data . "','" . $expire . "')";
-  }
-  _vae_sql_q($query);
-  return true;
-}
- 
-function _vae_session_handler_close() {
-  return true;
-}
- 
-function _vae_session_handler_destroy($id) {
-  global $_VAE;
-  _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
-  return true;
-}
- 
-function _vae_session_handler_gc($expire) {
-  _vae_sql_q("DELETE FROM session_data WHERE expires<" . time());
-}
 
 function _vae_set_default_config() {
   global $_VAE, $BACKLOTCONFIG;
@@ -1768,88 +1684,6 @@ function _vae_should_load() {
   if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/__noverb.php")) return false;
   if (preg_match('/^\/piwik/', $_SERVER['REQUEST_URI'])) return false;
   return true;
-}
-function _vae_sql_ar() {
-  global $_VAE;
-  if (!isset($_VAE['shared_sql'])) {
-    _vae_sql_connect();
-  }
-  return mysql_affected_rows($_VAE['shared_sql']);
-}
-
-function _vae_sql_close() {
-  global $_VAE;
-  $ret = mysql_close($_VAE['shared_sql']);
-  unset($_VAE['shared_sql']);
-  return $ret;
-}
-
-function _vae_sql_connect() {
-  global $_VAE;
-  if (!isset($_VAE['shared_sql'])) {
-    $_VAE['shared_sql'] = mysql_pconnect("localhost", "verbshared", "UztCZzeUxKGJQmkVKMrLCyUuG4W3WUiu");
-    if (!$_VAE['shared_sql']) {
-      _vae_error("", "Error connecting to Shared SQL:" . mysql_error($_VAE['shared_sql']));
-    }
-    mysql_select_db("av_verbshared");
-  }
-}
-
-function _vae_sql_e($q) {
-  return mysql_escape_string($q);
-}
-
-function _vae_sql_iid() {
-  global $_VAE;
-  if (!isset($_VAE['shared_sql'])) {
-    _vae_sql_connect();
-  }
-  return mysql_insert_id($_VAE['shared_sql']);
-}
-
-function _vae_sql_lock() {
-  global $_VAE;
-  if ($_REQUEST['__debug']) return true;
-  $LOCK_TIME = 1000000;
-  $old_locks_removed = false;
-  for ($i = 0; $i < 60*1000*1000/$LOCK_TIME; $i++) {
-    _vae_tick("Attempting to acquire the SQL lock");
-    $ret = _vae_sql_q("INSERT INTO locks (`subdomain`,`created_at`) VALUES('" . $_VAE['settings']['subdomain'] . "',NOW())", true);
-    if (!$ret) {
-      if (!$old_locks_removed) {
-        _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 1 MINUTE)");
-        $old_locks_removed = true;
-      }  
-      usleep($LOCK_TIME);
-    } else {
-      return true;
-    }
-  }
-  _vae_error("", "Couldn't obtain SQL lock to download files from Vae.");
-}
-
-function _vae_sql_n($q) {
-  return mysql_num_rows($q);
-}
-
-function _vae_sql_q($q, $ignore_errors = false) {
-  global $_VAE;
-  if (!isset($_VAE['shared_sql'])) {
-    _vae_sql_connect();
-  }
-  $ret = mysql_query($q, $_VAE['shared_sql']);
-  if (!$ret and !$ignore_errors) _vae_error("", "Error running $q: " . mysql_error($_VAE['shared_sql']));
-  return $ret;
-}
-
-function _vae_sql_r($q) {
-  return mysql_fetch_assoc($q);
-}
-
-function _vae_sql_unlock() {
-  global $_VAE;
-  _vae_sql_q("DELETE FROM `locks` WHERE `subdomain`='" . $_VAE['settings']['subdomain'] . "'");
-  usleep(1000);
 }
 
 function _vae_src($filename) {
