@@ -289,12 +289,15 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('6<7+2'), true);
   }
 
-  function testShortTermCache() {
+  function testShortTermCacheGetAndSet() {
     $this->assertEqual(_vae_short_term_cache_get("badkey"), "");
     _vae_short_term_cache_set("st1", "v1");
     $this->assertEqual(_vae_short_term_cache_get("st1"), "v1");
     _vae_short_term_cache_set("st1", "v2");
     $this->assertEqual(_vae_short_term_cache_get("st1"), "v2");
+  }
+
+  function testShortTermCacheDelete() {
     _vae_short_term_cache_set("st1", "v2", 600, 1);
     _vae_short_term_cache_set("st2", "v2", 600, 1);
     $this->assertEqual(_vae_short_term_cache_get("st1"), "v2");
@@ -303,25 +306,36 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_short_term_cache_get("st2"), "v2");
   }
     
-  function testLongTermCache() {
+  function testLongTermCacheGetAndSet() {
     $this->assertEqual(_vae_long_term_cache_get("badkey"), "");
     _vae_long_term_cache_set("t1", "v1", 600, 0);
     $this->assertEqual(_vae_long_term_cache_get("t1", false), "v1");
     _vae_long_term_cache_set("t1", "v2", 600, 0);
     $this->assertEqual(_vae_long_term_cache_get("t1", false), "v2");
     $this->assertEqual(_vae_long_term_cache_get("t1", true), "v2");
+  }
+
+  function testLongTermCacheDelete() {
     _vae_long_term_cache_set("t1", "v2", 600, 1);
     _vae_long_term_cache_set("t2", "v2", 600, 1);
     $this->assertEqual(_vae_long_term_cache_get("t1"), "v2");
     _vae_long_term_cache_delete("t1");
     $this->assertEqual(_vae_long_term_cache_get("t1"), "");
     $this->assertEqual(_vae_long_term_cache_get("t2"), "v2");
+  }
+
+  function testLongTermCacheEmpty() {
     _vae_long_term_cache_set("t1", "v2", 600, 1);
     _vae_long_term_cache_set("t2", "v2", 600, 1);
     $this->assertEqual(_vae_long_term_cache_get("t1"), "v2");
     _vae_long_term_cache_empty();
     $this->assertEqual(_vae_long_term_cache_get("t1"), "");
     $this->assertEqual(_vae_long_term_cache_get("t2"), "");
+  }
+
+  function testLongTermCacheSweeperInfo() {
+    $this->assertNotNull(_vae_store_file("TESTIDEN2", "testfile.txt", "txt"));
+    $this->assertEqual(array_keys(_vae_long_term_cache_sweeper_info()), array("TESTIDEN2"));
   }
     
 }
