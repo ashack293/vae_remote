@@ -1234,7 +1234,7 @@ class StoreTest extends VaeUnitTestCase {
     _vae_store_payment_paypal_callback($data, $tag);
     $this->assertEqual($data['discount'], 5);
     $this->assertEqual($data['total'], 551.35);
-    $this->assertPattern('/https:\/\/www.paypal.com\/cgi-bin\/webscr\?cmd=_cart&upload=1&business=sales%40actionverb\.com&amount_1=4\.95&on0_1=Option&os0_1=&item_name_1=Item\+1&item_number_1=13421&quantity_1=1&amount_2=148\.34&on0_2=Option&os0_2=&item_name_2=Item\+2&item_number_2=13433&quantity_2=3&shipping_1=63\.70&tax_1=37\.68&notify_url=http%3A%2F%2Fbtg\.vaesite\.com%2Fpage%3F__v%3Astore_payment_method_ipn%3Dpaypal&return=http%3A%2F%2Fbtg\.vaesite\.com%2F%2Fdone&cancel_return=http%3A%2F%2Fbtg\.vaesite\.com%2Fpage&address_override=1&first_name=Kevin&last_name=Bombino&address1=1375\+Broadway&address2=Floor\+3&city=New\+York&state=NY&zip=10018&country=US&night_phone_a=800-286-8372&no_note=1&currency_code=USD&bn=PP%2dBuyNowBF&lc=US&custom=([a-f0-9]*)\.tmp/', $_VAE['force_redirect']);
+    $this->assertPattern('/https:\/\/www.paypal.com\/cgi-bin\/webscr\?/', $_VAE['force_redirect']);
   }
   
   function testVaeStorePaymentPaypalCallback() {
@@ -1252,32 +1252,6 @@ class StoreTest extends VaeUnitTestCase {
   
   function testVaeStorePaymentPaypalEmail() {
     $this->assertEqual(_vae_store_payment_paypal_email(), "sales@actionverb.com");
-  }
-  
-  function testVaeStorePaymentPaypalIpn() {
-    $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
-    $out = _vae_store_payment_paypal_ipn($tag);
-    $this->assertPattern('/Status: 503 Service Temporarily Unavailable/', $out);
-    $this->assertPattern('/connect to PayPal/', $out);
-    $this->assertReportedError();
-  }
-  
-  function testVaeStorePaymentPaypalIpnInvalid() {
-    $this->mockRest("INVALID");
-    $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
-    $out = _vae_store_payment_paypal_ipn($tag);
-    $this->assertPattern('/Status: 503 Service Temporarily Unavailable/', $out);
-    $this->assertPattern('/Response : INVALID/', $out);
-    $this->assertNoReportedErrors();
-  }
-  
-  function testVaeStorePaymentPaypalIpnValidNotCompleted() {
-    $this->mockRest("VERIFIED");
-    $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
-    $out = _vae_store_payment_paypal_ipn($tag);
-    $this->assertPattern('/Status: 503 Service Temporarily Unavailable/', $out);
-    $this->assertPattern('/PayPal authenticity verified./', $out);
-    $this->assertNoReportedErrors();
   }
   
   function testVaeStorePaymentPaypalIpnEmailMismatch() {
@@ -1324,49 +1298,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['checkout_attempts']);
     $this->assertNoReportedErrors();
   }
-  
-  function testVaeStorePaymentPaypalIpnRealConnection() {
-    $this->dontMockRest();
-    $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
-    $out = _vae_store_payment_paypal_ipn($tag);
-    $this->assertPattern('/Status: 503 Service Temporarily Unavailable/', $out);
-    $this->assertPattern('/Response : INVALID/', $out);
-    $this->assertPattern('/Request  : /', $out);
-    $this->assertPattern('/Messages : N/', $out);
-  }
-  
-  function testVaeStorePaymentPaypalIpnForced() {
-    $this->populateCart();
-    $_SESSION['__v:store']['discount'] = "19.99";
-    $_SESSION['__v:store']['discount_code'] = "abc123";
-    $_SESSION['__v:store']['payment_method'] = "test";
-    $_SESSION['__v:store']['checkout_attempts'] = 2;
-    $this->mockRest("<reference-id>123</reference-id>");
-    $data = array('payment_method' => 'test');
-    $this->assertNotNull($_SESSION['__v:store']['cart']);
-    $this->assertNotNull($_SESSION['__v:store']['discount']);
-    $this->assertNotNull($_SESSION['__v:store']['discount_code']);
-    $this->assertNotNull($_SESSION['__v:store']['payment_method']);
-    $this->assertNotNull($_SESSION['__v:store']['checkout_attempts']);
-    $oldcart = $_SESSION['__v:store']['cart'];    
-    $_REQUEST['__force'] = "12345";
-    _vae_write_file($_REQUEST['__force'], serialize(array('data' => $data, 'cart' => $_SESSION['__v:store']['cart'])));
-    $out = _vae_store_payment_paypal_ipn($tag);
-    foreach ($oldcart as $k => $v) {
-      $oldcart[$k]['order_id'] = 123;
-    }
-    $this->assertEqual($_SESSION['__v:store']['recent_order'], $oldcart);
-    $data['id'] = 123;
-    $this->assertEqual($_SESSION['__v:store']['recent_order_data'], $data);
-    $this->assertNull($_SESSION['__v:store']['cart']);
-    $this->assertNull($_SESSION['__v:store']['discount']);
-    $this->assertNull($_SESSION['__v:store']['discount_code']);
-    $this->assertNull($_SESSION['__v:store']['payment_method']);
-    $this->assertNull($_SESSION['__v:store']['checkout_attempts']);
-    $this->assertNoRedirect();
-    $this->assertNoReportedErrors();
-  }
-  
+   
   function testVaeStorePopulateAddress() {
     _vae_store_populate_address(array('address_type' => "billing", 'name' => "Kevin", 'city' => "Sydney"));
     $this->assertSessionDep('__v:store');
@@ -1420,6 +1352,7 @@ class StoreTest extends VaeUnitTestCase {
         'created_at' => '4/5/2008 01:23:23',
         'date' => 'April 05, 2008',
         'subtotal' => '7.00',
+        'order_id' => 1,
       ),
       4 => 
       array (
@@ -1428,6 +1361,7 @@ class StoreTest extends VaeUnitTestCase {
         'created_at' => '4/7/2008 01:23:23',
         'date' => 'April 07, 2008',
         'subtotal' => '19.50',
+        'order_id' => 4,
       ),
     ));
   }
@@ -1458,6 +1392,7 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_add_item_to_cart(13435, 13436, 1, array("disable_inventory_check" => true, "inventory_field" => "inventory", "name_field" => "name", "price_field" => "price", "option_field" => "size", "options_collection" => "inventory"));
     $this->assertTrue(_vae_store_verify_available());
     $_SESSION['__v:store']['cart'][1]['check_inventory'] = true;
+    $_SESSION['__v:store']['cart'][1]['inventory_field'] = 'inventory';
     $this->assertFalse(_vae_store_verify_available());
     $this->assertErrors("removed from");
     $this->assertEqual($_SESSION['__v:store']['cart'], array());
