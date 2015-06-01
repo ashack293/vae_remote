@@ -1188,8 +1188,8 @@ class StoreTest extends VaeUnitTestCase {
     $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
     _vae_store_load_customer($raw);
     $this->assertSessionDep('__v:store');
-    $this->assertNull($_SESSION['__v:store']['customer_id_notloggedin']);
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney"));
+    $this->assertTrue($_SESSION['__v:store']['loggedin']);
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney"));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertEqual($_SESSION['__v:store']['customer_addresses'], array(array('address_type' => 'billing', 'name' => 'Kevin Bombino', 'city' => 'Sydney')));
   }
@@ -1198,9 +1198,9 @@ class StoreTest extends VaeUnitTestCase {
     $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
     _vae_store_load_customer($raw, false);
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com'));
-    $this->assertEqual($_SESSION['__v:store']['customer_id_notloggedin'], 124);
-    $this->assertNull($_SESSION['__v:store']['customer_id']);
+    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null));
+    $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
+    $this->assertFalse($_SESSION['__v:store']['loggedin']);
     $this->assertNull($_SESSION['__v:store']['customer_addresses']);
   }
   
