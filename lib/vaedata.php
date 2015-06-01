@@ -1155,9 +1155,11 @@ function _vae_session_handler_gc($expire) {
 
 function _vae_sitewide_lock() {
   if ($_REQUEST['__debug']) return true;
-  if (VaeQuery::___sitewideLock() != 1) {
-    _vae_error("", "Couldn't obtain Sitewide lock to download files from Vae.");
+  for ($i = 0; $i < 50; $i++) {
+    if (VaeQuery::___sitewideLock() == 1) return;
+    usleep(1000000);
   }
+  _vae_error("", "Couldn't obtain Sitewide lock to download files from Vae.");
 }
 
 function _vae_sitewide_unlock() {

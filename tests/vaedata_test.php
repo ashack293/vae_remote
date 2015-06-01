@@ -355,6 +355,11 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_session_handler_read("sc2"), "v2");
   }
 
+  function testSitewideLock() {
+    _vae_sitewide_lock();
+    _vae_sitewide_unlock();
+  }
+
 }
 
 ?>
