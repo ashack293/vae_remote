@@ -684,9 +684,19 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     return self::$client->longTermCacheSet(self::$sessionId, $key, $value, $expireInterval, $isFilename);
   }
 
+  public static function ___longTermCacheDelete($key) {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->longTermCacheDelete(self::$sessionId, $key);
+  }
+
   public static function ___longTermCacheEmpty() {
     if (!self::$sessionId) self::___openSession();
     return self::$client->longTermCacheEmpty(self::$sessionId);
+  }
+
+  public static function ___longTermCacheSweeperInfo() {
+    if (!self::$sessionId) self::___openSession();
+    return self::$client->longTermCacheSweeperInfo(self::$sessionId)->data;
   }
 
   public static function ___sessionCacheGet($key) {
@@ -1093,8 +1103,16 @@ function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_fil
   return VaeQuery::___longTermCacheSet($key, $value, $expire_interval, $is_filename);
 }
 
+function _vae_long_term_cache_delete($iden) {
+  return VaeQuery::___longTermCacheDelete($iden);
+}
+
 function _vae_long_term_cache_empty() {
   return VaeQuery::___longTermCacheEmpty();
+}
+
+function _vae_long_term_cache_sweeper_info() {
+  return VaeQuery::___longTermCacheSweeperInfo();
 }
 
 function _vae_long_term_cache_exists($iden) {
@@ -1109,10 +1127,8 @@ function _vae_session_handler_open($s, $n) {
 }
 
 function _vae_session_handler_read($id) {
-  global $_VAE;
   $data = VaeQuery::___sessionCacheGet($id);
   if (strlen($data)) {
-    $_VAE['session_read'] = true;
     return base64_decode($data);
   }
   return "";
