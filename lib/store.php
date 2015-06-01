@@ -845,7 +845,7 @@ function _vae_store_find_discount($code) {
   if (isset($_SESSION['__v:store']['discount'][$code.$customer_id])) return $_SESSION['__v:store']['discount'][$code.$customer_id];
   if ($raw = _vae_rest(array(), "api/site/v1/store_discount_codes/verify/" . $code . ($customer_id ? "?customer_id=" . $customer_id : ""), "customer")) {
     if (strstr($raw, "BAD")) {
-      return $raw;
+      return false;
     } else {
       $data = _vae_array_from_rails_xml(simplexml_load_string($raw));
     }
