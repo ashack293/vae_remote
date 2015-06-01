@@ -701,8 +701,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___sessionCacheGet($key) {
     if (!self::$sessionId) self::___openSession();
-    $ret = self::$client->sessionCacheGet(self::$sessionId, $key);
-    return unserialize($ret);
+    return self::$client->sessionCacheGet(self::$sessionId, $key);
   }
 
   public static function ___sessionCacheSet($key, $value) {
@@ -1146,7 +1145,7 @@ function _vae_session_handler_close() {
 }
  
 function _vae_session_handler_destroy($id) {
-  VaeQuery::___sessionCacheDestroy($id);
+  VaeQuery::___sessionCacheDelete($id);
   return true;
 }
  

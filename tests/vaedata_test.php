@@ -338,6 +338,23 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(array_keys(_vae_long_term_cache_sweeper_info()), array("TESTIDEN2"));
   }
     
+  function testSessionHandlerReadAndWrite() {
+    $this->assertEqual(_vae_session_handler_read("badkey"), "");
+    _vae_session_handler_write("sc1", "v1");
+    $this->assertEqual(_vae_session_handler_read("sc1"), "v1");
+    _vae_session_handler_write("sc1", "v2");
+    $this->assertEqual(_vae_session_handler_read("sc1"), "v2");
+  }
+
+  function testSessionHandlerDestroy() {
+    _vae_session_handler_write("sc1", "v2");
+    _vae_session_handler_write("sc2", "v2");
+    $this->assertEqual(_vae_session_handler_read("sc1"), "v2");
+    _vae_session_handler_destroy("sc1");
+    $this->assertEqual(_vae_session_handler_read("sc1"), "");
+    $this->assertEqual(_vae_session_handler_read("sc2"), "v2");
+  }
+
 }
 
 ?>
