@@ -2,7 +2,7 @@
 <v:text_field path="e_mail_address" />
 </v:newsletter>
 >
-<form action="/page?__v:newsletter=5caee5cd439e660c2bdb28c7e2de93d5" method="post">
+<form action="/page?__v%3Anewsletter=5caee5cd439e660c2bdb28c7e2de93d5" method="post">
 <input value="" name="e_mail_address" id="e_mail_address" type="text" />
 </form>
 =

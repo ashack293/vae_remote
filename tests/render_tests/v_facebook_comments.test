@@ -11,4 +11,4 @@
             "//connect.facebook.net/en_US/all.js";
           document.getElementById("fb-root").appendChild(e);
         }());
-      </script><fb:comments xid="/page" numposts="10" width="450"></fb:comments>
+      </script><fb:comments appid="1" width="450" xid="/page" numposts="10" />

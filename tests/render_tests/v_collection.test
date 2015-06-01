@@ -1,4 +1,48 @@
-ession_cookies'], array('artists' => '13421,/artist/kevin-bombino,13447,14448')); ?>
+<v:collection path="@bad">in<v:else>out</v:else></v:collection>
+>
+out
+=
+<v:collection path="artists" filter_input="q">in</v:collection>
+>
+You did not enter a search query.
+=
+<v:collection path="artists" filter_input="q">in<v:else>out</v:else></v:collection>
+>
+out
+=
+<v:collection path="artists">a</v:collection>
+>
+aaaa
+=
+<v:collection path="artists">a<v:divider every="1">b</v:divider></v:collection>
+>
+abababa
+=
+<v:collection path="artists">a<v:divider every="2">b</v:divider></v:collection>
+>
+aabaa
+=
+<v:collection path="artists">a<v:divider every="3">b</v:divider></v:collection>
+>
+aaaba
+=
+<v:collection path="13437/songs">a<v:divider every="4"><div><v:yield /></div></v:divider></v:collection>
+>
+<div>a</div>aaa<div>a</div>aaa
+=
+<v:collection path="artists" per_row="3"><td>a</td></v:collection>
+>
+<tr><td>a</td><td>a</td><td>a</td></tr><tr><td>a</td><td></td><td></td></tr>
+=
+<v:collection path="artists" store_in_session="artists">a</v:collection>
+>
+aaaa
+<?php $this->assertEqual($_VAE['session_cookies'], array('artists' => '13421,/artist/kevin-bombino,13447,14448')); ?>
+=
+<v:collection path="artists" store_in_session="artists" paginate="1">a</v:collection>
+>
+a
+<?php $this->assertEqual($_VAE['session_cookies'], array('artists' => '13421,/artist/kevin-bombino,13447,14448')); ?>
 =
 <v:collection path="artists"><v=name></v:collection>
 >

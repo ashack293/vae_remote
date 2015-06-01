@@ -1,7 +1,0 @@
-<v:if path="1>2">out</v:if><v:elseif path="4<5">in1</v:elseif><v:else>elsed</v:else>
->
-in1
-=
-<v:if path="1<2">out</v:if><v:elseif path="4<5">in1</v:elseif><v:else>elsed</v:else>
->
-out

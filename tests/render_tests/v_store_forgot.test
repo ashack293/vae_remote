@@ -3,7 +3,7 @@
 <form action="/page?__v%3Astore_forgot=43bf274052852bd22c1ca3a810b8afbb" method="post"></form>
 <?php $this->assertSessionDep('__v:store'); ?>
 =
-<?php $_SESSION['__v:store']['customer_id'] = 1; ?>
+<?php $_SESSION['__v:store']['customer_id'] = 1; $_SESSION['__v:store']['loggedin'] = 1; ?>
 <v:store:forgot></v:store:forgot>
 >
 <?php $this->assertRedirect("/"); ?>

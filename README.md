@@ -46,7 +46,36 @@ TODO: Actually make the above file exist.  Currently the file is
 MISSING, please generate one from production.
 
 
-## How to run the Test Suite
+## Test Suite
+
+Vae Remote includes a large test suite that tests both Vae Remote as
+well as VaeQL and VaeDB and VaeRubyd.  This can be found in the tests/
+folder.
+
+
+### Developing VaeML Rendering Tests
+
+Inside the tests/render_tests/ folder, there are several VaeML
+test files.  The format of these is:
+
+    input VaeML
+    >
+    output HTML
+    =
+    input VaeML
+    >
+    output HTML
+    =
+    etc.
+
+
+Note that the test suite is designed using the old deprecated method of
+putting <v:else> tags inside of their container <v:if>, rather than
+after them.  We would welcome a commit that rearranges the test suite to
+use the new style of putting <v:else> after the <v:if>.
+
+
+### Running The Suite
 
 In another window, change dir to where you have VaeDB compiled.  This is
 part of the vae_thrift project.

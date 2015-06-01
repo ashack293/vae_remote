@@ -7,7 +7,7 @@ $_VAE['settings'] = array(
   'preserve_filenames' => "1",
   'redirects' => array("old-page.html" => "newpage"),
   'subdomain' => "btg",
-  'child_v_else' => true,
+  'child_v_else' => 'true',
   'domains' => array('btgrecords.com' => array('home' => ''), 'bridgingthegapmusic.com' => array('home' => '/music')),
   'timezone' => "Eastern Time (US & Canada)",
   'tax_rates' => array(1 => array('rate' => '8.375', 'description' => 'New York State 8.375%', 'state' => 'NY'), 2 => array('rate' => '0.500', 'description' => '1000* 0.500%', 'zip' => '1000', 'include_shipping' => 1), 3 => array('rate' => '18.000', 'description' => 'Australia GST', 'country' => 'AU'), 4 => array('rate' => '5', 'description' => 'CA Clothing', 'state' => 'CA', 'tax_class' => 'clothing'), 5 => array('rate' => '7', 'description' => 'CA Services', 'state' => 'CA', 'tax_class' => 'services'), 6 => array('rate' => '4', 'description' => 'FL Luxury Tax', 'state' => 'FL', 'minimum_price' => '100')),

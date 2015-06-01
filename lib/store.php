@@ -1273,7 +1273,7 @@ function _vae_store_render_discount($a, &$tag, $context, &$callback, $render_con
 
 function _vae_store_render_forgot($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_forgot');
-  if ($_SESSION['__v:store']['logged in']) return _vae_render_redirect("/");
+  if ($_SESSION['__v:store']['loggedin']) return _vae_render_redirect("/");
  return _vae_render_callback("store_forgot", $a, $tag, $context, $callback, $render_context);
 }
 

@@ -5,4 +5,4 @@
 <?php $this->populateCustomer(); $_SESSION['__v:store']['customer_addresses'] = array(array('name' => "a1", 'state' => "Sydney", 'address_type' => "billing"), array('name' => "a2", 'state' => "Sydney", 'address_type' => "billing")); ?>
 <v:store:address_select type="billing" />
 >
-<select onchange="window.location.href='/page?__v%3Astore_address_select=963578950fbe63958226bd1eff5c43ca&amp;address='+this.value"><option value="0" selected="selected">a1, Sydney</option><option value="1">a2, Sydney</option></select>
+<select onchange="window.location.href='/page?__v:store_address_select=963578950fbe63958226bd1eff5c43ca&amp;address='+this.value"><option value="0" selected="selected">a1, Sydney</option><option value="1">a2, Sydney</option></select>

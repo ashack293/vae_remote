@@ -55,6 +55,9 @@ class RenderTest extends VaeUnitTestCase {
                 $this->assertPattern($output, $out, "Expecting Pattern [$output] in Render Test File [$file]");
               } else {
                 $this->assertEqual($output, $out, "Expecting [$out] to be [$output] in Render Test File [$file]");
+                if ($output != $out) {
+                  echo "\n^^ Additional Output For The Above:\n  Render Test File: $file\n\nGot:$out\n";
+                }
               }
             } elseif ($dump) {
               echo $out . "\n";

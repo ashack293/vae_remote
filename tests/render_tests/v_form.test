@@ -8,17 +8,17 @@ EYou cannot nest
 <v:form action="/kevin" ajax="div">test</v:form>
 >
 <form action="/kevin" id="vae_generated_might_change_TESTGLOBID" method="post">test</form>
-<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.form' => true)); $this->assertEqual(array('jQuery(\'#vae_generated_might_change_TESTGLOBID\').ajaxForm({ success: function(data,status) { if (match = /^__err=(.*)/.exec(data)) { alert(match[1]); } else { jQuery(\'#div\').html(data); } } });'), $_VAE['on_dom_ready']); ?>
+<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.form' => true)); ?>
 =
 <v:form action="/kevin" validateinline="true">test</v:form>
 >
 <form action="/kevin" id="vae_generated_might_change_TESTGLOBID" method="post">test</form>
-<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.validate' => true)); $this->assertEqual(array('jQuery(\'#vae_generated_might_change_TESTGLOBID\').validate();'), $_VAE['on_dom_ready']); ?>
+<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.validate' => true)); ?>
 =
 <v:form action="/kevin" ajax="div" validateinline="true">test</v:form>
 >
 <form action="/kevin" id="vae_generated_might_change_TESTGLOBID" method="post">test</form>
-<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.form' => true, 'jquery.validate' => true)); $this->assertEqual(array('jQuery(\'#vae_generated_might_change_TESTGLOBID\').ajaxForm({ success: function(data,status) { if (match = /^__err=(.*)/.exec(data)) { alert(match[1]); } else { jQuery(\'#div\').html(data); } }, beforeSubmit: function() { return jQuery(\'#vae_generated_might_change_TESTGLOBID\').valid(); } }); jQuery(\'#vae_generated_might_change_TESTGLOBID\').validate();'), $_VAE['on_dom_ready']); ?>
+<?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true, 'jquery.form' => true, 'jquery.validate' => true)); ?>
 =
 <?php _vae_flash("test", 'msg', 'header'); $_SESSION['__v:flash'] = $_SESSION['__v:flash_new']; ?>
 <v:form action="/loc"></v:form>

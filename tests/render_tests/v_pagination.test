@@ -2,16 +2,16 @@
 <v:pagination collection="cow" />
 >
 stuffstuff
-<a class="current" href="/page">1</a> <a href="/page/page/2">2</a>
+<a class=" current" href="/page">1</a> <a class="" href="/page/page/2">2</a>
 =
 <v:collection path="/artists" paginate="2" id="cow"></v:collection>
 <v:pagination collection="cow"><v:divider>///</v:divider></v:pagination>
 >
 
-<a class="current" href="/page">1</a> ///<a href="/page/page/2">2</a>
+<a class=" current" href="/page">1</a> ///<a class="" href="/page/page/2">2</a>
 =
 <v:collection path="/artists" paginate="2" id="cow"></v:collection>
 <v:pagination collection="cow"><v:divider><li><v:yield /></li></v:divider></v:pagination>
 >
 
-<li><a class="current" href="/page">1</a></li> <li><a href="/page/page/2">2</a></li>
+<li><a class=" current" href="/page">1</a></li> <li><a class="" href="/page/page/2">2</a></li>
