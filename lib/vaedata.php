@@ -643,15 +643,9 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   public static function ___openSession() {
     global $_VAE;
     self::___openClient();
-    $staging = false;
-    if ($_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'] == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VAE['settings']['subdomain'] . ".vaesite.com" == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VAE['settings']['subdomain'] . ".verbsite.com" == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_site'] == $_SERVER['HTTP_HOST']) $staging = true;
-    if ($_VAE['staging'] == true) $staging = true;
     for ($i = 0; $i < 5; $i++) {
       try {
-        self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], $staging, mt_rand());
+        self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], vae_staging(), mt_rand());
         return;
       } catch (TSocketException $e) {
         self::___resetClient();
