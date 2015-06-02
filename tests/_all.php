@@ -22,8 +22,6 @@ class AllTests extends TestSuite {
   
   function AllTests() {
     $this->TestSuite('Vae Remote Tests');
-    $this->addFile(dirname(__FILE__) . '/vaedata_test.php');
-    return;
     $this->addFile(dirname(__FILE__) . '/callback_test.php');
     $this->addFile(dirname(__FILE__) . '/constants_test.php');
     $this->addFile(dirname(__FILE__) . '/context_test.php');
