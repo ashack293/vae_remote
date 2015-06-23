@@ -302,7 +302,7 @@ class dhl {
 
         $airborne = _parsexml3254($airborne_response);
 
-        if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
+        if ($airborne['res:ErrorResponse']['->']['Response'][0]['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
             $error_message = 'The following errors have occured:';
             $i = 0;
             // We dont want to return this type of error
@@ -381,7 +381,7 @@ class dhl {
         }
         $airborne = _parsexml3254($airborne_response);
         // Check for errors
-        if ($airborne['res:ErrorResponse']['->']['Response']['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
+        if ($airborne['res:ErrorResponse']['->']['Response'][0]['->']['Status'][0]['->']['ActionStatus'][0]['->'] == 'Error') {
             $error_message = 'The following errors have occured:';
             $i = 0;
             // We dont want to return this type of error
