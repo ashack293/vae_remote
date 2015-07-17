@@ -133,7 +133,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('permalink/artist/kevin-bombino/name'), "Kevin Bombino");
     $this->assertEqual(vae('permalink/artist/kevin-bombino/albums/name'), "Unreleased Songs");
   }
-    
+
   function testVaeFetch() {
     $this->assertEqual(_vae_fetch("13427")->name, "One More Time");
     $this->assertEqual(_vae_fetch("13427/name"), "One More Time");
@@ -156,7 +156,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_fetch("artists[name='Kevin Bombino']/name"), "Kevin Bombino");
     $this->assertEqual(_vae_fetch("artists[name='Kevin Bombino']/name"), "Kevin Bombino");
     $this->assertEqual(_vae_fetch("@artists[name='Kevin Bombinp']/name"), false);
-    $_REQUEST['min_price'] = "3.00";  
+    $_REQUEST['min_price'] = "3.00";
     $this->assertEqual(_vae_fetch('artists/albums[price>$min_price]/name'), "EP");
     $this->assertEqual(_vae_fetch("name", _vae_fetch("artists")), "Freefall");
     $this->assertEqual(_vae_fetch("../name", _vae_fetch(13423)), "Freefall");
@@ -202,7 +202,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual((string)$name, (string)_vae_fetch("artists[name='Freefall']/albums/songs")->name);
     $this->assertEqual(vae("13421/albums", array('order' => 'year'))->name, "EP");
   }
-  
+
   function testVaeFetchForCreating() {
     $c = _vae_fetch_for_creating("artists");
     $this->assertEqual(array($c->structure_id, $c->row_id), array(1269, null));
@@ -234,12 +234,12 @@ class VaeDataTest extends VaeUnitTestCase {
     $c = _vae_fetch_for_creating("/artists/13432/items");
     $this->assertEqual(array($c->structure_id, $c->row_id), array(1285, 13432));
   }
-  
+
   function testVaeFind() {
     $this->assertEqual(vae_find("13421/name"), "Freefall");
     $this->assertEqual(vae_find("13423/songs")->data, array ('name' => 'Last Chance',    'duration' => '3:45',    'mp3' => '28616',    'price' => '0.99',    'feature_on_homepage' => '1',  ));
   }
-  
+
   function textVaeArrayToXml() {
     $data = array(201 => array("kevin" => "awesome"), 202 => array("kevin" => "baller"));
     $res = _vae_array_to_xml($data);
@@ -249,13 +249,13 @@ class VaeDataTest extends VaeUnitTestCase {
     $res->next();
     $this->assertEqual($res->current()->kevin, "baller");
   }
-  
+
   function testVaeToXml() {
     $data = array("kevin" => "awesome");
     $res = _vae_to_xml($data);
     $this->assertEqual($res->kevin, "awesome");
   }
-  
+
   function testVaeQl() {
     $this->assertEqual(_vaeql_query("now()"), array(0, vae_now()));
     $this->assertEqual(_vaeql_query("artists[category='']"), array(1, "artists[category='']"));
@@ -301,7 +301,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_short_term_cache_get("st1"), "");
     $this->assertEqual(_vae_short_term_cache_get("st2"), "v2");
   }
-    
+
   function testLongTermCacheGetAndSet() {
     $this->assertEqual(_vae_long_term_cache_get("badkey"), "");
     _vae_long_term_cache_set("t1", "v1", 600, 0);
@@ -333,7 +333,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertNotNull(_vae_store_file("TESTIDEN2", "testfile.txt", "txt"));
     $this->assertEqual(array_keys(_vae_long_term_cache_sweeper_info()), array("TESTIDEN2"));
   }
-    
+
   function testSessionHandlerReadAndWrite() {
     $this->assertEqual(_vae_session_handler_read("badkey"), "");
     _vae_session_handler_write("sc1", "v1");
