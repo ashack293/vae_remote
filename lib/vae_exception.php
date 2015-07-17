@@ -4,7 +4,7 @@ final class VaeException extends Exception {
   public $debugging_info;
   public $backtrace;
   public $filename;
-  
+
   public function __construct($message = "", $debugging_info = "", $filename = null) {
     $this->debugging_info = $debugging_info;
     $this->backtrace = debug_backtrace();

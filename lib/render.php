@@ -54,7 +54,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
     if ($a['path'] != "/") {
       $new_context = _vae_fetch($a['path'], $context);
       if (strlen((string)$new_context)) {
-        if ($new_context->type == "FileItem" || $new_context->type == "VideoItem" || $new_context->type == "ImageItem") {          
+        if ($new_context->type == "FileItem" || $new_context->type == "VideoItem" || $new_context->type == "ImageItem") {
           $preserve_filename = ($_VAE['settings']['preserve_filenames'] ? true : false);
           $href = vae_data_url() . vae_file($new_context, $preserve_filename);
         } else {
@@ -266,7 +266,7 @@ function _vae_render_collection($a, &$tag, $context, &$callback, $render_context
       if ($a['all']) $_VAE['hrefs'][$a['all']] =  $_SERVER['PHP_SELF'] . _vae_qs(array($page_request_variable => "all"));
     }
     if ($a['page_select']) $_VAE['page_select'][$a['page_select']] = array($last_page, $page, $_SERVER['PHP_SELF'] . _vae_qs($page_request_variable . "=", true, $page_request_variable . "="), $a['default_page'] == "last()");
-    if ($a['id']) $_VAE['pagination'][$a['id']] = array('page' => $page, 'last_page' => $last_page, 'page_request_variable' => $page_request_variable);  
+    if ($a['id']) $_VAE['pagination'][$a['id']] = array('page' => $page, 'last_page' => $last_page, 'page_request_variable' => $page_request_variable);
     $render_context = $render_context->set("total_items", $contexts->totalMatches());
     $reverse = stristr($a['output_order'], "reverse");
     if ($a['per-row']) $a['per_row'] = $a['per-row'];
@@ -558,7 +558,7 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
   if (!strlen($a['method'])) $a['method'] = 'post';
   $out = _vae_render_flash_inside($a['flash'], $render_context);
   $out .= _vae_render_tag("form", $a, $tag, $context, $render_context->set("form_context", $context)->set_in_place("form", true));
-  if ($a['ajax']) {   
+  if ($a['ajax']) {
     if ($a['loading']) {
       $loader = '<img id="' . $a['id'] . '_loading" src="' . $a['loading'] . '" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />';
       if ($a['loadingposition'] == "before") $out = $loader . $out;
@@ -604,7 +604,7 @@ function _vae_render_gravatar($a, &$tag, $context, &$callback, $render_context) 
   if (!strlen($a['size'])) $a['size'] = "80";
   if (!strlen($a['default'])) $a['default'] = "wavatar";
   if (!strlen($a['rating'])) $a['rating'] = "g";
-  $a['src'] =  "http://www.gravatar.com/avatar/" . md5(strtolower($a['email'])) . "?default=" . urlencode($a['default']) . "&rating=" . $a['rating'] . "&size=" . $a['size']; 
+  $a['src'] =  "http://www.gravatar.com/avatar/" . md5(strtolower($a['email'])) . "?default=" . urlencode($a['default']) . "&rating=" . $a['rating'] . "&size=" . $a['size'];
   return '<img' . _vae_attrs($a, "img") . ' />';
 }
 
@@ -637,7 +637,7 @@ function _vae_render_if($a, &$tag, $context, &$callback, $render_context) {
     $true = ($q1 == $q2);
   }
   if ($true === "0.0" || (string)$true == "0") $true = 0;
-  if (strlen($a['is'])) $true = ($true == $a['is']); 
+  if (strlen($a['is'])) $true = ($true == $a['is']);
   if (is_object($true) && !$true->collection() && (string)$true == "") {
     $true = false;
   }
@@ -685,7 +685,7 @@ function _vae_render_img($a, &$tag, $context, &$callback, $render_context) {
       $params = explode(",", str_replace(array("(", ")"), "", substr($a['filter'], 7)));
       $a['src'] = vae_image_reflect($a['src'], (strlen($params[0]) ? $params[0] : 30), (strlen($params[1]) ? $params[1] : 35), true);
     } elseif ($a['filter'] == "grey") {
-      $a['src'] = vae_image_grey($a['src'], true);    
+      $a['src'] = vae_image_grey($a['src'], true);
     }
     $size = _vae_imagesize($a['src']);
     if ($size) {
@@ -906,7 +906,7 @@ function _vae_render_pagination($a, &$tag, $context, &$callback, $render_context
     $end_page = min($b['last_page'], $start_page + $max_pages);
   }
   for ($i = $start_page; $i <= $end_page; $i++) {
-    $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . $_SERVER['PHP_SELF'] . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>'; 
+    $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . $_SERVER['PHP_SELF'] . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>';
     $out .= _vae_merge_dividers($data, $dividers, $i - 1, $context, $render_context) . ' ';
   }
   if ($a['loading']) {
@@ -1006,7 +1006,7 @@ function _vae_render_rss($a, &$tag, $context, &$callback, $render_context) {
     if ($a['author_field'] && !strstr($inside, "<author>")) $items .= '   <author>' . _vae_format_for_rss(_vae_fetch_multiple($a['author_field'], $ctxt, $a)) . '</author>' . "\n";
     if (!strstr($inside, "<description>")) $items .= '   <description>' . _vae_format_for_rss(_vae_fetch_multiple($a['description_field'], $ctxt, $a)) . '</description>' . "\n";
     $id_or_permalink = $ctxt->permalinkOrId();
-    if (is_numeric($id_or_permalink)) { 
+    if (is_numeric($id_or_permalink)) {
       if (!strstr($inside, "<guid>")) $items .= '   <guid>http://' . $_SERVER['HTTP_HOST'] . "/?_guid=" . $id_or_permalink . '</guid>' . "\n";
     } else {
       if (!strstr($inside, "<link>")) $items .= '   <link>http://' . $_SERVER['HTTP_HOST'] . $id_or_permalink. '</link>' . "\n";
@@ -1138,7 +1138,7 @@ function _vae_render_tags(&$parent_tag, $context = null, $render_context = null,
   $out = "";
   if (!$true) {
     return _vae_get_else($parent_tag, $context, $render_context);
-  }  
+  }
   if (is_object($render_context)) $render_context = $render_context->unsett("else");
   if (count($parent_tag['tags'])) {
     for ($i = 0; $i < count($parent_tag['tags']); $i++) {
@@ -1173,7 +1173,7 @@ function _vae_render_text($a, &$tag, $context, &$callback, $render_context) {
     if (strlen($a['path'])) {
       $text = _vae_fetch($a['path'], $context);
     }
-    if ($text->type == "DateItem" || strlen($a['strftime'])) { 
+    if ($text->type == "DateItem" || strlen($a['strftime'])) {
       if (!strlen($a['path'])) $text = time();
       if (!strlen($a['strftime'])) $a['strftime'] = "%B %d, %Y";
       $time = (string)$text;
@@ -1236,7 +1236,7 @@ function _vae_render_update($a, &$tag, $context, &$callback, $render_context) {
   }
 }
 
-function _vae_render_video($a, &$tag, $context, &$callback, $render_context) { 
+function _vae_render_video($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   if ($a['src']) {
     $url = $a['src'];

@@ -67,7 +67,7 @@
       } else {
         $prod = 'GNDRES';
       }
-      
+
       //if ($method) $this->_upsAction('3'); // return a single quote
 
       $this->_upsProduct($prod);

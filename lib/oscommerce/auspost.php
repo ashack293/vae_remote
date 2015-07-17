@@ -7,7 +7,7 @@ class auspost {
     $frompcode = SHIPPING_ORIGIN_ZIP;
     $topcode = $order->delivery['postcode'];
     $country = $order->delivery['country']['iso_code_2'];
-    
+
     $sweight = $shipping_weight;
     $quotes = array('methods' => array());
     $types = explode(",", $method['types']);
@@ -29,7 +29,7 @@ class auspost {
     }
     return $quotes;
   }
-  
+
 }
 
 ?>

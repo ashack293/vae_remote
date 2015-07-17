@@ -30,7 +30,7 @@ if (_vae_should_load()) {
     $_VAE['tick'] = microtime(true);
     $_VAE['ticks'] = array();
   }
-  
+
   /* Phpinfo */
   if ($_REQUEST['__phpinfo']) {
     phpinfo();
@@ -65,7 +65,7 @@ if (_vae_should_load()) {
   if ($_REQUEST['clear_login']) _vae_clear_login();
   if ($_REQUEST['set_login']) _vae_set_login();
   _vae_tick("Vae Startup", true);
-  
+
   /* Dispatch request */
   if ($_REQUEST['__status']) {
     require_once(dirname(__FILE__) . "/status.php");
@@ -74,13 +74,13 @@ if (_vae_should_load()) {
   if ($_REQUEST['__sweep']) {
     _vae_sweep_data_dir();
   }
-  
-  if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();  
+
+  if ($_REQUEST['__v:store_payment_method_ipn']) _vae_store_ipn();
   if (file_exists($_SERVER['DOCUMENT_ROOT']."/__vae.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__vae.php");
-  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");  
-  
+  if (file_exists($_SERVER['DOCUMENT_ROOT']."/__verb.php") && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) require_once($_SERVER['DOCUMENT_ROOT']."/__verb.php");
+
   if ($_REQUEST['secret_key']) _vae_remote();
-  
+
   if (substr($_SERVER['SCRIPT_FILENAME'], -5) == ".sass" || substr($_SERVER['SCRIPT_FILENAME'], -5) == ".scss") {
     require_once(dirname(__FILE__) . "/haml.php");
     ob_start('_vae_sass_ob');
@@ -95,8 +95,8 @@ if (_vae_should_load()) {
 
     if (strstr($_SERVER['SCRIPT_FILENAME'], ".pdf") && !isset($_VAE['skip_pdf'])) {
       require_once(dirname(__FILE__) . "/pdf.php");
-      _vae_pdf();  
-    } elseif (!$_ENV['TEST']) {  
+      _vae_pdf();
+    } elseif (!$_ENV['TEST']) {
       /* Normal Request */
       if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
       _vae_set_cache_key();

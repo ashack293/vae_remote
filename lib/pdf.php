@@ -1,5 +1,5 @@
 <?php
- 
+
 require_once(dirname(__FILE__) . "/../vendor/dompdf-0.6.0/dompdf_config.inc.php");
 
 function _vae_pdf() {

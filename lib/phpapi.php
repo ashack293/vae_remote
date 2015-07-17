@@ -153,9 +153,9 @@ function vae_file($id, $preserve_filename = false) {
   return _vae_file($id . "-file", $id, "api/site/v1/file/" . $id, "", $preserve_filename);
 }
 
-function vae_flash($message, $type = 'msg') {
+function vae_flash($message, $type = 'msg', $which = "") {
   if (!strlen($message)) _vae_error("You called <span class='c'>vae_flash()</span> but didn't provide a proper message.");
-  return _vae_flash($message, $type);
+  return _vae_flash($message, $type, $which);
 }
 
 function vae_image($id, $width = "", $height = "", $image_size = "", $grow = "", $quality = "", $preserve_filename = false) {
@@ -690,5 +690,5 @@ function vae_watermark($image, $watermark_image, $vertical_align = "", $align = 
 	imagecopy($tk, $tlogo, $alinks, $aoben, 0, 0, $logowidth, $logoheight);
   return _vae_store_file($iden, $tk, "jpg", null, "jpeg");
 }
- 
+
 ?>

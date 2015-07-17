@@ -80,22 +80,22 @@ function _vae_parse_vaeml($vaeml, $filename = null, $nested_tags = null, $render
 function _vae_parser_mask_errors($errno, $error_string) {
   global $_VAE;
   $e = str_replace(array(
-      "DOMDocument::loadXML() [<a href='domdocument.loadxml'>domdocument.loadxml</a>]: ", 
-      " in tag vaeml line 1 in Entity", 
-      " and vaeml in Entity", 
-      " in Entity", 
+      "DOMDocument::loadXML() [<a href='domdocument.loadxml'>domdocument.loadxml</a>]: ",
+      " in tag vaeml line 1 in Entity",
+      " and vaeml in Entity",
+      " in Entity",
       ), "", $error_string);
   if (!isset($_VAE['parser_errors'])) $_VAE['parser_errors'] = "";
   $_VAE['parser_errors'] .= "<li>" . $e . "</li>";
 }
 
 class VaeMLParser {
-  
+
   function __construct($vaeml, $filename) {
     $this->filename = $filename;
     $this->vaeml = $vaeml;
   }
-  
+
   function dom_to_vae($node) {
     global $_VAE;
     $out = array();
@@ -121,11 +121,11 @@ class VaeMLParser {
     }
     return $out;
   }
-  
+
   function fix($str) {
     return str_replace(array("A" . $this->i, "L" . $this->i, "B" . $this->i), array("&", "<", "]]>"), $str);
   }
-  
+
   function parse() {
     global $_VAE;
     $this->i = "_99" . substr(md5(rand()), 0, 6);
@@ -140,7 +140,7 @@ class VaeMLParser {
     restore_error_handler();
     return $this->dom_to_vae($dom->firstChild);
   }
-  
+
 }
 
 ?>

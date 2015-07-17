@@ -20,7 +20,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
       }
     }
   }
-  
+
   if (!strlen($css)) {
     $client = _vae_thrift();
     if ($scss) {
@@ -37,7 +37,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
 
 function _vae_sass_deps($sass, $include_directory, $root_item = false) {
   global $_VAE;
-  
+
   if ($include_directory == null) $include_directory = dirname($_SERVER['SCRIPT_FILENAME']);
   $cache_key = "sass2".md5($sass . $include_directory).".map";
 
@@ -104,5 +104,5 @@ function _vae_sass_ob($sass, $header = true) {
     return _vae_render_error($e);
   }
 }
- 
+
 ?>

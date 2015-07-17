@@ -22,7 +22,7 @@ function _vae_google_checkout_go($a) {
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleshipping.php");
   require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googletax.php");
   $m = _vae_store_payment_google_checkout_method();
-  $cart = new GoogleCart($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _vae_store_currency()); 
+  $cart = new GoogleCart($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _vae_store_currency());
   foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
     if ($_SESSION['__v:store']['user_shipping_methods']) {
       $r['user_shipping'] = serialize($_SESSION['__v:store']['user_shipping_methods']);
@@ -156,7 +156,7 @@ function _vae_google_checkout_ipn() {
         }
         unset($_VAE['store_cached_shipping']);
         _vae_store_compute_shipping();
-        foreach ($shipping_methods as $s) { 
+        foreach ($shipping_methods as $s) {
           unset($_SESSION['__v:store']['discount_code']);
           $merchant_result = new GoogleResult($curr_address['id']);
           if (isset($data[$root]['calculate']['merchant-code-strings']['merchant-code-string'])) {
@@ -199,7 +199,7 @@ function _vae_google_checkout_ipn() {
           }
           $merchant_calc->AddResult($merchant_result);
         }
-        
+
       }
       $Gresponse->ProcessMerchantCalculations($merchant_calc);
       break;
@@ -257,7 +257,7 @@ function _vae_google_checkout_ipn() {
     }
     case "authorization-amount-notification": {
       $out .= _vae_google_checkout_import_cart($data[$root]['order-summary']['shopping-cart']['items']['item']);
-      _vae_store_callback_checkout();  
+      _vae_store_callback_checkout();
       $Gresponse->SendAck();
       break;
     }

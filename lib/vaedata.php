@@ -353,7 +353,6 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     return false;
   }
 
-
   public function ___nestedQuery($query = null, $options = null, $raiseErrors = false) {
     if ($this->___responseId < 0) return;
     $response = $this->___executeQuery($this->___responseId, $query, $options, $raiseErrors);

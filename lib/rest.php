@@ -1,5 +1,5 @@
 <?php
- 
+
 function _vae_array_from_rails_xml($xml, $is_array = false, $transform = null) {
   $r = array();
   if ($is_array) {
@@ -23,7 +23,7 @@ function _vae_array_from_rails_xml($xml, $is_array = false, $transform = null) {
   }
   return $r;
 }
- 
+
 function _vae_build_xml($parent, $data) {
   if (!strlen($parent)) return "";
   $xml = "<" . $parent .">";
@@ -40,7 +40,7 @@ function _vae_build_xml($parent, $data) {
       $xml .= "</" . $k . ">";
     }
   }
-  $xml .= "</" . $parent . ">";  
+  $xml .= "</" . $parent . ">";
   return $xml;
 }
 
@@ -181,7 +181,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("http://", "/"), "", $header)));
   }
   $res = curl_exec($ch);
-  curl_close($ch); 
+  curl_close($ch);
   return $res;
   }
 

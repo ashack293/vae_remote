@@ -1,5 +1,5 @@
 <?php
- 
+
 function _vae_status() {
   $pages = array();
   $domains = array();
@@ -43,5 +43,5 @@ function _vae_status() {
 function _vae_status_cmp($a, $b) {
   return ((int)$a[0] < (int)$b[0] ? 1 : -1);
 }
- 
+
 ?>

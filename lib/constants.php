@@ -1,7 +1,7 @@
 <?php
- 
+
 $_VAE['local_newest_version'] = "0.6.9";
- 
+
 function _vae_list_countries() {
   return array('AF' => 'Afghanistan',
                'AX' => 'Aland Islands',
@@ -233,7 +233,7 @@ $_VAE['continents'] = array("AF","AN","AS","EU","NA","OC","SA");
 
 $_VAE['states'] = array(
   "AU" => array(
-    array('', ""), 
+    array('', ""),
 		array('ACT', "Australian Capital Territory (ACT)"),
 		array('JBT', "Jervis Bay Territory (JBT)"),
 		array('NSW', "New South Wales (NSW)"),
@@ -245,7 +245,7 @@ $_VAE['states'] = array(
 		array('WA' , "Western Australia (WA)"),
   ),
   "CA" => array(
-    array('', ""), 
+    array('', ""),
 		array('AB' , "Alberta (AB)"),
 		array('BC' , "British Columbia (BC)"),
 		array('MB' , "Manitoba (MB)"),
@@ -261,7 +261,7 @@ $_VAE['states'] = array(
 		array('YT' , "Yukon (YT)")
   ),
   "US" => array(
-    array('', ""), 
+    array('', ""),
     array('AA' , "Armed Forces Americas (AA)"),
     array('AE' , "Armed Forces Europe (AE)"),
     array('AP' , "Armed Forces Pacific (AP)"),
@@ -383,10 +383,10 @@ $_VAE['us48'] = array(
 );
 
 $_VAE['attributes'] = array(
-  'a' => array('charset','coords','href','hreflang','name','rel','rev','shape','target','type'),
+  'a' => array('charset','coords','href','hreflang','itemprop','itemscope','itemtype','name','rel','rev','shape','target','type'),
   'collection' => array("all","default_page","filter_input","groups","id","max_pages","nested","next","order","output_order","page_select","paginate","path","per_row","previous","skip","store_in_session","wrap"),
   'form' => array('accept','action','accept-charset','ajax','enctype','flash','method','name','target','validateinline'),
-  'img' => array('align','alt','border','height','hspace','ismap','longdesc','placeholder','src','usemap','vspace','width'),
+  'img' => array('align','alt','border','height','hspace','ismap','itemprop','itemscope','itemtype','longdesc','placeholder','src','usemap','vspace','width'),
   'input' => array('accept','align','alt','checked','disabled','maxlength','name','readonly','size','src','type','value'),
   'select' => array('default','disabled','multiple','name','options','size'),
   'standard' => array('accesskey','class','dir','id','lang','placeholder','style','tabindex','title','xml:lang','onblur','onchange','onfocus','onreset','onselect','onsubmit','onclick','ondblclick','onkeydown','onkeypress','onkeyup','onmousedown','onmousemove','onmouseover','onmouseout','onmouseup'),
@@ -443,50 +443,50 @@ $_VAE['recaptcha'] = array(
 );
 
 $_VAE['store']['payment_methods'] = array(
-  'authorize_net' => array('name' => "Credit Card", 'credit_card' => true), 
-  'braintree' => array('name' => "Credit Card", 'credit_card' => true), 
-  'braintree_blue' => array('name' => "Credit Card", 'credit_card' => true), 
-  'card_stream' => array('name' => "Credit Card", 'credit_card' => true), 
-  'cyber_source' => array('name' => "Credit Card", 'credit_card' => true), 
-  'data_cash' => array('name' => "Credit Card", 'credit_card' => true), 
-  'efsnet' => array('name' => "Credit Card", 'credit_card' => true), 
-  'eway' => array('name' => "Credit Card", 'credit_card' => true), 
-  'exact' => array('name' => "Credit Card", 'credit_card' => true), 
+  'authorize_net' => array('name' => "Credit Card", 'credit_card' => true),
+  'braintree' => array('name' => "Credit Card", 'credit_card' => true),
+  'braintree_blue' => array('name' => "Credit Card", 'credit_card' => true),
+  'card_stream' => array('name' => "Credit Card", 'credit_card' => true),
+  'cyber_source' => array('name' => "Credit Card", 'credit_card' => true),
+  'data_cash' => array('name' => "Credit Card", 'credit_card' => true),
+  'efsnet' => array('name' => "Credit Card", 'credit_card' => true),
+  'eway' => array('name' => "Credit Card", 'credit_card' => true),
+  'exact' => array('name' => "Credit Card", 'credit_card' => true),
   'firstdata_e4' => array('name' => "Credit Card", 'credit_card' => true),
-  'google_checkout' => array('name' => "Google Checkout", 'callback' => '_vae_store_payment_google_checkout_callback', 'ipn' => '_vae_store_payment_google_checkout_ipn'), 
-  'linkpoint' => array('name' => "Credit Card", 'credit_card' => true), 
-  'check' => array('name' => "Check"), 
-  'money_order' => array('name' => "Money Order"), 
-  'bank_transfer' => array('name' => "Bank Transfer"), 
-  'in_store' => array('name' => "Pay In Store"), 
+  'google_checkout' => array('name' => "Google Checkout", 'callback' => '_vae_store_payment_google_checkout_callback', 'ipn' => '_vae_store_payment_google_checkout_ipn'),
+  'linkpoint' => array('name' => "Credit Card", 'credit_card' => true),
+  'check' => array('name' => "Check"),
+  'money_order' => array('name' => "Money Order"),
+  'bank_transfer' => array('name' => "Bank Transfer"),
+  'in_store' => array('name' => "Pay In Store"),
   'merchantware' => array('name' => "Credit Card", 'credit_card' => true),
-  'exact' => array('name' => "Credit Card", 'credit_card' => true), 
-  'lucy' => array('name' => "Credit Card", 'credit_card' => true), 
-  'modern_payments' => array('name' => "Credit Card", 'credit_card' => true), 
-  'moneris' => array('name' => "Credit Card", 'credit_card' => true), 
-  'net_registry' => array('name' => "Credit Card", 'credit_card' => true), 
-  'netbilling' => array('name' => "Credit Card", 'credit_card' => true), 
-  'pay_junction' => array('name' => "Credit Card", 'credit_card' => true), 
-  'pay_secure' => array('name' => "Credit Card", 'credit_card' => true), 
-  'payflow_pro' => array('name' => "Credit Card", 'credit_card' => true), 
-  'payment_express' => array('name' => "Credit Card", 'credit_card' => true), 
-  'paypal' => array('name' => "PayPal", 'callback' => '_vae_store_payment_paypal_callback', 'ipn' => '_vae_store_payment_paypal_ipn'), 
-  'paypal_direct_payment' => array('name' => "Credit Card", 'credit_card' => true), 
-  'paypal_express_checkout' => array('name' => "PayPal Express Checkout"), 
-  'psigate' => array('name' => "Credit Card", 'credit_card' => true), 
-  'psi_card' => array('name' => "Credit Card", 'credit_card' => true), 
-  'quickpay' => array('name' => "Credit Card", 'credit_card' => true), 
-  'realex' => array('name' => "Credit Card", 'credit_card' => true), 
-  'sage' => array('name' => "Credit Card", 'credit_card' => true), 
-  'secure_pay' => array('name' => "Credit Card", 'credit_card' => true), 
-  'solveras' => array('name' => "Credit Card", 'credit_card' => true), 
+  'exact' => array('name' => "Credit Card", 'credit_card' => true),
+  'lucy' => array('name' => "Credit Card", 'credit_card' => true),
+  'modern_payments' => array('name' => "Credit Card", 'credit_card' => true),
+  'moneris' => array('name' => "Credit Card", 'credit_card' => true),
+  'net_registry' => array('name' => "Credit Card", 'credit_card' => true),
+  'netbilling' => array('name' => "Credit Card", 'credit_card' => true),
+  'pay_junction' => array('name' => "Credit Card", 'credit_card' => true),
+  'pay_secure' => array('name' => "Credit Card", 'credit_card' => true),
+  'payflow_pro' => array('name' => "Credit Card", 'credit_card' => true),
+  'payment_express' => array('name' => "Credit Card", 'credit_card' => true),
+  'paypal' => array('name' => "PayPal", 'callback' => '_vae_store_payment_paypal_callback', 'ipn' => '_vae_store_payment_paypal_ipn'),
+  'paypal_direct_payment' => array('name' => "Credit Card", 'credit_card' => true),
+  'paypal_express_checkout' => array('name' => "PayPal Express Checkout"),
+  'psigate' => array('name' => "Credit Card", 'credit_card' => true),
+  'psi_card' => array('name' => "Credit Card", 'credit_card' => true),
+  'quickpay' => array('name' => "Credit Card", 'credit_card' => true),
+  'realex' => array('name' => "Credit Card", 'credit_card' => true),
+  'sage' => array('name' => "Credit Card", 'credit_card' => true),
+  'secure_pay' => array('name' => "Credit Card", 'credit_card' => true),
+  'solveras' => array('name' => "Credit Card", 'credit_card' => true),
   'stripe' => array('name' => "Credit Card", 'credit_card' => true),
-  'skip_jack' => array('name' => "Credit Card", 'credit_card' => true), 
-  'trans_first' => array('name' => "Credit Card", 'credit_card' => true), 
-  'trust_commerce' => array('name' => "Credit Card", 'credit_card' => true), 
-  'verifi' => array('name' => "Credit Card", 'credit_card' => true), 
-  'viaklix' => array('name' => "Credit Card", 'credit_card' => true), 
-  'wirecard' => array('name' => "Credit Card", 'credit_card' => true), 
+  'skip_jack' => array('name' => "Credit Card", 'credit_card' => true),
+  'trans_first' => array('name' => "Credit Card", 'credit_card' => true),
+  'trust_commerce' => array('name' => "Credit Card", 'credit_card' => true),
+  'verifi' => array('name' => "Credit Card", 'credit_card' => true),
+  'viaklix' => array('name' => "Credit Card", 'credit_card' => true),
+  'wirecard' => array('name' => "Credit Card", 'credit_card' => true),
   'test' => array('name' => "Credit Card", 'credit_card' => true)
 );
 
@@ -503,678 +503,678 @@ $_VAE['store']['payment_methods'] = array(
 
 
 $_VAE['tags'] = array (
-  'a' => 
+  'a' =>
   array (
     'handler' => '_vae_render_a',
     'html' => 'a',
   ),
-  'a_if' => 
+  'a_if' =>
   array (
     'handler' => '_vae_render_a_if',
     'html' => 'a',
   ),
-  'asset' => 
+  'asset' =>
   array (
     'handler' => '_vae_render_asset',
   ),
-  'captcha' => 
+  'captcha' =>
   array (
     'handler' => '_vae_render_captcha',
     'html' => 'input',
   ),
-  'cdn' => 
+  'cdn' =>
   array (
     'handler' => '_vae_render_cdn'
   ),
-  'checkbox' => 
+  'checkbox' =>
   array (
     'handler' => '_vae_render_checkbox',
     'html' => 'input',
   ),
-  'collection' => 
+  'collection' =>
   array (
     'handler' => '_vae_render_collection',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
   ),
-  'country_select' => 
+  'country_select' =>
   array (
     'handler' => '_vae_render_country_select',
     'html' => 'select',
   ),
-  'create' => 
+  'create' =>
   array (
     'callback' => '_vae_callback_create',
     'handler' => '_vae_render_create',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
     'filename' => 'callback.php',
     'html' => 'form',
   ),
-  'date_select' => 
+  'date_select' =>
   array (
     'handler' => '_vae_render_date_select',
     'html' => 'select',
   ),
-  'date_selection' => 
+  'date_selection' =>
   array (
     'handler' => '_vae_render_date_selection',
     'html' => 'a',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
       1 => 'date_field',
     ),
   ),
-  'debug' => 
+  'debug' =>
   array (
     'handler' => '_vae_render_debug',
   ),
-  'disqus' => 
+  'disqus' =>
   array (
     'handler' => '_vae_render_disqus',
-    'required' => 
+    'required' =>
     array (
       0 => 'shortname',
     ),
   ),
-  'divider' => 
+  'divider' =>
   array (
     'handler' => '_vae_render_divider',
   ),
-  'else' => 
+  'else' =>
   array (
     'handler' => '_vae_render_else',
   ),
-  'elseif' => 
+  'elseif' =>
   array (
     'handler' => '_vae_render_elseif',
   ),
-  'facebook_comments' => 
+  'facebook_comments' =>
   array (
     'handler' => '_vae_render_facebook_comments',
-    'required' => 
+    'required' =>
     array (
       0 => 'appid',
     ),
   ),
-  'facebook_like' => 
+  'facebook_like' =>
   array (
     'handler' => '_vae_render_facebook_like',
   ),
-  'file' => 
+  'file' =>
   array (
     'callback' => '_vae_callback_file',
     'handler' => '_vae_render_file',
     'html' => 'a',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
     'filename' => 'callback.php',
   ),
-  'file_field' => 
+  'file_field' =>
   array (
     'handler' => '_vae_render_file_field',
     'html' => 'input',
   ),
-  'fileurl' => 
+  'fileurl' =>
   array (
     'handler' => '_vae_render_fileurl',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
   ),
-  'flash' => 
+  'flash' =>
   array (
     'handler' => '_vae_render_flash',
   ),
-  'form' => 
+  'form' =>
   array (
     'handler' => '_vae_render_form',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
     ),
   ),
-  'formmail' => 
+  'formmail' =>
   array (
     'callback' => '_vae_callback_formmail',
     'handler' => '_vae_render_formmail',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'to',
     ),
     'filename' => 'callback.php',
   ),
-  'fragment' => 
+  'fragment' =>
   array (
     'handler' => '_vae_render_fragment',
   ),
-  'gravatar' => 
+  'gravatar' =>
   array (
     'handler' => '_vae_render_gravatar',
     'html' => 'img',
-    'required' => 
+    'required' =>
     array (
       0 => 'email',
     ),
   ),
-  'hidden_field' => 
+  'hidden_field' =>
   array (
     'handler' => '_vae_render_hidden_field',
     'html' => 'input',
   ),
-  'if' => 
+  'if' =>
   array (
     'handler' => '_vae_render_if',
   ),
-  'if_backstage' => 
+  'if_backstage' =>
   array (
     'handler' => '_vae_render_if_backstage',
   ),
-  'if_paginate' => 
+  'if_paginate' =>
   array (
     'handler' => '_vae_render_if_paginate',
   ),
-  'if_time' => 
+  'if_time' =>
   array (
     'handler' => '_vae_render_if_time',
   ),
-  'img' => 
+  'img' =>
   array (
     'handler' => '_vae_render_img',
     'html' => 'img'
   ),
-  'imurl' => 
+  'imurl' =>
   array (
     'handler' => '_vae_render_img'
   ),
-  'module' => 
+  'module' =>
   array (
     'handler' => '_vae_render_template',
-    'required' => 
+    'required' =>
     array (
       0 => 'filename',
     ),
   ),
-  'nested_collection' => 
+  'nested_collection' =>
   array (
     'handler' => '_vae_render_nested_collection',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
   ),
-  'nested_divider' => 
+  'nested_divider' =>
   array (
     'handler' => '_vae_render_divider',
   ),
-  'newsletter' => 
+  'newsletter' =>
   array (
     'callback' => '_vae_callback_newsletter',
     'handler' => '_vae_render_newsletter',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'code',
     ),
     'filename' => 'callback.php',
   ),
-  'nowidows' => 
+  'nowidows' =>
   array (
     'handler' => '_vae_render_nowidows',
   ),
-  'option_select' => 
+  'option_select' =>
   array (
     'handler' => '_vae_render_option_select',
     'html' => 'select',
-    'required' => 
+    'required' =>
     array (
       0 => 'fields',
       1 => 'name',
       2 => 'path',
     ),
   ),
-  'pdf' => 
+  'pdf' =>
   array (
     'handler' => '_vae_render_pdf',
-    'required' => 
+    'required' =>
     array (
     ),
   ),
-  'pagination' => 
+  'pagination' =>
   array (
     'handler' => '_vae_render_pagination',
     'html' => 'a',
   ),
-  'password_field' => 
+  'password_field' =>
   array (
     'handler' => '_vae_render_password_field',
     'html' => 'input',
   ),
-  'php' => 
+  'php' =>
   array (
     'handler' => '_vae_render_php',
   ),
-  'radio' => 
+  'radio' =>
   array (
     'handler' => '_vae_render_radio',
     'html' => 'input',
   ),
-  'repeat' => 
+  'repeat' =>
   array (
     'handler' => '_vae_render_repeat',
   ),
-  'require_permalink' => 
+  'require_permalink' =>
   array (
     'handler' => '_vae_render_require_permalink',
-    'required' => 
+    'required' =>
     array (
     ),
   ),
-  'require_ssl' => 
+  'require_ssl' =>
   array (
     'handler' => '_vae_render_require_ssl',
-    'required' => 
+    'required' =>
     array (
     ),
   ),
-  'rss' => 
+  'rss' =>
   array (
     'handler' => '_vae_render_rss',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
       1 => 'title',
       2 => 'description',
     ),
   ),
-  'section' => 
+  'section' =>
   array (
     'handler' => '_vae_render_section',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
     ),
   ),
-  'select' => 
+  'select' =>
   array (
     'handler' => '_vae_render_select',
     'html' => 'select',
   ),
-  'set' => 
+  'set' =>
   array (
     'handler' => '_vae_render_set',
-    'required' => 
+    'required' =>
     array (
       0 => 'name',
     ),
   ),
-  'set_default' => 
+  'set_default' =>
   array (
     'handler' => '_vae_render_set_default',
     'required' => array('name')
   ),
-  'session_dump' => 
+  'session_dump' =>
   array (
     'handler' => '_vae_render_session_dump',
-    'required' => 
+    'required' =>
     array (
       0 => 'key',
     ),
   ),
-  'site_seal' => 
+  'site_seal' =>
   array (
     'handler' => '_vae_render_site_seal',
   ),
-  'state_select' => 
+  'state_select' =>
   array (
     'handler' => '_vae_render_state_select',
     'html' => 'select',
   ),
-  'template' => 
+  'template' =>
   array (
     'handler' => '_vae_render_template',
-    'required' => 
+    'required' =>
     array (
       0 => 'filename',
     ),
   ),
-  'text' => 
+  'text' =>
   array (
     'handler' => '_vae_render_text',
-    'required' => 
+    'required' =>
     array (
     ),
   ),
-  'text_area' => 
+  'text_area' =>
   array (
     'handler' => '_vae_render_text_area',
     'html' => 'textarea',
   ),
-  'text_field' => 
+  'text_field' =>
   array (
     'handler' => '_vae_render_text_field',
     'html' => 'input',
   ),
-  'unsubscribe' => 
+  'unsubscribe' =>
   array (
     'handler' => '_vae_render_unsubscribe',
   ),
-  'update' => 
+  'update' =>
   array (
     'callback' => '_vae_callback_update',
     'handler' => '_vae_render_update',
     'filename' => 'callback.php',
     'html' => 'form',
   ),
-  'video' => 
+  'video' =>
   array (
     'handler' => '_vae_render_video',
   ),
-  'yield' => 
+  'yield' =>
   array (
     'handler' => '_vae_render_yield',
   ),
-  'zip' => 
+  'zip' =>
   array (
     'callback' => '_vae_callback_zip',
     'handler' => '_vae_render_zip',
     'html' => 'a',
     'filename' => 'callback.php',
   ),
-  'store_add_to_cart' => 
+  'store_add_to_cart' =>
   array (
     'callback' => '_vae_store_callback_add_to_cart',
     'handler' => '_vae_store_render_add_to_cart',
     'html' => 'form',
   ),
-  'store_address_delete' => 
+  'store_address_delete' =>
   array (
     'callback' => '_vae_store_callback_address_delete',
     'html' => 'a',
     'handler' => '_vae_store_render_address_delete',
   ),
-  'store_address_select' => 
+  'store_address_select' =>
   array (
     'callback' => '_vae_store_callback_address_select',
     'handler' => '_vae_store_render_address_select',
     'html' => 'select',
   ),
-  'store_addresses' => 
+  'store_addresses' =>
   array (
     'handler' => '_vae_store_render_addresses',
   ),
-  'store_bundled_item' => 
+  'store_bundled_item' =>
   array (
     'handler' => '_vae_store_render_bundled_item',
   ),
-  'store_cart' => 
+  'store_cart' =>
   array (
     'callback' => '_vae_store_callback_cart',
     'handler' => '_vae_store_render_cart',
     'html' => 'form',
   ),
-  'store_cart_items' => 
+  'store_cart_items' =>
   array (
     'handler' => '_vae_store_render_cart_items',
   ),
-  'store_cart_discount' => 
+  'store_cart_discount' =>
   array (
     'handler' => '_vae_store_render_cart_discount',
   ),
-  'store_cart_shipping' => 
+  'store_cart_shipping' =>
   array (
     'handler' => '_vae_store_render_cart_shipping',
   ),
-  'store_cart_subtotal' => 
+  'store_cart_subtotal' =>
   array (
     'handler' => '_vae_store_render_cart_subtotal',
   ),
-  'store_cart_tax' => 
+  'store_cart_tax' =>
   array (
     'handler' => '_vae_store_render_cart_tax',
   ),
-  'store_cart_total' => 
+  'store_cart_total' =>
   array (
     'handler' => '_vae_store_render_cart_total',
   ),
-  'store_checkout' => 
+  'store_checkout' =>
   array (
     'callback' => '_vae_store_callback_checkout',
     'handler' => '_vae_store_render_checkout',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'redirect',
       1 => 'register_page',
     ),
   ),
-  'store_credit_card' => 
+  'store_credit_card' =>
   array (
     'handler' => '_vae_store_render_if_credit_card',
   ),
-  'store_credit_card_select' => 
+  'store_credit_card_select' =>
   array (
     'handler' => '_vae_store_render_credit_card_select',
     'html' => 'select',
   ),
-  'store_currency' => 
+  'store_currency' =>
   array (
     'handler' => '_vae_store_render_currency',
   ),
-  'store_currency_select' => 
+  'store_currency_select' =>
   array (
     'callback' => '_vae_store_callback_currency_select',
     'handler' => '_vae_store_render_currency_select',
     'html' => 'select',
   ),
-  'store_discount' => 
+  'store_discount' =>
   array (
     'callback' => '_vae_store_callback_discount',
     'handler' => '_vae_store_render_discount',
     'html' => 'form',
   ),
-  'store_forgot' => 
+  'store_forgot' =>
   array (
     'callback' => '_vae_store_callback_forgot',
     'handler' => '_vae_store_render_forgot',
     'html' => 'form',
   ),
-  'store_google_checkout' => 
+  'store_google_checkout' =>
   array (
     'callback' => '_vae_store_callback_google_checkout',
     'handler' => '_vae_store_render_google_checkout',
     'html' => 'img',
   ),
-  'store_if_bank_transfer' => 
+  'store_if_bank_transfer' =>
   array (
     'handler' => '_vae_store_render_if_bank_transfer',
   ),
-  'store_if_check' => 
+  'store_if_check' =>
   array (
     'handler' => '_vae_store_render_if_check',
   ),
-  'store_if_credit_card' => 
+  'store_if_credit_card' =>
   array (
     'handler' => '_vae_store_render_if_credit_card',
   ),
-  'store_if_currency' => 
+  'store_if_currency' =>
   array (
     'handler' => '_vae_store_render_if_currency',
   ),
-  'store_if_digital_downloads' => 
+  'store_if_digital_downloads' =>
   array (
     'handler' => '_vae_store_render_if_digital_downloads',
   ),
-  'store_if_discount' => 
+  'store_if_discount' =>
   array (
     'handler' => '_vae_store_render_if_discount',
   ),
-  'store_if_field_overridden' => 
+  'store_if_field_overridden' =>
   array (
     'handler' => '_vae_store_render_if_field_overridden',
-    'required' => 
+    'required' =>
     array (
       0 => 'field',
       1 => 'options_collection'
     ),
   ),
-  'store_if_logged_in' => 
+  'store_if_logged_in' =>
   array (
     'handler' => '_vae_store_render_if_logged_in',
   ),
-  'store_if_money_order' => 
+  'store_if_money_order' =>
   array (
     'handler' => '_vae_store_render_if_money_order',
   ),
-  'store_if_pay_in_store' => 
+  'store_if_pay_in_store' =>
   array (
     'handler' => '_vae_store_render_if_pay_in_store',
   ),
-  'store_if_paypal' => 
+  'store_if_paypal' =>
   array (
     'handler' => '_vae_store_render_if_paypal',
   ),
-  'store_if_paypal_express_checkout' => 
+  'store_if_paypal_express_checkout' =>
   array (
     'handler' => '_vae_store_render_if_paypal_express_checkout',
   ),
-  'store_if_recent_order_bank_transfer' => 
+  'store_if_recent_order_bank_transfer' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_bank_transfer',
   ),
-  'store_if_recent_order_check' => 
+  'store_if_recent_order_check' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_check',
   ),
-  'store_if_recent_order_credit_card' => 
+  'store_if_recent_order_credit_card' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_credit_card',
   ),
-  'store_if_recent_order_digital' => 
+  'store_if_recent_order_digital' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_digital',
   ),
-  'store_if_recent_order_money_order' => 
+  'store_if_recent_order_money_order' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_money_order',
   ),
-  'store_if_recent_order_pay_in_store' => 
+  'store_if_recent_order_pay_in_store' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_pay_in_store',
   ),
-  'store_if_recent_order_paypal' => 
+  'store_if_recent_order_paypal' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_paypal',
   ),
-  'store_if_recent_order_paypal_express_checkout' => 
+  'store_if_recent_order_paypal_express_checkout' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_paypal_express_checkout',
   ),
-  'store_if_shippable' => 
+  'store_if_shippable' =>
   array (
     'handler' => '_vae_store_render_if_shippable',
   ),
-  'store_if_tax' => 
+  'store_if_tax' =>
   array (
     'handler' => '_vae_store_render_if_tax',
   ),
-  'store_if_user' => 
+  'store_if_user' =>
   array (
     'handler' => '_vae_store_render_if_user',
   ),
-  'store_item_if_discount' => 
+  'store_item_if_discount' =>
   array (
     'handler' => '_vae_store_render_item_if_discount',
   ),
-  'store_item_price' => 
+  'store_item_price' =>
   array (
     'handler' => '_vae_store_render_item_price',
   ),
-  'store_login' => 
+  'store_login' =>
   array (
     'callback' => '_vae_store_callback_login',
     'handler' => '_vae_store_render_login',
     'html' => 'form',
   ),
-  'store_logout' => 
+  'store_logout' =>
   array (
     'callback' => '_vae_store_callback_logout',
     'html' => 'a',
     'handler' => '_vae_store_render_logout',
   ),
-  'store_paypal_checkout' => 
+  'store_paypal_checkout' =>
   array (
     'callback' => '_vae_store_callback_paypal_checkout',
     'handler' => '_vae_store_render_paypal_checkout',
     'html' => 'img',
   ),
-  'store_paypal_express_checkout' => 
+  'store_paypal_express_checkout' =>
   array (
     'callback' => '_vae_store_callback_paypal_express_checkout',
     'handler' => '_vae_store_render_paypal_express_checkout',
     'html' => 'img',
   ),
-  'store_payment_methods_select' => 
+  'store_payment_methods_select' =>
   array (
     'callback' => '_vae_store_callback_payment_methods_select',
     'handler' => '_vae_store_render_payment_methods_select',
     'html' => 'select',
   ),
-  'store_previous_order_items' => 
+  'store_previous_order_items' =>
   array (
     'handler' => '_vae_store_render_previous_order_items',
   ),
-  'store_previous_order' => 
+  'store_previous_order' =>
   array (
     'handler' => '_vae_store_render_previous_order',
   ),
-  'store_previous_orders' => 
+  'store_previous_orders' =>
   array (
     'handler' => '_vae_store_render_previous_orders',
   ),
-  'store_recent_order' => 
+  'store_recent_order' =>
   array (
     'handler' => '_vae_store_render_recent_order',
   ),
-  'store_recent_order_items' => 
+  'store_recent_order_items' =>
   array (
     'handler' => '_vae_store_render_recent_order_items',
   ),
-  'store_register' => 
+  'store_register' =>
   array (
     'callback' => '_vae_store_callback_register',
     'handler' => '_vae_store_render_register',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'redirect',
     ),
   ),
-  'store_shipping_methods_select' => 
+  'store_shipping_methods_select' =>
   array (
     'callback' => '_vae_store_callback_shipping_methods_select',
     'handler' => '_vae_store_render_shipping_methods_select',
     'html' => 'select',
   ),
-  'store_user' => 
+  'store_user' =>
   array (
     'handler' => '_vae_store_render_user',
   ),
-  'users_forgot' => 
+  'users_forgot' =>
   array (
     'callback' => '_vae_users_callback_forgot',
     'handler' => '_vae_users_render_forgot',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'email_field',
       1 => 'path',
@@ -1182,158 +1182,158 @@ $_VAE['tags'] = array (
     ),
     'filename' => 'users.php',
   ),
-  'users_if_logged_in' => 
+  'users_if_logged_in' =>
   array (
     'handler' => '_vae_users_render_if_logged_in',
     'filename' => 'users.php',
   ),
-  'users_login' => 
+  'users_login' =>
   array (
     'callback' => '_vae_users_callback_login',
     'handler' => '_vae_users_render_login',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
       1 => 'required',
     ),
     'filename' => 'users.php',
   ),
-  'users_logout' => 
+  'users_logout' =>
   array (
     'callback' => '_vae_users_callback_logout',
     'html' => 'a',
     'handler' => '_vae_users_render_logout',
     'filename' => 'users.php',
   ),
-  'users_register' => 
+  'users_register' =>
   array (
     'callback' => '_vae_users_callback_register',
     'handler' => '_vae_users_render_register',
     'html' => 'form',
-    'required' => 
+    'required' =>
     array (
       0 => 'path',
       1 => 'redirect',
     ),
     'filename' => 'users.php',
   ),
-  'store_if_in_cart' => 
+  'store_if_in_cart' =>
   array (
     'handler' => '_vae_store_render_if_in_cart',
   ),
 );
 $_VAE['callbacks'] = array (
-  'create' => 
+  'create' =>
   array (
     'callback' => '_vae_callback_create',
     'filename' => 'callback.php',
   ),
-  'file' => 
+  'file' =>
   array (
     'callback' => '_vae_callback_file',
     'filename' => 'callback.php',
   ),
-  'formmail' => 
+  'formmail' =>
   array (
     'callback' => '_vae_callback_formmail',
     'filename' => 'callback.php',
   ),
-  'newsletter' => 
+  'newsletter' =>
   array (
     'callback' => '_vae_callback_newsletter',
     'filename' => 'callback.php',
   ),
-  'update' => 
+  'update' =>
   array (
     'callback' => '_vae_callback_update',
     'filename' => 'callback.php',
   ),
-  'zip' => 
+  'zip' =>
   array (
     'callback' => '_vae_callback_zip',
     'filename' => 'callback.php',
   ),
-  'store_add_to_cart' => 
+  'store_add_to_cart' =>
   array (
     'callback' => '_vae_store_callback_add_to_cart',
   ),
-  'store_address_delete' => 
+  'store_address_delete' =>
   array (
     'callback' => '_vae_store_callback_address_delete',
   ),
-  'store_address_select' => 
+  'store_address_select' =>
   array (
     'callback' => '_vae_store_callback_address_select',
   ),
-  'store_cart' => 
+  'store_cart' =>
   array (
     'callback' => '_vae_store_callback_cart',
   ),
-  'store_checkout' => 
+  'store_checkout' =>
   array (
     'callback' => '_vae_store_callback_checkout',
   ),
-  'store_currency_select' => 
+  'store_currency_select' =>
   array (
     'callback' => '_vae_store_callback_currency_select',
   ),
-  'store_discount' => 
+  'store_discount' =>
   array (
     'callback' => '_vae_store_callback_discount',
   ),
-  'store_forgot' => 
+  'store_forgot' =>
   array (
     'callback' => '_vae_store_callback_forgot',
   ),
-  'store_google_checkout' => 
+  'store_google_checkout' =>
   array (
     'callback' => '_vae_store_callback_google_checkout',
   ),
-  'store_login' => 
+  'store_login' =>
   array (
     'callback' => '_vae_store_callback_login',
   ),
-  'store_logout' => 
+  'store_logout' =>
   array (
     'callback' => '_vae_store_callback_logout',
   ),
-  'store_paypal_checkout' => 
+  'store_paypal_checkout' =>
   array (
     'callback' => '_vae_store_callback_paypal_checkout',
   ),
-  'store_paypal_express_checkout' => 
+  'store_paypal_express_checkout' =>
   array (
     'callback' => '_vae_store_callback_paypal_express_checkout',
   ),
-  'store_payment_methods_select' => 
+  'store_payment_methods_select' =>
   array (
     'callback' => '_vae_store_callback_payment_methods_select',
   ),
-  'store_register' => 
+  'store_register' =>
   array (
     'callback' => '_vae_store_callback_register',
   ),
-  'store_shipping_methods_select' => 
+  'store_shipping_methods_select' =>
   array (
     'callback' => '_vae_store_callback_shipping_methods_select',
   ),
-  'users_forgot' => 
+  'users_forgot' =>
   array (
     'callback' => '_vae_users_callback_forgot',
     'filename' => 'users.php',
   ),
-  'users_login' => 
+  'users_login' =>
   array (
     'callback' => '_vae_users_callback_login',
     'filename' => 'users.php',
   ),
-  'users_logout' => 
+  'users_logout' =>
   array (
     'callback' => '_vae_users_callback_logout',
     'filename' => 'users.php',
   ),
-  'users_register' => 
+  'users_register' =>
   array (
     'callback' => '_vae_users_callback_register',
     'filename' => 'users.php',
