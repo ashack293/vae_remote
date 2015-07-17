@@ -53,7 +53,7 @@ function _vae_page_check_domain() {
   }
 }
 
-function _vae_page_check_redirects() {  
+function _vae_page_check_redirects() {
   global $_VAE;
   $e = explode("?", $_SERVER['REQUEST_URI'], 2);
   $page = substr($_SERVER['REQUEST_URI'], 1);
@@ -102,7 +102,7 @@ function _vae_page_find($page) {
         if ($other_page_to_render and str_replace($_SERVER['DOCUMENT_ROOT'] . "/", "", $_SERVER['SCRIPT_FILENAME']) == $page) continue; // skip $other_page_to_render if the URL actually exists in the FTP
         _vae_page_run($page, (strlen($other_page_to_render) ? $other_page_to_render : $context->structure()->permalink), $context);
         return;
-      } 
+      }
     }
     memcache_set($_VAE['memcached'], $_VAE['global_cache_key'] . "path2" . $page, array());
   }

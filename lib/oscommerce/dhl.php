@@ -294,7 +294,7 @@ class dhl {
 
         $airborne_response = curl_exec($ch);
         curl_close($ch);
-        
+
         // Debugging
         if ($this->debug) {
             $this->captureXML($request, $airborne_response);
@@ -544,13 +544,13 @@ class dhl {
                 return "NV";
             case ($zip >= 90000 AND $zip <= 96199): // California (90000-96199 range)
                 return "CA";
-            case ($zip >= 96700 AND $zip <= 96899): // Hawaii (96700-96899 range)            
+            case ($zip >= 96700 AND $zip <= 96899): // Hawaii (96700-96899 range)
                 return "HI";
             case ($zip >= 97000 AND $zip <= 97999): // Oregon (97000-97999 range)
                 return "OR";
             case ($zip >= 98000 AND $zip <= 99499): // Washington (98000-99499 range)
                 return "WA";
-            case ($zip >= 99500 AND $zip <= 99999): // Alaska (99500-99999 range) 
+            case ($zip >= 99500 AND $zip <= 99999): // Alaska (99500-99999 range)
                 return "AK";
         }
     }
@@ -700,38 +700,38 @@ function _makedate3254($unit = '', $time = '', $mask = '') {
         $mask = 'yyyymmdd';
 
     switch ($mask) {
-        case 'short': // 7/4/2003 
+        case 'short': // 7/4/2003
             $mask = "n/j/Y";
             break;
-        case 'long':  // Friday, July 4, 2003 
+        case 'long':  // Friday, July 4, 2003
             $mask = "l, F j, Y";
             break;
         default:
             $chars = (preg_match('/([[:space:]]|[[:punct:]])/', $mask)) ? preg_split('/([[:space:]]|[[:punct:]])/', $mask, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) : preg_split('/(m*|d*|y*)/i', $mask, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             foreach ($chars as $key => $char) {
                 switch (TRUE) {
-                    case eregi("m{3,}", $chars[$key]): // 'mmmm' = month string 
+                    case eregi("m{3,}", $chars[$key]): // 'mmmm' = month string
                         $chars[$key] = "F";
                         break;
-                    case eregi("m{2}", $chars[$key]):  // 'mm'   = month as 01-12 
+                    case eregi("m{2}", $chars[$key]):  // 'mm'   = month as 01-12
                         $chars[$key] = "m";
                         break;
-                    case eregi("m{1}", $chars[$key]):  // 'm'    = month as 1-12 
+                    case eregi("m{1}", $chars[$key]):  // 'm'    = month as 1-12
                         $chars[$key] = "n";
                         break;
-                    case eregi("d{3,}", $chars[$key]): // 'dddd' = day string 
+                    case eregi("d{3,}", $chars[$key]): // 'dddd' = day string
                         $chars[$key] = "l";
                         break;
-                    case eregi("d{2}", $chars[$key]):  // 'dd'   = day as 01-31 
+                    case eregi("d{2}", $chars[$key]):  // 'dd'   = day as 01-31
                         $chars[$key] = "d";
                         break;
-                    case eregi("d{1}", $chars[$key]):  // 'd'    = day as 1-31 
+                    case eregi("d{1}", $chars[$key]):  // 'd'    = day as 1-31
                         $chars[$key] = "j";
                         break;
-                    case eregi("y{3,}", $chars[$key]): // 'yyyy' = 4 digit year 
+                    case eregi("y{3,}", $chars[$key]): // 'yyyy' = 4 digit year
                         $chars[$key] = "Y";
                         break;
-                    case eregi("y{1,2}", $chars[$key]):// 'yy'   = 2 digit year 
+                    case eregi("y{1,2}", $chars[$key]):// 'yy'   = 2 digit year
                         $chars[$key] = "y";
                         break;
                 }

@@ -1,7 +1,7 @@
 <?php
 
 class VaeContext implements ArrayAccess, Countable {
-  
+
   private $___context;
   private $___createInfo = array();
   private $___data = array();
@@ -13,7 +13,7 @@ class VaeContext implements ArrayAccess, Countable {
   private $___queries = array();
   private $___singleData;
   private $___structure = null;
-  
+
   public function __construct($context = null, &$query = null, $singleData = null, $dataSource = "vaedb") {
     $this->___context = $context;
     $this->___query = $query;
@@ -21,14 +21,14 @@ class VaeContext implements ArrayAccess, Countable {
     if ($context && get_class($context) == "VaeDbContext" && $context->dataMap) {
       $this->___addData($context->dataMap);
       if ($context->dataSource) $dataSource = $context->dataSource;
-    } 
+    }
     $this->___dataSource = $dataSource;
   }
-  
+
   public function ___addCreateInfo($query, $createInfo) {
     $this->___createInfo[$query] = $createInfo;
   }
-  
+
   public function ___addData($data, $formId = null, $clone = false) {
     if (count($data)) {
       foreach ($data as $k => $v) {
@@ -41,21 +41,21 @@ class VaeContext implements ArrayAccess, Countable {
       $this->___context = new VaeDbContext(array('id' => $data['id']));
     }
   }
-  
+
   public function ___addQuery($query) {
     $q = $query->___getQuery();
     if (!isset($this->___queries[$q])) $this->___queries[$q] = array();
     $this->___queries[$q][] = $query;
   }
-  
+
   public function ___addStructure($structure) {
     $this->___structure = $structure;
   }
-  
+
   public function __call($name, $arguments) {
     return $this->get($name, array_shift($arguments));
   }
-  
+
   private function ___findQueryFromCache($query, $options, $useDataCache = true) {
     if ($useDataCache && !count($options) && isset($this->___data[$query])) {
       $v = $this->___data[$query];
@@ -68,60 +68,60 @@ class VaeContext implements ArrayAccess, Countable {
     }
     return false;
   }
-  
+
   private function ___proxyObject() {
     if (strlen($this->___singleData) && $this->___dataSource == "vaedb") {
       return $this->___context->get($this->___query, null, false);
     }
     return false;
   }
-  
+
   public function __get($name) {
     return $this->get($name);
   }
-  
+
   public function __invoke($name) {
     return $this->get($name);
   }
-  
+
   public function __isset($name) {
     return $this->offsetExists($name);
   }
-  
+
   public function __set($name, $value) {
     $this->offsetSet($name, $value);
   }
-  
+
   public function __toString() {
     if (strlen($this->___singleData)) return (string)$this->___singleData;
     if ($this->___context && (get_class($this->___context) != "VaeDbContext")) return "";
     if (strlen($this->___context->data)) return $this->___context->data;
     return "";
   }
-  
+
   public function __unset($name) {
     $this->offsetUnset($name);
   }
-  
+
   public function collection() {
     return false;
   }
-  
+
   public function count() {
     return 1;
   }
-  
+
   public function data() {
     if ($this->___data) return $this->___data;
     if (strlen($this->___singleData) || !$this->___query) return false;
     $this->___query->___retrieveData();
     return $this->___data;
   }
-  
+
   public function debug() {
     return $this->data();
   }
-  
+
   public function forCreating($query = null) {
     if ($ret = $this->___createInfo[$query]) return $ret;
     if (is_object($this->___query)) {
@@ -131,16 +131,16 @@ class VaeContext implements ArrayAccess, Countable {
     }
     return $this->___createInfo[$query];
   }
-  
+
   public function found() {
     return $this;
   }
-  
+
   public function formId() {
     if (is_numeric($this->___formId)) return $this->___formId;
     return $this->id();
   }
-  
+
   public function get($query = null, $options = null, $useDataCache = true) {
     $raiseErrors = true;
     if ($query == "collection") return $this->collection();
@@ -178,7 +178,7 @@ class VaeContext implements ArrayAccess, Countable {
     }
     return $this->___findQueryFromCache($query, $options, $useDataCache);
   }
-  
+
   public function id() {
     return (($id = $this->___context->id) == 0 ? null : $id);
   }
@@ -187,35 +187,35 @@ class VaeContext implements ArrayAccess, Countable {
     $g = $this->get($name);
     return ($g ? (is_object($g) ? $g->found() : true) : false);
   }
-  
+
   public function offsetGet($name) {
     return $this->get($name);
   }
-  
+
   public function offsetSet($name, $value) {
     $this->___locals[$name] = $value;
   }
-  
+
   public function offsetUnset($name) {
     unset($this->___locals[$name]);
   }
-  
+
   public function parent() {
     return $this->get("..");
   }
-  
+
   public function permalink($leadingSlash = true) {
     $p = $this->___context->permalink;
     if (strlen($p)) return (($leadingSlash) ? "/" : "") . $p;
     if (is_numeric($this->___formId)) return vae($this->___context->id)->permalink($leadingSlash);
     return "";
   }
-  
+
   public function permalinkOrId() {
     if (strlen($p = $this->permalink())) return $p;
     return $this->id();
   }
-  
+
   public function structure() {
     if (strlen($this->___singleData)) {
       if ($p = $this->___proxyObject()) return $p->structure();
@@ -226,11 +226,11 @@ class VaeContext implements ArrayAccess, Countable {
     $this->___query->___retrieveStructures();
     return $this->___structure;
   }
-  
+
   public function totalMatches() {
     return 1;
   }
-  
+
   public function type() {
     if (strlen($this->___singleData)) {
       if ($p = $this->___proxyObject()) return $p->type();
@@ -248,7 +248,7 @@ class VaeContext implements ArrayAccess, Countable {
 }
 
 class VaeQuery implements Iterator, ArrayAccess, Countable {
-  
+
   private $___contexts = array();
   private $___first;
   private $___next = null;
@@ -257,7 +257,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   private $___raiseErrors = true;
   private $___responseId = null;
   private $___totalMatches = null;
-  
+
   private static $client = null;
   public static $sessionId = null;
 
@@ -269,26 +269,26 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     $this->___raiseErrors = $raiseErrors;
     $this->___responseId = $responseId;
   }
-  
+
   public function ___addContext($context) {
     $this->___contexts[] = new VaeContext($context, $this);
   }
-  
+
   public function ___addContextFromArray($array, $formId = null, $clone = false) {
     $context = new VaeContext();
     $context->___addData($array, $formId, $clone);
     $this->___contexts[] = $context;
   }
-  
+
   public function ___addTotalMatches($total) {
     $this->___totalMatches = $total;
   }
-  
+
   public function __call($name, $arguments) {
     if ($this->___kicker()) return "";
     return $this->current()->get($name, array_shift($arguments));
   }
-  
+
   private function ___executeQuery($responseId, $query, $options, $raiseErrors = false) {
     global $_VAE;
     try {
@@ -323,39 +323,39 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       return false;
     }
   }
-  
+
   public function ___first() {
     return $this->___first;
   }
-  
+
   public function __get($name) {
     return $this->get($name);
   }
-  
+
   public function ___getOptions() {
     return $this->___options;
   }
-  
+
   public function ___getQuery() {
     return $this->___query;
   }
-  
+
   public function __invoke($name) {
     if ($this->___kicker()) return "";
     return $this->current()->get($name);
   }
-  
+
   public function __isset($name) {
     return $this->offsetExists($name);
   }
-  
+
   public function ___kicker() {
     $this->___run();
     if (!$this->___contexts) return true;
     if (!$this->valid()) $this->rewind();
     return false;
   }
-  
+
   public function ___nestedQuery($query = null, $options = null, $raiseErrors = false) {
     if ($this->___responseId < 0) return;
     $response = $this->___executeQuery($this->___responseId, $query, $options, $raiseErrors);
@@ -383,15 +383,15 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     }
     //if ($prevDataQuery && $prevDataQuery->collection()) $prevDataQuery->___retrieveData(); // TODO: determine if this is a speedup
   }
-  
+
   public function ___newContextIterator() {
     return new ArrayIterator($this->___contexts);
   }
-  
+
   public function ___next() {
     return $this->___next;
   }
-  
+
   public function ___retrieveCreateInfo($query, $contextForResponse = null) {
     if (!self::$sessionId) self::___openSession();
     try {
@@ -410,7 +410,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       $iter->next();
     }
   }
-  
+
   public function ___retrieveData() {
     global $_VAE;
     $response = null;
@@ -435,7 +435,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       $iter->next();
     }
   }
-  
+
   public function ___retrieveStructures() {
     $response = self::$client->structure(self::$sessionId, $this->___responseId);
     $iter = new VaeQueryIterator($this);
@@ -445,7 +445,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       $iter->next();
     }
   }
-  
+
   private function ___run() {
     if ($this->___responseId) return;
     $response = $this->___executeQuery(0, $this->___query, $this->___options, $this->___raiseErrors);
@@ -460,58 +460,58 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       //if ($this->collection()) $this->___retrieveData(); // TODO: determine if this is a speedup
     }
   }
-  
+
   public function __set($name, $value) {
     $this->offsetSet($name, $value);
   }
-  
+
   public function ___setNext($next) {
     $this->___next = $next;
   }
-  
+
   public function __toString() {
     if ($this->___kicker()) return "";
     $c = $this->current();
     return ($c ? $c->__toString() : "");
   }
-  
+
   public function __unset($name) {
     $this->offsetUnset($name);
   }
-  
+
   public function collection() {
     $t = $this->type();
     return ($t == "Collection" || $t == "NestedCollection");
   }
-  
+
   public function count() {
     $this->___kicker();
     return count($this->___contexts);
   }
-  
+
   public function current() {
     $this->___run();
     return current($this->___contexts);
   }
-  
+
   public function data() {
     $c = $this->current();
     return ($c ? $c->data() : array());
   }
-  
+
   public function debug() {
     return $this->data();
   }
-  
+
   public function forCreating($query = null) {
     $c = $this->current();
     return ($c ? $c->forCreating($query) : false);
   }
-  
+
   public function found() {
     return ($this->totalMatches() > 0 ? $this : false);
   }
-  
+
   public function get($query, $options = null) {
     if ($this->___kicker()) return "";
     if ($query == "collection") return $this->collection();
@@ -520,7 +520,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     if ($query == "totalMatches") return $this->totalMatches();
     return $this->current()->get($query, $options);
   }
-  
+
   public function key() {
     $this->___run();
     $c = $this->current();
@@ -531,43 +531,43 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     $this->___run();
     return next($this->___contexts);
   }
-  
+
   public function offsetExists($name) {
     $g = $this->get($name);
     return ($g ? $g->found() : false);
   }
-  
+
   public function offsetGet($name) {
     return $this->get($name);
   }
-  
+
   public function offsetSet($name, $value) {
     $this->current()->offsetSet($name, $value);
   }
-  
+
   public function offsetUnset($name) {
     $this->current()->offsetUnset($name);
   }
-  
+
   public function permalink($leadingSlash = true) {
     $c = $this->current();
     return ($c ? $c->permalink($leadingSlash) : false);
   }
-  
+
   public function permalinkOrId() {
     $c = $this->current();
     return ($c ? $c->permalinkOrId() : false);
   }
-  
+
   public function rewind() {
     reset($this->___contexts);
   }
-  
+
   public function structure() {
     $c = $this->current();
     return ($c ? $c->structure() : false);
   }
-  
+
   public function toArray() {
     $array = array();
     foreach ($this as $r) {
@@ -575,12 +575,12 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     }
     return $array;
   }
-  
+
   public function totalMatches() {
     $this->___kicker();
     return $this->___totalMatches;
   }
-  
+
   public function type() {
     $c = $this->current();
     return ($c ? $c->type() : "");
@@ -589,12 +589,12 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   public function valid() {
     return ($this->current() !== false);
   }
-  
-  public static function ___createInfo($query, $contextForResponse) {  
+
+  public static function ___createInfo($query, $contextForResponse) {
     $q = new self();
     $q->___retrieveCreateInfo($query, $contextForResponse);
   }
-  
+
   public static function ___factory($query = null, $options = null, $already_transformed = false) {
     if ($query == null) {
       return new VaeContext();
@@ -612,7 +612,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       return new self($query, $options, null, null, $raiseErrors);
     }
   }
-  
+
   public static function ___fromArray($array, $clone = false) {
     $q = new self(null, null, -1);
     if (is_array($array) && count($array)) {
@@ -622,7 +622,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     }
     return $q;
   }
-  
+
   private static function ___getSubdomain() {
     global $_VAE;
     if ($_VAE['config']['content_subdomain']) {
@@ -635,11 +635,11 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       return $_VAE['settings']['subdomain'];
     }
   }
-  
+
   public static function ___openClient() {
     if (!self::$client) self::$client = _vae_dbd();
   }
-  
+
   public static function ___openSession() {
     global $_VAE;
     self::___openClient();
@@ -661,7 +661,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     self::$client = null;
     self::___openClient();
   }
- 
+
   public static function ___resetSite() {
     global $_VAE;
     self::___openClient();
@@ -673,9 +673,9 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
 
 class VaeQueryIterator implements Iterator {
-  
+
   private $obj;
-  
+
   public function __construct($obj) {
     $this->obj = $obj->___first();
     $this->setIterator();
@@ -684,11 +684,11 @@ class VaeQueryIterator implements Iterator {
   public function current() {
     return $this->iter->current();
   }
-  
+
   public function key() {
     return $this->iter->key();
   }
-  
+
   public function next() {
     $next = $this->iter->next();
     while (!$this->iter->valid() && ($nextObj = $this->obj->___next())) {
@@ -703,15 +703,15 @@ class VaeQueryIterator implements Iterator {
     $this->obj = $this->obj->___first();
     $this->setIterator();
   }
-  
+
   private function setIterator() {
     $this->iter = $this->obj->___newContextIterator();
   }
-  
+
   public function valid() {
     return $this->iter->valid();
   }
-  
+
 }
 
 class VaeSqlQuery {
@@ -720,13 +720,13 @@ class VaeSqlQuery {
   private static $connectionInfo = null;
   private static $responseId = null;
   private static $responses = null;
-  
+
   private $columns = null;
   private $limited = false;
   private $mysqlResult = null;
   private $query = null;
   private $table = null;
-  
+
   public function __construct($responseId, $query, $options) {
     $this->response = new VaeDbResponse();
     self::$responseId++;
@@ -758,7 +758,7 @@ class VaeSqlQuery {
     }
     self::$responses[self::$responseId] = $this->response;
   }
-  
+
   private function buildQuery($query, $options) {
     if (substr($query, 0, 7) == "SELECT ") {
       $this->table = false;
@@ -791,10 +791,10 @@ class VaeSqlQuery {
       }
     }
     if ($options['groups']) {
-      throw new VaeException("Cannot use <span class='c'>groups</span> option in SQL queries.");      
+      throw new VaeException("Cannot use <span class='c'>groups</span> option in SQL queries.");
     }
     if (stristr($options['page'], "last")) {
-      throw new VaeException("Cannot use <span class='c'>page=\"last()\"</span> option in SQL queries.");      
+      throw new VaeException("Cannot use <span class='c'>page=\"last()\"</span> option in SQL queries.");
     }
     if ($options['paginate']) $options['limit'] = $options['paginate'];
     if (stristr($options['page'], "all")) unset($options['limit']);
@@ -824,7 +824,7 @@ class VaeSqlQuery {
     if (strlen($where)) $where = " WHERE " . $where;
     $this->query = $query . $where . $order . $limit;
   }
-  
+
   private function connect() {
     if (self::$connection == null) {
       $ci = self::$connectionInfo;
@@ -839,11 +839,11 @@ class VaeSqlQuery {
       }
     }
   }
-  
+
   private function executeQuery() {
     $this->mysqlResult = mysql_query($this->query, self::$connection) or $this->mysqlError();
   }
-  
+
   private function getColumns() {
     if ($this->columns) return $this->columns;
     $this->columns = array();
@@ -853,11 +853,11 @@ class VaeSqlQuery {
     }
     return $this->columns;
   }
-  
+
   private function mysqlError() {
     throw new VaeException("MySQL Error: " . mysql_error(self::$connection) . ".  Attempted query was: <span class='c'>" . $this->query . "</span>.");
   }
-  
+
   private function totalResults() {
     if ($this->limited) {
       $res = mysql_query("SELECT FOUND_ROWS();", self::$connection) or $this->mysqlError();
@@ -868,7 +868,7 @@ class VaeSqlQuery {
       return mysql_num_rows($this->mysqlResult);
     }
   }
-  
+
   public function toVaeDbResponse() {
     return $this->response;
   }

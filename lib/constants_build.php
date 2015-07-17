@@ -1,5 +1,5 @@
 <?php
- 
+
 _vae_register_tag('a', array('handler' => '_vae_render_a', 'html' => 'a'));
 _vae_register_tag('a_if', array('handler' => '_vae_render_a_if', 'html' => 'a'));
 _vae_register_tag('asset', array('handler' => '_vae_render_asset'));

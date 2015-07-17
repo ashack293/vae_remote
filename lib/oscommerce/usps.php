@@ -89,7 +89,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 	//PRIORITY FLAT-RATE BOX INTERNATIONAL OPTION:
 		$this->PriorityFlatRateBoxType = 'Flat-Rate Boxes';  		//OPTIONS: 'Flat-Rate Box', 'Large Flat-Rate Box'
 	/****************************************************************** */
-	
+
 
       $this->intl_types = array('GLOCAL EXPRESS' => '/Global.*\(GXG\)/',
 								'GLOCAL EXPRESS NON-DOC RECT' => '/Global.*Non-Document.*Rectangular/',
@@ -100,7 +100,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 								'PRIORITY MAIL INT FLAT RATE ENV' => '/Prioirty.*International Flat.*Envelope/',
 								'PRIORITY MAIL INT FLAT RATE BOX' => '/Priority.*International Flat.*Box/',
 								'FIRST-CLASS MAIL INT' => '/First-Class.*Package/');
-                       
+
 
       $this->countries = $this->country_list();
 	$this->countryinsure = $this->country_maxinsure();
@@ -122,7 +122,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 	else {
   		$costperpkg = $order->info['subtotal'] / $shipping_num_boxes;
 	}
-  
+
 	// retrieve the maximum allowed insurance for the destination country and if the package value exceeds it then set package value to the maximum allowed
 	$maxins = $this->countryinsure[$order->delivery['country']['iso_code_2']];
 	if ($costperpkg > $maxins) $costperpkg = $maxins;
@@ -131,7 +131,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 	if (($maxins == 0) || (MODULE_SHIPPING_USPS_INSURE == 'False')) {
   		$insurance = 0;
 	}
-  
+
 	// US and Canada share the same insurance calculation (though not the same maximum)
 	else if (($order->delivery['country']['iso_code_2'] == 'US') || ($order->delivery['country']['iso_code_2'] == 'CA')){
 		if ($costperpkg<=50) {
@@ -150,7 +150,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 			$insurance = MODULE_SHIPPING_USPS_INS4 + ((ceil($costperpkg/100) -3) * MODULE_SHIPPING_USPS_INS5);
 		}
   	}
-  
+
 	// if insurance allowed and is not US or Canada then calculate international insurance
 	else {
 		if ($costperpkg<=50) {
@@ -212,8 +212,8 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
             $title = ((isset($this->types[$type])) ? $this->types[$type] : $type);
             if(in_array('Display transit time', explode(', ', MODULE_SHIPPING_USPS_OPTIONS)))    $title .= $transittime[$type];
-			
-			
+
+
 			if (MODULE_SHIPPING_DMSTC_INSURANCE_OPTION == 'Force Insurance') {
 				$methods[] = array('id' => $type,
                         	'title' => $title,
@@ -263,14 +263,14 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 	tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Domstic Priority Mail Threshold', 'MODULE_SHIPPING_CONFIG_DMSTC_PRIORITY_THRESHOLD', '0, 70, 0, 70, 0, 70', 'If the total weight is between 0lb and 2lbs, Standard is used. Between 1lb and 3lbs, Flat-Rate is used, etc. TYPES CONTROLLED SEPARATELY, ALL USED.  <br><br><i>All Priority types have a weight limit of 70lbs.</i>', '6', '0', 'tep_cfg_multiinput_duallist_lb(array(\'Flat-Rate Envelope\', \'Flat-Rate Box\', \'Standard Priority\'), ', now())");
 	tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Domstic Other Mail Threshold', 'MODULE_SHIPPING_CONFIG_DMSTC_OTHER_THRESHOLD', '0, 0, 0, 70, 0, 70, 0, 0, 0, 0, 0, 70, 0, 70', 'Epress FltRt and Standard cannot be used at same time. ParcelPst Reg, Lrg, OvrSz cannot be used same time. All others are controlled separately.<br><br><i>BPM limit 15lbs. All others is 70lbs</i>', '6', '0', 'tep_cfg_multiinput_duallist_lb(array(\'Express FltRt Env\', \'Express Standard\', \'Parcel Pst Reg\', \'Parcel Pst Lrg\', \'Parcel Pst OvrSz\', \'BoundPM\', \'Media Mail\'), ', now())");
 
-//You can add Global Express services here, but be aware that if this line below is too long, 
-//it will create an install error.  
+//You can add Global Express services here, but be aware that if this line below is too long,
+//it will create an install error.
 //If this line is changed, you must uninstall and reinstall this module for the changes to take effect.
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Int\'l Shipping Methods', 'MODULE_SHIPPING_USPS_TYPES_INTL', 'GLBL EX, GLBL EX NONDOC RECT, GLBL EX NONDOC NON-RECT, EXPRESS INT, EXPRESS INT FLAT RATE ENV, PRIORITY INT, PRIORITY INT FLAT RATE ENV, PRIORITY INT FLAT RATE BOX, FIRST-CLASS INT', 'Select the international services to be offered:', '6', '0', 'tep_cfg_select_multioption(array(\'GLBL EX\', \'GLBL EX NONDOC RECT\', \'GLBL EX NONDOC RECT\', \'EXPRESS INT\', \'EXPRESS INT FLAT RATE ENV\', \'PRIORITY INT\', \'PRIORITY INT FLAT RATE ENV\', \'PRIORITY INT FLAT RATE BOX\', \'FIRST-CLASS INT\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('USPS Options', 'MODULE_SHIPPING_USPS_OPTIONS', 'Display weight, Display transit time', 'Select from the following the USPS options.', '6', '0', 'tep_cfg_select_multioption(array(\'Display weight\', \'Display transit time\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Domestic Insurance Options', 'MODULE_SHIPPING_DMSTC_INSURANCE_OPTION', 'None', 'Select how you want to offer USPS Domestic Insurance.', '6', '0', 'tep_cfg_select_option(array(\'None\', \'Buyers Option Does not work yet\', \'Force Insurance\'), ', now())");
 	tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('International Insurance Options', 'MODULE_SHIPPING_INTL_INSURANCE_OPTION', 'None', 'Select how you want to offer USPS International Insurance.  International Insurance is calculated automatically by USPS for certain mailing types.', '6', '0', 'tep_cfg_select_option(array(\'None\', \'Buyers Option Does not work yet\', \'Force Insurance\'), ', now())");
-	
+
 //configuration values for insurance
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, date_added) values ('US/Canada $.01-$50.00', 'MODULE_SHIPPING_USPS_INS1', '1.70', 'US/Canada insurance for totals $.01-$50.00', '6', '0', 'currencies->format', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, date_added) values ('US/Canada $50.01-$100.00', 'MODULE_SHIPPING_USPS_INS2', '2.15', 'US/Canada insurance for totals $50.01-$100', '6', '0', 'currencies->format', now())");
@@ -338,9 +338,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
         foreach( explode(",", $method['types']) as $value ) {
            $allowed_types[] = $this->vae_types[$value];
         }
-        
+
         while (list($key, $value) = each($this->types)) {
-        
+
 	        if (!in_array($key, $allowed_types) ) continue;
 
           $request .= '<Package ID="' . $services_count . '">' .
@@ -374,11 +374,11 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
         $request = 'API=IntlRate&XML=' . urlencode($request);
       }
-      
+
 	//USPS PRODUCTION SERVER
       $usps_server = 'production.shippingapis.com'; //'stg-production.shippingapis.com'; // or  stg-secure.shippingapis.com //'production.shippingapis.com';
       $api_dll = 'shippingapi.dll'; //'shippingapi.dll';
-      
+
       $body = '';
 
       if (!class_exists('httpClient')) {
@@ -442,8 +442,8 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             $rates_sorter[] = $postage;
           }
         }
-        
-        
+
+
       } else {
         if (ereg('<Error>', $response[0])) {
           $number = ereg('<Number>(.*)</Number>', $response[0], $regs);
@@ -511,7 +511,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
 		  $rates[] = array($service => $postage);
               $rates_sorter[] = $postage;
-		
+
 
 		  if ($time != '') $transittime[$service] = $time;
             }
@@ -753,7 +753,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       return $list;
     }
 
-// Set up list of maximum allowed insurance values  
+// Set up list of maximum allowed insurance values
 
     function country_maxinsure() {
       $list = array('AF' => 0,

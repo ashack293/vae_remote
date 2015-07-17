@@ -52,7 +52,7 @@ function _vae_akismet($a) {
 		while (!feof($fs)) $response .= fgets($fs, 1160);
 		fclose($fs);
 		$response = explode("\r\n\r\n", $response, 2);
-	} 
+	}
 	return ($response[1] == "true");
 }
 
@@ -219,7 +219,7 @@ function _vae_fetch_multiple($path = "*", $context = null) {
   foreach (explode(",", $path) as $p) {
     if (substr($p, 0, 1) != "@") $p = "@" . $p;
     $value = _vae_fetch($p, $context);
-    if (strlen($value) && strlen($out)) $out .= " - "; 
+    if (strlen($value) && strlen($out)) $out .= " - ";
     if ($value->type == "ImageItem") {
       $out .= '<img src="' . _vae_absolute_data_url(vae_image($value, $options['asset_width'], $options['asset_height'])) . '" />';
     } elseif ($value->type == "HtmlAreaItem") {
@@ -338,12 +338,12 @@ function _vae_form_prepare($a, &$tag, $context, $render_context) {
       if ($context) {
         $id = $context->formId();
         if (($id > 0) && ($render_context->get("form_context") != $context)) {
-          if (!isset($a['id'])) $a['id'] = $a['name'] . "_" . $id; 
+          if (!isset($a['id'])) $a['id'] = $a['name'] . "_" . $id;
           $a['name'] .= "[" . $id . "]";
         }
       }
     }
-    if (!isset($a['id'])) $a['id'] = $a['name'];    
+    if (!isset($a['id'])) $a['id'] = $a['name'];
   } else {
     if (($value = _vae_request_param($a['name'], true)) && _vae_flash_are_errors() && !is_array($value)) {
       $a['value'] = $value;
@@ -568,11 +568,11 @@ function _vae_htmlarea($text, $a, $offsite = false) {
     '$matches',
     'return "<img" . $matches[1] . "src=\"' . _vae_absolute_data_url() . '" . vae_asset($matches[5], "' . $width . '","' . $height . '", "' . $quality . '", ' . $preserve_filename . ') . "\"";'), $text);
   $text = preg_replace_callback("/<img([^>]*)\/(VAE|VERB)_HOSTED_VIDEO\/([0-9]*)([^>]*)>/", create_function(
-    '$matches', ($offsite ? "return '';" : 
+    '$matches', ($offsite ? "return '';" :
     '$id = _vae_global_id();
      $file = vae_asset($matches[3]);
      if ($file == "tryagain.flv") $file = "' . $_VAE['config']['backlot_url'] . '/videos/" . $file;
-     else $file = "' . _vae_absolute_data_url() . '" . $file; 
+     else $file = "' . _vae_absolute_data_url() . '" . $file;
      _vae_needs_javascript("jwplayer");
      return \'<div id="\' . $id . \'_container">You need to <a href="http://www.macromedia.com/go/getflashplayer">get the Flash Player</a> to see this video.</div>
      <script type="text/javascript">
@@ -609,7 +609,7 @@ function _vae_inject_assets($out) {
       if (strlen($s)) $bottom .= '<script type="text/javascript" src="' . $_VAE['config']['asset_url'] . $s . '.js"></script>';
     }
   }
-  if (count($_VAE['assets'])) {    
+  if (count($_VAE['assets'])) {
     foreach ($_VAE['assets'] as $group => $assets) {
       $iden = "";
       foreach ($assets as $asset) {
@@ -705,7 +705,7 @@ function _vae_inject_cdn_callback($a) {
   if (strstr($a[0], "wp-content/plugins")) return $a[0];
   $url = $a[3] . "wp-" . $a[4] . "/" . $a[5];
   $url = _vae_cdn_timestamp_url("/" . $url);
-  return $a[1] . vae_cdn_url() . substr($url, 1) . $a[6]; 
+  return $a[1] . vae_cdn_url() . substr($url, 1) . $a[6];
 }
 
 function _vae_interpret_vaeml($vaeml) {
@@ -736,13 +736,13 @@ function _vae_interpret_vaeml($vaeml) {
           if ($hash == "s") {
             if (isset($_SESSION[$filename])) {
               _vae_tick("can't use cached version because $filename is in my session");
-              unset($out); 
+              unset($out);
               break;
             }
           } else {
             if (@md5_file($_SERVER['DOCUMENT_ROOT'] . "/" . $filename) != $hash) {
               _vae_tick("can't use cached version because $filename has changed");
-              unset($out); 
+              unset($out);
               break;
             }
           }
@@ -756,7 +756,7 @@ function _vae_interpret_vaeml($vaeml) {
     $from_cache = true;
     $_VAE['session_cookies'] = $cached[3];
     _vae_tick("read HTML from cache");
-  } else {  
+  } else {
     _vae_set_initial_context();
     _vae_tick("set initial context");
     list($parse_tree, $render_context) = _vae_parse_vaeml($vaeml, $_VAE['filename']);
@@ -772,10 +772,10 @@ function _vae_interpret_vaeml($vaeml) {
     _vae_tick("render HTML (no cache)");
   }
   foreach ($_VAE['callback_stack'] as $name => $tag) {
-    if (_vae_run_hooks($name) != false) { 
+    if (_vae_run_hooks($name) != false) {
       $func = $_VAE['callbacks'][$name];
       if (isset($func['filename'])) require_once(dirname(__FILE__)."/".$func['filename']);
-      return call_user_func($func['callback'], $tag); 
+      return call_user_func($func['callback'], $tag);
     }
   }
   if ($_SESSION != $old_session) {
@@ -937,7 +937,7 @@ function _vae_local_authenticate($base_key) {
       }
     } else {
       return $out;
-    }  
+    }
   }
   return "BAD";
 }
@@ -1028,7 +1028,7 @@ function _vae_merge_data_from_tags(&$tag, &$data, &$errors, $nested = false) {
           }
           continue;
   	    } elseif ($itag['type'] == "date_select") {
-  	      $time = strtotime(_vae_request_param($name . "_month") . "/" . _vae_request_param($name . "_day") . _vae_request_param($name . "_year")); 
+  	      $time = strtotime(_vae_request_param($name . "_month") . "/" . _vae_request_param($name . "_day") . _vae_request_param($name . "_year"));
   	      $value = ($time > 0 ? strftime("%Y-%m-%d", $time) : "");
   	    } elseif ($itag['type'] == "file_field") {
   	      if ($_FILES[$name] && $_FILES[$name]['name']) {
@@ -1294,7 +1294,7 @@ function _vae_parse_path() {
 function _vae_php($code, $context, $ref = null) {
   global $_VAE;
   $hash = md5($code);
-  if (!isset($_VAE['phpfns'][$hash])) {  
+  if (!isset($_VAE['phpfns'][$hash])) {
     if (substr($code, 0, 1) == "=") $code = "return " . substr($code, 1) . ";";
     preg_match_all("/\\$([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)/", $code, $matches);
     if (is_array($matches) && is_array($matches[0])) {
@@ -1729,17 +1729,17 @@ function _vae_session_handler_write($id, $data) {
   _vae_sql_q($query);
   return true;
 }
- 
+
 function _vae_session_handler_close() {
   return true;
 }
- 
+
 function _vae_session_handler_destroy($id) {
   global $_VAE;
   _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
   return true;
 }
- 
+
 function _vae_session_handler_gc($expire) {
   _vae_sql_q("DELETE FROM session_data WHERE expires<" . time());
 }
@@ -1852,7 +1852,7 @@ function _vae_sql_lock() {
       if (!$old_locks_removed) {
         _vae_sql_q("DELETE FROM `locks` WHERE created_at<DATE_SUB(NOW(), INTERVAL 1 MINUTE)");
         $old_locks_removed = true;
-      }  
+      }
       usleep($LOCK_TIME);
     } else {
       return true;
@@ -1895,7 +1895,7 @@ function _vae_src($filename) {
       if (strlen($vaeml)) {
         $filename = $filename . $ext;
         break;
-      }     
+      }
     } else {
       if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/" . $filename . $ext)) {
         $vaeml = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/" . $filename . $ext);
@@ -1988,7 +1988,7 @@ function _vae_sweep_data_dir() {
   $dh = opendir($_VAE['config']['data_path']);
   while (($file = readdir($dh)) !== false) {
     if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
-    if (isset($save[$file])) continue; 
+    if (isset($save[$file])) continue;
     $filename = $_VAE['config']['data_path'] . $file;
     $fileage = time() - filemtime($filename);
     if ($fileage < 3*86400) continue;
@@ -2070,15 +2070,15 @@ function _vae_valid_url($url) {
 function _vae_write_file($name, $data) {
   global $_VAE;
   $f = fopen($_VAE['config']['data_path'] . $name, "wb");
-  if (!$f) { 
-    _vae_error("","Couldn't fopen() local cache file " . _vae_h($name)); 
+  if (!$f) {
+    _vae_error("","Couldn't fopen() local cache file " . _vae_h($name));
   }
   $ret = fwrite($f, $data);
   fclose($f);
   if ($ret != strlen($data)) {
-    _vae_error("","Couldn't write enough data to local cache file " . _vae_h($name)); 
+    _vae_error("","Couldn't write enough data to local cache file " . _vae_h($name));
   }
   if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
-} 
+}
 
 ?>

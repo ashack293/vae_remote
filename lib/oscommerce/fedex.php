@@ -12,7 +12,7 @@ class fedex {
     $this->country          = $origin_country;
   }
 
-  function quote($method = '') {  
+  function quote($method = '') {
     global $shipping_weight, $shipping_num_boxes, $cart, $order, $method;
 
     $path_to_wsdl = dirname(__FILE__) . "/../../vendor/fedex/RateService_v9.wsdl";
@@ -21,7 +21,7 @@ class fedex {
 
     $vdomestic = explode(",", $method['domestic_types']);
     $vinternational = explode(",", $method['international_types']);
-    
+
     $this->types = array();
     if (in_array('01', $vinternational)) {
       $this->types['INTERNATIONAL_PRIORITY'] = array();
@@ -29,7 +29,7 @@ class fedex {
     }
     if (in_array('03', $vinternational)) {
       $this->types['INTERNATIONAL_ECONOMY'] = array();
-    }  
+    }
     if (in_array('05', $vdomestic)) {
       $this->types['STANDARD_OVERNIGHT'] = array();
     }
@@ -78,7 +78,7 @@ class fedex {
                                                      'City' => $method['city'],
                                                      'StateOrProvinceCode' => $method['state'],
                                                      'PostalCode' => $method['postal'],
-                                                     'CountryCode' => $this->country));          
+                                                     'CountryCode' => $this->country));
     $request['RequestedShipment']['Recipient'] = array('Address' => array (
                                                        'StreetLines' => array($street_address, $street_address2), // customer street address
                                                        'City' => $city, //customer city
@@ -126,12 +126,12 @@ class fedex {
             $cost = $rateReply->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
             $cost = (float)round(preg_replace('/[^0-9.]/', '',  $cost), 2);
           }
-          $methods[] = array('id' => str_replace('_', '', $rateReply->ServiceType),                                                   
-                             'title' => str_replace("Fedex ", "", ucwords(strtolower(str_replace('_', ' ', $rateReply->ServiceType)))),     
+          $methods[] = array('id' => str_replace('_', '', $rateReply->ServiceType),
+                             'title' => str_replace("Fedex ", "", ucwords(strtolower(str_replace('_', ' ', $rateReply->ServiceType)))),
                              'cost' => $cost);
         }
       }
-      $this->quotes['methods'] = $methods;     
+      $this->quotes['methods'] = $methods;
     } else {
       $message = 'Error in processing transaction.<br /><br />';
       foreach ($response -> Notifications as $notification) {

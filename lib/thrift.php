@@ -41,7 +41,7 @@ function _vae_thrift_open($client_class, $port) {
   if(!($backends = _vae_vaedb_backends($subdomain))) {
     throw new VaeException("", "No VaeDb backends configured");
   }
-  
+
   $i = 0;
   $shift = hexdec(substr(md5($subdomain),0,15));
   while ($i < 4) {
