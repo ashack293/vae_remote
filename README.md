@@ -67,7 +67,7 @@ part of the vae_thrift project.
 
 Also start VaeRubyd, which is also part of the vae_thrift project:
 
-    cd ../vae_thrift/ruby
+    cd ../vae_thrift/rb
     ruby vaerubyd.rb
 
 Then you are ready to run the tests:

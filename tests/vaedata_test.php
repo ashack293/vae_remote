@@ -240,10 +240,6 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae_find("13423/songs")->data, array ('name' => 'Last Chance',    'duration' => '3:45',    'mp3' => '28616',    'price' => '0.99',    'feature_on_homepage' => '1',  ));
   }
   
-  function testVaeResetSite() {
-    _vae_reset_site();
-  }
-  
   function textVaeArrayToXml() {
     $data = array(201 => array("kevin" => "awesome"), 202 => array("kevin" => "baller"));
     $res = _vae_array_to_xml($data);
