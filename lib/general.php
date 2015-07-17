@@ -684,23 +684,6 @@ function _vae_inject_assets_css_callback($a) {
   return "url(" . $a[1] . $url . $a[3] . ")";
 }
 
-<<<<<<< HEAD
-=======
-function _vae_inject_cdn($out) {
-  //$out = preg_replace_callback("/(\"|'|url\\()http:\\/\\/(www\\.|)" . preg_replace("/^www\\./", "", $_SERVER['HTTP_HOST']) . "\\/([^\"')]*\\/|)wp-(content|photos)\\/([^\"')]*)(\"|'|\\))/", "_vae_inject_cdn_callback", $out);
-  $out = preg_replace('/verbsite\.com\.lg1([a-z0-9]*)\.simplecdn\.net/', "vaesite.net", $out);
-  $out = str_replace("verbcms.com", "vaeplatform.com", $out);
-  return $out;
-}
-
-function _vae_inject_cdn_callback($a) {
-  if (strstr($a[0], "wp-content/plugins")) return $a[0];
-  $url = $a[3] . "wp-" . $a[4] . "/" . $a[5];
-  $url = _vae_cdn_timestamp_url("/" . $url);
-  return $a[1] . vae_cdn_url() . substr($url, 1) . $a[6];
-}
-
->>>>>>> master
 function _vae_interpret_vaeml($vaeml) {
   global $_VAE;
   $out = "";
@@ -1640,54 +1623,6 @@ function _vae_session_cookie($name, $val) {
   $_VAE['session_cookies'][$name] = $val;
 }
 
-<<<<<<< HEAD
-=======
-function _vae_session_handler_open($s, $n) {
-  return true;
-}
-
-function _vae_session_handler_read($id) {
-  global $_VAE;
-  $q = _vae_sql_q("SELECT data FROM session_data WHERE id='" . _vae_sql_e($id) . "'");// AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
-  if ($r = _vae_sql_r($q)) {
-    $_VAE['session_read'] = true;
-    $ret = base64_decode($r["data"]);
-  } else {
-    $ret = "";
-  }
-  return $ret;
-}
-
-function _vae_session_handler_write($id, $data) {
-  global $_VAE;
-  if (!$data) return _vae_session_handler_destroy($id);
-  $expire = time() + (86400 * 2);
-  $data = _vae_sql_e(base64_encode($data));
-  if (strlen($data) > 1048576) return false;
-  if (isset($_VAE['session_read'])) {
-    $query = "UPDATE session_data SET data='" . $data . "',expires='" . $expire . "',subdomain='" . $_VAE['settings']['subdomain'] . "' WHERE id='" . _vae_sql_e($id) . "'";// AND subdomain='" . $_VAE['settings']['subdomain'] . "'";
-  } else {
-    $query = "INSERT INTO session_data (`id`,`subdomain`,`data`,`expires`) VALUES('" . _vae_sql_e($id) . "','" . $_VAE['settings']['sudomain'] . "','" . $data . "','" . $expire . "')";
-  }
-  _vae_sql_q($query);
-  return true;
-}
-
-function _vae_session_handler_close() {
-  return true;
-}
-
-function _vae_session_handler_destroy($id) {
-  global $_VAE;
-  _vae_sql_q("DELETE FROM session_data WHERE id='" . _vae_sql_e($id) . "' AND subdomain='" . $_VAE['settings']['subdomain'] . "'");
-  return true;
-}
-
-function _vae_session_handler_gc($expire) {
-  _vae_sql_q("DELETE FROM session_data WHERE expires<" . time());
-}
->>>>>>> master
-
 function _vae_set_default_config() {
   global $_VAE, $BACKLOTCONFIG;
   if (file_exists(dirname(__FILE__) . "/config.php")) include_once(dirname(__FILE__) . "/config.php");
@@ -1941,14 +1876,9 @@ function _vae_write_file($name, $data) {
   if ($ret != strlen($data)) {
     _vae_error("","Couldn't write enough data to local cache file " . _vae_h($name));
   }
-<<<<<<< HEAD
   if ($_ENV['TEST']) {
     $_VAE['files_written'][] = $name;
   }
-} 
-=======
-  if ($_ENV['TEST']) $_VAE['files_written'][] = $name;
 }
->>>>>>> master
 
 ?>
