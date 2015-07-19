@@ -60,7 +60,8 @@ use the new style of putting <v:else> after the <v:if>.
 ### Running The Suite
 
 First, make sure you have MySQL running locally and have created a
-database called 'vaedb'.
+database called 'vaedb' using the instructions in the vae_thrift
+repository.
 
 In another window, change dir to where you have VaeDB compiled.  This is
 part of the vae_thrift project.
