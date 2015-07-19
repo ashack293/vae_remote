@@ -59,17 +59,26 @@ use the new style of putting <v:else> after the <v:if>.
 
 ### Running The Suite
 
+First, make sure you have MySQL running locally and have created a
+database called 'vaedb'.
+
 In another window, change dir to where you have VaeDB compiled.  This is
 part of the vae_thrift project.
 
     cd ../vae_thrift/cpp/
     ./vaedb --test
 
+If your local MySQL database is named other than 'vaedb' or the
+username/password is different from 'root' and no password, you'll need
+to pass additional arguments to vaedb to point at the proper MySQL
+server.  Run ./vaedb --help to learn how.
+
 Also start VaeRubyd, which is also part of the vae_thrift project:
 
     cd ../vae_thrift/rb
-    ruby vaerubyd.rb
+    bundle exec ruby vaerubyd.rb
 
 Then you are ready to run the tests:
 
     php tests/_all.php
+
