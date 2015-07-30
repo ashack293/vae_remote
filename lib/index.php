@@ -9,6 +9,7 @@ if ($_VERB['config']) {
 $_VAE['version'] = 100;
 
 require_once(dirname(__FILE__) . "/general.php");
+require_once(dirname(__FILE__) . "/vaedata.php");
 
 session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 
@@ -52,7 +53,6 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/store.php");
   require_once(dirname(__FILE__) . "/thrift.php");
   require_once(dirname(__FILE__) . "/users.php");
-  require_once(dirname(__FILE__) . "/vaedata.php");
 
   /* Configure PHP */
   _vae_configure_php();
