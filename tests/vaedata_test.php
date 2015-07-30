@@ -364,6 +364,10 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(VaeQuery::___sitewideUnlock(), 1);
   }
 
+  function testVaeSafeKey() {
+    $this->assertEqual(_vae_safe_key(" "), "uSPC");
+  }
+
 }
 
 ?>
