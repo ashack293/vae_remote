@@ -354,6 +354,14 @@ class VaeDataTest extends VaeUnitTestCase {
   function testSitewideLock() {
     _vae_sitewide_lock();
     _vae_sitewide_unlock();
+    $this->assertEqual(VaeQuery::___sitewideLock(), 1);
+    $this->assertEqual(VaeQuery::___sitewideLock(), 0);
+    $this->assertEqual(VaeQuery::___sitewideLock(), 0);
+    $this->assertEqual(VaeQuery::___sitewideLock(), 0);
+    $this->assertEqual(VaeQuery::___sitewideLock(), 0);
+    $this->assertEqual(VaeQuery::___sitewideUnlock(), 1);
+    $this->assertEqual(VaeQuery::___sitewideLock(), 1);
+    $this->assertEqual(VaeQuery::___sitewideUnlock(), 1);
   }
 
 }
