@@ -293,6 +293,12 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_short_term_cache_get("st1"), "v2");
   }
 
+  function testShortTermCacheDoesntExplodeOnSpaces() {
+    _vae_short_term_cache_set("a b", "foo");
+    _vae_long_term_cache_set("a b", "foo");
+    $this->assertEqual(_vae_short_term_cache_get("a b"), "foo");
+  }
+
   function testShortTermCacheDelete() {
     _vae_short_term_cache_set("st1", "v2", 600, 1);
     _vae_short_term_cache_set("st2", "v2", 600, 1);
@@ -365,7 +371,7 @@ class VaeDataTest extends VaeUnitTestCase {
   }
 
   function testVaeSafeKey() {
-    $this->assertEqual(_vae_safe_key(" "), "uSPC");
+    $this->assertEqual(_vae_safe_key(" "), " ");
   }
 
 }
