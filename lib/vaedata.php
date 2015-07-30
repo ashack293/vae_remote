@@ -667,9 +667,9 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     return self::$client->shortTermCacheDelete(self::$sessionId, $key);
   }
 
-  public static function ___longTermCacheGet($key, $renew) {
+  public static function ___longTermCacheGet($key, $renew, $useShortTermCache) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheGet(self::$sessionId, $key, $renew);
+    return self::$client->longTermCacheGet(self::$sessionId, $key, $renew, $useShortTermCache);
   }
 
   public static function ___longTermCacheSet($key, $value, $expireInterval, $isFilename) {
