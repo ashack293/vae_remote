@@ -653,33 +653,33 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___shortTermCacheGet($key, $flags) {
     if (!self::$sessionId) self::___openSession();
-    $ret = self::$client->shortTermCacheGet(self::$sessionId, $key, $flags);
+    $ret = self::$client->shortTermCacheGet(self::$sessionId, _vae_safe_key($key), $flags);
     return unserialize($ret);
   }
 
   public static function ___shortTermCacheSet($key, $value, $flags, $expires) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheSet(self::$sessionId, $key, serialize($value), $flags, $expires);
+    return self::$client->shortTermCacheSet(self::$sessionId, _vae_safe_key($key), serialize($value), $flags, $expires);
   }
 
   public static function ___shortTermCacheDelete($key) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheDelete(self::$sessionId, $key);
+    return self::$client->shortTermCacheDelete(self::$sessionId, _vae_safe_key($key));
   }
 
   public static function ___longTermCacheGet($key, $renew, $useShortTermCache) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheGet(self::$sessionId, $key, $renew, $useShortTermCache);
+    return self::$client->longTermCacheGet(self::$sessionId, _vae_safe_key($key), $renew, $useShortTermCache);
   }
 
   public static function ___longTermCacheSet($key, $value, $expireInterval, $isFilename) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheSet(self::$sessionId, $key, $value, $expireInterval, $isFilename);
+    return self::$client->longTermCacheSet(self::$sessionId, _vae_safe_key($key), $value, $expireInterval, $isFilename);
   }
 
   public static function ___longTermCacheDelete($key) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheDelete(self::$sessionId, $key);
+    return self::$client->longTermCacheDelete(self::$sessionId, _vae_safe_key($key));
   }
 
   public static function ___longTermCacheEmpty() {
@@ -694,17 +694,17 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___sessionCacheGet($key) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheGet(self::$sessionId, $key);
+    return self::$client->sessionCacheGet(self::$sessionId, _vae_safe_key($key));
   }
 
   public static function ___sessionCacheSet($key, $value) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheSet(self::$sessionId, $key, $value);
+    return self::$client->sessionCacheSet(self::$sessionId, _vae_safe_key($key), $value);
   }
 
   public static function ___sessionCacheDelete($key) {
     if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheDelete(self::$sessionId, $key);
+    return self::$client->sessionCacheDelete(self::$sessionId, _vae_safe_key($key));
   }
 
   public static function ___sitewideLock() {
@@ -1073,6 +1073,25 @@ function _vaeql_variable($name) {
 
 
 /*** Cache APIs ***/
+
+function _vae_safe_key($key) {
+  return substr(str_replace(
+    array(
+        '/\x00/', '/\x01/', '/\x02/', '/\x03/', '/\x04/',
+        '/\x05/', '/\x06/', '/\x07/', '/\x08/', '/\x09/', '/\x0A/',
+        '/\x0B/','/\x0C/','/\x0D/', '/\x0E/', '/\x0F/', '/\x10/', '/\x11/',
+        '/\x12/','/\x13/','/\x14/','/\x15/', '/\x16/', '/\x17/', '/\x18/',
+        '/\x19/','/\x1A/','/\x1B/','/\x1C/','/\x1D/', '/\x1E/', '/\x1F/', ' '
+    ),
+    array(
+        "u0000", "u0001", "u0002", "u0003", "u0004",
+        "u0005", "u0006", "u0007", "u0008", "u0009", "u000A",
+        "u000B", "u000C", "u000D", "u000E", "u000F", "u0010", "u0011",
+        "u0012", "u0013", "u0014", "u0015", "u0016", "u0017", "u0018",
+        "u0019", "u001A", "u001B", "u001C", "u001D", "u001E", "u001F", "uSPC"
+    ),
+    $key), 0, 240);
+}
 
 function _vae_short_term_cache_get($key, $flags = 0) {
   return VaeQuery::___shortTermCacheGet($key, $flags);
