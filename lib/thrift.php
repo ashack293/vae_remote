@@ -22,7 +22,8 @@ function _vae_vaedb_backends($subdomain) {
       shuffle($backends);
       return $backends;
   }
-  return shuffle($_VAE['vaedbd_backends']);
+  shuffle($_VAE['vaedbd_backends']);
+  return $_VAE['vaedb_backends']);
 };
 
 function _vae_thrift_open($client_class, $port) {
