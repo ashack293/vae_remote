@@ -892,6 +892,12 @@ function _vae_log($msg) {
   $_VAE['log'] .= $msg . "\n";
 }
 
+function _vae_logstash_send($log_msg) {
+  $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+  @socket_connect($sock, "public.logs***REMOVED***", 5000);
+  @socket_write($sock, $log_msg, strlen($log_msg));
+}
+
 function _vae_mail($to, $subj, $body, $headers) {
   global $_VAE;
   if ($_ENV['TEST']) {
@@ -1460,10 +1466,7 @@ function _vae_render_error($e) {
     if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
   }
-  $log_msg = str_replace("\n", "; ", $log_msg);
-  $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-  @socket_connect($sock, "public.logs***REMOVED***", 5000);
-  @socket_write($sock, $log_msg, strlen($log_msg));
+  _vae_logstash_send(str_replace("\n", "; ", $log_msg));
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }
