@@ -285,6 +285,16 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('6<7+2'), true);
     $this->assertEqual(vae('strlen("foo")'), 3);
     $this->assertEqual(vae('strlen("foobar")'), 6);
+    $this->assertEqual(vae('strlen($variable)'), 4);
+    $this->assertEqual(vae("strlen(artists[name='Kevin Bombino']/name)"), "13");
+    $_REQUEST['time'] = time();
+    $this->assertEqual(vae('strftime("%Y")'), strftime("%Y"));
+    $this->assertEqual(vae('strftime("%Y", $time)'), strftime("%Y"));
+    $this->assertEqual(vae('1==2'), 0);
+    $this->assertEqual(vae('strftime("%Y", $time)==2'), 0);
+    $this->assertEqual(vae('strftime("%Y", $time)==strftime("%Y", $time)'), 1);
+    $this->assertEqual(vae('strftime("%Y", $time)=strftime("%Y", $time)'), 1);
+    $this->assertEqual(vae("strlen(artists[name='Kevin Bombino']/name)==strlen(artists[name='Kevin Bombino']/name)"), 1);
   }
 
   function testShortTermCacheGetAndSet() {
