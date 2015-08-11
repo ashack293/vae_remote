@@ -1037,6 +1037,7 @@ function _vaeql_query($query, $context = null, $options = null, $raiseErrors = t
     return array(1, $query);
   }
   _vae_logstash_send("[vaeqldebug] " . $_VAE['settings']['subdomain'] . " : " . $query);
+  sleep(2);
   $ret = _vaeql_query_internal($query);
   if (is_array($ret)) {
     list($path, $query) = $ret;
