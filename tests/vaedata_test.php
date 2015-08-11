@@ -283,6 +283,8 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('6>7'), false);
     $this->assertEqual(vae('6<7-2'), false);
     $this->assertEqual(vae('6<7+2'), true);
+    $this->assertEqual(vae('strlen("foo")'), 3);
+    $this->assertEqual(vae('strlen("foobar")'), 6);
   }
 
   function testShortTermCacheGetAndSet() {

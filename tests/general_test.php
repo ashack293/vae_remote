@@ -258,7 +258,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_h("<hr />"), "&lt;hr /&gt;");
     $this->assertEqual(_vae_h("<hr />&lt;"), "&lt;hr /&gt;&amp;lt;");
   }
-
   function testVaeHandleOb() {
     global $_VAE;
     $_SESSION['__v:flash'] = array('stuff' => 'things');
@@ -307,7 +306,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertNoRedirect();
     $this->assertEqual(_vae_handleob("<html>test</html>"), "__err=TESTERR");
   }
-
   function testVaeHandleObMergeSessionData() {
     $_SESSION['moo'] = "SPOTS";
     $this->assertEqual("<html>SPOTS</html>", _vae_handleob("<html><v:session_dump key='moo' /></html>"));
@@ -596,7 +594,6 @@ class GeneralTest extends VaeUnitTestCase {
       $this->pass();
     }
   }
-
   function testVaeLocalAuthenticateGood() {
     global $_VAE;
     $_REQUEST['__local_username'] = "kevin";
