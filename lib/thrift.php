@@ -40,6 +40,7 @@ function _vae_vaedb_backends($subdomain) {
     shuffle($backends);
     return $backends;
   }
+  shuffle($_VAE['vaedbd_backends']);
   return $_VAE['vaedbd_backends'];
 };
 
