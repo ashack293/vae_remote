@@ -45,24 +45,26 @@ function _vae_sass_deps($sass, $include_directory, $root_item = false) {
   preg_match_all('/@import (.*)/', $sass, $matches, PREG_SET_ORDER);
   if (count($matches)) {
     foreach ($matches as $match) {
-      $filename = str_replace(array("'", '"',';'), "", $match[1]);
-      if (!strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
+      $filename = trim(preg_replace('/\/\/.*$/', '', str_replace(array("'", '"',';'), "", $match[1])));
+      if (strlen($filename) && !strstr($filename, ".") || strstr($filename, ".sass") || strstr($filename, ".scss")) {
         $inc_dir = (substr($filename, 0, 1) == "/" ? "" : $include_directory . "/");
         if (!strstr($filename, ".") && !stristr($filename,'vendor/') && !stristr($filename,'vendors/') && !stristr($filename,'compass')) {
           $tmp_filename = (strrchr($filename,"/") == false) ? "_". $filename : substr($filename, 0, strpos($filename,strrchr($filename,"/")) + 1 ) . "_" . substr(strrchr($filename,"/"),1);
           if (file_exists($inc_dir . $tmp_filename . ".scss")) {
             $filename = $tmp_filename . ".scss";
-          }elseif (file_exists($inc_dir . $filename . ".scss")) {
+          } elseif (file_exists($inc_dir . $filename . ".scss")) {
             $filename = $filename . ".scss";
           } else {
             $filename = $filename . ".sass";
           }
 
           $filename = $inc_dir . $filename;
-          $sass = @file_get_contents($filename);
-          $deps[$filename] = md5($sass);
-          $nested_dir = dirname($filename);
-          $deps = array_merge($deps, _vae_sass_deps_check($sass, $nested_dir,false));
+          if (file_exists($filename)) {
+            $sass = @file_get_contents($filename);
+            $deps[$filename] = md5($sass);
+            $nested_dir = dirname($filename);
+            $deps = array_merge($deps, _vae_sass_deps_check($sass, $nested_dir,false));
+          }
         }
       }
     }
