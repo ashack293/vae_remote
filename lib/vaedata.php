@@ -1091,7 +1091,7 @@ function _vae_short_term_cache_delete($key) {
 }
 
 function _vae_long_term_cache_get($iden, $renew_expiry = null) {
-  return VaeQuery::___longTermCacheGet($iden, $renew_expiry, !$_ENV['TEST']);
+  return VaeQuery::___longTermCacheGet($iden, $renew_expiry, !$_ENV['TEST'] && !$_REQUEST['__debugcache']);
 }
 
 function _vae_long_term_cache_set($key, $value, $expire_interval = null, $is_filename = 0) {
