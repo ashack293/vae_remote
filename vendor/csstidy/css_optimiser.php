@@ -27,8 +27,8 @@
  * @author Brett Zamir (brettz9 at yahoo dot com) 2007
  */
 
-require('class.csstidy.php');
-require('lang.inc.php');
+require(dirname(__FILE__) . '/class.csstidy.php');
+require(dirname(__FILE__) . '/lang.inc.php');
 
 
 if (get_magic_quotes_gpc()) {
