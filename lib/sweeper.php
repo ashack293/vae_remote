@@ -2,6 +2,7 @@
 
 $dir = dirname(__FILE__);
 require($dir . "/general.php");
+require($dir . "/func.php");
 require($dir . "/thrift.php");
 require($dir . "/vaedata.php");
 require($dir . "/vae_exception.php");
@@ -15,6 +16,9 @@ if (!file_exists("/mnt/vae-fs-$fsnum/vhosts/" . $argv[1] . ".verb")) die("Bad su
 $_VAE['settings']['subdomain'] = $argv[1];
 $_VAE['config']['data_path'] = "/mnt/vae-fs-$fsnum/vhosts/" . $argv[1] . ".verb/data/";
 require("/mnt/vae-fs-$fsnum/vae-config/fs-settings.php");
+require("/mnt/vae-fs-$fsnum/vhosts/" . $argv[1] . ".verb/conf/config.php");
+
+error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING | E_STRICT));
 
 function _vae_sweep_data_dir() {
   global $_VAE;
