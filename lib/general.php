@@ -160,6 +160,7 @@ function _vae_decimalize($amount, $decimal_places = 2) {
 
 function _vae_dependency_add($filename, $md5 = null) {
   global $_VAE;
+  $filename = preg_replace('/^\//', "", str_replace($_SERVER['DOCUMENT_ROOT'], "", $filename));
   if ($md5 == null) $md5 = @md5_file($_SERVER['DOCUMENT_ROOT'] . "/" . $filename);
   if (!isset($_VAE['dependencies'])) $_VAE['dependencies'] = array();
   $_VAE['dependencies'][$filename] = $md5;

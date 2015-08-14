@@ -1134,12 +1134,12 @@ class GeneralTest extends VaeUnitTestCase {
 
   function testVaeSrc() {
     $this->assertEqual(_vae_src("test1"), array("/test1.haml", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test1.haml")));
-    $this->assertDep("/test1.haml");
+    $this->assertDep("test1.haml");
     $this->assertNotDep("/test1.php");
     $this->assertEqual(_vae_src("/test1"), array("/test1.haml", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test1.haml")));
     $this->assertEqual(_vae_src("/test1.haml"), array("/test1.haml", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test1.haml")));
     $this->assertEqual(_vae_src("test2"), array("/test2.html", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test2.html")));
-    $this->assertDep("/test2.html");
+    $this->assertDep("test2.html");
     $this->assertEqual(_vae_src("test3"), array("/test3.sass", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test3.sass")));
     $this->assertEqual(_vae_src("test4"), array("/test4.xml", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test4.xml")));
     $this->assertEqual(_vae_src("test5"), array("/test5.rss", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/test5.rss")));
