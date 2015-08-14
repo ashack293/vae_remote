@@ -1782,30 +1782,6 @@ function _vae_stringify_array($array) {
   return $array;
 }
 
-function _vae_sweep_data_dir() {
-  global $_VAE;
-  foreach (_vae_long_term_cache_sweeper_info() as $k => $v) {
-    $save[$v] = true;
-    $filename = $_VAE['config']['data_path'].$v;
-    if (!file_exists($filename)) {
-      _vae_long_term_cache_delete($k);
-    }
-  }
-  $dh = opendir($_VAE['config']['data_path']);
-  while (($file = readdir($dh)) !== false) {
-    if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
-    if (isset($save[$file])) continue;
-    $filename = $_VAE['config']['data_path'] . $file;
-    $fileage = time() - filemtime($filename);
-    if ($fileage < 3*86400) continue;
-    echo "deleting $file<br />";
-    unlink($filename);
-  }
-  touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
-  echo "done";
-  flush();
-  die();
-}
 
 function _vae_tag_unique_id(&$tag, $context) {
   if (!isset($tag['unique_id'])) {
