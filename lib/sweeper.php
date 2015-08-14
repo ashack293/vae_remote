@@ -2,7 +2,9 @@
 
 $dir = dirname(__FILE__);
 require($dir . "/general.php");
+require($dir . "/thrift.php");
 require($dir . "/vaedata.php");
+require($dir . "/vae_exception.php");
 
 if (!strlen($argv[1])) die("No subdomain provided");
 if (!is_numeric($argv[2])) die("No fsnum provided");
@@ -12,6 +14,7 @@ $fsnum = $argv[2];
 if (!file_exists("/mnt/vae-fs-$fsnum/vhosts/" . $argv[1] . ".verb")) die("Bad subdomain provided.");
 $_VAE['settings']['subdomain'] = $argv[1];
 $_VAE['config']['data_path'] = "/mnt/vae-fs-$fsnum/vhosts/" . $argv[1] . ".verb/data/";
+require("/mnt/vae-fs-$fsnum/vae-config/fs-settings.php");
 
 function _vae_sweep_data_dir() {
   global $_VAE;
