@@ -1048,7 +1048,7 @@ function _vae_minify_js($js) {
 }
 
 function _vae_multipart_mail($from, $to, $subject, $text, $html, $reply_to=false) {
-  $headers  = 'From: ' . $from . "\n";
+  $headers = 'From: ' . $from . "\n";
   if ($reply_to) {
     $headers .= 'Reply-To: ' . $reply_to . "\n";
   }
@@ -1058,18 +1058,18 @@ function _vae_multipart_mail($from, $to, $subject, $text, $html, $reply_to=false
   }
   $boundary = md5(uniqid(time()));
   $headers .= 'MIME-Version: 1.0' ."\n";
-  $headers .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '"' . "\n\n";
-  $headers .= $text . "\n";
-  $headers .= '--' . $boundary . "\n";
-  $headers .= 'Content-Type: text/plain; charset=ISO-8859-1' ."\n";
-  $headers .= 'Content-Transfer-Encoding: 8bit'. "\n\n";
-  $headers .= $text . "\n";
-  $headers .= '--' . $boundary . "\n";
-  $headers .= 'Content-Type: text/HTML; charset=ISO-8859-1' ."\n";
-  $headers .= 'Content-Transfer-Encoding: 8bit'. "\n\n";
-  $headers .= $html . "\n";
-  $headers .= '--' . $boundary . "--\n";
-  return _vae_mail($to, $subject,'', $headers);
+  $headers .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
+  $body = $text . "\n";
+  $body .= '--' . $boundary . "\n";
+  $body .= 'Content-Type: text/plain; charset=ISO-8859-1' ."\n";
+  $body .= 'Content-Transfer-Encoding: 8bit'. "\n\n";
+  $body .= $text . "\n";
+  $body .= '--' . $boundary . "\n";
+  $body .= 'Content-Type: text/HTML; charset=ISO-8859-1' ."\n";
+  $body .= 'Content-Transfer-Encoding: 8bit'. "\n\n";
+  $body .= $html . "\n";
+  $body .= '--' . $boundary . "--\n";
+  return _vae_mail($to, $subject, $body, $headers);
 }
 
 function _vae_natural_time($time) {
