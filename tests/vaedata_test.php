@@ -118,6 +118,8 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae("artists", array('filter' => 'Rock'))->totalMatches, 2);
     $this->assertEqual(vae("artists", array('filter' => 'Rock', 'paginate' => 1, 'page' => 1))->name, "Freefall");
     $this->assertEqual(vae("artists", array('filter' => 'Rock', 'paginate' => 1, 'page' => 2))->name, "Kevin Bombino");
+    $this->assertEqual(vae("pagination"), "20");
+    $this->assertEqual(vae("artists", array('filter' => 'Rock', 'paginate' => vae("pagination"), 'page' => 1))->totalMatches, 2);
     $this->assertEqual(vae("blog_posts[date=DATE('2008-08')]")->count, 2);
     $this->assertEqual(vae("blog_posts[date=DATE('2008-07')]")->count, 0);
     $this->assertEqual(vae("blog_posts[date=DATE('2008-09')]")->count, 0);

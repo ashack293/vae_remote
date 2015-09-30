@@ -268,6 +268,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     $this->___query = $query;
     $this->___raiseErrors = $raiseErrors;
     $this->___responseId = $responseId;
+    $this->___sanitize_options();
   }
 
   public function ___addContext($context) {
@@ -558,6 +559,18 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public function rewind() {
     reset($this->___contexts);
+  }
+
+  // Just sanitize the paginate option to start with, and we'll return
+  // to sanitize other options after discussing with Kevin what is safe
+  // and unsafe to cast to a string.  If it turns out that it's always
+  // safe and desired to cast all options to strings, then we'll do
+  // that. --MHB
+  private function ___sanitize_options() {
+    if ($this->___options != null) {
+      if (isset($this->___options["paginate"]))
+        $this->___options["paginate"] = (string) $this->___options["paginate"];
+    }
   }
 
   public function structure() {
