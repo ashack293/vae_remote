@@ -32,15 +32,17 @@ function _vae_sweep_data_dir() {
       echo "Found file $v (key: $k)\n";
     }
   }
-  $dh = opendir($_VAE['config']['data_path']);
-  while (($file = readdir($dh)) !== false) {
-    if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
-    if (isset($save[$file])) continue;
-    $filename = $_VAE['config']['data_path'] . $file;
-    $fileage = time() - filemtime($filename);
-    if ($fileage < 3*86400) continue;
-    echo "deleting $file\n";
-    unlink($filename);
+  if (count($save) > 0) {
+    $dh = opendir($_VAE['config']['data_path']);
+    while (($file = readdir($dh)) !== false) {
+      if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
+      if (isset($save[$file])) continue;
+      $filename = $_VAE['config']['data_path'] . $file;
+      $fileage = time() - filemtime($filename);
+      if ($fileage < 3*86400) continue;
+      echo "deleting $file\n";
+      unlink($filename);
+    }
   }
   touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
   echo "done\n";
