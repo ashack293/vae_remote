@@ -1155,11 +1155,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->clearLocal();
   }
 
-  function testVaeStoreFeed() {
-    _vae_store_feed("feed data");
-    $this->pass();
-  }
-
   function testVaeStoreFile() {
     $this->assertNotNull(_vae_store_file("TESTIDEN2" . md5(rand()), "some data", "txt", md5(rand()) . "testfile.txt"));
   }
