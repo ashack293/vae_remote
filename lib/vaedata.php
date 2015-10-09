@@ -260,6 +260,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   private static $client = null;
   public static $sessionId = null;
+  public static $generation = null;
 
   private function __construct($query = null, $options = null, $responseId = null, $first = null, $raiseErrors = true) {
     if ($first == null) $first = $this;
