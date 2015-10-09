@@ -1752,11 +1752,6 @@ function _vae_statsd_timing($key, $time) {
   _vae_statsd_send("$key:$time|ms|@1");
 }
 
-function _vae_store_feed($feed, $message = false) {
-  _vae_write_file("feed.xml", $feed);
-  if($message) echo "200 Success";
-}
-
 function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded = false) {
   global $_VAE;
   $newname = _vae_make_filename($ext, $filename);

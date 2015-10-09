@@ -655,7 +655,9 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     self::___openClient();
     for ($i = 0; $i < 5; $i++) {
       try {
-        self::$sessionId = self::$client->openSession(self::___getSubdomain(), $_VAE['config']['secret_key'], vae_staging(), mt_rand());
+        $ret = self::$client->openSession2(self::___getSubdomain(), $_VAE['config']['secret_key'], vae_staging(), mt_rand());
+        self::$sessionId = $ret->session_id;
+        self::$generation = $ret->generation;
         return;
       } catch (TSocketException $e) {
         self::___resetClient();
