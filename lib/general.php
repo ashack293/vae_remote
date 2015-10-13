@@ -146,6 +146,12 @@ function _vae_configure_php() {
   if (!$_REQUEST['__v:store_payment_method_ipn']) {
     session_start();
   }
+  $key = "fg" . $_VAE['feed_generation'];
+  $vae_yml = $_SERVER['DOCUMENT_ROOT'] . '/__vae.yml';
+  if (file_exists($vae_yml)) $key .= filemtime($vae_yml);
+  $verb_yml = $_SERVER['DOCUMENT_ROOT'] . '/__verb.yml';
+  if (file_exists($verb_yml)) $key .= filemtime($verb_yml);
+  $_VAE['global_cache_key'] = $key;
 }
 
 function _vae_debug($msg) {
@@ -1639,12 +1645,6 @@ function _vae_set_default_config() {
   if (!isset($_VAE['config']['data_path'])) $_VAE['config']['data_path'] = dirname(__FILE__) . "/data/";
   if (!isset($_VAE['config']['data_url'])) $_VAE['config']['data_url'] = substr($_VAE['config']['data_path'], 1 + strlen(dirname($_SERVER['SCRIPT_FILENAME'])));
   if (!isset($_VAE['config']['asset_url'])) $_VAE['config']['asset_url'] = $_VAE['config']['data_url'] . "../";
-  $key = @filemtime($_VAE['config']['data_path'] . 'feed.xml');
-  $vae_yml = $_SERVER['DOCUMENT_ROOT'] . '/__vae.yml';
-  if (file_exists($vae_yml)) $key .= filemtime($vae_yml);
-  $verb_yml = $_SERVER['DOCUMENT_ROOT'] . '/__verb.yml';
-  if (file_exists($verb_yml)) $key .= filemtime($verb_yml);
-  $_VAE['global_cache_key'] = $key;
 }
 
 function _vae_set_initial_context() {
