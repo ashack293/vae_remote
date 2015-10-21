@@ -75,7 +75,7 @@ function _vae_thrift_open($client_class, $port) {
       } 
       $transport->open();
       return $client;
-    } catch (TException $tx) {
+    } catch (Thrift\Exception\TException $tx) {
     }
 
     if(!$backends) { $backends = _vae_vaedb_backends($subdomain); }

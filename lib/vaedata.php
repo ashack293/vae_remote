@@ -306,7 +306,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
           if (!self::$sessionId) self::___openSession();
           if ($options == null) $options = array();
           $result = self::$client->get(self::$sessionId, $responseId, $query, $options);
-        } catch (TSocketException $e) {
+        } catch (Thrift\Exception\TException $e) {
           self::___resetClient();
         }
         if ($result) {
@@ -416,7 +416,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
     for ($i = 0; $i < 5; $i++) {
       try {
         $response = self::$client->data(self::$sessionId, $this->___responseId);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -661,7 +661,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         self::$generation = $ret->generation;
         $_VAE['feed_generation'] = $ret->generation;
         return;
-      } catch (TException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -674,7 +674,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         if (!self::$sessionId) self::___openSession();
         $ret = self::$client->shortTermCacheGet(self::$sessionId, _vae_safe_key($key), $flags);
         return unserialize($ret);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -685,7 +685,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->shortTermCacheSet(self::$sessionId, _vae_safe_key($key), serialize($value), $flags, $expires);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -696,7 +696,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->shortTermCacheDelete(self::$sessionId, _vae_safe_key($key));
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -707,7 +707,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->longTermCacheGet(self::$sessionId, _vae_safe_key($key), $renew, $useShortTermCache);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -718,7 +718,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->longTermCacheSet(self::$sessionId, _vae_safe_key($key), $value, $expireInterval, $isFilename);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -729,7 +729,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->longTermCacheDelete(self::$sessionId, _vae_safe_key($key));
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -740,7 +740,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->longTermCacheEmpty(self::$sessionId);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -751,7 +751,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->longTermCacheSweeperInfo(self::$sessionId)->data;
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -762,7 +762,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->sessionCacheGet(self::$sessionId, _vae_safe_key($key));
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -773,7 +773,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->sessionCacheSet(self::$sessionId, _vae_safe_key($key), $value);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -784,7 +784,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->sessionCacheDelete(self::$sessionId, _vae_safe_key($key));
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -795,7 +795,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->sitewideLock(self::$sessionId);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
@@ -806,7 +806,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
       try {
         if (!self::$sessionId) self::___openSession();
         return self::$client->sitewideUnlock(self::$sessionId);
-      } catch (TSocketException $e) {
+      } catch (Thrift\Exception\TException $e) {
         self::___resetClient();
       }
     }
