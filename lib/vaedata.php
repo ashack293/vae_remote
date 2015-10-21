@@ -661,7 +661,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
         self::$generation = $ret->generation;
         $_VAE['feed_generation'] = $ret->generation;
         return;
-      } catch (TSocketException $e) {
+      } catch (TException $e) {
         self::___resetClient();
       }
     }
@@ -736,7 +736,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___resetClient() {
     global $_VAE;
-    sleep(2);
+    usleep(100000);
     unset($_VAE['vaedbd']);
     self::$client = null;
     self::___openClient();

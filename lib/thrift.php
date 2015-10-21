@@ -79,7 +79,7 @@ function _vae_thrift_open($client_class, $port) {
     }
 
     if(!$backends) { $backends = _vae_vaedb_backends($subdomain); }
-    sleep(1);
+    usleep(10000);
     $i++;
   }
 
