@@ -669,69 +669,147 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
   }
 
   public static function ___shortTermCacheGet($key, $flags) {
-    if (!self::$sessionId) self::___openSession();
-    $ret = self::$client->shortTermCacheGet(self::$sessionId, _vae_safe_key($key), $flags);
-    return unserialize($ret);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        $ret = self::$client->shortTermCacheGet(self::$sessionId, _vae_safe_key($key), $flags);
+        return unserialize($ret);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___shortTermCacheSet($key, $value, $flags, $expires) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheSet(self::$sessionId, _vae_safe_key($key), serialize($value), $flags, $expires);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->shortTermCacheSet(self::$sessionId, _vae_safe_key($key), serialize($value), $flags, $expires);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___shortTermCacheDelete($key) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->shortTermCacheDelete(self::$sessionId, _vae_safe_key($key));
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->shortTermCacheDelete(self::$sessionId, _vae_safe_key($key));
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___longTermCacheGet($key, $renew, $useShortTermCache) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheGet(self::$sessionId, _vae_safe_key($key), $renew, $useShortTermCache);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->longTermCacheGet(self::$sessionId, _vae_safe_key($key), $renew, $useShortTermCache);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___longTermCacheSet($key, $value, $expireInterval, $isFilename) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheSet(self::$sessionId, _vae_safe_key($key), $value, $expireInterval, $isFilename);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->longTermCacheSet(self::$sessionId, _vae_safe_key($key), $value, $expireInterval, $isFilename);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___longTermCacheDelete($key) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheDelete(self::$sessionId, _vae_safe_key($key));
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->longTermCacheDelete(self::$sessionId, _vae_safe_key($key));
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___longTermCacheEmpty() {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheEmpty(self::$sessionId);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->longTermCacheEmpty(self::$sessionId);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___longTermCacheSweeperInfo() {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->longTermCacheSweeperInfo(self::$sessionId)->data;
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->longTermCacheSweeperInfo(self::$sessionId)->data;
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___sessionCacheGet($key) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheGet(self::$sessionId, _vae_safe_key($key));
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->sessionCacheGet(self::$sessionId, _vae_safe_key($key));
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___sessionCacheSet($key, $value) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheSet(self::$sessionId, _vae_safe_key($key), $value);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->sessionCacheSet(self::$sessionId, _vae_safe_key($key), $value);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___sessionCacheDelete($key) {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->sessionCacheDelete(self::$sessionId, _vae_safe_key($key));
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->sessionCacheDelete(self::$sessionId, _vae_safe_key($key));
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___sitewideLock() {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->sitewideLock(self::$sessionId);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->sitewideLock(self::$sessionId);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___sitewideUnlock() {
-    if (!self::$sessionId) self::___openSession();
-    return self::$client->sitewideUnlock(self::$sessionId);
+    for ($i = 0; $i < 5; $i++) {
+      try {
+        if (!self::$sessionId) self::___openSession();
+        return self::$client->sitewideUnlock(self::$sessionId);
+      } catch (TSocketException $e) {
+        self::___resetClient();
+      }
+    }
   }
 
   public static function ___resetClient() {
