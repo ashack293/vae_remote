@@ -22,6 +22,14 @@ Freef...
 >
 4.0
 =
+<v:text number_format="2" path="13835/price" />
+>
+12,499.98
+=
+<v:text after=".9876" before="7" text="100000" number_format="2" />
+>
+7,100,000.99
+=
 <v:text strftime="%B %d, %Y" path="14186/date" />
 >
 August 21, 2008
