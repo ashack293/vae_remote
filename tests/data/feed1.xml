@@ -208,6 +208,19 @@ Very orange.</description>
           <discount>25</discount>
         </inventory>
       </items>
+      <items type="1285" id="13835">
+        <name type="1286">Kevin Bombino Gold Framed Poster</name>
+        <price type="1287">12499.977</price>
+        <weight type="1289">25</weight>
+        <image type="1288">28638</image>
+        <inventory type="1290" id="13836">
+          <size type="1291">One Size</size>
+          <inventory type="1292">0</inventory>
+          <weight>30</weight>
+          <price>12499.97</price>
+          <discount>0</discount>
+        </inventory>
+      </items>
     </artists>
     <artists type="1269" id="13447">
       <name type="1270">Pratt Avenue</name>
