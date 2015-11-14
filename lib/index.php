@@ -84,6 +84,7 @@ if (_vae_should_load()) {
     if ($_REQUEST['__page'] || (strstr($_SERVER['SCRIPT_FILENAME'], "lib/pages.php") && strstr($_SERVER['SCRIPT_FILENAME'], "vae"))) _vae_page();
     _vae_page_check_redirects();
     _vae_parse_path();
+    _vae_set_cdn_url();
     if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) _vae_local();
 
     if (strstr($_SERVER['SCRIPT_FILENAME'], ".pdf") && !isset($_VAE['skip_pdf'])) {

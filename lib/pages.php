@@ -49,6 +49,9 @@ function _vae_page_check_domain() {
           _vae_die();
         }
       }
+      if ($d['use_cloudflare'] == 1 || $d['use_cloudflare'] == 2) {
+        $_VAE['cloudflare_active'] = true;
+      }
     }
   }
 }

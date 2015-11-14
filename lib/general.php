@@ -798,21 +798,9 @@ function _vae_load_settings() {
   }
   require_once($_VAE['config']['data_path'] . "settings.php");
   if (isset($_VERB['settings'])) $_VAE['settings'] = $_VERB['settings'];
-  if (!$_VAE['config']['force_local_assets'] && !_vae_ssl()) {
-    if (strlen($_VAE['settings']['cdn_host'])) {
-      $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['cdn_host'] . "/";
-    } else {
-      $domain = ($_VAE['settings']['domain_cdn'] ? $_VAE['settings']['domain_cdn'] : "vaesite.net");
-      $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['subdomain'] . "." . $domain . "/";
-    }
-    $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
-  }
-  if (_vae_ssl() && $_SERVER['HTTP_HOST'] == $_VAE['settings']['ssl_host']) {
-    $_VAE['config']['cdn_url'] = "https://" . $_VAE['settings']['subdomain'] . ".vaesite.com/";
-    $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
-  }
   @date_default_timezone_set($_VAE['settings']['timezone']);
 }
+
 
 function _vae_local($filename = "") {
   global $_VAE;
@@ -1631,6 +1619,23 @@ function _vae_set_cache_key() {
   if (file_exists($verb_php)) $key .= filemtime($verb_php);
   $key = md5($key._vae_proto().$_VAE['filename'].$_SERVER['HTTP_HOST'].$_SERVER['QUERY_STRING'].(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : "").serialize($_POST));
   $_VAE['cache_key'] = $key;
+}
+
+function _vae_set_cdn_url() {
+  global $_VAE;
+  if (!$_VAE['cloudflare_active'] && !$_VAE['config']['force_local_assets'] && !_vae_ssl()) {
+    if (strlen($_VAE['settings']['cdn_host'])) {
+      $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['cdn_host'] . "/";
+    } else {
+      $domain = ($_VAE['settings']['domain_cdn'] ? $_VAE['settings']['domain_cdn'] : "vaesite.net");
+      $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['subdomain'] . "." . $domain . "/";
+    }
+    $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
+  }
+  if (!$_VAE['cloudflare_active'] && _vae_ssl() && $_SERVER['HTTP_HOST'] == $_VAE['settings']['ssl_host']) {
+    $_VAE['config']['cdn_url'] = "https://" . $_VAE['settings']['subdomain'] . ".vaesite.com/";
+    $_VAE['config']['data_url'] = $_VAE['config']['cdn_url'] . "__data/";
+  }
 }
 
 function _vae_session_cookie($name, $val) {
