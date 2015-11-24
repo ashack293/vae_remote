@@ -362,17 +362,25 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
         $request = 'API=RateV4&XML=' . urlencode($request);
       } else {
-        $request  = '<IntlRateRequest USERID="' . $Authentication[0] . '" PASSWORD="' . $Authentication[1] . '">' .
+        $request  = '<IntlRateV2Request USERID="' . $Authentication[0] . '" PASSWORD="' . $Authentication[1] . '">' .
+                    '<Revision>2</Revision>' .
                     '<Package ID="0">' .
                     '<Pounds>' . $this->pounds . '</Pounds>' .
                     '<Ounces>' . $this->ounces . '</Ounces>' .
                     '<MailType>Package</MailType>' .
-			  '<ValueOfContents>' . $order->info['total'] . '</ValueOfContents>' .
+                    '<ValueOfContents>' . $order->info['total'] . '</ValueOfContents>' .
                     '<Country>' . $this->countries[$order->delivery['country']['iso_code_2']] . '</Country>' .
+                    '<Container> </Container>' .
+                    '<Size>LARGE</Size>' .
+                    '<Width></Width>'. 
+                    '<Length></Length>' .
+                    '<Height></Height>' .
+                    '<Girth></Girth>' .
+                     ((is_numeric(SHIPPING_ORIGIN_ZIP) && strlen(SHIPPING_ORIGIN_ZIP) == 5) ? '<OriginZip>' . _xmlEnc1234(SHIPPING_ORIGIN_ZIP) . '</OriginZip>' : '<OriginZip/>') .
                     '</Package>' .
-                    '</IntlRateRequest>';
+                    '</IntlRateV2Request>';
 
-        $request = 'API=IntlRate&XML=' . urlencode($request);
+        $request = 'API=IntlRateV2&XML=' . urlencode($request);
       }
 
 	//USPS PRODUCTION SERVER
