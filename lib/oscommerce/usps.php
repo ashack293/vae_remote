@@ -370,9 +370,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
                     '<MailType>Package</MailType>' .
                     '<ValueOfContents>' . $order->info['total'] . '</ValueOfContents>' .
                     '<Country>' . $this->countries[$order->delivery['country']['iso_code_2']] . '</Country>' .
-                    '<Container> </Container>' .
-                    '<Size>LARGE</Size>' .
-                    '<Width></Width>'. 
+                    '<Container></Container>' .
+                    '<Size>REGULAR</Size>' .
+                    '<Width></Width>'.
                     '<Length></Length>' .
                     '<Height></Height>' .
                     '<Girth></Girth>' .
