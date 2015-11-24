@@ -376,7 +376,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
                     '<Length></Length>' .
                     '<Height></Height>' .
                     '<Girth></Girth>' .
-                     ((is_numeric(SHIPPING_ORIGIN_ZIP) && strlen(SHIPPING_ORIGIN_ZIP) == 5) ? '<OriginZip>' . _xmlEnc1234(SHIPPING_ORIGIN_ZIP) . '</OriginZip>' : '<OriginZip/>') .
+                     ((is_numeric(SHIPPING_ORIGIN_ZIP) && strlen(SHIPPING_ORIGIN_ZIP) == 5) ? '<OriginZip>' . SHIPPING_ORIGIN_ZIP . '</OriginZip>' : '<OriginZip/>') .
                     '</Package>' .
                     '</IntlRateV2Request>';
 
