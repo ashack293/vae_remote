@@ -1336,7 +1336,7 @@ function _vae_store_render_if_field_overridden($a, &$tag, $context, &$callback, 
   $options = _vae_fetch($a['options_collection'], $context);
   if (count($options)) {
     foreach ($options as $r) {
-      if (strlen($r->$a['field'])) $overridden = true;
+      if (strlen($r->get($a['field']))) $overridden = true;
     }
   }
   return _vae_render_tags($tag, $context, $render_context, $overridden);

@@ -135,7 +135,7 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae('permalink/artist/kevin-bombino/name'), "Kevin Bombino");
     $this->assertEqual(vae('permalink/artist/kevin-bombino/albums/name'), "Unreleased Songs");
   }
-
+  
   function testVaeFetch() {
     $this->assertEqual(_vae_fetch("13427")->name, "One More Time");
     $this->assertEqual(_vae_fetch("13427/name"), "One More Time");

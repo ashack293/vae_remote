@@ -20,7 +20,7 @@ if ($argv[1] == "cov") {
 
 class AllTests extends TestSuite {
 
-  function AllTests() {
+  function __construct() {
     $this->TestSuite('Vae Remote Tests');
     $this->addFile(dirname(__FILE__) . '/callback_test.php');
     $this->addFile(dirname(__FILE__) . '/constants_test.php');
