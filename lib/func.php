@@ -96,6 +96,10 @@ function vae_production() {
   return (!(vae_staging()));
 }
 
+function vae_proto() {
+  return _vae_proto();
+}
+
 function vae_request_uri() {
   return $_SERVER['REQUEST_URI'];
 }
