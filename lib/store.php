@@ -266,6 +266,7 @@ function _vae_store_callback_cart($tag) {
   _vae_store_verify_available();
   _vae_run_hooks("store:cart:updated");
   if ($_REQUEST['checkout'] && $tag['attrs']['register_page']) return _vae_callback_redirect($tag['attrs']['register_page']);
+  if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
   return _vae_callback_redirect($_SERVER['PHP_SELF']);
 }
 
