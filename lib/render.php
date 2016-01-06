@@ -864,7 +864,7 @@ function _vae_render_option_select($a, &$tag, $context, &$callback, $render_cont
       $script .= $price_hints . "      }\n    }\n";
     }
     $script .= "  }\n";
-    $script .= "  var " . $name . " = {};\n";
+    $script .= "  window." . $name . " = {};\n";
     foreach ($entries as $r) {
       $script .= "  " . $name . "['" . $r->id() . "'] = new Array(";
       $line = '"' . ($price_field ? (($p = (string)$r->get($price_field)) ? $p : $main_price) : "0.00") . '"';
