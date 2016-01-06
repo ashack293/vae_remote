@@ -237,7 +237,13 @@ function _vae_render_collection($a, &$tag, $context, &$callback, $render_context
     $page = 1;
   }
   $options['page'] = $page;
-  if ($contexts == "__") $contexts = _vae_fetch($a['path'], $context, $options);
+  if ($contexts == "__") {
+    $contexts = _vae_fetch($a['path'], $context, $options);
+  } else {
+    if ($a['paginate']) {
+      $contexts = array_slice($contexts, 0, $a['paginate']);
+    }
+  }
   $dividers = _vae_find_dividers($tag);
   if ($a['store_in_session']) {
     $mycontexts = $contexts;
