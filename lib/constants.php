@@ -482,6 +482,7 @@ $_VAE['store']['payment_methods'] = array(
   'secure_pay' => array('name' => "Credit Card", 'credit_card' => true),
   'solveras' => array('name' => "Credit Card", 'credit_card' => true),
   'stripe' => array('name' => "Credit Card", 'credit_card' => true),
+  'stripe_test' => array('name' => "Credit Card (Test)", 'credit_card' => true),
   'skip_jack' => array('name' => "Credit Card", 'credit_card' => true),
   'trans_first' => array('name' => "Credit Card", 'credit_card' => true),
   'trust_commerce' => array('name' => "Credit Card", 'credit_card' => true),
