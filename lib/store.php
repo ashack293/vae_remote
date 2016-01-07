@@ -935,7 +935,7 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   }
   $_SESSION['__v:store']['user']['name'] = (string)$data->{'name'};
   $_SESSION['__v:store']['user']['gateway'] = (string)$data->{'gateway'};
-  $_SESSION['__v:store']['user']['gateway_customer_id'] = (string)$data->{'gateway_customer_id'};
+  $_SESSION['__v:store']['user']['gateway_customer_id'] = (string)$data->{'gateway-customer-id'};
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
   $_SESSION['__v:store']['user']['e_mail_address'] = (string)$data->{'e-mail-address'};
   _vae_store_populate_addresses();
