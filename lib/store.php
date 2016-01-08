@@ -621,7 +621,7 @@ function _vae_store_compute_number_of_items() {
 
 function _vae_store_compute_shipping($register_page = null) {
   global $_VAE;
-  if (isset($_VAE['store_cached_shipping']) && !$register_page) return $_VAE['store_cached_shipping'];    
+  if (isset($_VAE['store_cached_shipping']) && !$register_page) return $_VAE['store_cached_shipping'];
   $current = _vae_store_current_user();
   $country = $current['shipping_country'];
   $address = $current['shipping_address'];
@@ -629,6 +629,7 @@ function _vae_store_compute_shipping($register_page = null) {
   $state = $current['shipping_state'];
   $zip = $current['shipping_zip'];
   $sub = $_VAE['settings']['store_shipping_pad_pounds_per_order'];
+  if (!strlen($country)) $country = $_VAE['settings']['store_shipping_origin_country'];
   $handling = 0;
   if (isset($_SESSION['__v:store']['custom_handling'])) $handling = $_SESSION['__v:store']['custom_handling'];
   $subtotal = 0;
