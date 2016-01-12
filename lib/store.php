@@ -492,15 +492,15 @@ function _vae_store_complete_checkout($data, $tag = null) {
   $ret = _vae_rest($data, "api/site/v1/store/create_order", "order", $tag);
   if ($ret) {
     preg_match("|<reference-id([^>]*)>(.*)</reference-id>|U", $ret, $out);
-    if (is_numeric($out[2])) $data['id'] = $out[2];
+    $data['id'] = $order_data['reference_id'];
     foreach ($_SESSION['__v:store']['cart'] as $id => $d) {
       $_SESSION['__v:store']['cart'][$id]['order_id'] = $data['id'];
     }
     $_SESSION['__v:store']['recent_order'] = $_SESSION['__v:store']['cart'];
     $_SESSION['__v:store']['recent_order_data'] = $data;
-    if ($data['gateway_customer_id']) {
-      $_SESSION['__v:store']['user']['gateway_customer_id'] = $data['gateway_customer_id'];
-      $_SESSION['__v:store']['user']['gateway'] = $data['payment_method'];
+    if ($order_data['gateway_customer_id']) {
+      $_SESSION['__v:store']['user']['gateway_customer_id'] = $order_data['gateway_customer_id'];
+      $_SESSION['__v:store']['user']['gateway'] = $order_data['payment_method'];
     }
     _vae_run_hooks("store:checkout:success");
     unset($_SESSION['__v:store']['cart']);
