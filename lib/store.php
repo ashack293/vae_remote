@@ -28,7 +28,6 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
     if (!strlen($a['price_field'])) return _vae_error("Adding an item to cart, but <span class='c'>price</span> or <span class='c'>price_field</span> is not specified in <span class='c'>&lt;v:store:add_to_cart&gt;");
     $price = (string)_vae_fetch_without_errors($a['price_field'], $item);
   }
-  $original_price = $price;
   if ($qty < 1) {
     return _vae_error("Adding an item to cart, but the quantity is less than 1.");
   }
@@ -115,6 +114,7 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   } elseif ($a['option_value']) {
     $option_value = $a['option_value'];
   }
+  $original_price = $price;
   if (!strlen($price)) return _vae_error("Adding an item to cart, but the price field is blank.");
    if (!is_numeric($price)) return _vae_error("Adding an item to cart, but the price field is invalid.");
   $taxable = (isset($a['taxable']) ? ((string)$a['taxable'] ? true : false) : true);
