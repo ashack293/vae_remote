@@ -498,6 +498,10 @@ function _vae_store_complete_checkout($data, $tag = null) {
     }
     $_SESSION['__v:store']['recent_order'] = $_SESSION['__v:store']['cart'];
     $_SESSION['__v:store']['recent_order_data'] = $data;
+    if ($data['gateway_customer_id']) {
+      $_SESSION['__v:store']['user']['gateway_customer_id'] = $data['gateway_customer_id'];
+      $_SESSION['__v:store']['user']['gateway'] = $data['payment_method'];
+    }
     _vae_run_hooks("store:checkout:success");
     unset($_SESSION['__v:store']['cart']);
     unset($_SESSION['__v:store']['discount']);
