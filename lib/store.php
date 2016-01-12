@@ -491,7 +491,7 @@ function _vae_store_checkout($a = null, $tag = null) {
 function _vae_store_complete_checkout($data, $tag = null) {
   $ret = _vae_rest($data, "api/site/v1/store/create_order", "order", $tag);
   if ($ret) {
-    preg_match("|<reference-id([^>]*)>(.*)</reference-id>|U", $ret, $out);
+    $order_data = _vae_array_from_rails_xml(simplexml_load_string($ret));
     $data['id'] = $order_data['reference_id'];
     foreach ($_SESSION['__v:store']['cart'] as $id => $d) {
       $_SESSION['__v:store']['cart'][$id]['order_id'] = $data['id'];
