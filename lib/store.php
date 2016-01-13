@@ -912,6 +912,7 @@ function _vae_store_item_available($item, $options_collection, $inventory_field)
     if ($options) {
       foreach ($options as $id => $r) {
         if (((string)$r->$inventory_field > 0) && ($option == 0 || $option == $id)) return true;
+        if (((string)$r->$inventory_field == 0) && ($option == $id)) return false;
       }
     }
   }
