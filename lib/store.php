@@ -907,13 +907,11 @@ function _vae_store_ipn() {
 function _vae_store_item_available($item, $options_collection, $inventory_field) {
   global $_VAE;
   $root_inv = (string)_vae_fetch_without_errors($inventory_field, $item);
-  $option = (string)$item->option_id;
   if ($options_collection) {
     $options = _vae_fetch($options_collection, $item);
     if ($options) {
       foreach ($options as $id => $r) {
-        if (((string)$r->$inventory_field > 0) && (($option == 0 && !strlen($root_inv)) || $option == $id)) return true;
-        if (((string)$r->$inventory_field <= 0) && ($option == $id)) return false;
+        if ((string)$r->$inventory_field > 0) return true;
       }
     }
   }
