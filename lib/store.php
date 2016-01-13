@@ -95,6 +95,10 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
       $p = _vae_fetch_without_errors($a['barcode_field'], $item_option);
       if (strlen((string)$p)) $barcode = (string)$p;
     }
+    if ($a['backstage_notes_field']) {
+      $p = _vae_fetch_without_errors($a['backstage_notes_field'], $item_option);
+      if (strlen((string)$p)) $backstage_notes = (string)$p;
+    }
     if ($a['discount_field']) {
       $p = _vae_fetch_without_errors($a['discount_field'], $item_option);
       if (strlen((string)$p)) $discount = (string)$p;
