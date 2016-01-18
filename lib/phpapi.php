@@ -345,6 +345,7 @@ function vae_store_add_item_to_cart($id, $option_id = null, $qty = 1, $a = null,
 }
 
 function vae_store_add_shipping_method($options) {
+  global $_VAE;
   if (!isset($_SESSION['__v:store']['user_shipping_methods'])) $_SESSION['__v:store']['user_shipping_methods'] = array();
   foreach ($_SESSION['__v:store']['user_shipping_methods'] as $key => $method) {
     if ($method['title'] == $options['title']) {
@@ -352,6 +353,8 @@ function vae_store_add_shipping_method($options) {
     }
   }
   $_SESSION['__v:store']['user_shipping_methods'][] = _vae_stringify_array($options);
+  $_VAE['store_cached_shipping'] = null;
+  unset($_SESSION['__v:store']['shipping']);
 }
 
 function vae_store_cart_item($id) {
