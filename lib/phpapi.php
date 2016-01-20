@@ -378,6 +378,18 @@ function vae_store_clear_discount_code() {
   _vae_store_compute_discount();
 }
 
+function vae_store_add_cart_items_to_existing_order($order_id = null) {
+  if ($order_id == null) {
+    $order = vae_store_recent_order(true);
+    $order_id = $order['id'];
+  }
+  $line_items = _vae_store_convert_cart_to_line_items();
+  if (!count($line_items)) return false;
+  $data = array('line_items' => $line_items);
+  $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/add_line_items", "order");
+  return ($ret != false);
+}
+
 function vae_store_create_coupon_code($data) {
   $ret = _vae_rest($data, "api/site/v1/store_discount_codes/create", "store_discount_code");
   return ($ret != false);
