@@ -386,7 +386,7 @@ function vae_store_add_cart_items_to_existing_order($order_id = null) {
   $line_items = _vae_store_convert_cart_to_line_items();
   if (!count($line_items)) return false;
   $data = array('line_items' => $line_items);
-  $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/add_line_items", "order");
+  $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/add_line_items", "order", null, null, true);
   return ($ret != false);
 }
 
