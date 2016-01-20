@@ -387,6 +387,7 @@ function vae_store_add_cart_items_to_existing_order($order_id = null) {
   if (!count($line_items)) return false;
   $data = array('line_items' => $line_items);
   $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/add_line_items", "order", null, null, true);
+  if ($ret != false) unset($_SESSION['__v:store']['cart']);
   return ($ret != false);
 }
 
