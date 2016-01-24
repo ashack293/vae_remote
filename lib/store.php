@@ -902,6 +902,11 @@ function _vae_store_if_shippable() {
   return false;
 }
 
+function _vae_store_inventory_minimum_for_order() {
+  global $_VAE;
+  return (int)$_VAE['settings']['store_inventory_minimum_for_order'];
+}
+
 function _vae_store_ipn() {
   global $_VAE;
   try {
@@ -920,7 +925,7 @@ function _vae_store_item_available($item, $options_collection, $inventory_field)
     $options = _vae_fetch($options_collection, $item);
     if ($options) {
       foreach ($options as $id => $r) {
-        if ((string)$r->$inventory_field > 0) return true;
+        if ((string)$r->$inventory_field > _vae_store_inventory_minimum_for_order()) return true;
       }
     }
   }
@@ -1725,7 +1730,7 @@ function _vae_store_verify_available($flash = true) {
         }
       }
       if ($r['inventory_field'] && $r['check_inventory']) {
-        $available_qty = (string)_vae_store_most_specific_field($r, $r['inventory_field']);
+        $available_qty = (string)_vae_store_most_specific_field($r, $r['inventory_field']) - _vae_store_inventory_minimum_for_order();
         if (strlen($available_qty)) {
           $available_qty = (int)$available_qty;
           if ($r['qty'] > $available_qty) {
