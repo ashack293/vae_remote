@@ -929,7 +929,7 @@ function _vae_store_item_available($item, $options_collection, $inventory_field)
       }
     }
   }
-  return ($root_inv > 0);
+  return ($root_inv > _vae_store_inventory_minimum_for_order());
 }
 
 function _vae_store_item_has_options($id, $option_field) {
