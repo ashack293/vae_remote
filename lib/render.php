@@ -648,7 +648,7 @@ function _vae_render_if($a, &$tag, $context, &$callback, $render_context) {
 
 function _vae_render_if_backstage($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:user_id');
-  if (!isset($_SESSION['__v:user_id']) && $a['redirect']) return _vae_render_redirect($a['redirect']);
+  if (!isset($_SESSION['__v:user_id']) && $a['redirect'] && !$_REQUEST['__vae_local']) return _vae_render_redirect($a['redirect']);
   return _vae_render_tags($tag, $context, $render_context, isset($_SESSION['__v:user_id']));
 }
 
