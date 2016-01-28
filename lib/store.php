@@ -1626,6 +1626,7 @@ function _vae_store_render_user($a, &$tag, $context, &$callback, $render_context
 
 function _vae_store_set_default_payment_method() {
   global $_VAE;
+  _vae_debug(_vae_store_compute_total());
   if (_vae_store_compute_total() == 0.00) {
     $_SESSION['__v:store']['payment_method'] = "No Payment Required";
   } else {
