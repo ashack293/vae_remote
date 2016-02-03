@@ -763,7 +763,7 @@ function _vae_store_compute_tax() {
 
 function _vae_store_compute_total() {
   $total = _vae_store_compute_shipping() + _vae_store_compute_tax() + _vae_store_compute_subtotal() - _vae_store_compute_discount();
-  $total = number_format($total, 2);
+  $total = str_replace(",", "", number_format($total, 2));
   if ($total < 0) $total = 0.00;
   return $total;
 }
