@@ -699,6 +699,9 @@ function _vae_render_img($a, &$tag, $context, &$callback, $render_context) {
         unset($a['width']);
         unset($a['height']);
       }
+    } else {
+      unset($a['width']);
+      unset($a['height']);
     }
     $a['src'] = _vae_absolute_data_url() . $a['src'];
   } elseif ($a['src']) {
