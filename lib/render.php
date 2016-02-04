@@ -690,13 +690,15 @@ function _vae_render_img($a, &$tag, $context, &$callback, $render_context) {
     } elseif ($a['filter'] == "grey") {
       $a['src'] = vae_image_grey($a['src'], true);
     }
-    $size = _vae_imagesize($a['src']);
-    if ($size) {
-      $a['width'] = $size[0];
-      $a['height'] = $size[1];
-    } else {
-      unset($a['width']);
-      unset($a['height']);
+    if (!$a['nosize']) {
+      $size = _vae_imagesize($a['src']);
+      if ($size) {
+        $a['width'] = $size[0];
+        $a['height'] = $size[1];
+      } else {
+        unset($a['width']);
+        unset($a['height']);
+      }
     }
     $a['src'] = _vae_absolute_data_url() . $a['src'];
   } elseif ($a['src']) {
