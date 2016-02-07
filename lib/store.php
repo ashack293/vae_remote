@@ -9,6 +9,7 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
   unset($_VAE['store_cached_shipping']);
   unset($_VAE['store_cached_subtotal']);
   unset($_VAE['store_cached_tax']);
+  if ($a['clear_cart']) unset($_SESSION['__v:store']['cart']);
   if (strlen($a['notes']) && !strlen($notes)) $notes = $a['notes'];
   $digital = ((string)$a['digital'] ? 1 : 0);
   if ($id) $item = _vae_fetch($id);
@@ -164,7 +165,6 @@ function _vae_store_callback_add_to_cart($tag) {
   if ($a['notes_input'] && !$a['multiple']) {
     $a['notes'] = $_REQUEST[$a['notes_input']];
   }
-  if ($a['clear_cart']) unset($_SESSION['__v:store']['cart']);
   if ($a['price_input']) {
     if ($_REQUEST[$a['price_input']] && (is_numeric($_REQUEST[$a['price_input']])) && ($_REQUEST[$a['price_input']] > 0)) {
       $a['price'] = $_REQUEST[$a['price_input']];
