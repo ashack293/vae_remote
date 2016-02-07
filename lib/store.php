@@ -474,6 +474,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
     $data['store_name'] = $a['store_name'];
     $data['store_logo'] = $a['store_logo'];
+    if ($a['gateway_transaction_id']) $data['gateway_transaction_id'] = $a['gateway_transaction_id'];
     if ($a['skip_emails']) $data['skip_emails'] = "1";
     foreach (array('confirmation' => array('order_confirmation','Order Confirmation'), 'received' => array('order_received','Order Received'), 'shipping' => array('shipping_info','Shipping Confirmation'), 'waiting_for_approval' => array('order_waiting_for_approval','Order Waiting For Approval')) as $email => $r) {
       if (isset($_VAE['google_checkout_attrs']['email_'.$email])) $file = $_VAE['google_checkout_attrs']['email_'.$email];
