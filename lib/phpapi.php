@@ -71,10 +71,11 @@ function vae_create($structure_id, $row_id, $data) {
   return _vae_create($structure_id, $row_id, $data, true);
 }
 
-function vae_customer($id) {
-  if (!is_numeric($id)) _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
+function vae_customer($id, $load = false) {
+  if (!is_numeric($id) && substr($id, 0, 4) != "cus_") _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
   $raw = _vae_rest(array(), "api/site/v1/customers/show/" . $id, "customer", array());
   if ($raw == false) return false;
+  if ($load) _vae_store_load_customer($raw);
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
 }
 
@@ -486,7 +487,7 @@ function vae_store_payment_method() {
 }
 
 function vae_store_previous_orders() {
-  if (isset($_SESSION['__v:store']['previous_orders'])) {
+  if (isset($_SESSION['__v:store']['previous_orders']) && !$_REQUEST['__debug']) {
     $pdata = $_SESSION['__v:store']['previous_orders'];
   } elseif ($_SESSION['__v:store']['loggedin']) {
     $raw = _vae_rest(array(), "api/site/v1/store/previous_orders/" . $_SESSION['__v:store']['customer_id'], "order", $tag);
