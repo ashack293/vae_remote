@@ -1554,12 +1554,7 @@ function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $rend
 function _vae_store_render_previous_orders($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_orders');
-  if (isset($_SESSION['__v:store']['previous_orders'])) {
-    $pdata = $_SESSION['__v:store']['previous_orders'];
-  } elseif ($_SESSION['__v:store']['loggedin']) {
-    $raw = _vae_rest(array(), "api/site/v1/store/previous_orders/" . $_SESSION['__v:store']['customer_id'], "order", $tag);
-    $_SESSION['__v:store']['previous_orders'] = $pdata = _vae_store_transform_orders($raw);
-  }
+  $pdata = vae_store_previous_orders();
   $a['path'] = "order";
   if (!count($pdata)) return _vae_get_else($tag, $context, $render_context);
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($pdata));

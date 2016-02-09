@@ -485,6 +485,16 @@ function vae_store_payment_method() {
   return $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']]['name'];
 }
 
+function vae_store_previous_orders() {
+  if (isset($_SESSION['__v:store']['previous_orders'])) {
+    $pdata = $_SESSION['__v:store']['previous_orders'];
+  } elseif ($_SESSION['__v:store']['loggedin']) {
+    $raw = _vae_rest(array(), "api/site/v1/store/previous_orders/" . $_SESSION['__v:store']['customer_id'], "order", $tag);
+    $_SESSION['__v:store']['previous_orders'] = $pdata = _vae_store_transform_orders($raw);
+  }
+  return $pdata;
+}
+
 function vae_store_recent_order($all = false) {
   _vae_session_deps_add('__v:store');
   if ($all) return $_SESSION['__v:store']['recent_order_data'];
