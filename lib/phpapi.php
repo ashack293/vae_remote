@@ -585,6 +585,21 @@ function vae_store_update_order($order_id, $attributes = null) {
   return ($ret != false);
 }
 
+function vae_store_update_order_line_items($order_id = null, $line_items = null) {
+  if ($order_id == null) {
+    $order = vae_store_recent_order(true);
+    $order_id = $order['id'];
+  }
+  if (!$line_items) $line_items = array();
+  if (!count($line_items)) return false;
+  $data = array();
+  foreach ($line_items as $id => $qty) {
+    $data["item_" . $id . "_qty"] = $qty;
+  }
+  $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/update_line_items", "order", null, null, true);
+  return ($ret != false);
+}
+
 function vae_store_update_order_status($order_id, $status) {
   if ($status != "Processing" && $status != "Ordered" && $status != "Shipped") return false;
   if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order_status()</span> but didn't provide a proper ID.");
