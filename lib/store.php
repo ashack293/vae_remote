@@ -1209,7 +1209,8 @@ function _vae_store_render_cart($a, &$tag, $context, &$callback, $render_context
 function _vae_store_render_cart_items($a, &$tag, $context, &$callback, $render_context, $data = null) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_cart_items');
-  if ($data == null) $data = usort($_SESSION['__v:store']['cart'], function($a, $b) { return $a['position'] < $b['position']; });
+  if ($data == null) $data = $_SESSION['__v:store']['cart'];
+  usort($data, function($a, $b) { return $a['position'] < $b['position']; });
   return _vae_render_collection($a, $tag, $context, $callback, $render_context->set(array("price_field" => "price")), _vae_array_to_xml($data, true));
 }
 
