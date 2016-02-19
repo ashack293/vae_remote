@@ -618,6 +618,7 @@ function vae_template_mail($from, $to, $subject, $template, $text_yield = null, 
   $text_template = _vae_find_source($template . ".txt");
   if (($html = _vae_proxy($html_template, "", true, $html_yield)) == false) return _vae_error("Unable to build Mail Template E-Mail (HTML version) file from <span class='c'>" . _vae_h($template) . "</span>.  You can debug this by loading that file directly in your browser.");
   if (($text = _vae_proxy($text_template, "", true, $text_yield)) == false) return _vae_error("Unable to build Mail Template E-Mail (text version) file from <span class='c'>" . _vae_h($template) . "</span>.  You can debug this by loading that file directly in your browser.");
+  $html = _vae_rest(array('html' => $html), "api/site/v1/premailer", "premailer");
   return vae_multipart_mail($from, $to, $subject, $text, $html);
 }
 
