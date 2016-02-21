@@ -794,6 +794,7 @@ function _vae_store_create_customer($data, $newsletter_code = null, $from_php = 
         if (!$from_php) _vae_flash($err, 'err');
         return false;
       }
+      unset($data['password']);
       $_SESSION['__v:store']['user'] = $data;
       if ($newsletter_code) _vae_newsletter_subscribe($newsletter_code, $data['e_mail_address']);
       _vae_run_hooks("store:register:success", $_SESSION['__v:store']['user']);
