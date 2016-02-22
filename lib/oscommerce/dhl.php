@@ -186,7 +186,7 @@ class dhl {
     }
 
     function _setDimensions($exclusive) {
-        $dimensions = split("[:xX,]", MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_TABLE);
+        $dimensions = preg_split("/[:xX,]/", MODULE_SHIPPING_AIRBORNE_DIMENSIONAL_TABLE);
         $size = sizeof($dimensions);
         for ($i = 0, $n = $size; $i < $n; $i+=4) {
             if ($exclusive == 'true') {

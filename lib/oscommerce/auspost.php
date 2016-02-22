@@ -15,7 +15,7 @@ class auspost {
       $url = "http://drc.edeliver.com.au/ratecalc.asp?Pickup_Postcode=$frompcode&Destination_Postcode=$topcode&Country=$country&Weight=$sweight&Service_Type=$type&Height=200&Width=200&Length=200&Quantity=1";
       $myfile = file($url);
       foreach($myfile as $vals) {
-        $bits = split("=", $vals);
+        $bits = str_split("=", $vals);
         $$bits[0] = $bits[1];
       }
       if ($charge > 0) {
