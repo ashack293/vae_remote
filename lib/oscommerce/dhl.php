@@ -710,28 +710,28 @@ function _makedate3254($unit = '', $time = '', $mask = '') {
             $chars = (preg_match('/([[:space:]]|[[:punct:]])/', $mask)) ? preg_split('/([[:space:]]|[[:punct:]])/', $mask, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) : preg_split('/(m*|d*|y*)/i', $mask, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             foreach ($chars as $key => $char) {
                 switch (TRUE) {
-                    case eregi("m{3,}", $chars[$key]): // 'mmmm' = month string
+                    case preg_match("/m{3,}/", $chars[$key]): // 'mmmm' = month string
                         $chars[$key] = "F";
                         break;
-                    case eregi("m{2}", $chars[$key]):  // 'mm'   = month as 01-12
-                        $chars[$key] = "m";
+                    case preg_match("/m{2}/", $chars[$key]):  // 'mm'   = month as 01-12
+                        $preg_match[$key] = "m";
                         break;
-                    case eregi("m{1}", $chars[$key]):  // 'm'    = month as 1-12
+                    case preg_match("/m{1}/", $chars[$key]):  // 'm'    = month as 1-12
                         $chars[$key] = "n";
                         break;
-                    case eregi("d{3,}", $chars[$key]): // 'dddd' = day string
+                    case preg_match("/d{3,}/", $chars[$key]): // 'dddd' = day string
                         $chars[$key] = "l";
                         break;
-                    case eregi("d{2}", $chars[$key]):  // 'dd'   = day as 01-31
+                    case preg_match("/d{2}/", $chars[$key]):  // 'dd'   = day as 01-31
                         $chars[$key] = "d";
                         break;
-                    case eregi("d{1}", $chars[$key]):  // 'd'    = day as 1-31
+                    case preg_match("/d{1}/", $chars[$key]):  // 'd'    = day as 1-31
                         $chars[$key] = "j";
                         break;
-                    case eregi("y{3,}", $chars[$key]): // 'yyyy' = 4 digit year
+                    case preg_match("/y{3,}/", $chars[$key]): // 'yyyy' = 4 digit year
                         $chars[$key] = "Y";
                         break;
-                    case eregi("y{1,2}", $chars[$key]):// 'yy'   = 2 digit year
+                    case preg_match("/y{1,2}/", $chars[$key]):// 'yy'   = 2 digit year
                         $chars[$key] = "y";
                         break;
                 }
