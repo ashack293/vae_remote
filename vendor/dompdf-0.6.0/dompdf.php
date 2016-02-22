@@ -181,7 +181,7 @@ switch ( $sapi ) {
   }
 
   if ( isset($opts['t']) ) {
-    $arr = split(',',$opts['t']);
+    $arr = explode(',',$opts['t']);
     $types = array();
     foreach ($arr as $type)
       $types[ trim($type) ] = 1;
