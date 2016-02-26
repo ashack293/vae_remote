@@ -1615,7 +1615,7 @@ function _vae_store_render_shipping_methods_select($a, &$tag, $context, &$callba
 
 function _vae_store_render_user($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_user');
-  if (!$_SESSION['__v:store']['user']) {
+  if (!$_SESSION['__v:store']['user'] && !$a['safe']) {
     _vae_flash("Your session expired due to lack of activity.  Please start again.");
     return _vae_callback_redirect("/");
   }
