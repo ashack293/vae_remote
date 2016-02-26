@@ -444,8 +444,8 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             $service = strip_tags(html_entity_decode(str_replace(array("&#174;", "&#8482;"), "", html_entity_decode($regs[1]))));
             $postage = preg_match('/<Rate>(.*)<\/Rate>/', $response[$i], $regs);
             $postage = $regs[1];
-        		$insurance = preg_match('/<Insurance>(.*)<\/Insurance>/', $response[$i], $regs);
-        		$insurance = $regs[1];
+            $insurance = preg_match('/<Insurance>(.*)<\/Insurance>/', $response[$i], $regs);
+            $insurance = $regs[1];
             $rates[] = array($service => $postage);
             $rates_sorter[] = $postage;
           }
