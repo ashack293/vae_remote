@@ -427,9 +427,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
       if ($order->delivery['country']['id'] == SHIPPING_ORIGIN_COUNTRY) {
         if (sizeof($response) == '1') {
           if (preg_match('/<Error>/', $response[0])) {
-            $number = preg_match('/<Number>(.*)</Number>/', $response[0], $regs);
+            $number = preg_match('/<Number>(.*)<\/Number>\/', $response[0], $regs);
             $number = $regs[1];
-            $description = preg_match('/<Description>(.*)</Description>/', $response[0], $regs);
+            $description = preg_match('/<Description>(.*)<\/Description>/', $response[0], $regs);
             $description = $regs[1];
 
             return array('error' => $number . ' - ' . $description);
@@ -439,12 +439,12 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
         $n = sizeof($response);
         for ($i=0; $i<$n; $i++) {
           if (strpos($response[$i], '<Rate>')) {
-            $service = preg_match('/<MailService>(.*)</MailService>/', $response[$i], $regs);
+            $service = preg_match('/<MailService>(.*)<\/MailService>/', $response[$i], $regs);
             $service = $regs[1];
             $service = strip_tags(html_entity_decode(str_replace(array("&#174;", "&#8482;"), "", html_entity_decode($regs[1]))));
-            $postage = preg_match('/<Rate>(.*)</Rate>/', $response[$i], $regs);
+            $postage = preg_match('/<Rate>(.*)<\/Rate>/', $response[$i], $regs);
             $postage = $regs[1];
-        		$insurance = preg_match('/<Insurance>(.*)</Insurance>/', $response[$i], $regs);
+        		$insurance = preg_match('/<Insurance>(.*)<\/Insurance>/', $response[$i], $regs);
         		$insurance = $regs[1];
             $rates[] = array($service => $postage);
             $rates_sorter[] = $postage;
@@ -454,9 +454,9 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
 
       } else {
         if (preg_match('/<Error>/', $response[0])) {
-          $number = preg_match('/<Number>(.*)</Number>/', $response[0], $regs);
+          $number = preg_match('/<Number>(.*)<\/Number>/', $response[0], $regs);
           $number = $regs[1];
-          $description = preg_match('/<Description>(.*)</Description>/', $response[0], $regs);
+          $description = preg_match('/<Description>(.*)<\/Description>/', $response[0], $regs);
           $description = $regs[1];
 
           return array('error' => $number . ' - ' . $description);
@@ -482,12 +482,12 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
           $size = sizeof($services);
           for ($i=0, $n=$size; $i<$n; $i++) {
             if (strpos($services[$i], '<Postage>')) {
-              $service = preg_match('/<SvcDescription>(.*)</SvcDescription>/', $services[$i], $regs);
+              $service = preg_match('/<SvcDescription>(.*)<\/SvcDescription>/', $services[$i], $regs);
               $service = strip_tags(html_entity_decode(str_replace(array("&#174;", "&#8482;"), "", html_entity_decode($regs[1]))));
               $postage = preg_match('/<Postage>(.*)</Postage>/', $services[$i], $regs);
               $postage = $regs[1];
 
-              $time = preg_match('/<SvcCommitments>(.*)</SvcCommitments>/', $services[$i], $tregs);
+              $time = preg_match('/<SvcCommitments>(.*)<\/SvcCommitments>/', $services[$i], $tregs);
               $time = $tregs[1];
               $time = preg_replace('/Weeks$/', MODULE_SHIPPING_USPS_TEXT_WEEKS, $time);
               $time = preg_replace('/Days$/', MODULE_SHIPPING_USPS_TEXT_DAYS, $time);
@@ -506,7 +506,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
               }
 
 		  if (strpos($services[$i], '<Insurance>')) {
-			$iinsurance = preg_match('/<Insurance>(.*)</Insurance>/', $services[$i], $regs);
+			$iinsurance = preg_match('/<Insurance>(.*)<\/Insurance>/', $services[$i], $regs);
                   $iinsurance = $regs[1];
 			if (MODULE_SHIPPING_INTL_INSURANCE_OPTION == 'Force Insurance') {
 				$postage = $postage + $iinsurance;
