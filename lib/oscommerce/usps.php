@@ -484,7 +484,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
             if (strpos($services[$i], '<Postage>')) {
               $service = preg_match('/<SvcDescription>(.*)<\/SvcDescription>/', $services[$i], $regs);
               $service = strip_tags(html_entity_decode(str_replace(array("&#174;", "&#8482;"), "", html_entity_decode($regs[1]))));
-              $postage = preg_match('/<Postage>(.*)</Postage>/', $services[$i], $regs);
+              $postage = preg_match('/<Postage>(.*)<\/Postage>/', $services[$i], $regs);
               $postage = $regs[1];
 
               $time = preg_match('/<SvcCommitments>(.*)<\/SvcCommitments>/', $services[$i], $tregs);
@@ -492,7 +492,7 @@ define('MODULE_SHIPPING_CONFIG_DMSTC_FIRSTCLASS_THRESHOLD', '0, 3.5, 3.5, 10, 10
               $time = preg_replace('/Weeks$/', MODULE_SHIPPING_USPS_TEXT_WEEKS, $time);
               $time = preg_replace('/Days$/', MODULE_SHIPPING_USPS_TEXT_DAYS, $time);
               $time = preg_replace('/Day$/', MODULE_SHIPPING_USPS_TEXT_DAY, $time);
-		  $time = ' (' . $time . ') ';
+              $time = ' (' . $time . ') ';
 
               if (!$all_allowed) {
                 $ok = false;
