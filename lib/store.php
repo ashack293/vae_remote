@@ -744,7 +744,7 @@ function _vae_store_compute_tax() {
         	if ($rate['tax_class'] == _vae_store_shipping_tax_class()) {
             $subtotal += _vae_store_compute_shipping();
         	}
-        } elseif ($rate['include_shipping'] && (($subtotal > 0) || !$rate['tax_class'])) {
+        } elseif ($rate['include_shipping']) {
           $subtotal += _vae_store_compute_shipping();
         }
         if ($subtotal < 0) $subtotal = 0;
