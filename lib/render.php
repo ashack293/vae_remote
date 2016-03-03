@@ -1213,8 +1213,8 @@ function _vae_render_text($a, &$tag, $context, &$callback, $render_context) {
     } else {
       $render = vae_style($text, ($a['nohtml'] ? false : true));
     }
-    if ($a['nolinebreak']) $render = str_replace("\n", "", $render);
   }
+  if ($a['nolinebreak']) $render = str_replace("\n", "", $render);
   if ($a['escape']) $render = addslashes($render);
   return $render;
 }
