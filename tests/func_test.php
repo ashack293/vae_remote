@@ -20,8 +20,8 @@ class FuncTest extends VaeUnitTestCase {
   
   function testDateRange() {
     $this->assertEqual(vae_daterange("2009"), array(1230786000, 1262322000));
-    $this->assertEqual(vae_daterange("2009-01"), array(1230786000, 1262322000));
-    $this->assertEqual(vae_daterange("2009-01-01"), array(1230786000, 1262322000));
+    $this->assertEqual(vae_daterange("2009-01"), array(1230786000, 1233464400));
+    $this->assertEqual(vae_daterange("2009-01-01"), array(1230786000, 1230872400));
     $this->assertEqual(vae_daterange(), array(1, 9999999999));
     $this->assertEqual(vae_daterange(NULL), array(1, 9999999999));
     $this->assertEqual(vae_daterange(""), array(1, 9999999999));
