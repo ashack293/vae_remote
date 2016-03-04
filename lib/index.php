@@ -1,5 +1,9 @@
 <?php
 
+if (!function_exists('_vaeql_query_internal')) {
+  die("VaeQL PHP Extension not found.  Please make sure it is installed.");
+}
+
 if ($_VERB['config']) {
   foreach ($_VERB['config'] as $k => $v) {
     $_VAE['config'][$k] = $v;

@@ -1128,9 +1128,7 @@ function _vaeql_query($query, $context = null, $options = null, $raiseErrors = t
   if (is_null($options)) $options = array();
   $_VAE['vaeql_context'] = $context;
   $query = preg_replace('/\[([A-Za-z0-9_]*)=DATE\(([^]]*)\)\]/i', "[\\1:DATERANGE(\\2)]", $query);
-  if (!function_exists('_vaeql_query_internal')) {
-    return array(1, $query);
-  }
+
   $ret = _vaeql_query_internal($query);
   if (is_array($ret)) {
     list($path, $query) = $ret;
