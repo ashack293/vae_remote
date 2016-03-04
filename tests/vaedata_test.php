@@ -127,6 +127,15 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae("blog_posts[date=DATE('2008-08-21')]")->count, 2);
     $this->assertEqual(vae("blog_posts[date=DATE('2008-08-22')]")->count, 0);
     $this->assertEqual(vae("blog_posts[date=DATE('2008-08-20')]")->count, 0);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-08')]")->count, 2);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-07')]")->count, 0);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-09')]")->count, 0);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-08')]")->count, 2);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-08-21')]")->count, 2);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-08-22')]")->count, 0);
+    $this->assertEqual(vae("blog_posts[date:DATERANGE('2008-08-20')]")->count, 0);
+    $this->assertEqual(vae('blog_posts[date=DATE($d)]')->count, 2);
+    $this->assertEqual(vae('blog_posts[date:DATERANGE($d)]')->count, 2);
     $_REQUEST['d'] = "2008";
     $this->assertEqual(vae('blog_posts[date=DATE($d)]')->count, 2);
     $this->assertEqual(vae('blog_posts[date=DATE(\'$d\')]')->count, 0);
