@@ -355,7 +355,7 @@ $.extend( $.validator, {
     required: "This field is required.",
     remote: "Please fix this field.",
     email: "Please enter a valid email address.",
-    name: "Please enter both a first and last name.",
+    name_: "Please enter both a first and last name.",
     url: "Please enter a valid URL.",
     date: "Please enter a valid date.",
     dateISO: "Please enter a valid date ( ISO ).",
