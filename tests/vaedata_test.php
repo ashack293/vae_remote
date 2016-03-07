@@ -139,6 +139,8 @@ class VaeDataTest extends VaeUnitTestCase {
     $_REQUEST['d'] = "2008";
     $this->assertEqual(vae('blog_posts[date=DATE($d)]')->count, 2);
     $this->assertEqual(vae('blog_posts[date=DATE(\'$d\')]')->count, 0);
+    $this->assertEqual(vae('blog_posts[date:DATERANGE($d)]')->count, 2);
+    $this->assertEqual(vae('blog_posts[date:DATERANGE(\'$d\')]')->count, 0);
     $this->assertEqual(vae('permalink/artist/kevin-bombino')->id, 13432);
     $this->assertEqual(vae('permalink/artist/kevin-bombino')->name, "Kevin Bombino");
     $this->assertEqual(vae('permalink/artist/kevin-bombino/name'), "Kevin Bombino");
