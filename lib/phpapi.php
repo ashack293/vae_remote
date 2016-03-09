@@ -114,6 +114,12 @@ function vae_customer_order_ids($id) {
   return $arr['fixnum'];
 }
 
+function vae_customer_update($id = null, $data) {
+  if (!$id) $id = $_SESSION['__v:store']['customer_id'];
+  $ret = _vae_rest($data, "api/site/v1/customers/update/" . $id, "customer");
+  return ($ret != false);
+}
+
 function vae_data_path() {
   global $_VAE;
   _vae_load_settings();
