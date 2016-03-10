@@ -503,6 +503,7 @@ function _vae_store_complete_checkout($data, $tag = null) {
   if ($ret) {
     $order_data = _vae_array_from_rails_xml(simplexml_load_string($ret));
     $data['id'] = $order_data['reference_id'];
+    $data['created_at'] = time();
     foreach ($_SESSION['__v:store']['cart'] as $id => $d) {
       $_SESSION['__v:store']['cart'][$id]['order_id'] = $data['id'];
     }
