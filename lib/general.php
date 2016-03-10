@@ -131,7 +131,6 @@ function _vae_configure_php() {
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   _vae_set_default_config();
   _vae_load_settings();
-  _vae_store_marketing_data_in_session();
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
     if ($_REQUEST['__get_yield']) {
@@ -147,6 +146,7 @@ function _vae_configure_php() {
   if (!$_REQUEST['__v:store_payment_method_ipn']) {
     session_start();
   }
+  _vae_store_marketing_data_in_session();
   $key = "fg" . $_VAE['feed_generation'];
   $vae_yml = $_SERVER['DOCUMENT_ROOT'] . '/__vae.yml';
   if (file_exists($vae_yml)) $key .= filemtime($vae_yml);
