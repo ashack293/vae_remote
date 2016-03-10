@@ -535,7 +535,8 @@ function _vae_htmlarea($text, $a, $offsite = false) {
     $text = str_replace(array("\r", "\n"), "", $text);
     $text = str_replace(array("</p>", "<br />", "<br>", "<br/>"), "\n", $text);
     $text = preg_replace("/\n\n(\n*)/", "\n\n", $text);
-    $text = html_entity_decode(strip_tags($text));
+    $text = strip_tags(html_entity_decode($text));
+    if ($a['entities']) $text = htmlspecialchars($text);
     if ($a['maxlength'] && (strlen($text) > $a['maxlength'])) $text = substr($text, 0, $a['maxlength']) . "...";
     $text = $a['before'] . $text . $a['after'];
     return $text;
