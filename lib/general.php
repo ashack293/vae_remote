@@ -131,6 +131,7 @@ function _vae_configure_php() {
   if ($_REQUEST['__skip_pdf']) $_VAE['skip_pdf'] = true;
   _vae_set_default_config();
   _vae_load_settings();
+  _vae_store_marketing_data_in_session();
   if ($_REQUEST['__proxy']) {
     session_id($_REQUEST['__proxy']);
     if ($_REQUEST['__get_yield']) {
@@ -1776,6 +1777,14 @@ function _vae_store_file($iden, $file, $ext, $filename = null, $gd_or_uploaded =
     _vae_long_term_cache_set($iden, $newname, null, 1);
   }
   return $newname;
+}
+
+function _vae_store_marketing_data_in_session() {
+  foreach (array('campaign','content','keyword','medium','source') as $q) {
+    if ($_REQUEST['utm_'.$q]) {
+      $_SESSION['__v:store']['marketing_data']['marketing_' . $q] = $_REQUEST['utm_'.$q];
+    }
+  }
 }
 
 function _vae_stringify_array($array) {

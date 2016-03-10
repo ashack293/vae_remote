@@ -492,6 +492,9 @@ function _vae_store_checkout($a = null, $tag = null) {
     foreach (array('billing_name','billing_company','billing_address','billing_city','billing_state','billing_country','billing_zip','billing_phone','shipping_name','shipping_company','shipping_address','shipping_address_2','shipping_city','shipping_state','shipping_zip','shipping_country','shipping_phone') as $k) {
       $data[$k] = $current[$k];
     }
+    foreach ($_SESSION['__v:store']['marketing_data'] as $k => $v) {
+      $data[$k] = $v;
+    }
     if ($payment_method['callback']) return call_user_func($payment_method['callback'], $data, $tag);
     return _vae_store_complete_checkout($data, $tag);
   }
