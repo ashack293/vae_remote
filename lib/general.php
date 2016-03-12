@@ -892,6 +892,7 @@ function _vae_log($msg) {
 function _vae_logstash_send($log_msg) {
   if ($_ENV['TEST']) return;
   $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+  stream_set_timeout($sock, 1);
   @socket_connect($sock, "public.logs***REMOVED***", 5000);
   @socket_write($sock, $log_msg, strlen($log_msg));
 }
