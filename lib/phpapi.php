@@ -456,7 +456,7 @@ function vae_store_discount_code($code = null, $force = false) {
   } else {
     if (!$force && strlen($_SESSION['__v:store']['discount_code'])) return false;
     $_SESSION['__v:store']['discount_code'] = preg_replace("/[^a-z0-9]/", "", strtolower($code));
-    _vae_store_compute_discount();
+    _vae_store_compute_discount(null, null, '', true);
     return true;
   }
 }

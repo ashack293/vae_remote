@@ -529,9 +529,10 @@ function _vae_store_complete_checkout($data, $tag = null) {
   return false;
 }
 
-function _vae_store_compute_discount($item = null, $remaining = null, $flash_location = '') {
+function _vae_store_compute_discount($item = null, $remaining = null, $flash_location = '', $hide_errors = false) {
   $amount = 0;
   $show_errors = $_SESSION['__v:store']['discount_code_show_errors'];
+  if ($hide_errors) $show_errors = false;
   _vae_session_deps_add('__v:store', '_vae_store_compute_discount');
   $current = _vae_store_current_user();
   if ($_SESSION['__v:store']['user_discount'] && $item == null) {
