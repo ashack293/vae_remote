@@ -958,7 +958,7 @@ function _vae_merge_data_from_tags(&$tag, &$data, &$errors, $nested = false) {
   	      if ($_FILES[$name] && $_FILES[$name]['name']) {
   	        $sep = explode(".", $_FILES[$name]['name']);
   	        $ext = array_pop($sep);
-  	        $value = vae_data_url() . _vae_store_file(null, $_FILES[$name]['tmp_name'], $ext, "upload_" . implode("_", $sep), "uploaded");
+  	        $value = _vae_absolute_data_url() . _vae_store_file(null, $_FILES[$name]['tmp_name'], $ext, "upload_" . implode("_", $sep), "uploaded");
   	      }
   	    } else {
   	      $value = _vae_request_param($name);

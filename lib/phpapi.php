@@ -127,9 +127,7 @@ function vae_data_path() {
 }
 
 function vae_data_url() {
-  global $_VAE;
-  _vae_load_settings();
-  return $_VAE['config']['data_url'];
+  return _vae_absolute_data_url();
 }
 
 function vae_destroy($id) {
