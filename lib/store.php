@@ -454,10 +454,14 @@ function _vae_store_checkout($a = null, $tag = null) {
   $current = _vae_store_current_user();
   _vae_store_set_default_payment_method();
   $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
+  $line_items = _vae_store_convert_cart_to_line_items();
+  if (!count($line_items)) {
+    _vae_flash("You submitted a duplicate order.  Maybe you clicked the submit button twice.  Please check your email to see if you see an order confirmation.  If you don't see one, please contact us.", 'err');
+    return false;
+  }
   if (_vae_store_verify_available()) {
     _vae_store_compute_shipping();
     _vae_store_compute_tax();
-    $line_items = _vae_store_convert_cart_to_line_items();
     $shipping_method = $_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'];
     if (!_vae_store_if_shippable() && _vae_store_if_digital_downloads()) {
       $shipping_method = "Digital Delivery";
