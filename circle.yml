@@ -6,7 +6,7 @@ checkout:
   post:
     - git submodule sync
     - git submodule update --init
-    - ln -s tests/dependencies/vae_thrift ../vae_thrift
+    - ln -s /home/ubuntu/vae_remote/tests/dependencies/vae_thrift /home/ubuntu/vae_thrift
 
 dependencies:
   pre:
