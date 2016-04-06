@@ -12,3 +12,7 @@ dependencies:
     - sudo apt-get update; sudo apt-get install libantlr3c-dev
     - cd tests/dependencies/vaeql && make && make install
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.inithub
+
+test:
+  override:
+    - php tests/_all.php
