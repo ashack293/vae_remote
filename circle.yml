@@ -11,10 +11,13 @@ checkout:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libantlr3c-dev libzmq-dev libpcre3-dev libthrift-dev libmemcached-dev libmysqlcppconn-dev
-    - sudo git clone git@github.com/bji/libs3.git && cd libs3 && sudo make install
+    - git clone git@github.com:bji/libs3.git && cd libs3 && sudo make install
     - cd tests/dependencies/vaeql && make && make install
     - cd tests/dependencies/vae_thrift/cpp && ./configure && make && make install
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
+  post:
+    - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
+      background: true
 
 test:
   override:
