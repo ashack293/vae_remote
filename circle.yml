@@ -1,14 +1,14 @@
+machine:
+  php:
+    version: 7.0.4
+
 checkout:
   post:
     - git submodule sync
     - git submodule update --init
-    - cd tests/dependencies/vaeql && make && make install
-    - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.inithub
 
 dependencies:
   pre:
-  - sudo apt-get update; sudo apt-get install libantlr3c-dev
-
-machine:
-  php:
-    version: 7.0.4
+    - sudo apt-get update; sudo apt-get install libantlr3c-dev
+    - cd tests/dependencies/vaeql && make && make install
+    - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.inithub
