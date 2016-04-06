@@ -18,6 +18,8 @@ dependencies:
   post:
     - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
       background: true
+    - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --test:
+      background: true
 
 test:
   override:
