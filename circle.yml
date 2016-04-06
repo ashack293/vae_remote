@@ -17,9 +17,9 @@ dependencies:
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
   post:
     - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
-      background: true
+        background: true
     - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --test:
-      background: true
+        background: true
 
 test:
   override:
