@@ -24,15 +24,16 @@ function _vae_array_from_rails_xml($xml, $is_array = false, $transform = null) {
   return $r;
 }
 
-function _vae_build_xml($parent, $data) {
+function _vae_build_xml($parent, $data, $method) {
+  global $_VAE;
   if (!strlen($parent)) return "";
   $xml = "<" . $parent .">";
   foreach ($data as $k => $v) {
-    if (strlen($k) && !strstr($k, " ")) {
+    if (strlen($k) && !strstr($k, " ") && (!isset($_VAE['safe_params'][$method]) || in_array($k, $_VAE['safe_params'][$method]))) {
       $xml .= "<" . $k . ">";
       if (is_array($v)) {
         foreach ($v as $item) {
-          $xml .= _vae_build_xml("item", $item);
+          $xml .= _vae_build_xml("item", $item, $method . "/nested/" . $k);
         }
       } else {
         $xml .= htmlspecialchars($v);
@@ -94,7 +95,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   global $_VAE;
   if ($errors == null) $errors = array();
   if ($tag) _vae_merge_data_from_tags($tag, $data, $errors);
-  if (count($errors) == 0) $ret = _vae_send_rest($method, _vae_build_xml($param, $data), $errors);
+  if (count($errors) == 0) $ret = _vae_send_rest($method, _vae_build_xml($param, $data, _vae_safe_method_name($method)), $errors);
   $_VAE['errors'] = $errors;
   if (!$hide_errors && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
     return false;
@@ -105,6 +106,10 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
     }
   }
   return $ret;
+}
+
+function _vae_safe_method_name($method) {
+ return preg_replace('/\/[0-9]+/', '', $method);
 }
 
 function _vae_send_rest($method, $data, &$errors) {

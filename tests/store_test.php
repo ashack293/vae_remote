@@ -1,14 +1,14 @@
 <?php
 
 class StoreTest extends VaeUnitTestCase {
-  
+
   function setUp() {
     $this->tag = array();
     $this->callback = array();
     $this->render_context = new Context();
     parent::setUp();
   }
-  
+
   function testVaeStoreAddItemToCart() {
     $this->assertEqual(1, _vae_store_add_item_to_cart(13421, null, 1, array('name' => "test", 'price' => 12.34)));
     $this->assertSessionDep('__v:store');
@@ -68,7 +68,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['total'], 225.00);
 
   }
-    
+
   function testVaeStoreAddItemToCartProperAttributes() {
     $this->expectException();
     try {
@@ -114,14 +114,14 @@ class StoreTest extends VaeUnitTestCase {
       $this->assertPattern('/option_field.*is not specified/', $e->getMessage());
     }
   }
-  
+
   function testVaeStoreBannedCountry() {
     global $_VAE;
     $this->assertFalse(_vae_store_banned_country("jp"));
     $_VAE['settings']['store_banned_countries'] = "jp";
     $this->assertTrue(_vae_store_banned_country("jp"));
   }
-  
+
   function testVaeStoreCallbackAddToCart() {
     global $_VAE;
     $this->assertEqual(1, _vae_store_add_item_to_cart(null, null, 1, array('name' => "meaningless", 'price' => 1.00)));
@@ -143,20 +143,20 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['cart'][2]);
     $this->assertNull($_SESSION['__v:store']['cart'][1]);
   }
-  
+
   function testVaeStoreCallbackAddToCartBadOptionValue() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" name_field="name" price_field="price" options_collection="inventory" option_field="size" />');
     $tag['callback']['item'] = 13435;
     _vae_store_callback_add_to_cart($tag);
     $this->assertErrors("select an option value");
   }
-  
+
   function testVaeStoreCallbackAddToCartBadPriceInput() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" name="item" price_input="donation" clear_cart="true" notes_input="notes" />');
     _vae_store_callback_add_to_cart($tag);
     $this->assertErrors("enter an amount");
   }
-  
+
   function testVaeStoreCallbackAddToCartBadQty() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" name_field="name" price_field="price" options_collection="inventory" option_field="size" inventory_field="inventory" />');
     $tag['callback']['item'] = 13433;
@@ -166,7 +166,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 747);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['option_value'], "One Size");
   }
-  
+
   function testVaeStoreCallbackAddToCartMultiple() {
     $_REQUEST['buy'] = array(11 => 13433, 12 => 13435);
     $_REQUEST['options'] = array(11 => 13434, 12 => 13436);
@@ -185,13 +185,13 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['option_id'], 13436);
     $this->assertEqual($_SESSION['__v:store']['cart'][2]['option_value'], "One Size");
   }
-  
+
   function testVaeStoreCallbackAddToCartMultipleError() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" multiple="buy" name_field="name" price_field="price" options_collection="inventory" option_field="size" />');
     _vae_store_callback_add_to_cart($tag);
     $this->assertErrors("No items found");
   }
-  
+
   function testVaeStoreCallbackAddToCartQuantityArray() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" name_field="name" price_field="price" options_collection="inventory" option_field="size" />');
     $tag['callback']['item'] = 13435;
@@ -200,7 +200,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 3);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['option_value'], "One Size");
   }
-  
+
   function testVaeStoreCallbackAddToCartWithOption() {
     $tag = $this->callbackTag('<v:store:add_to_cart redirect="/cart" name_field="name" price_field="price" options_collection="inventory" option_field="size" />');
     $tag['callback']['item'] = 13435;
@@ -210,7 +210,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 3);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['option_value'], "One Size");
   }
-  
+
   function testVaeStoreCallbackAddressDelete() {
     $tag = $this->callbackTag('<v:store:address_delete />');
     $tag['callback']['id'] = 2;
@@ -221,13 +221,13 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['customer_addresses'][2]);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackAddressDeleteRedirect() {
     $tag = $this->callbackTag('<v:store:address_delete redirect="/cow" />');
     _vae_store_callback_address_delete($tag);
     $this->assertRedirect("/cow");
   }
-  
+
   function testVaeStoreCallbackAddressSelect() {
     $tag = $this->callbackTag('<v:store:address_select type="billing" />');
     $_REQUEST['address'] = "1";
@@ -237,7 +237,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRedirect($_SERVER['PHP_SELF']);
     $this->assertEqual($_SESSION['__v:store']['user']['billing_name'], "a2");
   }
-  
+
   function testVaeStoreCallbackCart() {
     global $_VAE;
     $this->populateCart();
@@ -254,7 +254,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_VAE['__test_hooked'], 2);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackCartPriceNoLogin() {
     global $_VAE;
     $this->populateCart();
@@ -266,7 +266,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['total'], 5.00);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 1);
   }
-  
+
   function testVaeStoreCallbackCartPrice() {
     global $_VAE;
     $this->populateCart();
@@ -279,7 +279,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['total'], 2.00);
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 1);
   }
-  
+
   function testVaeStoreCallbackCartRegister() {
     global $_VAE;
     $_REQUEST['checkout'] = "true";
@@ -287,7 +287,7 @@ class StoreTest extends VaeUnitTestCase {
     _vae_store_callback_cart($tag);
     $this->assertRedirect("/register");
   }
-  
+
   function testVaeStoreCallbackCheckout() {
     $tag = $this->callbackTag('<v:store:checkout redirect="/done" register_page="/register" />');
     $this->populateCart();
@@ -296,12 +296,12 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRest();
     $this->assertRedirect("/done");
   }
-  
+
   function helperStoreCallbackData1($data, $tag) {
     $this->assertEqual($data, array(
-      'line_items' => 
+      'line_items' =>
       array (
-        0 => 
+        0 =>
         array (
           'qty' => 1,
           'inventory_field' => NULL,
@@ -321,8 +321,9 @@ class StoreTest extends VaeUnitTestCase {
           'position' => 1,
           'bundled_with' => '',
           'image' => '',
+          'discount_class' => ''
         ),
-        1 => 
+        1 =>
         array (
           'qty' => 3,
           'inventory_field' => NULL,
@@ -342,8 +343,9 @@ class StoreTest extends VaeUnitTestCase {
           'position' => 2,
           'bundled_with' => '',
           'image' => '',
+          'discount_class' => ''
         ),
-        2 => 
+        2 =>
         array (
           'qty' => 1,
           'inventory_field' => 'inventory',
@@ -363,6 +365,7 @@ class StoreTest extends VaeUnitTestCase {
           'position' => 3,
           'bundled_with' => '',
           'image' => '',
+          'discount_class' => ''
         ),
       ),
       'remote_addr' => '66.0.12.12',
@@ -401,15 +404,15 @@ class StoreTest extends VaeUnitTestCase {
       'shipping_phone' => '800-286-8372',
     ));
   }
-  
+
   function helperStoreCallbackData2($data, $tag) {
     $this->assertEqual($data['shipping_method'], "Digital Delivery");
   }
-  
+
   function helperStoreCallbackData3($data, $tag) {
     $this->assertEqual($data['shipping_method'], "N/A");
   }
-  
+
   function helperStoreCallbackEmails($data) {
     $this->assertEqual($data['order_confirmation_email_html'], '1');
     $this->assertEqual($data['order_confirmation_email_text'], '2');
@@ -418,7 +421,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($data['shipping_info_email_html'], '5');
     $this->assertEqual($data['shipping_info_email_text'], '6');
   }
-  
+
   function testVaeStoreCallbackCheckoutData() {
     global $_VAE;
     $_SESSION['__v:store']['payment_method'] = 'unittest';
@@ -445,7 +448,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCart(array('weight' => 0));
     _vae_store_callback_checkout($tag);
   }
-  
+
   function testVaeStoreCallbackEmails() {
     global $_VAE;
     $_SESSION['__v:store']['payment_method'] = 'unittest';
@@ -458,7 +461,7 @@ class StoreTest extends VaeUnitTestCase {
     }
     _vae_store_callback_checkout($tag);
   }
-  
+
   function testVaeStoreCallbackEmailsBad() {
     global $_VAE;
     $_SESSION['__v:store']['payment_method'] = 'unittest';
@@ -473,7 +476,7 @@ class StoreTest extends VaeUnitTestCase {
       $this->assertPattern('/Unable to find Order Confirmation/', $e->getMessage());
     }
   }
-  
+
   function testVaeStoreCallbackCheckoutItemsNotAvail() {
     $tag = $this->callbackTag('<v:store:checkout redirect="/done" register_page="/register" />');
     vae_store_add_item_to_cart(13433, 13434, 1, array("inventory_field" => "inventory", "name_field" => "name", "price_field" => "price", "option_field" => "size", "options_collection" => "inventory"));
@@ -483,21 +486,21 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("no longer available");
     $this->assertRedirect("/page");
   }
-  
+
   function testVaeStoreCallbackCheckoutLockout() {
     $tag = $this->callbackTag('<v:store:checkout redirect="/done" register_page="/register" lockout_redirect="/bad" />');
     $_SESSION['__v:store']['checkout_attempts'] = 3;
     _vae_store_callback_checkout($tag);
     $this->assertRedirect("/bad");
   }
-  
+
   function testVaeStoreCallbackCurrencySelect() {
     $tag = $this->callbackTag('<v:store:currency_select />');
     $_REQUEST['currency'] = "AUD";
     _vae_store_callback_currency_select($tag);
     $this->assertEqual($_SESSION['__v:store_display_currency'], "AUD");
   }
-  
+
   function testVaeStoreCallbackDiscount() {
     $tag = $this->callbackTag('<v:store:discount />');
     $this->populateCart();
@@ -509,7 +512,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRedirect($_SERVER['PHP_SELF']);
     $this->assertEqual(_vae_store_compute_discount(), "5.00");
   }
-  
+
   function testVaeStoreCallbackDiscountEmpty() {
     $tag = $this->callbackTag('<v:store:discount />');
     _vae_store_callback_discount($tag);
@@ -517,27 +520,27 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("enter a discount");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackForgot() {
     $this->mockRestError();
     $tag = $this->callbackTag('<v:store:forgot />');
     _vae_store_callback_forgot($tag);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackForgotRedirect() {
     $tag = $this->callbackTag('<v:store:forgot redirect="/lalala" />');
     _vae_store_callback_forgot($tag);
     $this->assertRedirect("/lalala");
   }
-  
+
   function testVaeStoreCallbackForgotRedirectFail() {
     $this->mockRestError();
     $tag = $this->callbackTag('<v:store:forgot redirect="/lalala" />');
     _vae_store_callback_forgot($tag);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackLogin() {
     $this->mockRest("<customer><id>123</id><name>Kevin Bombino</name><customer-addresses><customer-address><address-type>billing</address-type><city>Sydney</city></customer-address></customer-addresses></customer>");
     $tag = $this->callbackTag('<v:store:login />');
@@ -546,7 +549,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['user']['billing_city'], "Sydney");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackLoginCustomRedirect() {
     $this->mockRest("<customer><id>123</id><name>Kevin Bombino</name><customer-addresses><customer-address><address-type>billing</address-type><city>Sydney</city></customer-address></customer-addresses></customer>");
     $tag = $this->callbackTag('<v:store:login redirect="/lalala" />');
@@ -555,7 +558,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['user']['billing_city'], "Sydney");
     $this->assertRedirect("/lalala");
   }
-  
+
   function testVaeStoreCallbackLoginFail() {
     $this->mockRestError();
     $tag = $this->callbackTag('<v:store:login redirect="/lalala" />');
@@ -563,7 +566,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("Login information incorrect.");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackLoginFailCustomMessage() {
     $this->mockRestError();
     $tag = $this->callbackTag('<v:store:login redirect="/lalala" invalid="pwn3d" />');
@@ -571,7 +574,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("pwn3d");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackLogout() {
     $tag = $this->callbackTag('<v:store:logout />');
     _vae_store_callback_logout($tag);
@@ -579,13 +582,13 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['previous_orders']);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackLogoutRedirect() {
     $tag = $this->callbackTag('<v:store:logout redirect="/home" />');
     _vae_store_callback_logout($tag);
     $this->assertRedirect("/home");
   }
-  
+
   function testVaeStoreCallbackPaymentMethodsSelect() {
     $_REQUEST['__method'] = "testeuro";
     $this->assertNull($_SESSION['__v:store']['payment_method']);
@@ -594,7 +597,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['payment_method'], "testeuro");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackPaymentMethodsSelectExpressCheckout() {
     $_REQUEST['__method'] = "paypal_express_checkout";
     $this->mockRest("http://cow.com/");
@@ -603,14 +606,14 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRest();
     $this->assertRedirect("http://cow.com/");
   }
-  
+
   function testVaeStoreCallbackPaymentMethodsSelectExpressCheckoutToken() {
     $_REQUEST['token'] = "applesauce";
     $tag = $this->callbackTag('<v:store:payment_methods_select />');
     _vae_store_callback_payment_methods_select($tag);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackPaypalExpressCheckout() {
     $this->mockRest("http://cow.com/");
     $tag = $this->callbackTag('<v:store:paypal_express_checkout />');
@@ -618,7 +621,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRest();
     $this->assertRedirect("http://cow.com/");
   }
-  
+
   function testVaeStoreCallbackPaypalExpressCheckoutToken() {
     $_REQUEST['token'] = 12345;
     $_REQUEST['PayerID'] = 6789;
@@ -631,7 +634,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['user']['billing_address_2'], "Floor 3");
     $this->assertRedirect("/checkout");
   }
-  
+
   function testVaeStoreCallbackPaypalExpressCheckoutTokenFail() {
     $_REQUEST['token'] = 12345;
     $_REQUEST['PayerID'] = 6789;
@@ -642,21 +645,21 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['paypal_express_checkout'], array('token' => 12345, 'payer_id' => 6789));
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackPaypalExpressCheckoutRestError() {
     $this->mockRestError("http://cow.com/");
     $tag = $this->callbackTag('<v:store:paypal_express_checkout />');
     _vae_store_callback_paypal_express_checkout($tag);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackRegister() {
     $tag = $this->callbackTag("<v:store:register formmail='kevin@bombino.org' redirect='/checkout'><v:text path='billing_name' required='name' /></v:store:register>");
     _vae_store_callback_register($tag);
     $this->assertRest();
     $this->assertRedirect("/checkout");
   }
-  
+
   function testVaeStoreCallbackRegisterErrors() {
     $this->mockRestError("wild error");
     $tag = $this->callbackTag("<v:store:register redirect='/checkout'><v:text path='billing_name' required='name' /></v:store:register>");
@@ -664,7 +667,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("wild error");
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCallbackShippingMethodsSelect() {
     $_REQUEST['__method'] = 1;
     $tag = $this->callbackTag('<v:store:shipping_methods_select />');
@@ -675,19 +678,19 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['shipping']['selected'], 15.00);
     $this->assertRedirect($_SERVER['PHP_SELF']);
   }
-  
+
   function testVaeStoreCartItemName() {
     $this->assertEqual(_vae_store_cart_item_name(array('name' => 'cow')), 'cow');
     $this->assertEqual(_vae_store_cart_item_name(array('name' => 'cow', 'option_value' => 'red')), 'cow (red)');
   }
-  
+
   function testVaeStoreCompleteCheckout() {
     $this->populateCart();
     $_SESSION['__v:store']['discount'] = "19.99";
     $_SESSION['__v:store']['discount_code'] = "abc123";
     $_SESSION['__v:store']['payment_method'] = "test";
     $_SESSION['__v:store']['checkout_attempts'] = 2;
-    $this->mockRest("<reference-id>123</reference-id>");
+    $this->mockRest("<order><reference-id>123</reference-id></order>");
     $data = array('payment_method' => 'test');
     $this->assertNotNull($_SESSION['__v:store']['cart']);
     $this->assertNotNull($_SESSION['__v:store']['discount']);
@@ -697,10 +700,11 @@ class StoreTest extends VaeUnitTestCase {
     $oldcart = $_SESSION['__v:store']['cart'];
     foreach ($oldcart as $k => $v) {
       $oldcart[$k]['order_id'] = 123;
-    }  
+    }
     $this->assertTrue(_vae_store_complete_checkout($data));
     $this->assertEqual($_SESSION['__v:store']['recent_order'], $oldcart);
     $data['id'] = 123;
+    unset($_SESSION['__v:store']['recent_order_data']['created_at']);
     $this->assertEqual($_SESSION['__v:store']['recent_order_data'], $data);
     $this->assertNull($_SESSION['__v:store']['cart']);
     $this->assertNull($_SESSION['__v:store']['discount']);
@@ -709,7 +713,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['checkout_attempts']);
     $this->assertNoRedirect();
   }
-  
+
   function testVaeStoreCompleteCheckoutBad() {
     $this->populateCart();
     $this->mockRestError();
@@ -718,7 +722,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['recent_order']);
     $this->assertNull($_SESSION['__v:store']['recent_order_data']);
   }
-  
+
   function testVaeStoreCompleteCheckoutRedirect() {
     $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
     $this->populateCart();
@@ -726,7 +730,7 @@ class StoreTest extends VaeUnitTestCase {
     _vae_store_complete_checkout($data, $tag);
     $this->assertRedirect("/done");
   }
-  
+
   function testVaeStoreComputeDiscount() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount></store-discount-code>');
@@ -735,14 +739,14 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(null, 4), 4.00);
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreComputeDiscountCantFind() {
     $this->populateCart();
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("invalid coupon code");
   }
-  
+
   function testVaeStoreComputeDiscountCountry() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>500</fixed-amount><country>jp</country></store-discount-code>');
@@ -751,21 +755,21 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("not being shipped to");
   }
-  
+
   function testVaeStoreComputeDiscountMax() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>500</fixed-amount></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 454.97);
   }
-  
+
   function testVaeStoreComputeDiscountMaxShipping() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>500</fixed-amount><free-shipping>true</free-shipping></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 518.67);
   }
-  
+
   function testVaeStoreComputeDiscountMinOrderAmount() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><min-order-amount>600</min-order-amount></store-discount-code>');
@@ -774,7 +778,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("not big enough");
   }
-  
+
   function testVaeStoreComputeDiscountMinOrderItems() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><min-order-items>7</min-order-items></store-discount-code>');
@@ -783,7 +787,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("not enough items");
   }
-  
+
   function testVaeStoreComputeDiscountNotAvailableAnymore() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><stop-at>Jan 1, 1990</stop-at></store-discount-code>');
@@ -791,7 +795,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("no longer available");
   }
-  
+
   function testVaeStoreComputeDiscountNotYetAvailable() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><start-at>Jan 1, 2035</start-at></store-discount-code>');
@@ -799,7 +803,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertErrors("not available yet");
   }
-  
+
   function testVaeStoreComputeDiscountNotUsedHideErrors() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>0</fixed-amount></store-discount-code>');
@@ -807,49 +811,49 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
     $this->assertEqual("bloglings", $_SESSION['__v:store']['discount_code']);
   }
-  
+
   function testVaeStoreComputeDiscountPerc() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><percentage-amount>50</percentage-amount></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 227.49);
   }
-  
+
   function testVaeStoreComputeDiscountIncludedClasses() {
     $this->populateCart(array('discount_class' => "goods,services"));
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><included-classes>goods</included-classes></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 5.00);
   }
-  
+
   function testVaeStoreComputeDiscountIncludedClasses2() {
     $this->populateCart(array('discount_class' => "services"));
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><included-classes>goods</included-classes></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
   }
-  
+
   function testVaeStoreComputeDiscountExcludedClasses() {
     $this->populateCart(array('discount_class' => "services"));
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><excluded-classes>goods</excluded-classes></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 5.00);
   }
-  
+
   function testVaeStoreComputeDiscountExcludedClasses2() {
     $this->populateCart(array('discount_class' => "goods,services"));
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><excluded-classes>goods</excluded-classes></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
   }
-  
+
   function testVaeStoreComputeDiscountRequiredClasses() {
     $this->populateCart(array('discount_class' => "goods,services"));
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><included-classes>goods</included-classes><required-classes>services</required-classes></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_discount(), 5.00);
   }
-  
+
   function testVaeStoreComputeDiscountShipping() {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>5</fixed-amount><free-shipping>true</free-shipping></store-discount-code>');
@@ -857,7 +861,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_discount(), 68.70);
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreComputeNumberOfItems() {
     global $_VAE;
     $this->assertEqual(_vae_store_compute_number_of_items(), 0);
@@ -868,7 +872,7 @@ class StoreTest extends VaeUnitTestCase {
     $_VAE['store_cached_number_of_items'] = 7;
     $this->assertEqual(_vae_store_compute_number_of_items(), 7);
   }
-  
+
   function testVaeStoreComputeShipping() {
     global $_VAE;
     $this->populateCustomer();
@@ -879,7 +883,7 @@ class StoreTest extends VaeUnitTestCase {
     unset($_SESSION['__v:store']['shipping']['hash']);
     $this->assertEqual($_SESSION['__v:store']['shipping'], array (
       'weight' => 4,
-      'options' => 
+      'options' =>
         array(
           array(
             'title' => 'Standard Shipping',
@@ -892,26 +896,26 @@ class StoreTest extends VaeUnitTestCase {
       'selected' => '63.70',
       'selected_index' => 0));
   }
-  
+
   function testVaeStoreComputeShippingCached() {
     global $_VAE;
     $_VAE['store_cached_shipping'] = 812.12;
     $this->assertEqual(812.12, _vae_store_compute_shipping());
     $this->assertNotEqual(812.12, _vae_store_compute_shipping("kevin.html"));
   }
-  
+
   function testVaeStoreComputeShippingEmpty() {
     $this->populateCustomer();
     $this->assertEqual(0, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingUser() {
     $this->populateCustomer();
     $this->populateCart();
     vae_store_add_shipping_method(array('title' => 'Cheap Shipping', 'cost' => '1.45', 'free_shipping_threshold' => 1000));
     $this->assertEqual(1.45, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingDestinationCountry() {
     global $_VAE;
     $this->populateCustomer();
@@ -922,7 +926,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCustomer(array('shipping_country' => "CA"));
     $this->assertEqual(1.45, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingDestinationContinent() {
     global $_VAE;
     $this->populateCustomer(array('shipping_country' => "US"));
@@ -933,7 +937,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCustomer(array('shipping_country' => "AU"));
     $this->assertEqual(63.70, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingDomesticOnly() {
     global $_VAE;
     $this->populateCustomer(array('shipping_country' => "US"));
@@ -944,7 +948,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCustomer(array('shipping_country' => "AU"));
     $this->assertEqual(63.70, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingInternationalOnly() {
     global $_VAE;
     $this->populateCustomer(array('shipping_country' => "US"));
@@ -955,35 +959,35 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCustomer(array('shipping_country' => "AU"));
     $this->assertEqual(1.45, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingClass() {
     $this->populateCustomer();
     $this->populateCart();
     vae_store_add_shipping_method(array('title' => 'Cheap Shipping', 'cost' => '1.45', 'class' => "bad"));
     $this->assertEqual(63.70, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingClass2() {
     $this->populateCustomer();
     $this->populateCart(array('shipping_class' => 'bad'));
     vae_store_add_shipping_method(array('title' => 'Cheap Shipping', 'cost' => '1.45', 'class' => "bad"));
     $this->assertEqual(1.45, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingWeightsManual() {
     $this->populateCustomer();
     $this->populateCart();
     $_SESSION['__v:store']['total_weight'] = array(1, 1, 1, 4);
     $this->assertEqual(254.78, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingUserFree() {
     $this->populateCustomer();
     $this->populateCart();
     vae_store_add_shipping_method(array('title' => 'Cheap Shipping', 'cost' => '1.45', 'free_shipping_threshold' => 1));
     $this->assertEqual(0.00, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeShippingRateGroups() {
     $this->populateCustomer();
     $this->populateCart();
@@ -992,7 +996,7 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_add_shipping_method(array('title' => 'Cheap Shipping3', 'cost' => '2.00', 'rate_group' => 'grp'));
     $this->assertEqual(1.00, _vae_store_compute_shipping());
   }
-  
+
   function testVaeStoreComputeSubtotal() {
     global $_VAE;
     $this->assertEqual(_vae_store_compute_subtotal(), 0.00);
@@ -1003,7 +1007,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_subtotal(), 126.45);
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreComputeTaxBase() {
     global $_VAE;
     $this->populateCart();
@@ -1018,7 +1022,7 @@ class StoreTest extends VaeUnitTestCase {
     unset($_VAE['store_cached_tax']);
     $this->assertEqual($_VAE['store_cached_tax'], 0.00);
   }
-  
+
   function testVaeStoreComputeTaxCountry() {
     global $_VAE;
     $this->populateCart();
@@ -1026,7 +1030,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_tax(), 81.89);
     $this->assertEqual($_SESSION['__v:store']['tax_rate'], 'Australia GST');
   }
-  
+
   function testVaeStoreComputeTaxDiscount() {
     $this->populateCart();
     $this->populateCustomer(array('shipping_state' => 'NY'));
@@ -1034,14 +1038,14 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_discount_code("BLOGLINGS");
     $this->assertEqual(_vae_store_compute_tax(), 37.68);
   }
-  
+
   function testVaeStoreComputeTaxMinimumPrice() {
     global $_VAE;
     $this->populateCart();
     $this->populateCustomer(array('shipping_state' => 'FL'));
     $this->assertEqual(_vae_store_compute_tax(), 18.00);
   }
-  
+
   function testVaeStoreComputeTaxState() {
     global $_VAE;
     $this->populateCart();
@@ -1050,28 +1054,28 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_VAE['store_cached_tax'], 38.10);
     $this->assertEqual($_SESSION['__v:store']['tax_rate'], 'New York State 8.375%');
   }
-  
+
   function testVaeStoreComputeTaxTaxClasses() {
     global $_VAE;
     $this->populateCart(array('tax_class' => "clothing"));
     $this->populateCustomer(array('shipping_state' => 'CA'));
     $this->assertEqual(_vae_store_compute_tax(), 22.75);
   }
-  
+
   function testVaeStoreComputeTaxTaxClasses2() {
     global $_VAE;
     $this->populateCart(array('tax_class' => "services"));
     $this->populateCustomer(array('shipping_state' => 'CA'));
     $this->assertEqual(_vae_store_compute_tax(), 31.85);
   }
-  
+
   function testVaeStoreComputeTaxTaxClasses3() {
     global $_VAE;
     $this->populateCart();
     $this->populateCustomer(array('shipping_state' => 'CA'));
     $this->assertEqual(_vae_store_compute_tax(), 0.00);
   }
-  
+
   function testVaeStoreComputeTaxZip() {
     // note this also tests for shipping included in tax calculations
     $this->populateCart();
@@ -1079,7 +1083,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_compute_tax(), 40.70);
     $this->assertEqual($_SESSION['__v:store']['tax_rate'], 'New York State 8.375%/1000* 0.500%');
   }
-  
+
   function testVaeStoreComputeTotal() {
     global $_VAE;
     $_VAE['store_cached_subtotal'] = 100.00;
@@ -1092,7 +1096,7 @@ class StoreTest extends VaeUnitTestCase {
     $_VAE['store_cached_shipping'] = -1015.00;
     $this->assertEqual(_vae_store_compute_total(), 0.00);
   }
-  
+
   function testVaeStoreCreateCustomer() {
     global $_VAE;
     $_VAE['settings']['store_shipping_use_ups_address_validation'] = true;
@@ -1107,7 +1111,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRest();
     $this->assertEqual($_VAE['__test_hooked'], 1);
   }
-  
+
   function testVaeStoreCreateCustomerLoggedin() {
     global $_VAE;
     vae_register_hook("store:register:success", "helperHook");
@@ -1120,7 +1124,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertRest();
     $this->assertEqual($_VAE['__test_hooked'], 1);
   }
-  
+
   function testVaeStoreCreateCustomerLoggedinFailure() {
     global $_VAE;
     $_SESSION['__v:store']['customer_id'] = 123;
@@ -1129,7 +1133,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertFalse(_vae_store_create_customer($data));
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreCreateCustomerNotLoggedinFailure() {
     global $_VAE;
     $this->mockRestError();
@@ -1137,14 +1141,14 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertFalse(_vae_store_create_customer($data));
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreCurrency() {
     global $_VAE;
     $this->assertEqual(_vae_store_currency(), "USD");
     $_VAE['settings']['store_currency'] = "JPY";
     $this->assertEqual(_vae_store_currency(), "JPY");
   }
-  
+
   function testVaeStoreCurrencyDisplay() {
     $this->assertEqual(_vae_store_currency_display(7.99, false), "<span class='currency currency_USD'>7.99</span>");
     $this->assertEqual(_vae_store_currency_display(7.99), "<span class='currency currency_USD'>$7.99</span>");
@@ -1152,19 +1156,19 @@ class StoreTest extends VaeUnitTestCase {
     $this->mockRest(file_get_contents(dirname(__FILE__) . "/data/coinmill_rss.xml"));
     $this->assertEqual(_vae_store_currency_display(7.99), "<span class='currency currency_AUD'>est. $7.03 AUD</span>");
   }
-  
+
   function testVaeStoreCurrentUser() {
     $_SESSION['__v:store']['user'] = "k";
     $this->assertEqual(_vae_store_current_user(), "k");
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreExchangeRate() {
     $this->mockRest(file_get_contents(dirname(__FILE__) . "/data/coinmill_rss.xml"));
     $this->assertEqual(_vae_store_exchange_rate("USD", "AUD"), 0.88);
     $this->assertEqual(_vae_store_exchange_rate("USD", "AUD"), 0.88);
   }
-  
+
   function testVaeStoreFindDiscount() {
     $this->populateCustomer();
     $this->mockRest('<store-discount-code><code>cow</code><fixed-amount>5</fixed-amount></store-discount-code>');
@@ -1172,13 +1176,13 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($ret, array('code' => 'cow', 'fixed_amount' => '5'));
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreFindDiscountBad() {
     $this->populateCustomer();
     $this->mockRest('BAD');
     $this->assertFalse(_vae_store_find_discount("cow"));
   }
-  
+
   function testVaeStoreIfDigitalDownloads() {
     $this->assertFalse(_vae_store_if_digital_downloads());
     $this->populateCart();
@@ -1186,7 +1190,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCart(array('digital' => true));
     $this->assertTrue(_vae_store_if_digital_downloads());
   }
-  
+
   function testVaeStoreIfShippable() {
     $this->assertFalse(_vae_store_if_shippable());
     $this->populateCart();
@@ -1195,7 +1199,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCart(array('digital' => true, 'weight' => null));
     $this->assertFalse(_vae_store_if_shippable());
   }
-  
+
   function testVaeStoreItemAvailable() {
     $this->assertTrue(_vae_store_item_available(_vae_fetch(13434), null, "inventory"));
     $this->assertTrue(_vae_store_item_available(_vae_fetch(13433), "inventory", "inventory"));
@@ -1204,32 +1208,32 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertFalse(_vae_store_item_available(_vae_fetch(13435), "inventory", "inventory"));
     $this->assertFalse(_vae_store_item_available(_vae_fetch(13435), "bad", "inventory"));
   }
-  
+
   function testVaeStoreItemHasOptions() {
     $this->assertTrue(_vae_store_item_has_options(13421, "items"));
     $this->assertFalse(_vae_store_item_has_options(13447, "items"));
   }
-  
+
   function testVaeStoreLoadCustomer() {
-    $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
+    $raw = "<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
     _vae_store_load_customer($raw);
     $this->assertSessionDep('__v:store');
     $this->assertTrue($_SESSION['__v:store']['loggedin']);
-    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney"));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123'));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertEqual($_SESSION['__v:store']['customer_addresses'], array(array('address_type' => 'billing', 'name' => 'Kevin Bombino', 'city' => 'Sydney')));
   }
-  
+
   function testVaeStoreLoadCustomerNotLoggedIn() {
     $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
     _vae_store_load_customer($raw, false);
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null, 'gateway' => null, 'gateway_customer_id' => null));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertFalse($_SESSION['__v:store']['loggedin']);
     $this->assertNull($_SESSION['__v:store']['customer_addresses']);
   }
-  
+
   function testVaeStoreMostSpecificField() {
     $this->assertEqual(_vae_store_most_specific_field(array(), "cow"), "");
     $this->populateCart();
@@ -1238,13 +1242,13 @@ class StoreTest extends VaeUnitTestCase {
     $a['option_id'] = 13423;
     $this->assertEqual(_vae_store_most_specific_field($a, "name"), "Road Trip EP");
   }
-  
+
   function testVaeStorePaymentMethod() {
     $this->populateCart();
     _vae_store_set_default_payment_method();
     $this->assertEqual(_vae_store_payment_method(), array('method_name' => 'test', 'accept_visa' => '1', 'accept_master' => '1', 'accept_discover' => '1', 'accept_american_express' => '1'));
   }
-  
+
   function helperStorePaymentPaypalCallback($data, $tag) {
     global $_VAE;
     _vae_store_payment_paypal_callback($data, $tag);
@@ -1254,7 +1258,7 @@ class StoreTest extends VaeUnitTestCase {
     $file = _vae_read_file($matches[1] . ".tmp");
     $this->assertEqual(unserialize($file), array('data' => $data, 'cart' => $_SESSION['__v:store']['cart']));
   }
-  
+
   function helperStorePaymentPaypalCallback2($data, $tag) {
     global $_VAE;
     _vae_store_payment_paypal_callback($data, $tag);
@@ -1262,7 +1266,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($data['total'], 551.35);
     $this->assertPattern('/https:\/\/www.paypal.com\/cgi-bin\/webscr\?/', $_VAE['force_redirect']);
   }
-  
+
   function testVaeStorePaymentPaypalCallback() {
     global $_VAE;
     $_SESSION['__v:store']['payment_method'] = 'unittest';
@@ -1275,11 +1279,11 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_discount_code("BLOGLINGS");
     _vae_store_callback_checkout($tag);
   }
-  
+
   function testVaeStorePaymentPaypalEmail() {
     $this->assertEqual(_vae_store_payment_paypal_email(), "sales@actionverb.com");
   }
-  
+
   function testVaeStorePaymentPaypalIpnEmailMismatch() {
     $this->mockRest("VERIFIED");
     $_POST['custom'] = "12345";
@@ -1292,11 +1296,11 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertPattern('/E-Mail mismatch/', $out);
     $this->assertReportedError();
   }
-  
+
   function testVaeStorePaymentPaypalIpnValidAndCompleted() {
     global $_VAE;
     $this->mockRest("VERIFIED");
-    $this->mockRest("<reference-id>123</reference-id>");
+    $this->mockRest("<order><reference-id>123</reference-id></order>");
     $this->populateCart();
     $_POST['custom'] = "12345";
     $_POST['payment_status'] = "Completed";
@@ -1305,10 +1309,10 @@ class StoreTest extends VaeUnitTestCase {
     $data = array('payment_method' => 'test');
     _vae_write_file($_POST['custom'], serialize(array('data' => $data, 'cart' => $_SESSION['__v:store']['cart'])));
     unset($_VAE['files_written']);
-    $oldcart = $_SESSION['__v:store']['cart'];  
+    $oldcart = $_SESSION['__v:store']['cart'];
     foreach ($oldcart as $k => $v) {
       $oldcart[$k]['order_id'] = 123;
-    }  
+    }
     $tag = $this->callbackTag('<v:store:checkout register_page="/register" redirect="/done" />');
     $out = _vae_store_payment_paypal_ipn($tag);
     $data['id'] = 123;
@@ -1316,6 +1320,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertPattern('/PayPal authenticity verified./', $out);
     $this->assertPattern('/Payment Completed, submitting order./', $out);
     $this->assertEqual($_SESSION['__v:store']['recent_order'], $oldcart);
+    unset($_SESSION['__v:store']['recent_order_data']['created_at']);
     $this->assertEqual($_SESSION['__v:store']['recent_order_data'], $data);
     $this->assertNull($_SESSION['__v:store']['cart']);
     $this->assertNull($_SESSION['__v:store']['discount']);
@@ -1324,30 +1329,30 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertNull($_SESSION['__v:store']['checkout_attempts']);
     $this->assertNoReportedErrors();
   }
-   
+
   function testVaeStorePopulateAddress() {
     _vae_store_populate_address(array('address_type' => "billing", 'name' => "Kevin", 'city' => "Sydney"));
     $this->assertSessionDep('__v:store');
     $this->assertEqual($_SESSION['__v:store']['user'], array('billing_name' => "Kevin", 'billing_city' => "Sydney"));
   }
-  
+
   function testVaeStorePopulateAddresses() {
     $_SESSION['__v:store']['customer_addresses'] = array(array('address_type' => "billing", 'name' => "Kevin", 'city' => "Sydney"), array('address_type' => "shipping", 'name' => "Alex", 'city' => "Melbourne"));
     _vae_store_populate_addresses();
     $this->assertSessionDep('__v:store');
     $this->assertEqual($_SESSION['__v:store']['user'], array('billing_name' => "Kevin", 'billing_city' => "Sydney", 'shipping_name' => "Alex", 'shipping_city' => "Melbourne"));
   }
-  
+
   function testVaeStoreRenderAddToCart() {
     _vae_store_render_add_to_cart(array(), $this->tag, _vae_fetch(13433), $this->callback, $this->render_context);
     $this->assertEqual($this->callback['item'], 13433);
   }
-  
+
   function testVaeStoreRenderAddressDelete() {
     _vae_store_render_address_delete(array(), $this->tag, _vae_fetch("13421"), $this->callback, $this->render_context);
     $this->assertEqual($this->callback['id'], 13421);
   }
-  
+
   function testVaeStoreSetDefaultPaymentMethod() {
     $this->assertNull($_SESSION['__v:store']['payment_method']);
     _vae_store_set_default_payment_method();
@@ -1357,7 +1362,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual($_SESSION['__v:store']['payment_method'], "test");
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreSuggestAlternateAddress() {
     $this->mockRest('<?xml version="1.0"?><AddressValidationResponse><Response><TransactionReference><CustomerContext>Data</CustomerContext><XpciVersion>1.0001</XpciVersion></TransactionReference><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><AddressValidationResult><Rank>1</Rank><Quality>1.0</Quality><Address><City>NEW YORK</City><StateProvinceCode>NY</StateProvinceCode></Address><PostalCodeLowEnd>10016</PostalCodeLowEnd><PostalCodeHighEnd>10041</PostalCodeHighEnd></AddressValidationResult></AddressValidationResponse>');
     $this->assertEqual(_vae_store_suggest_alternate_address("US", "nyc", "NY", "10018"), "NEW YORK");
@@ -1366,11 +1371,11 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_suggest_alternate_address("US", "whatever1", "AE", "10018"), "whatever1");
     $this->assertEqual(_vae_store_suggest_alternate_address("US", "whatever1", "AP", "10018"), "whatever1");
   }
-  
+
   function testVaeStoreTransformOrders() {
     $xml = "<store-orders><store-order><id>1</id><email>sales@actionverb.com</email><total>7.00</total><created-at>4/5/2008 01:23:23</created-at></store-order><store-order><id>4</id><total>19.50</total><created-at>4/7/2008 01:23:23</created-at></store-order></store-orders>";
     $this->assertEqual(_vae_store_transform_orders($xml), array(
-      1 => 
+      1 =>
       array (
         'id' => '1',
         'total' => '7.00',
@@ -1380,7 +1385,7 @@ class StoreTest extends VaeUnitTestCase {
         'subtotal' => '7.00',
         'order_id' => 1,
       ),
-      4 => 
+      4 =>
       array (
         'id' => '4',
         'total' => '19.50',
@@ -1391,14 +1396,14 @@ class StoreTest extends VaeUnitTestCase {
       ),
     ));
   }
-  
+
   function testVaeStoreVerifyAvailableBaseCase() {
     $this->populateCart();
     $this->assertTrue(_vae_store_verify_available());
     $this->assertNoErrors();
     $this->assertSessionDep('__v:store');
   }
-  
+
   function testVaeStoreVerifyAvailableTooMany() {
     vae_store_add_item_to_cart(13433, 13434, 1, array("inventory_field" => "inventory", "name_field" => "name", "price_field" => "price", "option_field" => "size", "options_collection" => "inventory"));
     $_SESSION['__v:store']['cart'][1]['qty'] = 7000;
@@ -1406,14 +1411,14 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertErrors("in the quantity you requested");
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['qty'], 747);
   }
-  
+
   function testVaeStoreVerifyAvailableTooManyIgnored() {
     vae_store_add_item_to_cart(13433, 13434, 1, array("disable_inventory_check" => true, "inventory_field" => "inventory", "name_field" => "name", "price_field" => "price", "option_field" => "size", "options_collection" => "inventory"));
     $_SESSION['__v:store']['cart'][1]['qty'] = 7000;
     $this->assertTrue(_vae_store_verify_available());
     $this->assertNoErrors();
   }
-  
+
   function testVaeStoreVerifyAvailableNoneAvail() {
     vae_store_add_item_to_cart(13435, 13436, 1, array("disable_inventory_check" => true, "inventory_field" => "inventory", "name_field" => "name", "price_field" => "price", "option_field" => "size", "options_collection" => "inventory"));
     $this->assertTrue(_vae_store_verify_available());
