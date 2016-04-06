@@ -15,7 +15,7 @@ dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libantlr3c-dev libzmq-dev libpcre3-dev libmemcached-dev libmysqlcppconn-dev
     - if [[ ! -e libs3/build/bin/s3 ]]; then git clone git@github.com:bji/libs3.git; fi && cd libs3 && sudo make install
-    - if [[ ! -e thrift-0.9.2/replace_me ]]; then wget https://archive.apache.org/dist/thrift/0.9.2/thrift-0.9.2.tar.gz && tar -zxvf thrift-0.9.2.tar.gz && cd thrift-0.9.2 && ./configure --disable-tests --without-qt4 --without-java --without-nodejs --without-haskell --without-go --without-d --without-perl --without-lua --without-python --without-erlang && make; fi && sudo make install && ldconfig
+    - if [[ ! -e thrift-0.9.2/replace_me ]]; then wget https://archive.apache.org/dist/thrift/0.9.2/thrift-0.9.2.tar.gz && tar -zxvf thrift-0.9.2.tar.gz && cd thrift-0.9.2 && ./configure --disable-tests --without-tests --without-qt4 --without-java --without-nodejs --without-haskell --without-go --without-d --without-perl --without-lua --without-python --without-erlang && make; fi && sudo make install && ldconfig
     - cd tests/dependencies/vaeql && make && make install
     - cd tests/dependencies/vae_thrift/cpp && ./configure && make && make install
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
