@@ -2,3 +2,9 @@ checkout:
   post:
     - git submodule sync
     - git submodule update --init
+    - cd tests/dependencies/vaeql && make && make install
+    - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.inithub
+
+machine:
+  php:
+    version: 7.0.4
