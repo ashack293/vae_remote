@@ -31,7 +31,14 @@ class RestTest extends VaeUnitTestCase {
   function testVaeBuildXml() {
     $arr = array('name' => 'Freefall', 'tour_dates' => array(37465 => array('venue' => 'Mercury Lounge')));
     $xml = "<content><name>Freefall</name><tour_dates><item><venue>Mercury Lounge</venue></item></tour_dates></content>";
-    $this->assertEqual($xml, _vae_build_xml("content", $arr));
+    $this->assertEqual($xml, _vae_build_xml("content", $arr, "foo"));
+
+    // Test safe params
+    $arr = array('name' => "Kevin");
+    $xml = "<customer><name>Kevin</name></customer>";
+    $this->assertEqual($xml, _vae_build_xml("customer", $arr, "api/site/v1/customers/create_or_update"));
+    $arr = array('name' => "Kevin", 'bad_param' => "Foo");
+    $this->assertEqual($xml, _vae_build_xml("customer", $arr, "api/site/v1/customers/create_or_update"));
   }
 
   function testVaeCreate() {
