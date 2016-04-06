@@ -1,0 +1,6 @@
+[submodule "tests/dependencies/vaeql"]
+	path = tests/dependencies/vaeql
+	url = git@github.com:actionverb/vaeql.git
+[submodule "tests/dependencies/vae_thrift"]
+	path = tests/dependencies/vae_thrift
+	url = git@github.com:actionverb/vae_thrift.git
