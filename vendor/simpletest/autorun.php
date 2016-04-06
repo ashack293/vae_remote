@@ -31,13 +31,15 @@ function simpletest_autorun() {
             basename(initial_file()),
             $loader->selectRunnableTests($candidates));
     $result = $suite->run(new DefaultReporter());
-    
+
     // KMB HACK
     if ($coverage) {
         $coverage->stop();
         $writer = new PHP_CodeCoverage_Report_HTML;
         $writer->process($coverage, '/tmp/code-coverage-report');
     }
+    if ($result == "1") exit(0);
+    exit(1);
 }
 
 /**
