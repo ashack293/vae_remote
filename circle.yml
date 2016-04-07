@@ -23,11 +23,11 @@ dependencies:
     - cd tests/dependencies/vae_thrift/cpp && ./configure && make
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
   post:
-    - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
+    - cd /home/ubuntu/vae_thrift/rb && bundle && bundle exec ruby vaerubyd.rb:
         background: true
     - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --test:
         background: true
 
 test:
   override:
-    - php tests/_all.php
+    - cd /home/ubuntu/vae_remote && php tests/_all.php
