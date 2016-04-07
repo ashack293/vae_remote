@@ -8,7 +8,7 @@ mkdir -p ~/apt-cache
 cd ~/apt-cache
 
 # check we have a deb for each package
-useCache=false
+useCache=true
 for pkg in "${pkgs[@]}"; do
     if ! ls | grep "^${pkg}"; then
         useCache=false
