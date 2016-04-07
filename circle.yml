@@ -4,8 +4,7 @@ machine:
 
 checkout:
   post:
-    - git submodule sync
-    - git submodule update --init
+    - git submodule sync && git submodule update --init && git submodule foreach git reset --hard && git submodule foreach git pull origin master
     - ln -s /home/ubuntu/vae_remote/tests/dependencies/vae_thrift /home/ubuntu/vae_thrift
 
 dependencies:
@@ -23,7 +22,7 @@ dependencies:
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
   post:
     - cd /home/ubuntu/vae_thrift/rb && bundle
-    - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
+    - cd /home/ubuntu/vae_thrift/rb && bundle exec ./vaerubyd.rb:
         background: true
     - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --mysql_database circle_test --mysql_username root --mysql_password "" --test:
         background: true
