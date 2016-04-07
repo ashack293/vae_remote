@@ -22,7 +22,8 @@ dependencies:
     - cd tests/dependencies/vaeql && make && make install
     - echo "extension=vaeql.so" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/vaeql.ini
   post:
-    - cd /home/ubuntu/vae_thrift/rb && bundle && bundle exec ruby vaerubyd.rb:
+    - cd /home/ubuntu/vae_thrift/rb && bundle
+    - cd /home/ubuntu/vae_thrift/rb && bundle exec ruby vaerubyd.rb:
         background: true
     - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --mysql_database circle_test --mysql_username root --mysql_password "" --test:
         background: true
