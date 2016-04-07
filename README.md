@@ -7,7 +7,7 @@ PHP Library that provides VaeML and Vae PHP functions
 
  - VaeQL (see vaeql repository)
  - VaeDB and VaeRubyd (see vae_thrift repository)
- - PHP 5.6
+ - PHP 7
  - memcached (running on port 11211)
  - MySQL (running)
 

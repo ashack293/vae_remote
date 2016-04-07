@@ -25,8 +25,12 @@ dependencies:
   post:
     - cd /home/ubuntu/vae_thrift/rb && bundle && bundle exec ruby vaerubyd.rb:
         background: true
-    - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --test:
+    - cd /home/ubuntu/vae_thrift/cpp && ./vaedb --mysql_database circle_test --mysql_username root --mysql_password "" --test:
         background: true
+
+database:
+  override:
+    - sed 's/USE vaedb/USE circle_test/g' /home/vae_thrift_db/schema.sql && mysql < /home/vae_thrift/db/schema.sql
 
 test:
   override:
