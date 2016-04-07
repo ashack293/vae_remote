@@ -4,7 +4,7 @@ machine:
 
 checkout:
   post:
-    - git submodule sync && git submodule update --init && git submodule foreach git reset --hard && git submodule foreach git pull origin master
+    - git submodule foreach git reset --hard && git submodule sync && git submodule update --init && git submodule foreach git pull origin master
     - ln -s /home/ubuntu/vae_remote/tests/dependencies/vae_thrift /home/ubuntu/vae_thrift
 
 dependencies:
