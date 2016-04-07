@@ -24,6 +24,6 @@ fi
 
 sudo add-apt-repository -y ppa:chris-lea/zeromq
 sudo apt-get update
-sudo apt-get install --reinstall "${pkgs[@]}"
+sudo apt-get install "${pkgs[@]}"
 
 cp -v /var/cache/apt/archives/*.deb ~/apt-cache
