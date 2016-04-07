@@ -103,7 +103,7 @@ function _vae_callback_update($tag) {
 
 function _vae_callback_zip($tag) {
   global $_VAE;
-  require_once(dirname(__FILE__)."/../vendor/zipstream.php");
+  require_once(dirname(__FILE__)."/../vendor_old/zipstream.php");
   $name = ($tag['callback']['filename'] ? $tag['callback']['filename'] : "Archive");
   $zip = new ZipStream($name.'.zip');
   foreach ($tag['callback']['files'] as $file) {

@@ -15,7 +15,7 @@ class fedex {
   function quote($method = '') {
     global $shipping_weight, $shipping_num_boxes, $cart, $order, $method;
 
-    $path_to_wsdl = dirname(__FILE__) . "/../../vendor/fedex/RateService_v9.wsdl";
+    $path_to_wsdl = dirname(__FILE__) . "/../../vendor_old/fedex/RateService_v9.wsdl";
     ini_set("soap.wsdl_cache_enabled", "0");
     $client = new SoapClient($path_to_wsdl, array('trace' => 1));
 

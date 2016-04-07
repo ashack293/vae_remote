@@ -7,7 +7,7 @@ $_VAE['vaedbd_backends'] = array('127.0.0.1');
 error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING | E_STRICT));
 
 $_ENV['TEST'] = true;
-require_once(dirname(__FILE__) . '/../vendor/simpletest/autorun.php');
+require_once(dirname(__FILE__) . '/../vendor_old/simpletest/autorun.php');
 require_once(dirname(__FILE__) . '/_vae_unit_test_case.php');
 require_once(dirname(__FILE__) . '/../lib/index.php');
 

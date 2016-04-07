@@ -17,10 +17,10 @@ function _vae_google_checkout_get_arr_result($child_node) {
 
 function _vae_google_checkout_go($a) {
   global $_VAE;
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlecart.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleitem.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleshipping.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googletax.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googlecart.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googleitem.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googleshipping.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googletax.php");
   $m = _vae_store_payment_google_checkout_method();
   $cart = new GoogleCart($m['merchant_id'], $m['merchant_key'], ($m['sandbox'] ? "sandbox" : "production"), _vae_store_currency());
   foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
@@ -109,10 +109,10 @@ function _vae_google_checkout_import_cart($cart) {
 
 function _vae_google_checkout_ipn() {
   global $_VAE;
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlemerchantcalculations.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googlerequest.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleresult.php");
-  require_once(dirname(__FILE__) . "/../vendor/checkout-php-1.3.0/library/googleresponse.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googlemerchantcalculations.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googlerequest.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googleresult.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/checkout-php-1.3.0/library/googleresponse.php");
   $m = _vae_store_payment_google_checkout_method();
   $out = "";
   $Gresponse = new GoogleResponse($m['merchant_id'], $m['merchant_key']);

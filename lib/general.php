@@ -649,7 +649,7 @@ function _vae_inject_assets($out) {
             $raw = $js_out;
           }
         } elseif (!$_VAE['settings']['dont_minify_css_assets']) {
-          require_once(dirname(__FILE__) . "/../vendor/csstidy/class.csstidy.php");
+          require_once(dirname(__FILE__) . "/../vendor_old/csstidy/class.csstidy.php");
           $css = new csstidy();
           $css->parse($raw);
           $raw = $css->print->plain();

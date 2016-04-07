@@ -177,7 +177,7 @@ function _vae_render_callback_link($name, $a, &$tag, $context, &$callback, $rend
 function _vae_render_captcha($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   $tag['callback']['_form_prepared'] = true;
-  require_once(dirname(__FILE__) . "/../vendor/recaptchalib.php");
+  require_once(dirname(__FILE__) . "/../vendor_old/recaptchalib.php");
   return recaptcha_get_html($_VAE['recaptcha']['public'], null, _vae_ssl());
 }
 
