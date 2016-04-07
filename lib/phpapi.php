@@ -585,7 +585,7 @@ function vae_store_update_tax_rate($id, $data) {
 function vae_store_update_order($order_id, $attributes = null) {
   if (!is_array($attributes)) return false;
   if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order()</span> but didn't provide a proper ID.");
-  $ret = _vae_rest($attributes, "api/site/v1/store/orders/$order_id/update", "store_order", array(), null, true);
+  $ret = _vae_rest($attributes, "api/site/v1/store/orders/$order_id/update", "order", array(), null, true);
   return ($ret != false);
 }
 
