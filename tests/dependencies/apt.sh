@@ -22,6 +22,7 @@ if [ ${useCache} == true ]; then
     exit 0
 fi
 
+rm -rf ~/apt-cache/*
 sudo add-apt-repository -y ppa:chris-lea/zeromq
 sudo apt-get update
 sudo apt-get install "${pkgs[@]}"

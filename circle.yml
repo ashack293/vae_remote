@@ -29,7 +29,7 @@ dependencies:
 
 database:
   override:
-    - sed 's/USE vaedb/USE circle_test/g' /home/ubuntu/vae_thrift/db/schema.sql && mysql < /home/ubuntu/vae_thrift/db/schema.sql
+    - sed -i 's/USE vaedb/USE circle_test/g' /home/ubuntu/vae_thrift/db/schema.sql && mysql < /home/ubuntu/vae_thrift/db/schema.sql
 
 test:
   override:
