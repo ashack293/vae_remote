@@ -13,7 +13,7 @@ dependencies:
     - thrift-0.9.2
     - libs3
   pre:
-    - sudo add-apt-repository ppa:chris-lea/zeromq
+    - sudo add-apt-repository -y ppa:chris-lea/zeromq
     - sudo apt-get update; sudo apt-get install libantlr3c-dev libzmq3-dev libpcre3-dev libmemcached-dev libmysqlcppconn-dev
     - if [[ ! -e libs3/build/bin/s3 ]]; then git clone git@github.com:bji/libs3.git; fi && cd libs3 && sudo make install
     - if [[ ! -e thrift-0.9.2/lib/cpp/libthrift.la ]]; then wget https://archive.apache.org/dist/thrift/0.9.2/thrift-0.9.2.tar.gz && tar -zxvf thrift-0.9.2.tar.gz && cd thrift-0.9.2 && ./configure --disable-tests --without-tests --without-qt4 --without-java --without-nodejs --without-haskell --without-go --without-d --without-perl --without-lua --without-python --without-erlang --without-ruby && make; fi && sudo make install && sudo ldconfig
