@@ -33,5 +33,4 @@ database:
 
 test:
   override:
-    - sleep 5
     - cd /home/ubuntu/vae_remote && php tests/_all.php
