@@ -1,10 +1,12 @@
 <?php
 
-if (isset($_ENV['TEST'])) {
-  $GLOBALS['THRIFT_ROOT'] = dirname(__FILE__)."/../../vae_thrift/php/vendor";
-} else {
-  $GLOBALS['THRIFT_ROOT'] = '/app/vaedb/deploy/current/php/vendor';
-}  
+$paths = array(dirname(__FILE__) . "/../tests/dependencies/vae_thrift/php/vendor", dirname(__FILE__) . "/../../vae_thrift/php/vendor", '/app/vaedb/deploy/current/php/vendor');
+foreach ($paths as $path) {
+  if (file_exists($path)) {
+    $GLOBALS['THRIFT_ROOT'] = $path;
+    break;
+  }
+}
 require_once $THRIFT_ROOT . '/Thrift/ClassLoader/ThriftClassLoader.php';
 $loader = new Thrift\ClassLoader\ThriftClassLoader();
 $loader->registerNamespace('Thrift', $THRIFT_ROOT);
@@ -72,7 +74,7 @@ function _vae_thrift_open($client_class, $port) {
         $client = new Thrift\VaeDbClient($protocol);
       } else {
         $client = new Thrift\VaeRubydClient($protocol);
-      } 
+      }
       $transport->open();
       return $client;
     } catch (Thrift\Exception\TException $tx) {
