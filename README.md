@@ -16,8 +16,21 @@ PHP Library that provides VaeML and Vae PHP functions
 
 Install VaeQL, VaeDB, and VaeRubyd FIRST, before installing Vae Remote.
 
+The Git repositories for these projects is linked to this project
+using a Git Submodule.  To install as a submodule, do the following:
+
+    git submodule sync
+    git submodule update --init
+    git submodule foreach git pull origin mater
+
+Then look in tests/dependencies/vaeql and
+tests/dependencies/vae_thrift.
+
 There are README.md files in the respective vaeql and vae_thrift
 repositories that should explain what's needed there.
+
+Follow those README.md's to get those projects installed before
+moving on.
 
 
 ### Installing Prerequisites on Mac OS X
