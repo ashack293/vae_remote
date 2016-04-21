@@ -25,16 +25,16 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['vaedb_port'] = getenv("VAE_LOCAL_VAEDB_PORT");
   $_VAE['config']['data_path'] = $data_path;
   $_VAE['config']['content_subdomain'] = $data_path . "feed.xml";
-  $_VAE['config']['asset_url'] = "/__assets/";
-  $_VAE['config']['data_url'] = "/__data/";
+  $_VAE['config']['asset_url'] = "/.vae/data/assets/";
+  $_VAE['config']['data_url'] = "/.vae/data/";
   $_VAE['vaedbd_backends'] = array('127.0.0.1');
   $_VAE['local_full_stack'] = true;
   $found = false;
   $script_name = $_SERVER['SCRIPT_NAME'];
-  $server_parsed = array('', '.html','.haml','.php','.xml','.rss','.sass','.scss');
+  $server_parsed = array('.html','.haml','.php','.xml','.rss','.sass','.scss');
   foreach ($server_parsed as $ext) {
     foreach (array('', '/index') as $file) {
-      $path = str_replace("//", "/", $_SERVER['DOCUMENT_ROOT'] . $script_name . $file . $ext);
+      $path = str_replace($ext . $ext, $ext, str_replace("//", "/", $_SERVER['DOCUMENT_ROOT'] . $script_name . $file . $ext));
       if (file_exists($path) && !is_dir($path)) {
         $_SERVER['SCRIPT_FILENAME'] = $path;
         $found = true;

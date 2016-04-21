@@ -1624,6 +1624,7 @@ function _vae_set_cache_key() {
 
 function _vae_set_cdn_url() {
   global $_VAE;
+  if ($_VAE['local_full_stack']) return;
   if (!$_VAE['cloudflare_active'] && !$_VAE['config']['force_local_assets'] && !_vae_ssl()) {
     if (strlen($_VAE['settings']['cdn_host'])) {
       $_VAE['config']['cdn_url'] = "http://" . $_VAE['settings']['cdn_host'] . "/";
