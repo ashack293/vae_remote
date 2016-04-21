@@ -59,7 +59,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
           $href = vae_data_url() . vae_file($new_context, $preserve_filename);
         } else {
           $href = $new_context;
-          if (substr($href, 0, 1) == "/" && !$_REQUEST['__vae_local']) $href = _vae_proto() . $_SERVER['HTTP_HOST'] . $href;
+          if (substr($href, 0, 1) == "/" && !$_REQUEST['__vae_local'] && !$_VAE['local_full_stack']) $href = _vae_proto() . $_SERVER['HTTP_HOST'] . $href;
         }
       } else {
         $context = $new_context;
@@ -423,7 +423,7 @@ function _vae_render_disqus($a, &$tag, $context, &$callback, $render_context) {
   $xid = ($context ? $context->id : null);
   $js = '<div id="disqus_thread"></div>
     <script type="text/javascript">'. (($context && $context->id) ? '
-      var disqus_identifier = ' . $xid . ';' : '') . (($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) ? '
+      var disqus_identifier = ' . $xid . ';' : '') . (($_VAE['local_full_stack'] || $_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) ? '
       var disqus_developer = true;' : '') . ($a['css'] ? '
       var disqus_iframe_css = ' . $a['css'] . ';' : '') . '
       (function() {
@@ -648,7 +648,7 @@ function _vae_render_if($a, &$tag, $context, &$callback, $render_context) {
 
 function _vae_render_if_backstage($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:user_id');
-  $logged_in = isset($_SESSION['__v:user_id']) || $_REQUEST['__vae_local'];
+  $logged_in = isset($_SESSION['__v:user_id']) || $_REQUEST['__vae_local'] || $_VAE['local_full_stack'];
   if (!$logged_in && $a['redirect']) return _vae_render_redirect($a['redirect']);
   return _vae_render_tags($tag, $context, $render_context, $logged_in);
 }

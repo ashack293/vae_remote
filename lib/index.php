@@ -28,6 +28,7 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['config']['asset_url'] = "/__assets/";
   $_VAE['config']['data_url'] = "/__data/";
   $_VAE['vaedbd_backends'] = array('127.0.0.1');
+  $_VAE['local_full_stack'] = true;
 }
 
 if (_vae_should_load()) {

@@ -375,7 +375,7 @@ function _vae_gd_handle($d) {
 
 function _vae_generate_relative_links() {
   global $_VAE;
-  if ($_REQUEST['__vae_local'] || isset($_VAE['settings']['generate_relative_links'])) {
+  if ($_REQUEST['__vae_local'] || $_VAE['local_full_stack'] || isset($_VAE['settings']['generate_relative_links'])) {
     return true;
   } else {
     return false;
@@ -431,7 +431,7 @@ function _vae_handleob($vaeml) {
     }
     if (isset($_VAE['ticks'])) return _vae_render_timer();
     _vae_statsd_timing("render_time", ceil((microtime(true)-$_VAE['start_tick'])*1000));
-    if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr'] && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])!='xmlhttprequest') {
+    if ($_SESSION['__v:pre_ssl_host'] && _vae_ssl() && !$_VAE['ssl_required'] && !$_VAE['local_full_stack'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_REQUEST['__xhr'] && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])!='xmlhttprequest') {
       $_VAE['force_redirect'] = "http://" . $_SESSION['__v:pre_ssl_host'] . $_SERVER['REQUEST_URI'];
     }
     if (isset($_VAE['force_redirect']) && $_SESSION['__v:flash']['redirected']) {
@@ -1553,7 +1553,7 @@ function _vae_require_ssl() {
   global $_VAE;
   $_VAE['ssl_required'] = true;
   $_VAE['cant_cache'] = "ssl_required";
-  if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
+  if (!_vae_ssl() && !$_VAE['local_full_stack'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
     if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com") && !$_SESSION['__v:pre_ssl_host']) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if (strlen($_VAE['settings']['ssl_host']) && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['ssl_host'];

@@ -55,7 +55,7 @@ function vae_cache_with_contingency($key, $timeout = 3600, $contingency_timeout 
 function vae_cdn_url() {
   global $_VAE;
   if (isset($_VAE['config']['cdn_url'])) return $_VAE['config']['cdn_url'];
-  if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return "/";
+  if ($_VAE['local_full_stack'] || $_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return "/";
   return _vae_proto() . $_SERVER['HTTP_HOST'] . "/";
 }
 
