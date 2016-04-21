@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('_vaeql_query_internal')) {
-  die("VaeQL PHP Extension not found.  Please make sure it is installed.");
+  die("VaeQL PHP Extension not local_script.  Please make sure it is installed.");
 }
 
 if ($_VERB['config']) {
@@ -13,12 +13,21 @@ if ($_VERB['config']) {
 $_VAE['version'] = 100;
 
 require_once(dirname(__FILE__) . "/general.php");
+require_once(dirname(__FILE__) . "/pages.php");
 require_once(dirname(__FILE__) . "/vaedata.php");
 
 session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_close", "_vae_session_handler_read", "_vae_session_handler_write", "_vae_session_handler_destroy", "_vae_session_handler_gc");
 
 @(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
 @(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../../vae-config/fs-settings.php')));
+
+function _vae_local_log($message) {
+  file_put_contents("php://stdout", sprintf("[%s] %s:%s %s\n", date("D M j H:i:s Y"), $_SERVER["REMOTE_ADDR"], $_SERVER["REMOTE_PORT"], $message));
+}
+
+function _vae_local_log_access($status = 200) {
+  return _vae_local_log(sprintf("[%s]: %s", $status, $_SERVER["REQUEST_URI"]));
+}
 
 if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['config']['backlot_url'] = "http://" . getenv("VAE_LOCAL_SUBDOMAIN") . ".vaeplatform.com";
@@ -30,21 +39,22 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['config']['data_url'] = "/.vae/data/";
   $_VAE['vaedbd_backends'] = array('127.0.0.1');
   $_VAE['local_full_stack'] = true;
-  $found = false;
+  $local_script = false;
   $script_name = $_SERVER['SCRIPT_NAME'];
+  $script_name = preg_replace('/^\/__cache\/[a0-9]*\//', "/", $script_name);
   $server_parsed = array('.html','.haml','.php','.xml','.rss','.sass','.scss');
   foreach ($server_parsed as $ext) {
     foreach (array('', '/index') as $file) {
       $path = str_replace($ext . $ext, $ext, str_replace("//", "/", $_SERVER['DOCUMENT_ROOT'] . $script_name . $file . $ext));
       if (file_exists($path) && !is_dir($path)) {
-        $_SERVER['SCRIPT_FILENAME'] = $path;
-        $found = true;
+        $_SERVER['SCRIPT_FILENAME'] = $local_script = $path;
         break;
       }
     }
-    if ($found) break;
+    if ($local_script) break;
   }
-  if (!$found && file_exists($_SERVER['DOCUMENT_ROOT'] . $script_name)) return false;
+  if (!$local_script && file_exists($_SERVER['DOCUMENT_ROOT'] . $script_name)) return false;
+
 }
 
 if (_vae_should_load()) {
@@ -69,7 +79,6 @@ if (_vae_should_load()) {
   require_once(dirname(__FILE__) . "/constants.php");
   require_once(dirname(__FILE__) . "/context.php");
   require_once(dirname(__FILE__) . "/func.php");
-  require_once(dirname(__FILE__) . "/pages.php");
   require_once(dirname(__FILE__) . "/parse.php");
   require_once(dirname(__FILE__) . "/phpapi.php");
   require_once(dirname(__FILE__) . "/render.php");
@@ -126,7 +135,12 @@ if (_vae_should_load()) {
       if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
       _vae_set_cache_key();
       _vae_start_ob();
-      if ($_VAE['local_full_stack']) require($_SERVER['SCRIPT_FILENAME']);
+      if ($_VAE['local_full_stack'] && $local_script) require($local_script);
     }
   }
+}
+
+if ($_VAE['local_full_stack'] && !$local_script) {
+  _vae_local_log_access(404);
+  _vae_page_404("Could not match URL.");
 }
