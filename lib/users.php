@@ -113,5 +113,3 @@ function _vae_users_render_register($a, &$tag, $context, &$callback, $render_con
   if (!$callback['structure_id']) return _vae_error("Could not find users collection in <span class='c'>&lt;v:users:register&gt;</span>.", "", $tag['filename']);
  return _vae_render_callback("users_register", $a, $tag, $context, $callback, $render_context);
 }
-
-?>

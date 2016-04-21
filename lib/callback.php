@@ -114,5 +114,3 @@ function _vae_callback_zip($tag) {
   $zip->finish();
   return $zip->out;
 }
-
-?>

@@ -150,5 +150,3 @@ function _vae_robots_txt() {
   echo "User-agent: *\r\nDisallow: /";
   _vae_die();
 }
-
-?>

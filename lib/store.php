@@ -1763,5 +1763,3 @@ function _vae_store_verify_available($flash = true) {
   }
   return true;
 }
-
-?>

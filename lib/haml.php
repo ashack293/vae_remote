@@ -106,5 +106,3 @@ function _vae_sass_ob($sass, $header = true) {
     return _vae_render_error($e);
   }
 }
-
-?>

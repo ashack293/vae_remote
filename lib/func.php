@@ -184,5 +184,3 @@ function vae_user() {
   }
   return $_SESSION['__v:logged_in']['id'];
 }
-
-?>

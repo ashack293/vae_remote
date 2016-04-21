@@ -1379,5 +1379,3 @@ $_VAE['form_items'] = array (
   'store_payment_methods_select' => 1,
   'store_shipping_methods_select' => 1,
 );
-
-?>

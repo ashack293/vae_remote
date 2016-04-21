@@ -1325,5 +1325,3 @@ function _vae_render_zip($a, &$tag, $context, &$callback, $render_context) {
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs("__v:zip=" . _vae_tag_unique_id($tag, $context));
   return '<a' . _vae_attrs($a, "a") . '>' . $out .'</a>';
 }
-
-?>

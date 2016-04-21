@@ -201,5 +201,3 @@ function _vae_update($id, $data, $update_frontend = true) {
   $_VAE['run_hooks'][] = array("content:updated", $id);
   return true;
 }
-
-?>

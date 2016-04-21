@@ -19,5 +19,3 @@ class preset_rates {
     return array('methods' => array(array('title' => 'Standard Shipping', 'cost' => $cost, 'keep_titles' => true)));
   }
 }
-
-?>

@@ -31,5 +31,3 @@ function _vae_pdf() {
   $dompdf->stream($filename . ".pdf");
   die();
 }
-
-?>

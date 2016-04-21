@@ -50,5 +50,3 @@ function _vae_sweep_data_dir() {
 }
 
 _vae_sweep_data_dir();
-
-?>

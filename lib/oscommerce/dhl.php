@@ -774,5 +774,3 @@ function _xmlCharCallback1235($m) {
 function _xmlEnc1234($str) {
     return preg_replace_callback('/\W/', '_xmlCharCallback1235', $str);
 }
-
-?>

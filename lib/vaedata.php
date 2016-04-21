@@ -1255,5 +1255,3 @@ function _vae_sitewide_lock() {
 function _vae_sitewide_unlock() {
   return VaeQuery::___sitewideUnlock();
 }
-
-?>

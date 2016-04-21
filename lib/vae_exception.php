@@ -16,5 +16,3 @@ final class VaeException extends Exception {
 
 final class VaeFragment extends Exception {
 }
-
-?>

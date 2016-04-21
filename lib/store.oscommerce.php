@@ -191,6 +191,3 @@ function tep_round_up($amount, $places) {
   $mult = pow(10, $places);
   return (ceil($amount * $mult) / $mult);
 }
-
-
-?>

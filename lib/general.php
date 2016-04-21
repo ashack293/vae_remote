@@ -1876,5 +1876,3 @@ function _vae_write_file($name, $data) {
     $_VAE['files_written'][] = $name;
   }
 }
-
-?>

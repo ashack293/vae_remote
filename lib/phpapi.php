@@ -737,5 +737,3 @@ function vae_watermark($image, $watermark_image, $vertical_align = "", $align = 
 	imagecopy($tk, $tlogo, $alinks, $aoben, 0, 0, $logowidth, $logoheight);
   return _vae_store_file($iden, $tk, "jpg", null, "jpeg");
 }
-
-?>

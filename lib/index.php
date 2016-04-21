@@ -130,6 +130,3 @@ if (_vae_should_load()) {
     }
   }
 }
-
-
-?>

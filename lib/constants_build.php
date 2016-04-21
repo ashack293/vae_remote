@@ -138,5 +138,3 @@ echo ";\n" . '$_VAE[\'form_items\'] = ';
 var_export($_VAE['form_items']);
 echo ";\n";
 die();
-
-?>
