@@ -40,7 +40,7 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['vaedbd_backends'] = array('127.0.0.1');
   $_VAE['local_full_stack'] = true;
   $local_script = false;
-  $script_name = $_SERVER['SCRIPT_NAME'];
+  $script_name = preg_replace('/\?.*$/', "", $_SERVER['REQUEST_URI']);
   $script_name = preg_replace('/^\/__cache\/[a0-9]*\//', "/", $script_name);
   $server_parsed = array('.html','.haml','.php','.xml','.rss','.sass','.scss');
   foreach ($server_parsed as $ext) {

@@ -955,6 +955,10 @@ function _vae_render_radio($a, &$tag, $context, &$callback, $render_context) {
 
 function _vae_render_redirect($to, $trash_post_data = false) {
   global $_VAE;
+  if ($_VAE['local_full_stack']) {
+    $trace = debug_backtrace();
+    _vae_local_log("Redirecting to $to");
+  }
   if (!strlen($_VAE['force_redirect'])) {
     if (!_vae_is_xhr() && isset($_SESSION['__v:pre_ssl_host']) && !strstr($to, "://") && ($_SERVER['PHP_SELF'] != $to)) {
       $to = "http://" . $_SESSION['__v:pre_ssl_host'] . (substr($to, 0, 1) == "/" ? "" : "/") . $to;
