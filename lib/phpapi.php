@@ -301,7 +301,15 @@ function vae_redirect($to, $trash_post_data = false) {
   global $_VAE;
   if ($_VAE['local_full_stack']) {
     $trace = debug_backtrace();
-    _vae_local_log("Redirecting to $to");
+    foreach ($trace as $fn) {
+      if ($fn['function'] == "vae_redirect") {
+        $line = $fn['line'];
+        continue;
+      }
+      $caller = $fn['function'] . ":" . $line;
+      break;
+    }
+    _vae_local_log("[302]: $caller redirecting to $to");
   }
   if (!strlen($_VAE['force_redirect'])) {
     if (!_vae_is_xhr() && isset($_SESSION['__v:pre_ssl_host']) && !strstr($to, "://") && ($_SERVER['PHP_SELF'] != $to)) {
