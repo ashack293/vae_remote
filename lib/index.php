@@ -19,6 +19,15 @@ session_set_save_handler("_vae_session_handler_open", "_vae_session_handler_clos
 
 @(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../vae-config/fs-settings.php')));
 @(include(realpath($_SERVER['DOCUMENT_ROOT'].'/../../../../vae-config/fs-settings.php')));
+if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
+  $_VAE['config']['backlot_url'] = "http://" . getenv("VAE_LOCAL_SUBDOMAIN") . ".vaeplatform.com";
+  $_VAE['config']['secret_key'] = getenv("VAE_LOCAL_SECRET_KEY");
+  $_VAE['vaedb_port'] = getenv("VAE_LOCAL_VAEDB_PORT");
+  $_VAE['config']['data_path'] = $data_path;
+  $_VAE['config']['content_subdomain'] = $data_path . "/data/feed.xml";
+  $_VAE['config']['asset_url'] = "/__assets/";
+  $_VAE['config']['data_url'] = "/__data/";
+}
 
 if (_vae_should_load()) {
 
