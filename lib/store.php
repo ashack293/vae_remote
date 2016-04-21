@@ -212,8 +212,8 @@ function _vae_store_callback_add_to_cart($tag) {
   }
   _vae_store_verify_available();
   _vae_run_hooks("store:cart:updated");
-  if ($a['redirect']) return _vae_callback_redirect($a['redirect']);
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  if ($a['redirect']) return vae_redirect($a['redirect']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_banned_country($country) {
@@ -237,16 +237,16 @@ function _vae_store_callback_address_delete($tag) {
     $raw = _vae_rest(array(), "api/site/v1/customer_addresses/destroy/" . $id, "customer_address", $tag, null, true);
     unset($_SESSION['__v:store']['customer_addresses'][$id]);
   }
-  if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_address_select($tag) {
   _vae_session_deps_add('__v:store', '_vae_store_callback_address_select');
   _vae_store_populate_address($_SESSION['__v:store']['customer_addresses'][$_REQUEST['address']]);
-  if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+  if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
   if (_vae_is_xhr()) return "";
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_cart($tag) {
@@ -269,20 +269,20 @@ function _vae_store_callback_cart($tag) {
   }
   _vae_store_verify_available();
   _vae_run_hooks("store:cart:updated");
-  if ($_REQUEST['checkout'] && $tag['attrs']['register_page']) return _vae_callback_redirect($tag['attrs']['register_page']);
-  if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  if ($_REQUEST['checkout'] && $tag['attrs']['register_page']) return vae_redirect($tag['attrs']['register_page']);
+  if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_checkout($tag = null) {
   _vae_session_deps_add('__v:store', '_vae_store_callback_checkout');
   $_SESSION['__v:store']['checkout_attempts']++;
   if ($tag['attrs']['lockout_redirect'] && ($_SESSION['__v:store']['checkout_attempts'] > 3)) {
-    return _vae_callback_redirect($tag['attrs']['lockout_redirect']);
+    return vae_redirect($tag['attrs']['lockout_redirect']);
   }
   $ret = _vae_store_checkout($tag['attrs'], $tag);
   if ($ret == false) {
-    return _vae_callback_redirect($_SERVER['PHP_SELF']);
+    return vae_redirect($_SERVER['PHP_SELF']);
   } else {
     return $ret;
   }
@@ -290,7 +290,7 @@ function _vae_store_callback_checkout($tag = null) {
 
 function _vae_store_callback_currency_select($tag) {
   $_SESSION['__v:store_display_currency'] = $_REQUEST['currency'];
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_discount($tag) {
@@ -306,7 +306,7 @@ function _vae_store_callback_discount($tag) {
   } else {
     _vae_flash("You did not enter a discount code into the box!", 'err', $tag['attrs']['flash']);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_forgot($tag) {
@@ -320,12 +320,12 @@ function _vae_store_callback_forgot($tag) {
     }
   }
   if ($raw = _vae_rest($data, "api/site/v1/customers/forgot", "customer", $tag, null, true)) {
-    if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-    return _vae_callback_redirect($_SERVER['PHP_SELF']);
+    if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+    return vae_redirect($_SERVER['PHP_SELF']);
   }
   _vae_flash("We could not find a record with that E-Mail address.
   ", 'err', $tag['attrs']['flash']);
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_google_checkout($tag) {
@@ -337,22 +337,22 @@ function _vae_store_callback_login($tag) {
   if ($raw = _vae_rest(array(), "api/site/v1/customers/authenticate", "customer", $tag, null, true)) {
     $err = _vae_store_load_customer($raw);
     if (!$err) {
-      if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-      return _vae_callback_redirect($_SERVER['PHP_SELF']);
+      if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+      return vae_redirect($_SERVER['PHP_SELF']);
     } else {
       _vae_flash($err, 'err', $tag['attrs']['flash']);
     }
   } else {
     _vae_flash(($tag['attrs']['invalid'] ? $tag['attrs']['invalid'] : 'Login information incorrect.'),'err', $tag['attrs']['flash']);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_logout($tag) {
   unset($_SESSION['__v:store']['loggedin']);
   unset($_SESSION['__v:store']['previous_orders']);
-  if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_payment_methods_select($tag) {
@@ -361,9 +361,9 @@ function _vae_store_callback_payment_methods_select($tag) {
   } else {
     $_SESSION['__v:store']['payment_method'] = $_REQUEST['__method'];
   }
-  if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
+  if ($tag['attrs']['redirect']) return vae_redirect($tag['attrs']['redirect']);
   if (_vae_is_xhr()) return "";
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_paypal_checkout($tag = null) {
@@ -391,17 +391,17 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
         _vae_flash($error . " Please return to PayPal and choose a different address.");
       } elseif (_vae_store_create_customer($data)) {
         $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout";
-        if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+        if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
       }
     }
-    return _vae_callback_redirect($_SERVER['PHP_SELF']);
+    return vae_redirect($_SERVER['PHP_SELF']);
   } else {
     $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
     $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&__method=") : _vae_qs(""));
     if ($url = _vae_rest(array('total' => _vae_store_compute_subtotal(), 'ip' => _vae_remote_addr(), 'return_url' => $return_url, 'cancel_return_url' => $cancel_url), "api/site/v1/store/paypal_express_checkout", "order")) {
-      return _vae_callback_redirect($url);
+      return vae_redirect($url);
     } else {
-      return _vae_callback_redirect($_SERVER['PHP_SELF']);
+      return vae_redirect($_SERVER['PHP_SELF']);
     }
   }
 }
@@ -421,10 +421,10 @@ function _vae_store_callback_register($tag) {
         $tag['attrs']['to'] = $tag['attrs']['formmail'];
         return _vae_callback_formmail($tag);
       }
-      if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+      if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     }
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_callback_shipping_methods_select($tag) {
@@ -432,9 +432,9 @@ function _vae_store_callback_shipping_methods_select($tag) {
   $method = $_REQUEST['__method'];
   $_SESSION['__v:store']['shipping']['selected_index'] = $method;
   $_SESSION['__v:store']['shipping']['selected'] = $_SESSION['__v:store']['shipping']['options'][$method]['cost'];
-  if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
+  if ($tag['attrs']['redirect']) return vae_redirect($tag['attrs']['redirect']);
   if (_vae_is_xhr()) return "";
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_store_cart_item_name($r) {
@@ -528,7 +528,7 @@ function _vae_store_complete_checkout($data, $tag = null) {
     unset($_SESSION['__v:store']['checkout_attempts']);
     unset($_SESSION['__v:store']['total_weight']);
     if ($tag == null) return true;
-    return _vae_callback_redirect($tag['attrs']['redirect']);
+    return vae_redirect($tag['attrs']['redirect']);
   }
   return false;
 }
@@ -689,7 +689,7 @@ function _vae_store_compute_shipping($register_page = null) {
     } else {
       _vae_flash("We could not confirm shipping availability to this address.  Please verify all information, including city, state/territory, postal code, and country information.", 'err');
     }
-    return _vae_render_redirect($register_page);
+    return vae_redirect($register_page);
   }
   $_SESSION['__v:store']['shipping']['weight'] = $sub;
   $_SESSION['__v:store']['shipping']['options'] = $options;
@@ -1056,7 +1056,7 @@ function _vae_store_payment_paypal_callback($data, $tag) {
     $address = "";
   }
   $url = "https://www.paypal.com/cgi-bin/webscr?cmd=_cart&upload=1&business=" . urlencode(_vae_store_payment_paypal_email()) . $items . "&notify_url=" . urlencode($notify_url) . "&return=" . urlencode($order_placed_url) . "&cancel_return=" . urlencode($cancel_url) . $address . "&no_note=1&currency_code=" . $currency . "&bn=PP%2dBuyNowBF&lc=US&custom=" . $filename;
-  return _vae_callback_redirect($url);
+  return vae_redirect($url);
 }
 
 function _vae_store_payment_paypal_email() {
@@ -1253,8 +1253,8 @@ function _vae_store_render_checkout($a, &$tag, $context, &$callback, $render_con
     if ($ret = _vae_require_ssl()) return $ret;
   }
   _vae_session_deps_add('__v:store', '_vae_store_render_checkout');
-  if (!count($_SESSION['__v:store']['cart'])) return _vae_render_redirect($a['shop_page'] ? $a['shop_page'] : "/");
-  if (!$_SESSION['__v:logged_in'] && !isset($_SESSION['__v:store']['user'])) return _vae_render_redirect($a['register_page']);
+  if (!count($_SESSION['__v:store']['cart'])) return vae_redirect($a['shop_page'] ? $a['shop_page'] : "/");
+  if (!$_SESSION['__v:logged_in'] && !isset($_SESSION['__v:store']['user'])) return vae_redirect($a['register_page']);
   _vae_store_compute_shipping($a['register_page']);
   return _vae_render_callback("store_checkout", $a, $tag, $context, $callback, $render_context);
 }
@@ -1307,7 +1307,7 @@ function _vae_store_render_discount($a, &$tag, $context, &$callback, $render_con
 
 function _vae_store_render_forgot($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_forgot');
-  if ($_SESSION['__v:store']['loggedin']) return _vae_render_redirect("/");
+  if ($_SESSION['__v:store']['loggedin']) return vae_redirect("/");
  return _vae_render_callback("store_forgot", $a, $tag, $context, $callback, $render_context);
 }
 
@@ -1544,7 +1544,7 @@ function _vae_store_render_previous_order_items($a, &$tag, $context, &$callback,
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
   if (!isset($_SESSION['__v:store']['previous_orders'])) {
-    return _vae_render_redirect("/");
+    return vae_redirect("/");
   } else {
     $pdata = $_SESSION['__v:store']['previous_orders'][$_REQUEST['order']]['items'];
   }
@@ -1555,7 +1555,7 @@ function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $rend
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
   if (!isset($_SESSION['__v:store']['previous_orders'])) {
-    return _vae_render_redirect("/");
+    return vae_redirect("/");
   } else {
     $pdata = array($_SESSION['__v:store']['previous_orders'][$_REQUEST['order']]);
   }
@@ -1574,7 +1574,7 @@ function _vae_store_render_previous_orders($a, &$tag, $context, &$callback, $ren
 function _vae_store_render_recent_order($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_recent_order');
   if (!isset($_SESSION['__v:store']['recent_order_data'])) {
-    return _vae_render_redirect("/");
+    return vae_redirect("/");
   }
   $data = $_SESSION['__v:store']['recent_order_data'];
   $data['order_id'] = $data['id'];
@@ -1588,7 +1588,7 @@ function _vae_store_render_recent_order($a, &$tag, $context, &$callback, $render
 function _vae_store_render_recent_order_items($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_recent_order_items');
   if (!isset($_SESSION['__v:store']['recent_order'])) {
-    return _vae_render_redirect("/");
+    return vae_redirect("/");
   }
   return _vae_store_render_cart_items($a, $tag, $context, $callback, $render_context, $_SESSION['__v:store']['recent_order']);
 }
@@ -1597,7 +1597,7 @@ function _vae_store_render_register($a, &$tag, $context, &$callback, $render_con
   _vae_session_deps_add('__v:store', '_vae_store_render_register');
   if ($_SESSION['__v:store']['payment_method'] == "paypal_express_checkout") {
     _vae_flash("You cannot edit your address on our site when using PayPal Express Checkout.  Use the back button to go back to PayPal to set the correct address.", "err");
-    return _vae_render_redirect($a['redirect']);
+    return vae_redirect($a['redirect']);
   }
   return _vae_render_callback("store_register", $a, $tag, _vae_to_xml($_SESSION['__v:store']['user']), $callback, $render_context);
 }
@@ -1626,7 +1626,7 @@ function _vae_store_render_user($a, &$tag, $context, &$callback, $render_context
   _vae_session_deps_add('__v:store', '_vae_store_render_user');
   if (!$_SESSION['__v:store']['user'] && !$a['safe']) {
     _vae_flash("Your session expired due to lack of activity.  Please start again.");
-    return _vae_callback_redirect("/");
+    return vae_redirect("/");
   }
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml(array($_SESSION['__v:store']['user'])));
 }

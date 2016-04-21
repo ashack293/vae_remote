@@ -219,8 +219,50 @@ class PhpapiTest extends VaeUnitTestCase {
   }
 
   function testVaeRedirect() {
-    vae_redirect("/test");
-    $this->assertRedirect("/test");
+    global $_VAE;
+    vae_redirect("/plow");
+    $this->assertRedirect("/plow");
+    $this->assertFalse($_VAE['trash_post_data']);
+  }
+
+  function testVaeRedirectTrashPostData() {
+    global $_VAE;
+    vae_redirect("/plow", true);
+    $this->assertRedirect("/plow");
+    $this->assertTrue($_VAE['trash_post_data']);
+  }
+
+  function testVaeRedirectSslSamePage() {
+    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
+    vae_redirect("/page");
+    $this->assertRedirect("/page");
+  }
+
+  function testVaeRedirectSsl() {
+    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
+    vae_redirect("/plow");
+    $this->assertRedirect("http://actionverb.com/plow");
+  }
+
+  function testVaeRedirectSslNoLeadingSlash() {
+    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
+    vae_redirect("plow");
+    $this->assertRedirect("http://actionverb.com/plow");
+  }
+
+  function testVaeRedirectRouter() {
+    vae_redirect("http://btgrecords.com/plow");
+    $this->assertRedirect("http://btgrecords.com/plow?__router=" . session_id());
+  }
+
+  function testVaeRedirectRouter2() {
+    vae_redirect("http://www.btgrecords.com/plow");
+    $this->assertRedirect("http://www.btgrecords.com/plow?__router=" . session_id());
+  }
+
+  function testVaeRedirectRouter3() {
+    vae_redirect("http://www.sonyrecords.com/plow");
+    $this->assertRedirect("http://www.sonyrecords.com/plow");
   }
 
   function testVaeRegisterHook() {

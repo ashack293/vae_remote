@@ -180,7 +180,7 @@ function vae_user() {
   global $_VAE;
   _vae_session_deps_add('__v:logged_in');
   if (!isset($_SESSION['__v:logged_in']['id'])) {
-    return _vae_render_redirect("/");
+    return vae_redirect("/");
   }
   return $_SESSION['__v:logged_in']['id'];
 }

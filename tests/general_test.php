@@ -32,13 +32,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_attrs(array( "ajax" => "kevin"), "a"), '');
   }
 
-  function testVaeCallbackRedirect() {
-    $this->assertNoRedirect();
-    $url = "http://google.com/";
-    _vae_callback_redirect($url);
-    $this->assertRedirect($url);
-  }
-
   function testVaeClearLogin() {
     $_SESSION['__v:logged_in'] = true;
     _vae_clear_login();
@@ -312,7 +305,7 @@ class GeneralTest extends VaeUnitTestCase {
   }
 
   function testVaeHandleObRedirect() {
-    _vae_render_redirect("/cow");
+    vae_redirect("/cow");
     $this->assertEqual("Redirecting to /cow", _vae_handleob("<html>test</html>"));
     $this->assertRedirect("/cow");
     $this->assertNull($_SESSION['__v:flash_new']);
@@ -320,13 +313,13 @@ class GeneralTest extends VaeUnitTestCase {
   }
 
   function testVaeHandleObRedirectDebug() {
-    _vae_render_redirect("/redir");
+    vae_redirect("/redir");
     $_REQUEST['__debug'] = "1";
     $this->assertEqual("Redirecting to /redir?__debug=1", _vae_handleob("<html>test</html>"));
   }
 
   function testVaeHandleObRedirectForwardOldFlashMessages() {
-    _vae_render_redirect("/cow");
+    vae_redirect("/cow");
     $_SESSION['__v:flash']['messages'] = array(array('msg' => "test_message", "which" => "", "type" => "msg"));
     $_SESSION['__v:flash']['redirected'] = 1;
     $this->assertEqual("Redirecting to /cow", _vae_handleob("<html>test</html>"));
@@ -337,7 +330,7 @@ class GeneralTest extends VaeUnitTestCase {
 
   function testVaeHandleObRedirectPost() {
     $_POST['kevin'] = "test";
-    _vae_render_redirect("/cow");
+    vae_redirect("/cow");
     _vae_handleob("<html>test</html>");
     $this->assertRedirect("/cow");
     $this->assertNull($_SESSION['__v:flash_new']);
@@ -346,7 +339,7 @@ class GeneralTest extends VaeUnitTestCase {
 
   function testVaeHandleObRedirectPostTrashed() {
     $_POST['kevin'] = "test";
-    _vae_render_redirect("/cow", true);
+    vae_redirect("/cow", true);
     _vae_handleob("<html>test</html>");
     $this->assertRedirect("/cow");
     $this->assertNull($_SESSION['__v:flash_new']);
@@ -354,14 +347,14 @@ class GeneralTest extends VaeUnitTestCase {
   }
 
   function testVaeHandleObRedirectXhr() {
-    _vae_render_redirect("/xmlredir");
+    vae_redirect("/xmlredir");
     $_REQUEST['__xhr'] = "1";
     $this->assertTrue(_vae_is_xhr());
     $this->assertEqual("Redirecting to /xmlredir?__xhr=1", _vae_handleob("<html>test</html>"));
   }
 
   function testVaeHandleObRedirectXssProtection() {
-    _vae_render_redirect("/cow?<script>");
+    vae_redirect("/cow?<script>");
     $this->assertEqual("Redirecting to /", _vae_handleob("<html>test</html>"));
   }
 

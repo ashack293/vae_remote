@@ -134,53 +134,6 @@ class RenderTest extends VaeUnitTestCase {
     $this->assertEqual('<div class="flash msg">test</div>', _vae_render_flash_inside('header', new Context()));
   }
 
-  function testVaeRenderRedirect() {
-    global $_VAE;
-    _vae_render_redirect("/plow");
-    $this->assertRedirect("/plow");
-    $this->assertFalse($_VAE['trash_post_data']);
-  }
-
-  function testVaeRenderRedirectTrashPostData() {
-    global $_VAE;
-    _vae_render_redirect("/plow", true);
-    $this->assertRedirect("/plow");
-    $this->assertTrue($_VAE['trash_post_data']);
-  }
-  
-  function testVaeRenderRedirectSslSamePage() {
-    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
-    _vae_render_redirect("/page");
-    $this->assertRedirect("/page");
-  }
-  
-  function testVaeRenderRedirectSsl() {
-    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
-    _vae_render_redirect("/plow");
-    $this->assertRedirect("http://actionverb.com/plow");
-  }
-  
-  function testVaeRenderRedirectSslNoLeadingSlash() {
-    $_SESSION['__v:pre_ssl_host'] = "actionverb.com";
-    _vae_render_redirect("plow");
-    $this->assertRedirect("http://actionverb.com/plow");
-  }
-
-  function testVaeRenderRedirectRouter() {
-    _vae_render_redirect("http://btgrecords.com/plow");
-    $this->assertRedirect("http://btgrecords.com/plow?__router=" . session_id());
-  }
-
-  function testVaeRenderRedirectRouter2() {
-    _vae_render_redirect("http://www.btgrecords.com/plow");
-    $this->assertRedirect("http://www.btgrecords.com/plow?__router=" . session_id());
-  }
-
-  function testVaeRenderRedirectRouter3() {
-    _vae_render_redirect("http://www.sonyrecords.com/plow");
-    $this->assertRedirect("http://www.sonyrecords.com/plow");
-  }
-
   function testVaeRenderTags() {
     $tag = $this->callbackTag("<v:section path='13421'>in<v:else>out</v:else></v:section>");
     $this->assertEqual("in", _vae_render_tags($tag));

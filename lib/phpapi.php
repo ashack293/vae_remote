@@ -297,9 +297,31 @@ function vae_permalink($id) {
   return "";
 }
 
-function vae_redirect($url) {
-  _vae_callback_redirect($url);
-  return true;
+function vae_redirect($to, $trash_post_data = false) {
+  global $_VAE;
+  if ($_VAE['local_full_stack']) {
+    $trace = debug_backtrace();
+    _vae_local_log("Redirecting to $to");
+  }
+  if (!strlen($_VAE['force_redirect'])) {
+    if (!_vae_is_xhr() && isset($_SESSION['__v:pre_ssl_host']) && !strstr($to, "://") && ($_SERVER['PHP_SELF'] != $to)) {
+      $to = "http://" . $_SESSION['__v:pre_ssl_host'] . (substr($to, 0, 1) == "/" ? "" : "/") . $to;
+      unset($_SESSION['__v:pre_ssl_host']);
+    } elseif (strstr($to, "://") && !strstr($to, "://" . $_SERVER['HTTP_HOST'])) {
+      $router = strstr($to, $_VAE['settings']['subdomain'] . ".vaesite.com") || strstr($to, $_VAE['settings']['subdomain'] . "-secure.vaesite.com");
+      if ($_VAE['settings']['domain_ssl'] && strstr($to, $_VAE['settings']['subdomain'] . "." . $_VAE['settings']['domain_ssl'])) $router = true;
+      if ($_VAE['settings']['domain_ssl'] && strstr($to, $_VAE['settings']['subdomain'] . "-staging." . $_VAE['settings']['domain_ssl'])) $router = true;
+      foreach ($_VAE['settings']['domains'] as $domain => $garbage) {
+        if (strstr($to, "://" . $domain) || strstr($to, "://www." . $domain)) {
+          $router = true;
+        }
+      }
+      if ($router) $to .= (strstr($to, "?") ? "&" : "?") . "__router=" . session_id();
+    }
+    $_VAE['force_redirect'] = $to;
+    $_VAE['trash_post_data'] = $trash_post_data;
+  }
+  return "";
 }
 
 function vae_register_hook($name, $options_or_callback) {

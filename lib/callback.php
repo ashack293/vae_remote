@@ -11,10 +11,10 @@ function _vae_callback_create($tag) {
       $tag['attrs']['to'] = $tag['attrs']['formmail'];
       return _vae_callback_formmail($tag);
     }
-    if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect'], true);
-    return _vae_callback_redirect($_SERVER['PHP_SELF'], true);
+    if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect'], true);
+    return vae_redirect($_SERVER['PHP_SELF'], true);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_callback_file($tag) {
@@ -71,9 +71,9 @@ function _vae_callback_formmail($tag) {
     }
     $email_field = ($tag['attrs']['newsletter_email_field'] ? $tag['attrs']['newsletter_email_field'] : 'e_mail_address');
     if ($tag['attrs']['newsletter']) _vae_newsletter_subscribe($tag['attrs']['newsletter'], $data[$email_field], $tag['attrs']['newsletter_confirm']);
-    if ($tag['attrs']['redirect']) return _vae_callback_redirect($tag['attrs']['redirect']);
+    if ($tag['attrs']['redirect']) return vae_redirect($tag['attrs']['redirect']);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_callback_newsletter($tag) {
@@ -81,7 +81,7 @@ function _vae_callback_newsletter($tag) {
   if ($_REQUEST['e_mail_address']) {
     $res = _vae_newsletter_subscribe($tag['attrs']['code'], $_REQUEST['e_mail_address']);
     if (strstr($res, "Welcome to")) {
-      if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+      if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     } elseif (strstr($res, "That E-Mail Address already on this list!")) {
       _vae_flash("You are already subscribed!", 'err', $a['flash']);
     } else {
@@ -90,15 +90,15 @@ function _vae_callback_newsletter($tag) {
   } else {
     _vae_flash("You did not enter an E-Mail address.", 'err', $a['flash']);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_callback_update($tag) {
   if (_vae_rest(array(), "api/site/v1/content/update/" . $tag['callback']['row_id'], "content", $tag)) {
     _vae_flash('Saved.', 'msg', $tag['attrs']['flash']);
-    if (strlen($tag['attrs']['redirect'])) return _vae_callback_redirect($tag['attrs']['redirect']);
+    if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
   }
-  return _vae_callback_redirect($_SERVER['PHP_SELF']);
+  return vae_redirect($_SERVER['PHP_SELF']);
 }
 
 function _vae_callback_zip($tag) {
