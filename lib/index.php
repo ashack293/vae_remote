@@ -24,9 +24,10 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['config']['secret_key'] = getenv("VAE_LOCAL_SECRET_KEY");
   $_VAE['vaedb_port'] = getenv("VAE_LOCAL_VAEDB_PORT");
   $_VAE['config']['data_path'] = $data_path;
-  $_VAE['config']['content_subdomain'] = $data_path . "/data/feed.xml";
+  $_VAE['config']['content_subdomain'] = $data_path . "/feed.xml";
   $_VAE['config']['asset_url'] = "/__assets/";
   $_VAE['config']['data_url'] = "/__data/";
+  $_VAE['vaedbd_backends'] = array('127.0.0.1');
 }
 
 if (_vae_should_load()) {

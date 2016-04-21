@@ -1499,7 +1499,7 @@ function _vae_render_message($title, $msg) {
       <body class="inner">
         <div id="header">
           <a class="vae-logo-top" href="http://vaeplatform.com/">
-            <img alt="Vae&trade;" src=//verb.vaesite.com/images-o/logo-top.png" title="Vae&trade;" />
+            <img alt="Vae&trade;" src="//verb.vaesite.com/images-o/logo-top.png" title="Vae&trade;" />
           </a>
           <div id="nav-top">
           </div>
