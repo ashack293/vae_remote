@@ -29,6 +29,21 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
   $_VAE['config']['data_url'] = "/__data/";
   $_VAE['vaedbd_backends'] = array('127.0.0.1');
   $_VAE['local_full_stack'] = true;
+  $found = false;
+  $script_name = $_SERVER['SCRIPT_NAME'];
+  $server_parsed = array('', '.html','.haml','.php','.xml','.rss','.sass','.scss');
+  foreach ($server_parsed as $ext) {
+    foreach (array('', '/index') as $file) {
+      $path = str_replace("//", "/", $_SERVER['DOCUMENT_ROOT'] . $script_name . $file . $ext);
+      if (file_exists($path) && !is_dir($path)) {
+        $_SERVER['SCRIPT_FILENAME'] = $path;
+        $found = true;
+        break;
+      }
+    }
+    if ($found) break;
+  }
+  if (!$found) return false;
 }
 
 if (_vae_should_load()) {
@@ -110,8 +125,10 @@ if (_vae_should_load()) {
       if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
       _vae_set_cache_key();
       _vae_start_ob();
+      if ($_VAE['local_full_stack']) require($_SERVER['SCRIPT_FILENAME']);
     }
   }
 }
+
 
 ?>
