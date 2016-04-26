@@ -81,7 +81,8 @@ function _vae_cdn_origin_pull() {
 }
 
 function _vae_cdn_timestamp_url($url) {
-  if  (strstr($url, "://")) return $url;
+  global $_VAE;
+  if  (strstr($url, "://") || $_VAE['local_full_stack']) return $url;
   $timestamp = @filemtime($_SERVER['DOCUMENT_ROOT'] . $url);
   if ($timestamp < 1) $timestamp = time();
   return "/__cache/a" . $timestamp . $url;
