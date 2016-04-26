@@ -588,7 +588,7 @@ function _vae_render_formmail($a, &$tag, $context, &$callback, $render_context) 
 function _vae_render_fragment($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   if (!$a['cache']) return "";
-  if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
+  if (!_vae_ssl() && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local'] && !$_VAE['local_full_stack']) {
     $key = $_VAE['global_cache_key'] . $a['cache'];
     $cached = _vae_short_term_cache_get($key);
     if (is_array($cached) && $cached[0] == "chks") {
