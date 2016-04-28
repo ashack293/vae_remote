@@ -841,7 +841,7 @@ function _vae_local($filename = "") {
 
 function _vae_local_authenticate($base_key) {
   global $_VAE;
-  $out = _vae_rest(array(), "api/site/v1/authorize?username=" . $_REQUEST['__local_username'] . "&password=" . $_REQUEST['__local_password'], "subversion");
+  $out = _vae_rest(array(), "api/site/v1/authorize?username=" . urlencode($_REQUEST['__local_username']) . "&password=" . urlencode($_REQUEST['__local_password']), "subversion");
   if ($out == "GOOD") {
     _vae_long_term_cache_set($base_key . "auth", $out, 1);
     if ($_REQUEST['__local_version'] != $_VAE['local_newest_version']) {
