@@ -81,7 +81,7 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   } else {
     $host = $_SERVER['HTTP_HOST'];
   }
-  $out = _vae_simple_rest("http://" . $_SERVER['SERVER_ADDR'] . "/" . $url . "?" . $qs, null, $host);
+  $out = _vae_simple_rest("http://" . $_SERVER['HTTP_HOST'] . "/" . $url . "?" . $qs, null, $host);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
