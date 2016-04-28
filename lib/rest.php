@@ -123,7 +123,9 @@ function _vae_send_rest($method, $data, &$errors) {
     if (isset($_VAE['mock_rest']) && strlen($mock = array_shift($_VAE['mock_rest']))) return $mock;
     return '<success></success>';
   }
-  $url = str_replace("http://", "https://", $_VAE['config']["backlot_url"]) . "/" . $method . (strstr($method, "?") ? "&" : "?") . "secret_key=" . $_VAE['config']["secret_key"];
+  $url_base = $_VAE['config']['backlot_url'];
+  $url_base = (preg_match('/\.dev$/', $url_base) ? $url_base : str_replace("http://", "https://", $url_base));
+  $url = $url_base . "/" . $method . (strstr($method, "?") ? "&" : "?") . "secret_key=" . $_VAE['config']["secret_key"];
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_POST, true);
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);

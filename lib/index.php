@@ -30,7 +30,7 @@ function _vae_local_log_access($status = 200) {
 }
 
 if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
-  $_VAE['config']['backlot_url'] = "http://" . getenv("VAE_LOCAL_SUBDOMAIN") . ".vaeplatform.com";
+  $_VAE['config']['backlot_url'] = "http://" . getenv("VAE_LOCAL_BACKSTAGE");
   $_VAE['config']['secret_key'] = getenv("VAE_LOCAL_SECRET_KEY");
   $_VAE['vaedb_port'] = getenv("VAE_LOCAL_VAEDB_PORT");
   $_VAE['config']['data_path'] = $data_path;
