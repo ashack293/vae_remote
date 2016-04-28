@@ -914,7 +914,7 @@ function _vae_render_pagination($a, &$tag, $context, &$callback, $render_context
     $end_page = min($b['last_page'], $start_page + $max_pages);
   }
   for ($i = $start_page; $i <= $end_page; $i++) {
-    $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . $_SERVER['PHP_SELF'] . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>';
+    $data = '<a class="' . $class . (($b['page'] == $i) ? ' current' : '') . '" href="' . urlencode($_SERVER['PHP_SELF']) . _vae_qs(array($b['page_request_variable'] => $i)) . '">' . $i . '</a>';
     $out .= _vae_merge_dividers($data, $dividers, $i - 1, $context, $render_context) . ' ';
   }
   if ($a['loading']) {
