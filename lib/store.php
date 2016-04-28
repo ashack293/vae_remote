@@ -493,6 +493,13 @@ function _vae_store_checkout($a = null, $tag = null) {
         }
       }
     }
+    if ($file = $a['packing_slip']) {
+      if ($html = _vae_find_source($file)) {
+        if (($data['packing_slip_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build packing slip file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+      } else {
+        _vae_error("Unable to find packing slip HTML file in <span class='c'>" . _vae_h($file) . "</span>.");
+      }
+    }
     foreach (array('billing_name','billing_company','billing_address','billing_city','billing_state','billing_country','billing_zip','billing_phone','shipping_name','shipping_company','shipping_address','shipping_address_2','shipping_city','shipping_state','shipping_zip','shipping_country','shipping_phone') as $k) {
       $data[$k] = $current[$k];
     }
