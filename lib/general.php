@@ -1615,7 +1615,7 @@ function _vae_set_cache_key() {
   if (file_exists($vae_php)) $key .= filemtime($vae_php);
   $verb_php = $_SERVER['DOCUMENT_ROOT'] . '/__verb.php';
   if (file_exists($verb_php)) $key .= filemtime($verb_php);
-  $key = md5($key._vae_proto().$_VAE['filename'].$_SERVER['HTTP_HOST'].$_SERVER['QUERY_STRING'].(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : "").serialize($_POST));
+  $key = md5($key._vae_proto().$_VAE['filename'].$_SERVER['HTTP_HOST'].$_SERVER['QUERY_STRING'].$_SERVER['HTTP_X_PJAX'].(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : "").serialize($_POST));
   $_VAE['cache_key'] = $key;
 }
 
