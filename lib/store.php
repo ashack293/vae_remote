@@ -480,25 +480,33 @@ function _vae_store_checkout($a = null, $tag = null) {
     $data['store_logo'] = $a['store_logo'];
     if ($a['gateway_transaction_id']) $data['gateway_transaction_id'] = $a['gateway_transaction_id'];
     if ($a['skip_emails']) $data['skip_emails'] = "1";
-    foreach (array('confirmation' => array('order_confirmation','Order Confirmation'), 'received' => array('order_received','Order Received'), 'shipping' => array('shipping_info','Shipping Confirmation'), 'waiting_for_approval' => array('order_waiting_for_approval','Order Waiting For Approval')) as $email => $r) {
-      if (isset($_VAE['google_checkout_attrs']['email_'.$email])) $file = $_VAE['google_checkout_attrs']['email_'.$email];
-      else $file = $a['email_'.$email];
-      if ($file) {
-        if (($html = _vae_find_source($file)) && ($txt = _vae_find_source($file . ".txt"))) {
-          if (($data[$r[0].'_email_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (HTML version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
-          if (($data[$r[0].'_email_text'] = _vae_proxy($txt)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (text version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
-          $data[$r[0].'_email_text'] = strip_tags($data[$r[0].'_email_text']);
-        } else {
-          _vae_error("Unable to find " . $r[1] . " E-Mail file in <span class='c'>" . _vae_h($file) . "</span>.  Remember that you need to provide an HTML version named <span class='c'>" . $file . "</span> and a text-only version named <span class='c'>" . $file . ".txt</span>.  Both may have the <span>.html</span>, <span>.haml</span>, <span>.php</span>, or <span>.haml.php</span> extension.");
+    if (!$_VAE['local_full_stack']) {
+      session_write_close();
+      foreach (array('confirmation' => array('order_confirmation','Order Confirmation'), 'received' => array('order_received','Order Received'), 'shipping' => array('shipping_info','Shipping Confirmation'), 'waiting_for_approval' => array('order_waiting_for_approval','Order Waiting For Approval')) as $email => $r) {
+        if (isset($_VAE['google_checkout_attrs']['email_'.$email])) $file = $_VAE['google_checkout_attrs']['email_'.$email];
+        else $file = $a['email_'.$email];
+        if ($file) {
+          if (($html = _vae_find_source($file)) && ($txt = _vae_find_source($file . ".txt"))) {
+            if (($data[$r[0].'_email_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (HTML version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+            if (($data[$r[0].'_email_text'] = _vae_proxy($txt)) == false) return _vae_error("Unable to build " . $r[1] . " E-Mail (text version) file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+            $data[$r[0].'_email_text'] = strip_tags($data[$r[0].'_email_text']);
+          } else {
+            _vae_error("Unable to find " . $r[1] . " E-Mail file in <span class='c'>" . _vae_h($file) . "</span>.  Remember that you need to provide an HTML version named <span class='c'>" . $file . "</span> and a text-only version named <span class='c'>" . $file . ".txt</span>.  Both may have the <span>.html</span>, <span>.haml</span>, <span>.php</span>, or <span>.haml.php</span> extension.");
+          }
         }
       }
-    }
-    if ($file = $a['packing_slip']) {
-      if ($html = _vae_find_source($file)) {
-        if (($data['packing_slip_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build packing slip file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
-      } else {
-        _vae_error("Unable to find packing slip HTML file in <span class='c'>" . _vae_h($file) . "</span>.");
+      if ($file = $a['packing_slip']) {
+        if ($html = _vae_find_source($file)) {
+          if (($data['packing_slip_html'] = _vae_proxy($html)) == false) return _vae_error("Unable to build packing slip file from <span class='c'>" . _vae_h($file) . "</span>.  You can debug this by loading that file directly in your browser.");
+        } else {
+          _vae_error("Unable to find packing slip HTML file in <span class='c'>" . _vae_h($file) . "</span>.");
+        }
       }
+      ini_set('session.use_only_cookies', false);
+      ini_set('session.use_cookies', false);
+      ini_set('session.use_trans_sid', false);
+      ini_set('session.cache_limiter', null);
+      session_start();
     }
     foreach (array('billing_name','billing_company','billing_address','billing_city','billing_state','billing_country','billing_zip','billing_phone','shipping_name','shipping_company','shipping_address','shipping_address_2','shipping_city','shipping_state','shipping_zip','shipping_country','shipping_phone') as $k) {
       $data[$k] = $current[$k];
