@@ -1138,9 +1138,9 @@ function _vae_render_tags(&$parent_tag, $context = null, $render_context = null,
 
 function _vae_render_template($a, &$tag, $context, &$callback, $render_context) {
   list($filename, $vaeml) = _vae_src($a['filename']);
-  if (!strlen($vaeml)) return _vae_render_tags($tag, $context, $render_context);
+  if (!strlen($vaeml) || ($a['unless'] && isset($_SERVER['HTTP_' . strtoupper(str_replace("-", "_", $a['unless']))]))) return _vae_render_tags($tag, $context, $render_context);
   foreach ($a as $k => $v) {
-    if ($k != "filename" && !isset($_REQUEST[$k])) $_REQUEST[$k] = $v;
+    if ($k != "filename" && $a != "unless" && !isset($_REQUEST[$k])) $_REQUEST[$k] = $v;
   }
   list($parse_tree, $render_context) = _vae_parse_vaeml($vaeml, $filename, $tag, $render_context);
   return _vae_render_tags($parse_tree, $context, $render_context);
