@@ -1486,9 +1486,15 @@ function _vae_store_render_item_if_discount($a, &$tag, $context, &$callback, $re
 function _vae_store_render_item_price($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add("__v:store_display_currency");
   $price = (string)_vae_fetch($render_context->required_attr("price_field", $a, "store:item:price"), $context);
+  $discount_percentage = $render_context->attr("discount_percentage", $a);
   $discount_field = $render_context->attr("discount_field", $a);
-  if ($discount_field && !$a['before_discount'] && ($discount = _vae_fetch($discount_field, $context))) {
-    $price = _vae_decimalize((string)$price * (100.0 - (string)$discount) / 100.0);
+  if (!$a['before_discount']) {
+    if ($discount_field && ($discount = _vae_fetch($discount_field, $context))) {
+      $price = _vae_decimalize((string)$price * (100.0 - (string)$discount) / 100.0);
+    }
+    if ($discount_percentage) {
+      $price = _vae_decimalize((string)$price * (100.0 - (string)$discount_percentage) / 100.0);
+    }
   }
   return _vae_store_currency_display($price);
 }
