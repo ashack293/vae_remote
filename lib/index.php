@@ -135,7 +135,10 @@ if (_vae_should_load()) {
       if (!isset($_VAE['filename'])) $_VAE['filename'] = str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['SCRIPT_FILENAME']);
       _vae_set_cache_key();
       _vae_start_ob();
-      if ($_VAE['local_full_stack'] && $local_script) require($local_script);
+      if ($_VAE['local_full_stack'] && $local_script) {
+        require($local_script);
+        _vae_local_log_access(200);
+      }
     }
   }
 }

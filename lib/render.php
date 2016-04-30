@@ -95,6 +95,7 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
       $loader = '<img id="' . $imgid . '" src="' . $a['loading'] . '" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />';
       if ($a['loadingposition'] == "before") $before = $loader;
       else $after = $loader;
+      if ($a['ajaxsuccess']) $a['oncomplete'] .= " " . $a['ajaxsuccess'];
       $a['oncomplete'] = _vae_append_js($a['oncomplete'], "jQuery('#" . $imgid . "').hide();");
     }
     if ($a['animate']) $a['oncomplete'] .= _vae_append_js($a['oncomplete'], "jQuery('#" . $a['ajax'] . "')." . $a['animate'] . "('slow');");
