@@ -120,6 +120,7 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
     $option_value = $a['option_value'];
   }
   $original_price = $price;
+  if ($a['original_price']) $original_price = $a['original_price'];
   if (!strlen($price)) return _vae_error("Adding an item to cart, but the price field is blank.");
    if (!is_numeric($price)) return _vae_error("Adding an item to cart, but the price field is invalid.");
   $taxable = (isset($a['taxable']) ? ((string)$a['taxable'] ? true : false) : true);
