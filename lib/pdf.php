@@ -26,7 +26,7 @@ function _vae_pdf() {
   try {
     @$dompdf->render();
   } catch(Exception $e) {
-    _vae_error("Couldn't render PDF.  Please double check that your HTML is valid.  Make sure that it passes the <a href='http://validator.w3.org/'>HTML Validation test</a>.");
+    _vae_error("Couldn't render PDF.  Please double check that your HTML is valid.  Make sure that it passes the <a href='http://validator.w3.org/'>HTML Validation test</a>.", get_class($e) . ": " . $e->getMessage());
   }
   $dompdf->stream($filename . ".pdf");
   die();
