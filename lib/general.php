@@ -1487,7 +1487,7 @@ function _vae_render_error($e) {
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
   $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
-  _vae_honeybadger_send($log_msg, get_class($e), _vae_render_backtrace($backtrace, 'hb'));
+  _vae_honeybadger_send($hb_msg, get_class($e), _vae_render_backtrace($backtrace, 'hb'));
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }
