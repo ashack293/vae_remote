@@ -494,6 +494,22 @@ function _vae_hide_dir($filename) {
   return str_replace($_SERVER['DOCUMENT_ROOT'], "", str_replace("/ebs/vhosts", "/var/www/vhosts", $filename));
 }
 
+function _vae_honeybadger_send($message, $backtrace) {
+  $data = array(
+    'notifier' => array('name' => 'Vae Remote Notifier', 'version' => '1.0.0', 'url' => 'http://github.com/actionverb/vae_remote'),
+    'error' => array('class' => 'VaeRemoteError', 'message' => $message, 'backtrace' => $backtrace),
+    'request' => array('url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'], 'params' => $_REQUEST, 'session' => $_SESSION, 'cgi_data' => $_SERVER),
+    'server' => array('project_root' => $_SERVER['DOCUMENT_ROOT'], 'environment_name' => 'production', 'hostname' => gethostname())
+  );
+  $curl = curl_init("https://api.honeybadger.io/v1/notices");
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+  curl_setopt($curl, CURLOPT_HEADER, true);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, Array("X-API-Key: f437889e", "Content-Type: application/json", "Accept: application/json"));
+  curl_exec($curl);
+  curl_close($curl);
+}
+
 function _vae_html2rgb($color) {
   if ($color[0] == '#') $color = substr($color, 1);
   if (strlen($color) == 6) list($r, $g, $b) = array($color[0].$color[1], $color[2].$color[3], $color[4].$color[5]);
@@ -1357,7 +1373,7 @@ function _vae_remove_file($name) {
   if (strlen($name)) @unlink($_VAE['config']['data_path'] . $name);
 }
 
-function _vae_render_backtrace($backtrace, $plaintext = false) {
+function _vae_render_backtrace($backtrace, $format = 'html') {
   $calls = array();
   foreach ($backtrace as $bt) {
     $bt['file']  = (isset($bt['file'])) ? $bt['file'] : 'Unknown';
@@ -1409,6 +1425,13 @@ function _vae_render_backtrace($backtrace, $plaintext = false) {
       'args'  => $args
     );
   }
+  if ($format == 'hb') {
+    $out = array();
+    foreach ($calls as $call) {
+      $out[] = array('number' => $call['line'], 'file' => $call['file'], 'method' => $call['func'], 'class' => $call['class']);
+    }
+    return $out;
+  }
   $htmlmessage = "<pre><ul>";
   foreach ($calls as $call) {
     $textmessage .= "    * {$call['class']}{$call['type']}{$call['func']}({$call['args']}) at {$call['file']}:{$call['line']}\n";
@@ -1417,7 +1440,7 @@ function _vae_render_backtrace($backtrace, $plaintext = false) {
         . '</span><span class="bt4">(</span><span class="bt5">' . htmlspecialchars($call['args'], ENT_COMPAT, 'UTF-8') . '</span><span class="bt4">)</span> at ' . htmlspecialchars($call['file'], ENT_COMPAT, 'UTF-8') . ':' . $call['line'] . '</li>';
   }
   $htmlmessage .= "</pre>\n";
-  if ($plaintext) return $textmessage;
+  if ($format == 'text') return $textmessage;
   return $htmlmessage;
 }
 
@@ -1459,9 +1482,10 @@ function _vae_render_error($e) {
   $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . get_class($e) . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
   if ($backtrace && (count($backtrace) > 1)) {
     if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
-    $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, true);
+    $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
+  _vae_honeybadger_send($log_msg, _vae_render_backtrace($backtrace, 'hb'));
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }
