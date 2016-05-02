@@ -495,6 +495,7 @@ function _vae_hide_dir($filename) {
 }
 
 function _vae_honeybadger_send($message, $backtrace) {
+  if ($_ENV['TEST']) return;
   $data = array(
     'notifier' => array('name' => 'Vae Remote Notifier', 'version' => '1.0.0', 'url' => 'http://github.com/actionverb/vae_remote'),
     'error' => array('class' => 'VaeRemoteError', 'message' => $message, 'backtrace' => $backtrace),
