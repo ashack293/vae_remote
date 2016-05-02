@@ -103,7 +103,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   } elseif (!$hide_errors && ($ret == false)) {
     _vae_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
     if (!strstr($method, "content/create")) {
-      _vae_report_error("REST API Error", $_VAE['resterror']);
+      _vae_honeybadger_send("VaeRailsAppRestApiError", $_VAE['resterror'], debug_backtrace());
     }
   }
   return $ret;

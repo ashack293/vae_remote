@@ -496,10 +496,17 @@ function _vae_hide_dir($filename) {
 
 function _vae_honeybadger_send($message, $class_name, $backtrace) {
   if ($_ENV['TEST']) return;
+  $safe_request = array();
+  $bad = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number');
+  foreach ($_REQUEST as $k => $v) {
+    if (!in_array($k, $bad)) {
+      $safe_request[$k] = $v;
+    }
+  }
   $data = array(
     'notifier' => array('name' => 'Vae Remote Notifier', 'version' => '1.0.0', 'url' => 'http://github.com/actionverb/vae_remote'),
     'error' => array('class' => $class_name, 'message' => $message, 'backtrace' => $backtrace),
-    'request' => array('url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'], 'params' => $_REQUEST, 'session' => $_SESSION, 'cgi_data' => $_SERVER),
+    'request' => array('url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'], 'params' => $safe_request, 'session' => $_SESSION, 'cgi_data' => $_SERVER),
     'server' => array('project_root' => $_SERVER['DOCUMENT_ROOT'], 'environment_name' => 'production', 'hostname' => gethostname())
   );
   $curl = curl_init("https://api.honeybadger.io/v1/notices");
@@ -1553,20 +1560,6 @@ function _vae_render_timer() {
   return _vae_render_message("Vae Timer on ".gethostname(), "<h2>Vae Timer</h2><div class='b'><table style='width: 100%;'>" . $ticks . "</table></div>");
 }
 
-function _vae_report_error($subject, $message, $urgent = true) {
-  $body = "------------------------------------\nMessage:\n$message\n------------------------------------\nEnvironment:\n";
-  foreach ($_SERVER as $k => $v) {
-    $body .= $k . " => " . $v . "\n";
-  }
-  $bad = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number');
-  $body .= "\n------------------------------------\nRequest:\n";
-  foreach ($_REQUEST as $k => $v) {
-    if (!in_array($k, $bad)) $body .= $k . " => " . $v . "\n";
-  }
-  _vae_mail("gabe@actionverb.com,jared@actionverb.com,michael@actionverb.com,kevin@actionverb.com", "Vae Remote Error : " . $subject, $body, "From: vaeerrors@actionverb.com");
-  return $body;
-}
-
 function _vae_request_param($name, $flash = false) {
   $name = str_replace(" ", "_", $name);
   if ($flash) return $_SESSION['__v:flash']['post'][$name];
@@ -1615,7 +1608,7 @@ function _vae_run_hooks($name, $params = null) {
       } catch (Exception $e) {
         if (strstr($e->getMessage(), "TSocket")) {
         } else {
-          _vae_report_error("Callback Hook Error: $name", serialize($e), false);
+          _vae_honeybadger_send("Callback Hook Error: $name", get_class($e), debug_backtrace());
         }
       }
     }
