@@ -494,11 +494,11 @@ function _vae_hide_dir($filename) {
   return str_replace($_SERVER['DOCUMENT_ROOT'], "", str_replace("/ebs/vhosts", "/var/www/vhosts", $filename));
 }
 
-function _vae_honeybadger_send($message, $backtrace) {
+function _vae_honeybadger_send($message, $class_name, $backtrace) {
   if ($_ENV['TEST']) return;
   $data = array(
     'notifier' => array('name' => 'Vae Remote Notifier', 'version' => '1.0.0', 'url' => 'http://github.com/actionverb/vae_remote'),
-    'error' => array('class' => 'VaeRemoteError', 'message' => $message, 'backtrace' => $backtrace),
+    'error' => array('class' => $class_name, 'message' => $message, 'backtrace' => $backtrace),
     'request' => array('url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'], 'params' => $_REQUEST, 'session' => $_SESSION, 'cgi_data' => $_SERVER),
     'server' => array('project_root' => $_SERVER['DOCUMENT_ROOT'], 'environment_name' => 'production', 'hostname' => gethostname())
   );
@@ -1486,7 +1486,8 @@ function _vae_render_error($e) {
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
-  _vae_honeybadger_send($log_msg, _vae_render_backtrace($backtrace, 'hb'));
+  $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
+  _vae_honeybadger_send($log_msg, get_class($e), _vae_render_backtrace($backtrace, 'hb'));
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }
