@@ -517,8 +517,9 @@ function _vae_honeybadger_send($message, $class_name, $backtrace) {
   curl_setopt($curl, CURLOPT_POST, true);
   curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
   curl_setopt($curl, CURLOPT_HEADER, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($curl, CURLOPT_HTTPHEADER, Array("X-API-Key: f437889e", "Content-Type: application/json", "Accept: application/json"));
-  curl_exec($curl);
+  $out = curl_exec($curl);
   curl_close($curl);
 }
 
