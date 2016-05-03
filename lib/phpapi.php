@@ -72,7 +72,7 @@ function vae_create($structure_id, $row_id, $data) {
 }
 
 function vae_customer($id, $load = false) {
-  if (!is_numeric($id) && substr($id, 0, 4) != "cus_") _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
+  if (!is_numeric($id) && substr($id, 0, 4) != "cus_" && !strstr($id, "@")) _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
   $raw = _vae_rest(array(), "api/site/v1/customers/show/" . $id, "customer", array());
   if ($raw == false) return false;
   if ($load) _vae_store_load_customer($raw);
