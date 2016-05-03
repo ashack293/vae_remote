@@ -1500,9 +1500,13 @@ function _vae_render_error($e) {
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
   $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
-  $hb_ignore = array('VaeQLQueryParseException','ParseError');
-  if (!in_array($e_class, $hb_ignore)) {
-    _vae_honeybadger_send($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
+  $hb_ignore_msg = array("Call to undefined function ereg");
+  $hb_ignore_classes = array('VaeQLQueryParseException','ParseError');
+  if (!in_array($e_class, $hb_ignore_classes)) {
+    foreach ($hb_ignore_msg as $msg) {
+      if (strstr($hb_msg, $msg)) $hb_msg = "";
+    }
+    if (strlen($hb_msg)) _vae_honeybadger_send($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
