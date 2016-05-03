@@ -14,5 +14,8 @@ final class VaeException extends Exception {
 
 }
 
+final class VaeQLQueryParseException extends Exception {
+}
+
 final class VaeFragment extends Exception {
 }

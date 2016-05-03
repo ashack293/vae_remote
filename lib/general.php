@@ -1456,15 +1456,16 @@ function _vae_render_error($e) {
   global $_VAE;
   @header("HTTP/1.1 500 Internal Server Error");
   @header("Status: 500 Internal Server Error");
+  $e_class = get_class($e);
   if (!$_REQUEST['__debug'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
     return @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html");
   }
-  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr(get_class($e), "Vae"))) {
+  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr($e_class, "Vae"))) {
     $error_type = "Vae Error";
-    if (get_class($e) == "VaeException" || get_class($e) == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
+    if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
   } else {
     $error_type = "Exception Thrown";
-    $msg = get_class($e) . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
+    $msg = $e_class . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
   }
   $out = "<h2>" . $error_type . (($e->filename && !strstr($e->filename, "/vae")) ? " in " . $e->filename : "") . "</h2>";
   if (!strlen($msg)) $msg = "An error has occured on our servers.  Please try again in a few minutes.";
@@ -1487,14 +1488,17 @@ function _vae_render_error($e) {
   } else {
     $backtrace = $e->getTrace();
   }
-  $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . get_class($e) . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
+  $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . $e_class . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
   if ($backtrace && (count($backtrace) > 1)) {
-    if (($_REQUEST['__debug'] == "vae") || !strstr(get_class($e), "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
+    if (($_REQUEST['__debug'] == "vae") || !strstr($e_class, "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
   $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
-  _vae_honeybadger_send($hb_msg, get_class($e), _vae_render_backtrace($backtrace, 'hb'));
+  $hb_ignore = array('VaeQLQueryParseException');
+  if (!in_array($e_class, $hb_ignore)) {
+    _vae_honeybadger_send($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
+  }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
   }

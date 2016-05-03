@@ -1135,7 +1135,7 @@ function _vaeql_query($query, $context = null, $options = null, $raiseErrors = t
   } elseif ($ret < -99) {
     throw new VaeException("", "VaeQL Internal Error.  Error Code: " . $ret);
   } elseif ((substr($query, 0, 1) != "@") && $raiseErrors) {
-    throw new VaeException("We could not parse VaeQL Query: <span class='code'>" . $query . "</span>");
+    throw new VaeQLQueryParseException("We could not parse VaeQL Query: <span class='code'>" . $query . "</span>");
   } else {
     $path = 0;
     $query = "";
