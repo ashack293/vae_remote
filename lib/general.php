@@ -497,7 +497,7 @@ function _vae_hide_dir($filename) {
 function _vae_honeybadger_send($message, $class_name, $backtrace) {
   global $_VAE;
   if ($_ENV['TEST']) {
-    $_VAE['honeybader_sent']++;
+    $_VAE['honeybadger_sent']++;
     return;
   }
   $safe_request = array();
