@@ -64,7 +64,7 @@ function _vae_destroy($row_id) {
 
 function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) {
   global $_VAE;
-  if ($_VAE['local_full_stack']) return "";
+  //if ($_VAE['local_full_stack']) return "";
   $id = session_id();
   if ($yield) {
     _vae_long_term_cache_set("_proxy_yield_$id", $yield, 1);
