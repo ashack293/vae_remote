@@ -114,7 +114,7 @@ class VaeUnitTestCase extends UnitTestCase {
   }
   
   function assertNoReportedErrors() {
-    $this->assertNoMail();
+    $this->assertEqual($_VAE['honeybadger_sent'], 0, "Expected no errors reported to Honeybadger.");
   }
   
   function assertNoRest() {
@@ -142,7 +142,7 @@ class VaeUnitTestCase extends UnitTestCase {
   }
   
   function assertReportedError($pattern = "") {
-    $this->assertMail();
+    $this->assertTrue($_VAE['honeybadger_sent'] > 0, "Expected errors reported to Honeybadger.");
   }
   
   function assertRestError() {

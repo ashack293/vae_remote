@@ -495,7 +495,11 @@ function _vae_hide_dir($filename) {
 }
 
 function _vae_honeybadger_send($message, $class_name, $backtrace) {
-  if ($_ENV['TEST']) return;
+  global $_VAE;
+  if ($_ENV['TEST']) {
+    $_VAE['honeybader_sent']++;
+    return;
+  }
   $safe_request = array();
   $bad = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number');
   foreach ($_REQUEST as $k => $v) {
@@ -1495,7 +1499,7 @@ function _vae_render_error($e) {
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
   $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
-  $hb_ignore = array('VaeQLQueryParseException');
+  $hb_ignore = array('VaeQLQueryParseException','ParseError');
   if (!in_array($e_class, $hb_ignore)) {
     _vae_honeybadger_send($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
   }
