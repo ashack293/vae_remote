@@ -35,7 +35,7 @@ function _vae_sweep_data_dir() {
   if (count($save) > 0) {
     $dh = opendir($_VAE['config']['data_path']);
     while (($file = readdir($dh)) !== false) {
-      if (in_array($file, array(".", "..", "feed.xml", "settings.php", "uploads"))) continue;
+      if (in_array($file, array(".", "..", "settings.php", "uploads"))) continue;
       if (isset($save[$file])) continue;
       $filename = $_VAE['config']['data_path'] . $file;
       $fileage = time() - filemtime($filename);
@@ -44,7 +44,6 @@ function _vae_sweep_data_dir() {
       unlink($filename);
     }
   }
-  touch($_VAE['config']['data_path'] . "/feed.xml"); // invalidate caches
   echo "done\n";
   flush();
 }

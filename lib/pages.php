@@ -92,7 +92,6 @@ function _vae_page_find($page) {
       _vae_page_run($page, $cached['template'], $cached['id'], true);
     }
   } else {
-    if (!file_exists($_VAE['config']['data_path'] . "feed.xml") && !isset($_VAE['config']['content_subdomain'])) return false;
     while (strstr($page, "//")) $page = str_replace("//", "/", $page);
     if (substr($page, 0, 1) == "/") $page = substr($page, 1);
     $split = explode("/", $page);
