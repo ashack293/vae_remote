@@ -160,15 +160,6 @@ function _vae_send_rest($method, $data, &$errors) {
   return false;
 }
 
-function _vae_master_rest($method, $post_data = null) {
-  global $_VAE;
-  _vae_tick("Sending Request for [" . $method . "] {" . serialize($post_data) . "}");
-  if ($post_data == null) $post_data = array();
-  $post_data['secret_key'] = $_VAE['config']['secret_key'];
-  $post_data['method'] = $method;
-  return _vae_simple_rest("http://" . $_VAE['settings']['subdomain'] . ".vaesite.com/", $post_data);
-}
-
 function _vae_simple_rest($url, $post_data = null, $header = false) {
   global $_VAE;
   if ($_ENV['TEST'] && !$_SESSION['real_rest']) {
