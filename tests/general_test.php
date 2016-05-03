@@ -967,11 +967,6 @@ class GeneralTest extends VaeUnitTestCase {
     $this->assertPattern('/<h2>Vae Timer<\/h2>/', _vae_render_timer());
   }
 
-  function testVaeReportError() {
-    $this->assertNotNull(_vae_report_error("subj", "msg"));
-    $this->assertMail(1);
-  }
-
   function testVaeRequestParam() {
     $this->assertNull(_vae_request_param("cow"));
     $_SESSION['__v:flash']['post']['cow'] = "moo2";
