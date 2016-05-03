@@ -142,6 +142,7 @@ class VaeUnitTestCase extends UnitTestCase {
   }
   
   function assertReportedError($pattern = "") {
+    global $_VAE;
     $this->assertTrue($_VAE['honeybadger_sent'] > 0, "Expected errors reported to Honeybadger.");
   }
   
