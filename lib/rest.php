@@ -77,12 +77,14 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);
   $qs .= "&__proxy=" . $id;
-  if ($_SESSION['__v:pre_ssl_host'] && $_VAE['settings']['domain_ssl_port']) {
+  $proto = _vae_proto();
+  if ($_SESSION['__v:pre_ssl_host']) {
     $host = $_SESSION['__v:pre_ssl_host'];
+    $proto = "http://";
   } else {
     $host = $_SERVER['HTTP_HOST'];
   }
-  $out = _vae_simple_rest("http://" . $_SERVER['HTTP_HOST'] . "/" . $url . "?" . $qs, null, $host);
+  $out = _vae_simple_rest($proto . "127.0.0.1" . "/" . $url . "?" . $qs, null, $host);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
@@ -171,6 +173,9 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
     $url = $_VAE['config']['backlot_url'] . $url;
   }
   $ch = curl_init($url);
+  if (strstr($url, "127.0.0.1") !== false) {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  }
   curl_setopt($ch, CURLOPT_TIMEOUT, 600);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   if ($post_data) {
