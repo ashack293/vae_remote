@@ -83,9 +83,6 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
     $host = $_SERVER['HTTP_HOST'];
   }
   $out = _vae_simple_rest(_vae_proto() . "127.0.0.1/" . $url . "?" . $qs, null, $host);
-  if (stristr($out, "Internal Server Error") !== false) {
-    $out = "";
-  }
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
@@ -183,10 +180,20 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
   }
   if ($header) {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("http://", "/"), "", $header)));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("https://", "http://", "/"), "", $header)));
   }
   $res = curl_exec($ch);
+  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
+  if ($http_code >= 300 || $http_code == 0) {
+    foreach (array('cc_number','cc_cvv','password','cc_month','cc_year','cc_start_month','cc_start_year') as $bad) {
+      $post_data = preg_replace("/<" . $bad . ">([^<]*)/", "<" . $bad . ">[FILTERED]", $post_data);
+      $post_data = preg_replace("/" . $bad . "=([^<]*)/", $bad . "=[FILTERED]", $post_data);
+    }
+    $url = preg_replace("/secret_key=([^<]*)/", "secret_key=[FILTERED]", $url);
+    _vae_honeybadger_send("VaeSimpleRestError", "Submitting to URL: $url\n\n-------------\n\nHost:\n\n$header\n\nData:\n\n$post_data\n\nResponse Code:\n\n$http_code\n\nResponse:\n\n$res\n\n-------------", debug_backtrace());
+    return "";
+  }
   return $res;
 }
 
