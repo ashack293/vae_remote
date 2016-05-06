@@ -83,6 +83,9 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
     $host = $_SERVER['HTTP_HOST'];
   }
   $out = _vae_simple_rest(_vae_proto() . "127.0.0.1/" . $url . "?" . $qs, null, $host);
+  if (stristr($out, "Internal Server Error") !== false) {
+    $out = "";
+  }
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
@@ -110,7 +113,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
 }
 
 function _vae_safe_method_name($method) {
- return preg_replace('/\/[0-9]+/', '', $method);
+  return preg_replace('/\/[0-9]+/', '', $method);
 }
 
 function _vae_send_rest($method, $data, &$errors) {
@@ -185,7 +188,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
   $res = curl_exec($ch);
   curl_close($ch);
   return $res;
-  }
+}
 
 function _vae_update($id, $data, $update_frontend = true) {
   global $_VAE;
