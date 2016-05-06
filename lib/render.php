@@ -355,7 +355,7 @@ function _vae_render_date_select($a, &$tag, $context, &$callback, $render_contex
   $a['id'] = $orig['id'] . "_day";
   $out .= " " . _vae_render_select($a, $tag, $context, $callback, $render_context);
   $a['options'] = array('' => '');
-  for ($i = strftime("%Y"); $i > 1900; $i--) { $a['options'][$i] = $i; }
+  for ($i = strftime("%Y") + ($a['years_future'] ? $a['years_future'] : 0); $i > 1900; $i--) { $a['options'][$i] = $i; }
   $a['value'] = ($date ? strftime("%Y", $date) : "");
   $a['name'] = $orig['name'] . "_year";
   $a['id'] = $orig['id'] . "_year";
