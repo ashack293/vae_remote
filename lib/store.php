@@ -1717,6 +1717,9 @@ function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {
   </Address>
   </AddressValidationRequest>';
   $ret_xml = _vae_simple_rest("https://onlinetools.ups.com/ups.app/xml/AV", $xml);
+  if (!strlen($ret_xml)) {
+    return false;
+  }
   $ret = simplexml_load_string($ret_xml);
   if ($ret->Response->ResponseStatusCode == 1) {
     foreach ($ret->AddressValidationResult as $r) {
