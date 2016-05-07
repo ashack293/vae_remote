@@ -817,7 +817,8 @@ class GeneralTest extends VaeUnitTestCase {
     $_REQUEST['kevin'] = "///";
     $this->assertEqual("%2F%2F%2F", _vae_oneline("PARAM(kevin)", _vae_fetch(13421), "href"));
     $_REQUEST['kevin'] = "\"'";
-    $this->assertEqual("&quot;&#039;", _vae_oneline("PARAM(kevin)", _vae_fetch(13421), "path"));
+    $this->assertEqual("&quot;&#039;", _vae_oneline("PARAM(kevin)", _vae_fetch(13421), "path_with_string_literals"));
+    $this->assertEqual("\"'", _vae_oneline("PARAM(kevin)", _vae_fetch(13421), "path"));
   }
 
   function testVaeOnelineGet() {

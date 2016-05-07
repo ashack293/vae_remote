@@ -1,19 +1,19 @@
 <?php
 
 class RenderTest extends VaeUnitTestCase {
-  
+
   function setUp() {
     $this->tag = array();
     $this->callback = array();
     $this->render_context = new Context();
     parent::setUp();
   }
-  
+
   function helperRunRenderTestsFromTestFilesCallback($fn) {
     global $_VAE;
     eval($fn[1]);
   }
-  
+
   function testRunRenderTestsFromTestFiles() {
     global $_VAE;
     $dir = dirname(__FILE__) . "/render_tests/";

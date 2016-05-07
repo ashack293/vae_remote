@@ -18,3 +18,15 @@ awesome
 <v=13421/name>
 >
 Freefall
+=
+<v? $_REQUEST['name'] = "Freefall"; ?><v:if path="/artists[name='<v=13421/name>']">1</v:if>
+>
+1
+=
+<v? $_REQUEST['name'] = "Freefall"; ?><v:if path='/artists[name="<v=13421/name>"]'>1</v:if>
+>
+1
+=
+<v:if path='<v?="/artists[name=\"Freefall\"]"?>'>1</v:if>
+>
+1
