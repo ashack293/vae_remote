@@ -1184,7 +1184,7 @@ function _vae_oneline($a, $context, $attribute_type = false) {
     $out = _vae_oneline_get($value, $getsize, $params);
   }
   if ($attribute_type == "href") $out = urlencode($out);
-  if ($attribute_type == "path") $out = htmlspecialchars($out, ENT_QUOTES);
+  if ($attribute_type == "path_with_string_literals") $out = htmlspecialchars($out, ENT_QUOTES);
   return $out;
 }
 

@@ -774,6 +774,7 @@ function _vae_render_nowidows($a, &$tag, $context, &$callback, $render_context) 
 
 function _vae_render_oneline($out, $context, $attribute_type = false) {
   global $_VAE;
+  if ($attribute_type == 'path' && (strstr($out, "'") || strstr($out, '"'))) $attribute_type = 'path_with_string_literals';
   preg_match_all('/<v=([^>]*)>/', $out, $matches, PREG_SET_ORDER);
   foreach ($matches as $regs) {
     $out = str_replace($regs[0], _vae_oneline($regs[1], $context, $attribute_type), $out);
