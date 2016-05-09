@@ -162,7 +162,7 @@ function _vae_send_rest($method, $data, &$errors) {
   return false;
 }
 
-function _vae_simple_rest($url, $post_data = null, $header = false) {
+function _vae_simple_rest($url, $post_data = null, $header = false, $follow_redirects = false) {
   global $_VAE;
   if ($_ENV['TEST'] && !$_SESSION['real_rest']) {
     $_VAE['rest_sent']++;
@@ -183,6 +183,9 @@ function _vae_simple_rest($url, $post_data = null, $header = false) {
   }
   if ($header) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . str_replace(array("https://", "http://", "/"), "", $header)));
+  }
+  if ($follow_redirects) {
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
   }
   $res = curl_exec($ch);
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
