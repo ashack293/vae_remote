@@ -77,11 +77,7 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   }
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);
   $qs .= "&__proxy=" . $id;
-  if ($_SESSION['__v:pre_ssl_host']) {
-    $host = $_SESSION['__v:pre_ssl_host'];
-  } else {
-    $host = $_SERVER['HTTP_HOST'];
-  }
+  $host = $_SERVER['HTTP_HOST'];}
   $out = _vae_simple_rest(_vae_proto() . "127.0.0.1/" . $url . "?" . $qs, null, $host);
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
