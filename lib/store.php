@@ -873,7 +873,7 @@ function _vae_store_exchange_rate($from, $to) {
   if ($rate = _vae_short_term_cache_get($key)) return $rate;
   $feed = _vae_simple_rest("http://coinmill.com/rss/" . $from . "_" . $to . ".xml", null, false, true);
   if (!strlen($feed)) return false;
-  preg_match("/ = ([0-9\.]*) /", $feed, $matches);
+  preg_match("/ " . $from . " = ([0-9\.]*) /", $feed, $matches);
   $rate = $matches[1];
   _vae_short_term_cache_set($key, $rate, 0, 3600);
   return $rate;
