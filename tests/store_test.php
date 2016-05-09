@@ -1154,7 +1154,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertEqual(_vae_store_currency_display(7.99), "<span class='currency currency_USD'>$7.99</span>");
     $_SESSION['__v:store_display_currency'] = "AUD";
     $this->mockRest(file_get_contents(dirname(__FILE__) . "/data/coinmill_rss.xml"));
-    $this->assertEqual(_vae_store_currency_display(7.99), "<span class='currency currency_AUD'>est. $7.03 AUD</span>");
+    $this->assertEqual(_vae_store_currency_display(7.99), "<span class='currency currency_AUD'>est. $8.79 AUD</span>");
   }
 
   function testVaeStoreCurrentUser() {
@@ -1165,8 +1165,9 @@ class StoreTest extends VaeUnitTestCase {
 
   function testVaeStoreExchangeRate() {
     $this->mockRest(file_get_contents(dirname(__FILE__) . "/data/coinmill_rss.xml"));
-    $this->assertEqual(_vae_store_exchange_rate("USD", "AUD"), 0.88);
-    $this->assertEqual(_vae_store_exchange_rate("USD", "AUD"), 0.88);
+    $this->assertEqual(_vae_store_exchange_rate("USD", "AUD"), 1.10);
+    $this->mockRest(file_get_contents(dirname(__FILE__) . "/data/coinmill_rss.xml"));
+    $this->assertEqual(_vae_store_exchange_rate("AUD", "USD"), 0.88);
   }
 
   function testVaeStoreFindDiscount() {
