@@ -24,9 +24,9 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
   if (!strlen($css)) {
     $client = _vae_thrift();
     if ($scss) {
-      $css = $client->scss($sass, $include_directory);
+      $css = $client->scss($sass, $include_directory, "compressed");
     } else {
-      $css = $client->sass($sass, $include_directory);
+      $css = $client->sass($sass, $include_directory, "compressed");
     }
     $deps = _vae_sass_deps_check($sass, $include_directory, true);
     _vae_short_term_cache_set($cache_key, array($css, $deps));
