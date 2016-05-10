@@ -21,7 +21,7 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
     }
   }
 
-  if (!strlen($css)) {
+  if (!strlen($css) || $_REQUEST['__debug']) {
     $client = _vae_thrift();
     $style = $_VAE['settings']['dont_minify_sass'] ? "nested" : "compressed";
     if ($scss) {
