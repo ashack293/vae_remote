@@ -1,5 +1,11 @@
 <?php
 
+function vae_backstage() {
+  global $_VAE;
+  _vae_session_deps_add('__v:user_id');
+  return isset($_SESSION['__v:user_id']) || $_REQUEST['__vae_local'] || $_VAE['local_full_stack'];
+}
+
 function vae_clubtime() {
   $a = strtotime(strftime("%B %d, %Y"));
   if (strftime("%H") < 3) $a -= 86400;
