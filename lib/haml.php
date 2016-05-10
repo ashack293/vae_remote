@@ -23,10 +23,11 @@ function _vae_sass($sass, $header = true, $include_directory = null, $scss = fal
 
   if (!strlen($css)) {
     $client = _vae_thrift();
+    $style = $_VAE['settings']['dont_minify_sass'] ? "nested" : "compressed";
     if ($scss) {
-      $css = $client->scss($sass, $include_directory, "compressed");
+      $css = $client->scss($sass, $include_directory, $style);
     } else {
-      $css = $client->sass($sass, $include_directory, "compressed");
+      $css = $client->sass($sass, $include_directory, $style);
     }
     $deps = _vae_sass_deps_check($sass, $include_directory, true);
     _vae_short_term_cache_set($cache_key, array($css, $deps));
