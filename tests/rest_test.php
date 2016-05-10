@@ -83,6 +83,11 @@ class RestTest extends VaeUnitTestCase {
     $this->assertErrors("This is not a real situation.");
   }
 
+  function testVaeRestMissingParamsError() {
+    $this->assertFalse( _vae_rest(array(), "api/site/v1/store/create_order", "order"));
+    $this->assertErrors("No parameters were provided.");
+  }
+
   function testVaeRestRestErrorHidden() {
     $this->mockRestError();
     $this->assertFalse( _vae_rest(array('name' => "Freefall"), "content/update/13421", "content", null, null, true));

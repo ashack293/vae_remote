@@ -94,7 +94,9 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   if ($tag) _vae_merge_data_from_tags($tag, $data, $errors);
   $method_name = _vae_safe_method_name($method);
   $xml = _vae_build_xml($param, $data, $method_name);
-  if (isset($_VAE['safe_params'][$method_name]) && $xml == "<" . $param . "></" . $param . ">") $errors = array('No parameters were provided.');
+  if (isset($_VAE['safe_params'][$method_name]) && $xml == "<" . $param . "></" . $param . ">") {
+    $errors = array('No parameters were provided.');
+  }
   if (count($errors) == 0) $ret = _vae_send_rest($method, $xml, $errors);
   $_VAE['errors'] = $errors;
   if (!$hide_errors && _vae_flash_errors($errors, $tag['attrs']['flash'])) {

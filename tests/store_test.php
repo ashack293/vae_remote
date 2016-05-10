@@ -529,7 +529,8 @@ class StoreTest extends VaeUnitTestCase {
   }
 
   function testVaeStoreCallbackForgotRedirect() {
-    $tag = $this->callbackTag('<v:store:forgot redirect="/lalala" />');
+    $tag = $this->callbackTag('<v:store:forgot redirect="/lalala"><v:text_field path="name" /></v:store:forgot>');
+    $_REQUEST['name'] = "Kevin";
     _vae_store_callback_forgot($tag);
     $this->assertRedirect("/lalala");
   }
@@ -654,7 +655,8 @@ class StoreTest extends VaeUnitTestCase {
   }
 
   function testVaeStoreCallbackRegister() {
-    $tag = $this->callbackTag("<v:store:register formmail='kevin@bombino.org' redirect='/checkout'><v:text path='billing_name' required='name' /></v:store:register>");
+    $_REQUEST['billing_name'] = "foo bar";
+    $tag = $this->callbackTag("<v:store:register formmail='kevin@bombino.org' redirect='/checkout'><v:text_field path='billing_name' required='name' /></v:store:register>");
     _vae_store_callback_register($tag);
     $this->assertRest();
     $this->assertRedirect("/checkout");
@@ -662,7 +664,8 @@ class StoreTest extends VaeUnitTestCase {
 
   function testVaeStoreCallbackRegisterErrors() {
     $this->mockRestError("wild error");
-    $tag = $this->callbackTag("<v:store:register redirect='/checkout'><v:text path='billing_name' required='name' /></v:store:register>");
+    $_REQUEST['billing_name'] = "foo";
+    $tag = $this->callbackTag("<v:store:register redirect='/checkout'><v:text_field path='billing_name' /></v:store:register>");
     _vae_store_callback_register($tag);
     $this->assertErrors("wild error");
     $this->assertRedirect($_SERVER['PHP_SELF']);
