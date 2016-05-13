@@ -4,6 +4,8 @@ PHP Library that provides VaeML and Vae PHP functions.
 
 ## License
 
+Copyright (c) 2007-2016 Action Verb, LLC.
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
