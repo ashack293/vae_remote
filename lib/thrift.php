@@ -1,6 +1,6 @@
 <?php
 
-$paths = array(dirname(__FILE__) . "/../tests/dependencies/vae_thrift/php/vendor", dirname(__FILE__) . "/../../vae_thrift/php/vendor", '/app/vaedb/deploy/current/php/vendor');
+$paths = array('/app/vaedb/deploy/current/php/vendor', dirname(__FILE__) . "/../tests/dependencies/vae_thrift/php/vendor", dirname(__FILE__) . "/../../vae_thrift/php/vendor");
 foreach ($paths as $path) {
   if (file_exists($path)) {
     $GLOBALS['THRIFT_ROOT'] = $path;
