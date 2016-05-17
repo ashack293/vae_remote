@@ -148,6 +148,7 @@ function _vae_send_rest($method, $data, &$errors) {
   foreach (array('cc_number','cc_cvv','password','cc_month','cc_year','cc_start_month','cc_start_year') as $bad) {
     $data = preg_replace("/<" . $bad . ">([^<]*)/", "<" . $bad . ">[FILTERED]", $data);
   }
+  $url = preg_replace("/secret_key=([^<]*)/", "secret_key=[FILTERED]", $url);
   $_VAE['resterror'] = "Submitting to URL: $url\n\n-------------\n\nData:\n\n$data\n\nResponse:\n\n$response\n\n-------------";
   preg_match_all("|<error>(.*)</error>|U", $response, $out, PREG_SET_ORDER);
   if (count($out)) {
