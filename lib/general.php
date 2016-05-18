@@ -115,7 +115,7 @@ function _vae_configure_php() {
   error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING | E_STRICT));
   set_exception_handler("_vae_exception_handler");
   date_default_timezone_set("America/New_York");
-  if (!$_ENV['TEST']) ini_set('display_errors', isset($_REQUEST['__debug'] || $_VAE['local_full_stack']));
+  if (!$_ENV['TEST']) ini_set('display_errors', (isset($_REQUEST['__debug']) || isset($_VAE['local_full_stack'])));
   if ($_REQUEST['__router']) {
     session_id($_REQUEST['__router']);
     session_start();

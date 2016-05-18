@@ -649,6 +649,7 @@ function _vae_render_if($a, &$tag, $context, &$callback, $render_context) {
 }
 
 function _vae_render_if_backstage($a, &$tag, $context, &$callback, $render_context) {
+  global $_VAE;
   _vae_session_deps_add('__v:user_id');
   $logged_in = isset($_SESSION['__v:user_id']) || $_REQUEST['__vae_local'] || $_VAE['local_full_stack'];
   if (!$logged_in && $a['redirect']) return vae_redirect($a['redirect']);
