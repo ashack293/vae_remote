@@ -115,7 +115,7 @@ function _vae_configure_php() {
   error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING | E_STRICT));
   set_exception_handler("_vae_exception_handler");
   date_default_timezone_set("America/New_York");
-  if (!$_ENV['TEST']) ini_set('display_errors', isset($_REQUEST['__debug']));
+  if (!$_ENV['TEST']) ini_set('display_errors', isset($_REQUEST['__debug'] || $_VAE['local_full_stack']));
   if ($_REQUEST['__router']) {
     session_id($_REQUEST['__router']);
     session_start();
@@ -1462,12 +1462,12 @@ function _vae_render_error($e) {
   @header("HTTP/1.1 500 Internal Server Error");
   @header("Status: 500 Internal Server Error");
   $e_class = get_class($e);
-  if (!$_REQUEST['__debug'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
+  if (!$_REQUEST['__debug'] && !$_VAE['local_full_stack'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
     return @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html");
   }
   if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr($e_class, "Vae"))) {
     $error_type = "Vae Error";
-    if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $_REQUEST['__debug']) $msg = $e->getMessage();
+    if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $_REQUEST['__debug'] || $_VAE['local_full_stack']) $msg = $e->getMessage();
   } else {
     $error_type = "Exception Thrown";
     $msg = $e_class . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
