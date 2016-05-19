@@ -99,9 +99,9 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   }
   if (count($errors) == 0) $ret = _vae_send_rest($method, $xml, $errors);
   $_VAE['errors'] = $errors;
-  if (!$hide_errors && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
+  if (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'],$hide_errors)) && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
     return false;
-  } elseif (!$hide_errors && ($ret == false)) {
+  } elseif (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'],$hide_errors)) && ($ret == false)) {
     _vae_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
     if (!strstr($method, "content/create")) {
       _vae_honeybadger_send("VaeRailsAppRestApiError", $_VAE['resterror'], debug_backtrace());
@@ -141,6 +141,7 @@ function _vae_send_rest($method, $data, &$errors) {
   $response = str_replace(array("HTTP/1.1 100 Continue\n", "HTTP/1.1 100"), "", str_replace("\r", "", $response));
   $status_code = array();
   preg_match('/\d\d\d/', $response, $status_code);
+  $_VAE['reststatus'] = $status_code[0];
   if ($status_code[0] == "200" || $status_code[0] == "201") {
     $split_out_header = explode("\n\n", $response, 2);
     return $split_out_header[1];

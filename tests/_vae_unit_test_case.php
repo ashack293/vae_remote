@@ -198,11 +198,13 @@ class VaeUnitTestCase extends UnitTestCase {
     global $_VAE;
     if (!isset($_VAE['mock_rest'])) $_VAE['mock_rest'] = array();
     $_VAE['mock_rest'][] = $data;
+    $_VAE['reststatus'] = "200";
   }
 
-  function mockRestError($data = false) {
+  function mockRestError($data = false, $status = "500") {
     global $_VAE;
     $_VAE['mock_rest_error'] = $data;
+    $_VAE['reststatus'] = $status;
   }
 
   function populateCart($options = null) {

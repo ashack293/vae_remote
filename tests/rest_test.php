@@ -77,8 +77,29 @@ class RestTest extends VaeUnitTestCase {
     $this->assertRestError();
   }
 
+  function testVaeRestRailsSupressesAllError() {
+    global $_VAE;
+    $this->mockRestError("This is a real situation.", "404");
+    $this->assertFalse( _vae_rest(array('name' => "Freefall"), "content/update/13421", "content", null, true));
+    $this->assertEqual("404", $_VAE['reststatus']);
+  }
+
+  function testVaeRestRails404Error() {
+    global $_VAE;
+    $this->mockRestError("This is a real situation.", "404");
+    $this->assertFalse( _vae_rest(array('name' => "Freefall"), "content/update/13421", "content", null, ['404']));
+    $this->assertEqual("404", $_VAE['reststatus']);
+  }
+
+  function testVaeRestRails504Error() {
+    global $_VAE;
+    $this->mockRestError("Gateway Timeout", "504");
+    $this->assertFalse( _vae_rest(array('name' => "Freefall"), "content/update/13421", "content", null, ['504']));
+    $this->assertEqual("504", $_VAE['reststatus']);
+  }
+
   function testVaeRestRailsError() {
-    $this->mockRestError("This is not a real situation.");
+    $this->mockRestError("This is not a real situation.", "404");
     $this->assertFalse( _vae_rest(array('name' => "Freefall"), "content/update/13421", "content"));
     $this->assertErrors("This is not a real situation.");
   }
