@@ -99,6 +99,7 @@ function vae_prevyear($d) {
 
 function vae_production() {
   global $_VAE;
+  if ($_VAE['local_full_stack']) return false;
   return (!(vae_staging()));
 }
 
