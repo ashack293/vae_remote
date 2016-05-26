@@ -457,7 +457,7 @@ class GeneralTest extends VaeUnitTestCase {
     _vae_needs_jquery('ui');
     $out = _vae_inject_assets($base_html);
     $this->assertPattern('/<script(.*)jquery.js(.*)<\/script>/', $out);
-    $this->assertPattern('/<script(.*)jquery.ui.js(.*)<\/script>/', $out);
+    $this->assertPattern('/<script(.*)jquery.ui.min.js(.*)<\/script>/', $out);
   }
 
   function testVaeInjectAssetsCssAssets() {
