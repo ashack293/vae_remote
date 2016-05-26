@@ -793,7 +793,7 @@ class GeneralTest extends VaeUnitTestCase {
     _vae_needs_jquery();
     $this->assertEqual($_VAE['javascripts'], array("jquery" => true));
     _vae_needs_jquery("ui");
-    $this->assertEqual($_VAE['javascripts'], array("jquery" => true, "jquery.ui" => true));
+    $this->assertEqual($_VAE['javascripts'], array("jquery" => true, "jquery.ui.min" => true));
   }
 
   function testVaeOnDomReady() {
