@@ -35,33 +35,14 @@ function _vae_dbd($port = 9091) {
   return $_VAE['vaedbd'];
 };
 
-function _vae_vaedb_backends($subdomain) {
-  global $_VAE;
-  if (array_key_exists($subdomain, $_VAE['vaedbd_overrides'])) {
-    $backends = $_VAE['vaedbd_overrides'][$subdomain];
-    shuffle($backends);
-    return $backends;
-  }
-  shuffle($_VAE['vaedbd_backends']);
-  return $_VAE['vaedbd_backends'];
-};
-
-
 function _vae_thrift_open($client_class, $port) {
-  global $_VAE;
-  $subdomain = $_VAE['settings']['subdomain'];
-  if (!($backends = _vae_vaedb_backends($subdomain))) {
+  $backends = $_VAE['vaedbd_backends'];
+  if (!$backends) {
     throw new VaeException("", "No VaeDb backends configured");
-  }
-  // Limit backends to those matching grep; meant for debugging.
-  if ($_REQUEST['__vaedb']) {
-    $backends = array_values(preg_grep("/" . $_REQUEST['__vaedb'] . "/", $backends));
-    if (empty($backends))
-      throw new VaeException("", "No matching VaeDb backends configured");
   }
 
   $i = 0;
-  $shift = hexdec(substr(md5($subdomain),0,15));
+  $shift = hexdec(substr(md5($_VAE['settings']['subdomain']), 0, 15));
   while ($i < 4) {
     $_VAE['thrift_host'] = $backends[($shift + $i) % count($backends)];
     try {
@@ -80,7 +61,7 @@ function _vae_thrift_open($client_class, $port) {
     } catch (Thrift\Exception\TException $tx) {
     }
 
-    if(!$backends) { $backends = _vae_vaedb_backends($subdomain); }
+    if (!$backends) { $backends = $_VAE['vaedbd_backends']; }
     usleep(10000);
     $i++;
   }
