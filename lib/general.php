@@ -1120,7 +1120,7 @@ function _vae_needs_jquery() {
   if (!is_array($_VAE['javascripts'])) $_VAE['javascripts'] = array();
   $_VAE['javascripts']['jquery'] = true;
   foreach (func_get_args() as $arg) {
-    if (strlen($arg)) $_VAE['javascripts']['jquery.' . $arg] = true;
+    if (strlen($arg)) $_VAE['javascripts']['jquery.' . $arg . '.min'] = true;
   }
 }
 
