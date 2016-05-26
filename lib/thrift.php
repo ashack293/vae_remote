@@ -36,6 +36,8 @@ function _vae_dbd($port = 9091) {
 };
 
 function _vae_thrift_open($client_class, $port) {
+  global $_VAE;
+
   $backends = $_VAE['vaedbd_backends'];
   if (!$backends) {
     throw new VaeException("", "No VaeDb backends configured");
