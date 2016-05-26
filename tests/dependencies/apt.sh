@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-pkgs=(libantlr3c-dev libzmq3-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-thread-dev libpcre3-dev libmemcached-dev libmysqlcppconn-dev)
+pkgs=(libantlr3c-dev libzmq3-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-thread-dev libpcre3-dev libmemcached-dev libmysqlcppconn-dev libjemalloc-dev)
 
 # Work from the directory CI will cache
 mkdir -p ~/apt-cache
