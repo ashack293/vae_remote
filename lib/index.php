@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('_vaeql_query_internal')) {
-  die("VaeQL PHP Extension not local_script.  Please make sure it is installed.");
+  die("VaeQL PHP Extension not found.  Please make sure it is installed.");
 }
 
 if ($_VERB['config']) {
