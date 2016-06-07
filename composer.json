@@ -1,5 +1,4 @@
 {
     "require": {
-        "gevans/honeybadger": "*"
     }
 }
