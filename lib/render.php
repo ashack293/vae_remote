@@ -560,6 +560,13 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
   if ($render_context->get("form")) _vae_error("You cannot nest <span class='c'>&lt;form&gt;</span> tags.  Watch out for any VaeML tags you have that generate <span class='c'>&lt;form&gt;</span> tags.", "", $tag['filename']);
   if (!strlen($a['id']) && ($a['ajax'] || $a['validateinline'] || $a['loading'])) $a['id'] = _vae_global_id();
   if (!strlen($a['method'])) $a['method'] = 'post';
+  $validateOptions = "{
+    focusInvalid: false,
+    invalidHandler: function(form, validator) {
+      if (!validator.numberOfInvalids()) return;
+        $('html, body').animate({ scrollTop: $(validator.errorList[0].element).offset().top }, 1000);
+    }
+  }";
   $out = _vae_render_flash_inside($a['flash'], $render_context);
   $out .= _vae_render_tag("form", $a, $tag, $context, $render_context->set("form_context", $context)->set_in_place("form", true));
   if ($a['ajax']) {
@@ -571,14 +578,14 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
     $script = "jQuery('#" . $a['id'] . "').ajaxForm({ success: function(data,status) { jQuery('#" . $a['id'] . "_loading').hide(); if (match = /^__err=(.*)/.exec(data)) { var error = match[1]; " . $a['ajaxfailure'] . " alert(match[1].replace(/\\\\n/g, \"\\n\")); } else { jQuery('#" . $a['ajax'] . "').html(data); if (!window.vRedirected) { " . $a['ajaxsuccess'] . " } " . ($a['animate'] ? "jQuery('#" . $a['ajax'] . "')." . $a['animate'] . "('slow');" : "") . "} }";
     if ($a['validateinline']) {
       _vae_needs_jquery('form','validate');
-      _vae_on_dom_ready($script . ", beforeSubmit: function() {" . $a['ajaxbefore'] . " var t = jQuery('#" . $a['id'] . "').valid(); if (t) { jQuery('#" . $a['id'] . "_loading').show(); } else { " . $a['ajaxfailure'] . " } return t; } }); jQuery('#" . $a['id'] . "').validate();");
+      _vae_on_dom_ready($script . ", beforeSubmit: function() {" . $a['ajaxbefore'] . " var t = jQuery('#" . $a['id'] . "').valid(); if (t) { jQuery('#" . $a['id'] . "_loading').show(); } else { " . $a['ajaxfailure'] . " } return t; } }); jQuery('#" . $a['id'] . "').validate(" . $validateOptions . ");");
     } else {
       _vae_needs_jquery('form');
       _vae_on_dom_ready($script . ", beforeSubmit: function() {" . $a['ajaxbefore'] . " jQuery('#" . $a['id'] . "_loading').show(); } });");
     }
   } elseif ($a['validateinline']) {
     _vae_needs_jquery('validate');
-    _vae_on_dom_ready("jQuery('#" . $a['id'] . "').validate();");
+    _vae_on_dom_ready("jQuery('#" . $a['id'] . "').validate(" . $validateOptions . ");");
   }
   return $out;
 }
