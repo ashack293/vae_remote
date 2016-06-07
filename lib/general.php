@@ -919,7 +919,7 @@ function _vae_logstash_send($log_msg) {
   global $_VAE;
   if ($_ENV['TEST'] || $_VAE['local_full_stack']) return;
   $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-  @socket_sendto($sock, $log_msg, strlen($log_msg), 0, "public.logs***REMOVED***", 5000);
+  @socket_sendto($sock, $log_msg, strlen($log_msg), 0, "public.logs.av", 5000);
 }
 
 function _vae_mail($to, $subj, $body, $headers) {
