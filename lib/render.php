@@ -1007,8 +1007,8 @@ function _vae_render_rss($a, &$tag, $context, &$callback, $render_context) {
   $nsattrs = array();
   if (strstr($items, "<g:")) $nsattrs['xmlns:g'] = "http://base.google.com/ns/1.0";
   if (strstr($items, "<itunes:")) $nsattrs['xmlns:itunes'] = "http://www.itunes.com/dtds/podcast-1.0.dtd";
-  foreach ($a as $k => $v) {
-    if (substr($k, 0, 6) == "xmlns:") $nsattrs[$k] = $v;
+  foreach ($tag['attrs'] as $k => $v) {
+    if (substr($k, 0, 6) == "xmlns_") $nsattrs[str_replace("xmlns_", "xmlns:", $k)] = $v;
   }
   $out  = '<?xml version="1.0"?>' . "\n";
   $out .= '<rss version="2.0"' . _vae_attrs($nsattrs) . '>' . "\n";

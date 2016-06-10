@@ -41,6 +41,40 @@ Erequired description
  </channel>
 </rss>
 =
+<v:rss path="/artists" title="My Feed" description="the best feed ever" title_field="name" description_field="genre" xmlns_foo="bar" />
+>
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:foo="bar">
+ <channel>
+  <title>My Feed</title>
+  <link>http://btg.vaesite.com/</link>
+  <description>the best feed ever</description>
+  <language>en-us</language>
+  <generator>Vae</generator>
+  <item>
+   <title>Freefall</title>
+   <description>Rock</description>
+   <guid>http://btg.vaesite.com/?_guid=13421</guid>
+  </item>
+  <item>
+   <title>Kevin Bombino</title>
+   <description>Rock/Indie</description>
+   <link>http://btg.vaesite.com/artist/kevin-bombino</link>
+   <guid>http://btg.vaesite.com/artist/kevin-bombino</guid>
+  </item>
+  <item>
+   <title>Pratt Avenue</title>
+   <description>Glam/Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=13447</guid>
+  </item>
+  <item>
+   <title>Matt Blake</title>
+   <description>2 Step / Tropical / Crunk</description>
+   <guid>http://btg.vaesite.com/?_guid=14448</guid>
+  </item>
+ </channel>
+</rss>
+=
 <v:rss path="/artists" title="My Feed" description="the best feed ever" title_field="name" description_field="genre">
  <morestuff>test<v=name></morestuff>
 </v:rss>
