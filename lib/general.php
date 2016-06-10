@@ -63,7 +63,7 @@ function _vae_asset_html($type, $src) {
   }
 }
 
-function _vae_attrs($attrs, $tagname) {
+function _vae_attrs($attrs, $tagname = "") {
   global $_VAE;
   $out = "";
   if (count($attrs)) {
