@@ -479,7 +479,9 @@ function _vae_store_checkout($a = null, $tag = null) {
     $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
     $data['store_name'] = $a['store_name'];
     $data['store_logo'] = $a['store_logo'];
-    if ($a['gateway_transaction_id']) $data['gateway_transaction_id'] = $a['gateway_transaction_id'];
+    foreach (array('gateway_transaction_id', 'stored_payment_method') as $optional_param) {
+      if ($a[$optional_param]) $data[$optional_param] = $a[$optional_param];
+    }
     if ($a['skip_emails']) $data['skip_emails'] = "1";
     if (!$_VAE['local_full_stack']) {
       session_write_close();
