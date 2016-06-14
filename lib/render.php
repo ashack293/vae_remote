@@ -100,7 +100,8 @@ function _vae_render_a($a, &$tag, $context, &$callback, $render_context) {
     if ($a['ajaxbefore']) $a['onclick'] .= " " . $a['ajaxbefore'];
     if ($a['ajaxsuccess']) $a['oncomplete'] .= " " . $a['ajaxsuccess'];
     if ($a['animate']) $a['oncomplete'] .= _vae_append_js($a['oncomplete'], "jQuery('#" . $a['ajax'] . "')." . $a['animate'] . "('slow');");
-    $a['onclick'] = _vae_append_js($a['onclick'], "jQuery.get('" . $href . "', function(d){  jQuery('#" . $a['ajax'] . "').html(d); " . $a['oncomplete'] . " }); " . ($a['jump'] ? "" : "return false;"));
+    $a['onclick'] = _vae_append_js($a['onclick'], "jQuery.get('" . $href . "', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1]; " . $a['ajaxfailure'] . " alert(match[1].replace(/\\\\n/g, \"\\n\")); } else { jQuery('#" . $a['ajax'] . "').html(d); } " . $a['oncomplete'] . " }); " . ($a['jump'] ? "" : "return false;"));
+
   }
   if ($_REQUEST['__host']) $a['href'] .= (strstr($a['href'], "?") ? "&" : "?") . "__host=" . $_REQUEST['__host'];
   $a['href'] = ($a['jump'] ? "#" . $a['jump'] : $href . ($anchor ? "#" . $anchor : ""));
