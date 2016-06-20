@@ -542,6 +542,7 @@ function _vae_store_complete_checkout($data, $tag = null) {
     unset($_SESSION['__v:store']['payment_method']);
     unset($_SESSION['__v:store']['checkout_attempts']);
     unset($_SESSION['__v:store']['total_weight']);
+    unset($_SESSION['__v:store']['previous_orders']);
     if ($tag == null) return true;
     return vae_redirect($tag['attrs']['redirect']);
   }
