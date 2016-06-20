@@ -73,9 +73,6 @@ function _vae_store_add_item_to_cart($id, $option_id, $qty = 1, $a, $notes = "",
     $weight = (string)_vae_fetch_without_errors($a['weight_field'], $item);
   }
   $check_inventory = ($a['disable_inventory_check'] ? false : true);
-  if (!$check_inventory) {
-    unset($a['inventory_field']);
-  }
   if (is_numeric($option_id)) {
     $item_option = _vae_fetch($option_id);
     $option_value = "";
