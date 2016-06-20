@@ -49,7 +49,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->assertPattern('/Get this limited edition/', $_SESSION['__v:store']['cart'][1]['notes']);
     unset($_SESSION);
     $this->assertEqual(1, _vae_store_add_item_to_cart(13433, 13434, 3, array('name_field' => "name", 'price_field' => "price", 'notes_field' => 'description', 'barcode' => "123ABC", "weight" => 4, 'inventory_field' => 'inventory', 'disable_inventory_check' => true, 'option_field' => 'size', 'tax_class' => 'services', 'discount_class' => 'cheap!', 'shipping_class' => "big"), "ignored"));
-    $this->assertNull($_SESSION['__v:store']['cart'][1]['inventory_field']);
+    $this->assertEqual($_SESSION['__v:store']['cart'][1]['inventory_field'], 'inventory');
     $this->assertEqual($_SESSION['__v:store']['cart'][1]['check_inventory'], false);
     unset($_SESSION);
     $this->assertEqual(1, _vae_store_add_item_to_cart(13433, null, 3, array('name_field' => "name", 'price_field' => "price", 'weight_field' => 'weight', 'discount_field' => 'discount', 'barcode_field' => 'description', 'option_value' => "RED")));

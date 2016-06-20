@@ -54,12 +54,12 @@
 =
 <v:a href="/kevin" ajax="div">test</v:a>
 >
-<a href="/kevin" onclick=" jQuery.get('/kevin', function(d){  jQuery('#div').html(d);  }); return false;">test</a>
+<a href="/kevin" onclick=" jQuery.get('/kevin', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1];  alert(match[1].replace(/\\n/g, &quot;\n&quot;)); } else { jQuery('#div').html(d); }  }); return false;">test</a>
 <?php $this->assertEqual($_VAE['javascripts'], array('jquery' => true)); ?>
 =
 <v:a href="/kevin" ajax="div" onclick="alert('moo');">test</v:a>
 >
-<a href="/kevin" onclick="alert('moo'); jQuery.get('/kevin', function(d){  jQuery('#div').html(d);  }); return false;">test</a>
+<a href="/kevin" onclick="alert('moo'); jQuery.get('/kevin', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1];  alert(match[1].replace(/\\n/g, &quot;\n&quot;)); } else { jQuery('#div').html(d); }  }); return false;">test</a>
 =
 <v:a path="13432/myspace_url">test</v:a>
 >
@@ -84,12 +84,12 @@
 =
 <v:a ajax="div" loading="spinner.png" href="/">test</v:a>
 >
-<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d);  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
+<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1];  alert(match[1].replace(/\\n/g, &quot;\n&quot;)); } else { jQuery('#div').html(d); }  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
 =
 <v:a ajax="div" loading="spinner.png" href="/" oncomplete="alert('a');">test</v:a>
 >
-<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d); alert('a'); jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
+<a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1];  alert(match[1].replace(/\\n/g, &quot;\n&quot;)); } else { jQuery('#div').html(d); } alert('a'); jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a><img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />
 =
 <v:a ajax="div" loading="spinner.png" href="/" loadingposition="before">test</v:a>
 >
-<img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" /><a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d){  jQuery('#div').html(d);  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a>
+<img id="vae_generated_might_change_TESTGLOBID" src="spinner.png" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" /><a href="/" onclick="jQuery('#vae_generated_might_change_TESTGLOBID').show(); jQuery.get('/', function(d) { if (match = /^__err=(.*)/.exec(d)) { var error = match[1];  alert(match[1].replace(/\\n/g, &quot;\n&quot;)); } else { jQuery('#div').html(d); }  jQuery('#vae_generated_might_change_TESTGLOBID').hide(); }); return false;">test</a>
