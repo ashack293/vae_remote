@@ -521,6 +521,7 @@ function vae_store_payment_method() {
 }
 
 function vae_store_previous_orders($populate_even_if_not_logged_in = false) {
+  $pdata = array();
   if (isset($_SESSION['__v:store']['previous_orders']) && !$_REQUEST['__debug']) {
     $pdata = $_SESSION['__v:store']['previous_orders'];
   } elseif ($_SESSION['__v:store']['loggedin'] || ($populate_even_if_not_logged_in && $_SESSION['__v:store']['customer_id'])) {
