@@ -317,7 +317,7 @@ function _vae_store_callback_forgot($tag) {
       $data['forgot_email_text'] = $text;
     }
   }
-  if ($raw = _vae_rest($data, "api/site/v1/customers/forgot", "customer", $tag, null, true)) {
+  if (_vae_rest($data, "api/site/v1/customers/forgot", "customer", $tag, null, true) !== false) {
     if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     return vae_redirect($_SERVER['PHP_SELF']);
   }
