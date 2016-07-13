@@ -1,7 +1,7 @@
 <?php
 
 if (!function_exists('_vaeql_query_internal')) {
-  die("VaeQL PHP Extension not found.  Please make sure it is installed.\n\nTo install VaeQL on macOS via Homebrew, run the following commands:\n  brew tap actionverb/tap\n  brew install vaeql"
+  die("VaeQL PHP Extension not found.  Please make sure it is installed.\n\nTo install VaeQL on macOS via Homebrew, run the following commands:\n  brew tap actionverb/tap\n  brew install vaeql");
 }
 
 if ($_VERB['config']) {
