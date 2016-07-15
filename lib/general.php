@@ -1462,31 +1462,34 @@ function _vae_render_error($e) {
   @header("HTTP/1.1 500 Internal Server Error");
   @header("Status: 500 Internal Server Error");
   $e_class = get_class($e);
-  if (!$_REQUEST['__debug'] && !$_VAE['local_full_stack'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
+  $show_debug = $_REQUEST['__debug'] || $_VAE['local_full_stack'] || $_REQUEST['__vae_local'];
+  if (!$show_debug && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
     return @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html");
   }
   if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || strstr($e_class, "Vae") || strstr($e_class, "Thrift")) {
     $error_type = "Vae Error";
-    if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $_REQUEST['__debug'] || $_VAE['local_full_stack']) $msg = $e->getMessage();
+    if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $show_debug) $msg = $e->getMessage();
+    $safe_class = false;
   } else {
     $error_type = "Exception Thrown";
     $msg = $e_class . ($e->getFile() ? " thrown in <span class='c'>" . _vae_hide_dir($e->getFile()) . "</span>" : "") . ($e->getLine() ? " at line <span class='c'>" . $e->getLine() . "</span>" : "") . ": " . $e->getMessage();
+    $safe_class = true;
   }
   $out = "<h2>" . $error_type . (($e->filename && !strstr($e->filename, "/vae")) ? " in " . $e->filename : "") . "</h2>";
   if (!strlen($msg)) $msg = "An error has occured on our servers.  Please try again in a few minutes.";
   $out .= "<div class='b'>" . $msg . "</div>";
-  if ($_REQUEST['__debug']) {
+  if ($show_debug) {
     if (strlen($e->debugging_info)) $out .= "<h3>Debugging Info:</h3><div class='b'>" . $e->debugging_info . "</div>";
     if (strlen($_VAE['debug'])) $out .= "<h3>Debugging Traces:</h3><div class='b'><pre>" . htmlentities($_VAE['debug']) . "</pre></div>";
   }
   foreach (array("_SERVER" => $_SERVER, "_REQUEST" => $_REQUEST) as $name => $r) {
     $log_details .= "  $" . $name . ":\n";
-    if ($_REQUEST['__debug'] == "vae") $out .= "<h3>$" . $name . ":</h3><div class='b'><pre>";
+    if ($show_debug) $out .= "<h3>$" . $name . ":</h3><div class='b'><pre>";
     foreach ($r as $k => $v) {
-      if ($_REQUEST['__debug'] == "vae") $out .= $k . " => " . $v . "\n";
+      if ($show_debug) $out .= $k . " => " . $v . "\n";
       $log_details .= "    " . $k . " => " . $v . "\n";
     }
-    if ($_REQUEST['__debug'] == "vae") $out .= "</pre></div>";
+    if ($show_debug) $out .= "</pre></div>";
   }
   if ($e->backtrace) {
     $backtrace = $e->backtrace;
@@ -1494,8 +1497,8 @@ function _vae_render_error($e) {
     $backtrace = $e->getTrace();
   }
   $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . $e_class . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
-  if ($backtrace && (count($backtrace) > 1) && ($_REQUEST['__debug'] || (!strstr($e_class, "Thrift") && !strstr($e_class, "Vae")))) {
-    if (($_REQUEST['__debug'] == "vae") || !strstr($e_class, "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
+  if ($backtrace && (count($backtrace) > 1)) {
+    if ($show_debug || $safe_class) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
