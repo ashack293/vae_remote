@@ -1465,7 +1465,7 @@ function _vae_render_error($e) {
   if (!$_REQUEST['__debug'] && !$_VAE['local_full_stack'] && file_exists($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html")) {
     return @file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/error_pages/vae_error.html");
   }
-  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || (strstr($e_class, "Vae"))) {
+  if (strstr($e->getFile(), "/www/vae_thrift") || strstr($e->getFile(), "/usr/local") || strstr($e_class, "Vae") || strstr($e_class, "Thrift")) {
     $error_type = "Vae Error";
     if ($e_class == "VaeException" || $e_class == "VaeSyntaxError" || $_REQUEST['__debug'] || $_VAE['local_full_stack']) $msg = $e->getMessage();
   } else {
