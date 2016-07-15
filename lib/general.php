@@ -1494,7 +1494,7 @@ function _vae_render_error($e) {
     $backtrace = $e->getTrace();
   }
   $log_msg = "[" . $_VAE['settings']['subdomain'] . "] " . $e_class . "\n" . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "") . $log_details;
-  if ($backtrace && (count($backtrace) > 1)) {
+  if ($backtrace && (count($backtrace) > 1) && ($_REQUEST['__debug'] || (!strstr($e_class, "Thrift") && !strstr($e_class, "Vae")))) {
     if (($_REQUEST['__debug'] == "vae") || !strstr($e_class, "Vae")) $out .= "<h3>Call stack (most recent first):</h3><div class='b'>" . _vae_render_backtrace($backtrace) . "</div>";
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
