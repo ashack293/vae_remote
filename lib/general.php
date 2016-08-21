@@ -704,13 +704,13 @@ function _vae_inject_assets($out) {
       $out = str_replace("<_VAE_ASSET_" . $group . $i . ">", $html[$group], $out);
     }
   }
-  $out = _vae_inject_at_bottom_of_head($out, $bottom);
+  $out = _vae_inject_at_bottom_of_body($out, $bottom);
   return $out;
 }
 
-function _vae_inject_at_bottom_of_head($out, $html) {
-  if (strstr($out, "</head>")) {
-    return str_replace("</head>", $html . "</head>", $out);
+function _vae_inject_at_bottom_of_body($out, $html) {
+  if (strstr($out, "</body>")) {
+    return str_replace("</body>", $html . "</body>", $out);
   } else {
     return $html . $out;
   }
