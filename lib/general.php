@@ -634,7 +634,7 @@ function _vae_inject_assets($out) {
       if ($s == "jquery") continue;
       foreach ($_VAE['assets'] as $group => $assets) {
         foreach ($assets as $asset) {
-          if (strstr($asset, $s)) $s = null;
+          if (strstr($asset, str_replace(".min", "", $s))) $s = null;
         }
       }
       if (strlen($s)) $bottom .= '<script type="text/javascript" src="' . $_VAE['config']['asset_url'] . $s . '.js"></script>';
