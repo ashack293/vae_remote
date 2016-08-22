@@ -632,11 +632,6 @@ function _vae_inject_assets($out) {
   if (is_array($_VAE['javascripts']) && (count($_VAE['javascripts']) > 0)) {
     foreach ($_VAE['javascripts'] as $s => $garbage) {
       if ($s == "jquery") continue;
-      foreach ($_VAE['assets'] as $group => $assets) {
-        foreach ($assets as $asset) {
-          if (strstr($asset, str_replace(".min", "", $s))) $s = null;
-        }
-      }
       if (strlen($s)) $bottom .= '<script type="text/javascript" src="' . $_VAE['config']['asset_url'] . $s . '.js"></script>';
     }
   }
@@ -704,13 +699,13 @@ function _vae_inject_assets($out) {
       $out = str_replace("<_VAE_ASSET_" . $group . $i . ">", $html[$group], $out);
     }
   }
-  $out = _vae_inject_at_bottom_of_body($out, $bottom);
+  $out = _vae_inject_at_bottom_of_head($out, $bottom);
   return $out;
 }
 
-function _vae_inject_at_bottom_of_body($out, $html) {
-  if (strstr($out, "</body>")) {
-    return str_replace("</body>", $html . "</body>", $out);
+function _vae_inject_at_bottom_of_head($out, $html) {
+  if (strstr($out, "</head>")) {
+    return str_replace("</head>", $html . "</head>", $out);
   } else {
     return $html . $out;
   }
