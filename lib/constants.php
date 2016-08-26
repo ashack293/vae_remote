@@ -1066,6 +1066,10 @@ $_VAE['tags'] = array (
   array (
     'handler' => '_vae_store_render_if_paypal_express_checkout',
   ),
+  'store_if_recent_order' =>
+  array (
+    'handler' => '_vae_store_render_if_recent_order',
+  ),
   'store_if_recent_order_bank_transfer' =>
   array (
     'handler' => '_vae_store_render_if_recent_order_bank_transfer',

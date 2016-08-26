@@ -97,6 +97,7 @@ _vae_register_tag('store_if_pay_in_store', array('handler' => '_vae_store_render
 _vae_register_tag('store_if_paypal', array('handler' => '_vae_store_render_if_paypal'));
 _vae_register_tag('store_if_paypal_checkout', array('handler' => '_vae_store_render_if_paypal_checkout'));
 _vae_register_tag('store_if_paypal_express_checkout', array('handler' => '_vae_store_render_if_paypal_express_checkout'));
+_vae_register_tag('store_if_recent_order', array('handler' => '_vae_store_render_if_recent_order'));
 _vae_register_tag('store_if_recent_order_bank_transfer', array('handler' => '_vae_store_render_if_recent_order_bank_transfer'));
 _vae_register_tag('store_if_recent_order_check', array('handler' => '_vae_store_render_if_recent_order_check'));
 _vae_register_tag('store_if_recent_order_credit_card', array('handler' => '_vae_store_render_if_recent_order_credit_card'));
