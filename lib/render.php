@@ -1214,7 +1214,7 @@ function _vae_render_text_area($a, &$tag, $context, &$callback, $render_context)
 
 function _vae_render_text_field($a, &$tag, $context, &$callback, $render_context) {
   $a = _vae_form_prepare($a, $tag, $context, $render_context);
-  $a['type'] = "text";
+  if (!$a['type']) $a['type'] = "text";
   return  '<input' . _vae_attrs($a, "input") . ' />';
 }
 
