@@ -1432,6 +1432,11 @@ function _vae_store_render_if_paypal_express_checkout($a, &$tag, $context, &$cal
   return _vae_render_tags($tag, $context, $render_context, ($_SESSION['__v:store']['payment_method'] == "paypal_express_checkout"));
 }
 
+function _vae_store_render_if_recent_order($a, &$tag, $context, &$callback, $render_context) {
+  _vae_session_deps_add('__v:store', 'if');
+  return _vae_render_tags($tag, $context, $render_context, isset($_SESSION['__v:store']['recent_order_data']));
+}
+
 function _vae_store_render_if_recent_order_bank_transfer($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', 'if');
   return _vae_render_tags($tag, $context, $render_context, ($_SESSION['__v:store']['recent_order_data']['payment_method'] == "bank_transfer"));
