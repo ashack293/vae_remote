@@ -539,7 +539,7 @@ class StoreTest extends VaeUnitTestCase {
     $this->mockRestError();
     $tag = $this->callbackTag('<v:store:forgot redirect="/lalala" />');
     _vae_store_callback_forgot($tag);
-    $this->assertRedirect($_SERVER['PHP_SELF']);
+    $this->assertRedirect('/lalala');
   }
 
   function testVaeStoreCallbackLogin() {
