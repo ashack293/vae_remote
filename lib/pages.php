@@ -3,8 +3,8 @@
 function _vae_page() {
   global $_VAE;
   $a = explode(".", $_REQUEST['__page']);
-  _vae_page_find($a[0]);
   _vae_page_check_redirects();
+  _vae_page_find($a[0]);
   if ($_REQUEST['__vae_local'] || $_REQUEST['__verb_local']) return _vae_local("/" . $a[0]);
   if ($a[0] == "admin" || $a[0] == "admin/") {
     @Header("Location: https://" . $_VAE['settings']['subdomain'] . ".vaeplatform.com/");
