@@ -97,6 +97,7 @@ if (_vae_should_load()) {
   /* Perform remote actions */
   if ($_REQUEST['clear_login']) _vae_clear_login();
   if ($_REQUEST['set_login']) _vae_set_login();
+  if ($_REQUEST['__v:customer_key']) _vae_store_load_customer_from_key();
   _vae_tick("Vae Startup", true);
 
   /* Dispatch request */

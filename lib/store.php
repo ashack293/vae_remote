@@ -988,6 +988,11 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   return false;
 }
 
+function _vae_store_load_customer_from_key() {
+  $raw = _vae_rest(array(), "api/site/v1/customers/show?id=vae_ticket_" . rawurlencode($_REQUEST['__v:customer_key']), "customer", array(), array(), ['404']);
+  if ($raw != false) _vae_store_load_customer($raw);
+}
+
 function _vae_store_most_specific_field($r, $field) {
   global $_VAE;
   if (!strlen($r['id'])) return "";
