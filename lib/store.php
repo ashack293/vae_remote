@@ -1534,6 +1534,9 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
     $a['options'] = array($_SESSION['__v:store']['payment_method'] => $_SESSION['__v:store']['payment_method']);
   } else {
     $a['options'] = array();  
+    if ($a['stored_payment_method']) {
+      $a['options']['stored_payment_method'] = $a['stored_payment_method'];
+    }
     foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
       if ($method['method_name'] == "manual") {
         if ($method['accept_check']) $a['options']['check'] = $_VAE['store']['payment_methods']['check']['name'];
@@ -1541,7 +1544,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
         if ($method['accept_bank_transfer']) $a['options']['bank_transfer'] = $_VAE['store']['payment_methods']['bank_transfer']['name'];
         if ($method['accept_in_store']) $a['options']['in_store'] = $_VAE['store']['payment_methods']['in_store']['name'];
       } elseif ($method['method_name'] != "google_checkout") {
-        $a['options'][$method['method_name']] = $_VAE['store']['payment_methods'][$method['method_name']]['name'];
+        $a['options'][$method['method_name']] = (($a['stored_payment_method'] && !strstr($method['method_name'], "paypal")) ? "Enter New " : "") . $_VAE['store']['payment_methods'][$method['method_name']]['name'];
       }
     }
     if ($a['ajax']) {
