@@ -375,8 +375,8 @@ function vae_store_add_item_to_cart($id, $option_id = null, $qty = 1, $a = null,
     if (!_vae_store_verify_available(false)) {
       $ret = false;
     }
-    _vae_run_hooks("store:cart:updated");
   }
+  _vae_run_hooks("store:cart:updated");
   return $ret;
 }
 
