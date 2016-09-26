@@ -346,8 +346,7 @@ function _vae_store_callback_login($tag) {
 }
 
 function _vae_store_callback_logout($tag) {
-  unset($_SESSION['__v:store']['loggedin']);
-  unset($_SESSION['__v:store']['previous_orders']);
+  vae_store_logout();
   if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
   return vae_redirect($_SERVER['PHP_SELF']);
 }
@@ -988,6 +987,11 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   return false;
 }
 
+function _vae_store_load_customer_from_key() {
+  $raw = _vae_rest(array(), "api/site/v1/customers/show?id=vae_ticket_" . rawurlencode($_REQUEST['__v:customer_key']), "customer", array(), array(), ['404']);
+  if ($raw != false) _vae_store_load_customer($raw);
+}
+
 function _vae_store_most_specific_field($r, $field) {
   global $_VAE;
   if (!strlen($r['id'])) return "";
@@ -1529,6 +1533,9 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
     $a['options'] = array($_SESSION['__v:store']['payment_method'] => $_SESSION['__v:store']['payment_method']);
   } else {
     $a['options'] = array();  
+    if ($a['stored_payment_method']) {
+      $a['options']['stored_payment_method'] = $a['stored_payment_method'];
+    }
     foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
       if ($method['method_name'] == "manual") {
         if ($method['accept_check']) $a['options']['check'] = $_VAE['store']['payment_methods']['check']['name'];
@@ -1536,7 +1543,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
         if ($method['accept_bank_transfer']) $a['options']['bank_transfer'] = $_VAE['store']['payment_methods']['bank_transfer']['name'];
         if ($method['accept_in_store']) $a['options']['in_store'] = $_VAE['store']['payment_methods']['in_store']['name'];
       } elseif ($method['method_name'] != "google_checkout") {
-        $a['options'][$method['method_name']] = $_VAE['store']['payment_methods'][$method['method_name']]['name'];
+        $a['options'][$method['method_name']] = (($a['stored_payment_method'] && !strstr($method['method_name'], "paypal")) ? "Enter New " : "") . $_VAE['store']['payment_methods'][$method['method_name']]['name'];
       }
     }
     if ($a['ajax']) {

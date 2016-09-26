@@ -506,6 +506,11 @@ function vae_store_handling_charge($amount) {
   $_SESSION['__v:store']['custom_handling'] = $amount;
 }
 
+function vae_store_logout() {
+  unset($_SESSION['__v:store']['loggedin']);
+  unset($_SESSION['__v:store']['previous_orders']);
+}
+
 function vae_store_orders($finders = null) {
   if (!is_array($finders)) $finders = array();
   if ($finders['ids'] && (is_array($finders['ids']))) {
