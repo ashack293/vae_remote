@@ -1230,7 +1230,7 @@ function _vae_store_render_bundled_item($a, &$tag, $context, &$callback, $render
 function _vae_store_render_cart($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_cart');
   if (!count($_SESSION['__v:store']['cart'])) {
-    return  ($render_context->get("has_flash_tag" . $a['flash']) ? "" : _vae_render_flash_inside($a['flash'], $render_context)) . _vae_get_else($tag, $context, $render_context, "<div class='vae-store-cart-empty'>Your cart is empty!</div>");
+    return  ($render_context->get("has_flash_tag" . $a['flash']) ? "" : _vae_render_flash_inside($a['flash'], $render_context, false, $a['flash_skip']))) . _vae_get_else($tag, $context, $render_context, "<div class='vae-store-cart-empty'>Your cart is empty!</div>");
   }
   return _vae_render_callback("store_cart", $a, $tag, $context, $callback, $render_context);
 }

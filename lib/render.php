@@ -535,17 +535,18 @@ function _vae_render_fileurl($a, &$tag, $context, &$callback, $render_context) {
 }
 
 function _vae_render_flash($a, &$tag, $context, &$callback = null, $render_context) {
-  return _vae_render_flash_inside($a['flash'], $render_context, true);
+  return _vae_render_flash_inside($a['flash'], $render_context, true, $a['skip']);
 }
 
-function _vae_render_flash_inside($which = "", $render_context, $is_flash_tag = false) {
+function _vae_render_flash_inside($which = "", $render_context, $is_flash_tag = false, $skip = "") {
   global $_VAE;
   $shown = array();
+  $skip = explode(",", $skip);
   if ($_SESSION['__v:flash']['messages'] && !$_VAE['flash_rendered'][$which]) {
     foreach ($_SESSION['__v:flash']['messages'] as $f) {
       if (!strlen($which) || ($f['which'] == $which)) {
         if ((strlen($which) || $is_flash_tag || !$render_context->get("has_flash_tag" . $f['which'])) && !$_VAE['flash_rendered'][$f['which']]) {
-          if (!$shown[$f['msg']]) {
+          if (!isset($skip[$f['which']]) && !$shown[$f['msg']]) {
             $out .= '<div class="flash ' . $f['type'] . '">' . $f['msg'] . "</div>";
             $shown[$f['msg']] = true;
           }
@@ -561,7 +562,7 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
   if ($render_context->get("form")) _vae_error("You cannot nest <span class='c'>&lt;form&gt;</span> tags.  Watch out for any VaeML tags you have that generate <span class='c'>&lt;form&gt;</span> tags.", "", $tag['filename']);
   if (!strlen($a['id']) && ($a['ajax'] || $a['validateinline'] || $a['loading'])) $a['id'] = _vae_global_id();
   if (!strlen($a['method'])) $a['method'] = 'post';
-  $out = _vae_render_flash_inside($a['flash'], $render_context);
+  $out = _vae_render_flash_inside($a['flash'], $render_context, false, $a['flash_skip']);
   $out .= _vae_render_tag("form", $a, $tag, $context, $render_context->set("form_context", $context)->set_in_place("form", true));
   if ($a['ajax']) {
     if ($a['loading']) {
