@@ -562,21 +562,28 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
     if ($disc == null || $disc == false || $disc == "BAD") {
       $show_errors = true;
       if ($item == null) _vae_flash("You entered an invalid coupon code.", 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif ($disc == "BAD_ALREADY_USED") {
       $show_errors = true;
       if ($item == null) _vae_flash("You cannot use this coupon code because you have already used it.", 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif ((strlen($disc['number_available']) && ($disc['number_available'] == "0")) || (strlen($disc['stop_at']) && (time() > strtotime($disc['stop_at'])))) {
       $show_errors = true;
       if ($item == null) _vae_flash("This coupon is no longer available.", 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif (strlen($disc['start_at']) && (time() < strtotime($disc['start_at']))) {
       $show_errors = true;
       if ($item == null) _vae_flash("This coupon is not available yet.", 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif (($disc['min_order_amount'] > 0) && (_vae_store_compute_subtotal() < $disc['min_order_amount'])) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because your order is not big enough.  Minimum order amount for this coupon: " . _vae_store_currency_symbol() . _vae_decimalize($disc['min_order_amount']), 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif (($disc['min_order_items'] > 0) && (_vae_store_compute_number_of_items() < $disc['min_order_items'])) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because there are not enough items in your order.  Minimum number of items needed for this coupon: " . $disc['min_order_items'], 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } elseif (($disc['country']) && $current['shipping_country'] != $disc['country']) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because your order is not being shipped to " . $disc['country'] . ".", 'err', $flash_location);
+      unset($_SESSION['__v:store']['discount_code']);
     } else {
 	    if (($item == null) && (strlen($disc['included_classes']) || strlen($disc['excluded_classes']))) {
 	      foreach ($_SESSION['__v:store']['cart'] as $id => $r) {
