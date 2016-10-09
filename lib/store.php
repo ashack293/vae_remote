@@ -304,6 +304,7 @@ function _vae_store_callback_discount($tag) {
   } else {
     _vae_flash("You did not enter a discount code into the box!", 'err', $tag['attrs']['flash']);
   }
+  if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
   return vae_redirect($_SERVER['PHP_SELF']);
 }
 
