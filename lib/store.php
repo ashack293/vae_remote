@@ -636,10 +636,6 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	      _vae_flash("This coupon does not provide any discounts for your order.", 'err', $flash_location);
 	    }
 	  }
-    if ($amount == 0 && ($item == null) && $show_errors) {
-      unset($_SESSION['__v:store']['discount_code']);
-      _vae_run_hooks("store:discount:updated");
-    }
   }
   return round($amount, 2);
 }
