@@ -546,7 +546,7 @@ function _vae_render_flash_inside($which = "", $render_context, $is_flash_tag = 
     foreach ($_SESSION['__v:flash']['messages'] as $f) {
       if (!strlen($which) || ($f['which'] == $which)) {
         if ((strlen($which) || $is_flash_tag || !$render_context->get("has_flash_tag" . $f['which'])) && !$_VAE['flash_rendered'][$f['which']]) {
-          if (!isset($skip[$f['which']]) && !$shown[$f['msg']]) {
+          if (!in_array($f['which'], $skip) && !$shown[$f['msg']]) {
             $out .= '<div class="flash ' . $f['type'] . '">' . $f['msg'] . "</div>";
             $shown[$f['msg']] = true;
           }
