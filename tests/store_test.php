@@ -756,7 +756,6 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_discount_code("BLOGLINGS");
     $_SESSION['__v:store']['discount_code_show_errors'] = true;
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
-    $this->assertErrors("not being shipped to");
   }
 
   function testVaeStoreComputeDiscountMax() {
@@ -779,7 +778,6 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_discount_code("BLOGLINGS");
     $_SESSION['__v:store']['discount_code_show_errors'] = true;
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
-    $this->assertErrors("not big enough");
   }
 
   function testVaeStoreComputeDiscountMinOrderItems() {
@@ -788,7 +786,6 @@ class StoreTest extends VaeUnitTestCase {
     vae_store_discount_code("BLOGLINGS");
     $_SESSION['__v:store']['discount_code_show_errors'] = true;
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
-    $this->assertErrors("not enough items");
   }
 
   function testVaeStoreComputeDiscountNotAvailableAnymore() {
