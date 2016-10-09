@@ -632,9 +632,6 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	          $amount += _vae_store_compute_shipping();
 	        }
 	      }
-	    } 
-	    if ($amount == 0 && ($item == null) && $show_errors) {
-	      _vae_flash("This coupon does not provide any discounts for your order.", 'err', $flash_location);
 	    }
 	  }
   }
