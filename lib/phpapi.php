@@ -310,6 +310,7 @@ function vae_redirect($to, $trash_post_data = false) {
       $caller = $fn['function'] . ":" . $line;
       break;
     }
+    if ($_REQUEST['__debug'] == "redirect") _vae_error("Redirect Debugging: $caller redirecting to $to");
     _vae_local_log("[302]: $caller redirecting to $to");
   }
   if (!strlen($_VAE['force_redirect'])) {
