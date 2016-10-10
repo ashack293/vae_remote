@@ -594,8 +594,6 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	      if ($amount > 0) {
 	        if ($disc['free_shipping'] && (!strlen($disc['free_shipping_method']) || strstr($_SESSION['__v:store']['shipping']['options'][$_SESSION['__v:store']['shipping']['selected_index']]['title'], $disc['free_shipping_method']))) {
             $amount += _vae_store_compute_shipping();
-          } elseif ($disc['voucher']) {
-            $amount += _vae_store_compute_shipping();
           }
 	      }
 	    } else {
