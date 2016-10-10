@@ -300,7 +300,7 @@ function vae_permalink($id) {
 
 function vae_redirect($to, $trash_post_data = false) {
   global $_VAE;
-  if ($_VAE['local_full_stack']) {
+  if ($_VAE['local_full_stack'] || $_REQUEST['__debug'] == "redirect") {
     $trace = debug_backtrace();
     foreach ($trace as $fn) {
       if ($fn['function'] == "vae_redirect") {
