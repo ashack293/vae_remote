@@ -448,6 +448,10 @@ function _vae_store_convert_cart_to_line_items() {
 
 function _vae_store_checkout($a = null, $tag = null) {
   global $_VAE;
+  unset($_VAE['store_cached_number_of_items']);
+  unset($_VAE['store_cached_shipping']);
+  unset($_VAE['store_cached_subtotal']);
+  unset($_VAE['store_cached_tax']);
   $current = _vae_store_current_user();
   _vae_store_set_default_payment_method();
   $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
