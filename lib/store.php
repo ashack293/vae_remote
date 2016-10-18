@@ -454,6 +454,9 @@ function _vae_store_checkout($a = null, $tag = null) {
   unset($_VAE['store_cached_tax']);
   $current = _vae_store_current_user();
   _vae_store_set_default_payment_method();
+  if (_vae_store_compute_total() == 0.00) {
+    unset($a['stored_payment_method']);
+  }
   $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
   $line_items = _vae_store_convert_cart_to_line_items();
   if (!count($line_items)) {
