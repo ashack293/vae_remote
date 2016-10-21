@@ -1074,8 +1074,9 @@ function _vae_minify_js($js) {
   return trim(str_replace(array("\r", "\n"), "", $js));
 }
 
-function _vae_multipart_mail($from, $to, $subject, $text, $html, $reply_to=false) {
-  $headers = 'From: ' . $from . "\n";
+function _vae_multipart_mail($from, $to, $subject, $text, $html, $reply_to = false, $headers = null) {
+  if ($headers == null) $headers = "";
+  $headers .= 'From: ' . $from . "\n";
   if ($reply_to) {
     $headers .= 'Reply-To: ' . $reply_to . "\n";
   }

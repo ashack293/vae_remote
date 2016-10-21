@@ -282,8 +282,8 @@ function vae_loggedin() {
   return ($_SESSION['__v:logged_in'] ? $_SESSION['__v:logged_in']['id'] : false);
 }
 
-function vae_multipart_mail($from, $to, $subject, $text, $html) {
-  _vae_multipart_mail($from, $to, $subject, $text, $html);
+function vae_multipart_mail($from, $to, $subject, $text, $html, $headers = null) {
+  _vae_multipart_mail($from, $to, $subject, $text, $html, false, $headers);
   return true;
 }
 
@@ -659,13 +659,13 @@ function vae_style($r, $urlize = true) {
   return nl2br($r);
 }
 
-function vae_template_mail($from, $to, $subject, $template, $text_yield = null, $html_yield = null) {
+function vae_template_mail($from, $to, $subject, $template, $text_yield = null, $html_yield = null, $headers = null) {
   $html_template = _vae_find_source($template);
   $text_template = _vae_find_source($template . ".txt");
   if (($html = _vae_proxy($html_template, "", true, $html_yield)) == false) return _vae_error("Unable to build Mail Template E-Mail (HTML version) file from <span class='c'>" . _vae_h($template) . "</span>.  You can debug this by loading that file directly in your browser.");
   if (($text = _vae_proxy($text_template, "", true, $text_yield)) == false) return _vae_error("Unable to build Mail Template E-Mail (text version) file from <span class='c'>" . _vae_h($template) . "</span>.  You can debug this by loading that file directly in your browser.");
   $html = _vae_rest(array('html' => $html), "api/site/v1/premailer", "premailer");
-  return vae_multipart_mail($from, $to, $subject, $text, $html);
+  return vae_multipart_mail($from, $to, $subject, $text, $html, $headers);
 }
 
 function vae_text($text, $font_name = "", $font_size = "22", $color = "#000000", $kerning = 1, $padding = 5, $max_width = 10000) {
