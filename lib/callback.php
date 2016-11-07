@@ -94,7 +94,9 @@ function _vae_callback_newsletter($tag) {
 }
 
 function _vae_callback_update($tag) {
-  if (_vae_rest(array(), "api/site/v1/content/update/" . $tag['callback']['row_id'], "content", $tag)) {
+  global $_VAE;
+  _vae_rest(array(), "api/site/v1/content/update/" . $tag['callback']['row_id'], "content", $tag);
+  if (!count($_VAE['errors'])) {
     _vae_flash('Saved.', 'msg', $tag['attrs']['flash']);
     if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
   }
