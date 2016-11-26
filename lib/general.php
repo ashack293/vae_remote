@@ -438,7 +438,7 @@ function _vae_handleob($vaeml) {
         }
       }
     } elseif (isset($_SESSION['__v:flash_new']) && isset($_SESSION['__v:flash_new']['messages']) && count($_SESSION['__v:flash_new']['messages'])) {
-      if (!isset($_VAE['force_redirect'])) $_VAE['force_redirect'] = $_SERVER['PHP_SELF'];
+      if (!isset($_VAE['force_redirect']) && $_SERVER['REQUEST_METHOD'] != "GET") $_VAE['force_redirect'] = $_SERVER['PHP_SELF'];
       if (_vae_is_xhr() && ($_VAE['force_redirect'] == $_SERVER['PHP_SELF'])) {
         foreach ($_SESSION['__v:flash_new']['messages'] as $m) {
           if ($m['type'] == "err") {
