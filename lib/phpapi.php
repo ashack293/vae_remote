@@ -277,6 +277,12 @@ function vae_include_once($path) {
   return vae_include($path, true);
 }
 
+function vae_latest_data() {
+  global $_VAE;
+  $latest_generation = _vae_rest(array(), 'api/site/v1/feed_generation');
+  return ($latest_generation == $_VAE['feed_generation']);
+}
+
 function vae_loggedin() {
   _vae_session_deps_add('__v:logged_in');
   return ($_SESSION['__v:logged_in'] ? $_SESSION['__v:logged_in']['id'] : false);

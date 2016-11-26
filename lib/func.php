@@ -52,12 +52,6 @@ function vae_host() {
   return $_SERVER['HTTP_HOST'];
 }
 
-function vae_latest_data() {
-  global $_VAE;
-  $latest_generation = _vae_rest(array(), 'api/site/v1/feed_generation');
-  return ($latest_generation == $_VAE['feed_generation']);
-}
-
 function vae_lowercase($d) {
   return strtolower($d);
 }
