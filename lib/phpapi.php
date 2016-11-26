@@ -279,8 +279,9 @@ function vae_include_once($path) {
 
 function vae_latest_data() {
   global $_VAE;
+  _vae_ensure_open_session();
   $latest_generation = _vae_rest(array(), 'api/site/v1/feed_generation');
-  return ($latest_generation == $_VAE['feed_generation']);
+  return ($latest_generation == $_VAE['feed_generation'] ? 1 : 0);
 }
 
 function vae_loggedin() {

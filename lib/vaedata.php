@@ -653,6 +653,7 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   public static function ___openSession() {
     global $_VAE;
+    if (self::$sessionId) return;
     self::___openClient();
     for ($i = 0; $i < 5; $i++) {
       try {
@@ -1087,6 +1088,11 @@ function _vae_fetch_without_errors($query = null, $context = null, $options = nu
   if (substr($query, 0, 1) != "@") $query = "@" . $query;
   return _vae_fetch($query, $context, $options);
 }
+
+function _vae_ensure_open_session() {
+  return VaeQuery::___openSession();
+}
+
 
 function _vae_reset_site() {
   return VaeQuery::___resetSite();
