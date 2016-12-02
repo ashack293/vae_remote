@@ -1371,7 +1371,7 @@ function _vae_remote() {
       echo "200 Success";
     } elseif ($_REQUEST['newsletter_yield']) {
       echo _vae_render_newsletter_yield($_REQUEST['newsletter_yield'], null, array());
-    } elseif ($_REQUEST['action'] == 'get_feed_generation']) {
+    } elseif ($_REQUEST['action'] == 'get_feed_generation') {
       _vae_ensure_open_session();
       echo $_VAE['feed_generation'];
     } else {
