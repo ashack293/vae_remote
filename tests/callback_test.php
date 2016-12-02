@@ -150,11 +150,10 @@ class CallbackTest extends VaeUnitTestCase {
 
   function testVaeCallbackUpdateRestError() {
     $_REQUEST['name'] = "Freefall2";
-    $this->mockRestError();
+    $this->mockRestError("Name is missing");
     $tag = $this->callbackTag('<v:update redirect="/index" path="/13421"><v:text_field path="name" required="true" /></v:update>');
-    $_SERVER['REQUEST_METHOD'] = "POST";
     _vae_callback_update($tag);
-    $this->assertRestError();
+    $this->assertRestError("Name is missing");
     $this->assertRedirect("/page");
   }
 

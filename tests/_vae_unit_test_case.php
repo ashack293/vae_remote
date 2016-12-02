@@ -146,8 +146,8 @@ class VaeUnitTestCase extends UnitTestCase {
     $this->assertTrue($_VAE['honeybadger_sent'] > 0, "Expected errors reported to Honeybadger.");
   }
 
-  function assertRestError() {
-    $this->assertErrors("A network error occured.", "Expected a REST Error");
+  function assertRestError($message = "A network error occured.") {
+    $this->assertErrors($message, "Expected a REST Error");
   }
 
   function assertSessionDep($key) {
