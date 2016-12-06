@@ -1233,12 +1233,12 @@ class GeneralTest extends VaeUnitTestCase {
   }
 
   function testVaeValidDigits() {
-    $this->assertTrue(_vae_valid_digits(""));
     $this->assertTrue(_vae_valid_digits("0"));
     $this->assertTrue(_vae_valid_digits("1"));
     $this->assertTrue(_vae_valid_digits("101010"));
     $this->assertTrue(_vae_valid_digits("12345678"));
     $this->assertTrue(_vae_valid_digits("72631498716"));
+    $this->assertFalse(_vae_valid_digits(""));
     $this->assertFalse(_vae_valid_digits("0.0"));
     $this->assertFalse(_vae_valid_digits("1,456"));
     $this->assertFalse(_vae_valid_digits("kevin"));
