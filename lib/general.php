@@ -1902,7 +1902,7 @@ function _vae_valid_date($date) {
 }
 
 function _vae_valid_digits($input) {
-  return (!preg_match('/[^0-9]/', $input));
+  return (strlen($input) && !preg_match('/[^0-9]/', $input));
 }
 
 function _vae_valid_email($email) {
