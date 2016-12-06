@@ -153,6 +153,10 @@ function vae_errors() {
   return $_VAE['errors'];
 }
 
+function vae_extra_ftp_user_path($user = "") {
+  return str_replace(array("/httpdocs", "/releases/current"), "", $_SERVER['DOCUMENT_ROOT']) . "/web_users/" . $user . "/";
+}
+
 function vae_file($id, $preserve_filename = false) {
   if (!strlen($id)) return "";
   return _vae_file($id . "-file", $id, "api/site/v1/file/" . $id, "", $preserve_filename);
