@@ -1170,6 +1170,16 @@ function _vae_oneline($a, $context, $attribute_type = false) {
       return implode(",", $out);
     }
     return $values;
+  } elseif (preg_match('/SUM\(([^)]*)\)/i', $a, $regs)) {
+    $out = 0;
+    $values = _vae_fetch($regs[1], $context, array('assume_numbers' => true));
+    if (is_object($values)) {
+      foreach ($values as $value) {
+        $out += _vae_oneline_get($value, $getsize, $params);
+      }
+      return $out;
+    }
+    return $values;
   } elseif (preg_match('/PARAM\(([^)]*)\)/i', $a, $regs)) {
     $out = $_REQUEST[$regs[1]];
   } else {
