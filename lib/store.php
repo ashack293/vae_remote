@@ -318,6 +318,7 @@ function _vae_store_callback_forgot($tag) {
       $data['forgot_email_text'] = $text;
     }
   }
+  if ($tag['attrs']['brand_name']) $data['brand_name'] = $tag['attrs']['brand_name'];
   if (_vae_rest($data, "api/site/v1/customers/forgot", "customer", $tag, null, true) !== false) {
     if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     return vae_redirect($_SERVER['PHP_SELF']);
@@ -332,7 +333,9 @@ function _vae_store_callback_google_checkout($tag) {
 }
 
 function _vae_store_callback_login($tag) {
-  if ($raw = _vae_rest(array(), "api/site/v1/customers/authenticate", "customer", $tag, null, true)) {
+  $data = array();
+  if ($tag['attrs']['brand_name']) $data['brand_name'] = $tag['attrs']['brand_name'];
+  if ($raw = _vae_rest($data, "api/site/v1/customers/authenticate", "customer", $tag, null, true)) {
     $err = _vae_store_load_customer($raw);
     if (!$err) {
       if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
@@ -408,6 +411,7 @@ function _vae_store_callback_register($tag) {
   $data = $_SESSION['__v:store']['user'];
   $errors = array();
   _vae_merge_data_from_tags($tag, $data, $errors);
+  if ($a['brand_name']) $data['brand_name'] = $tag['attrs']['brand_name'];
   if ($error = _vae_store_banned_country($data['shipping_country'])) {
     $errors[] = $error;
   }
@@ -480,9 +484,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     }
     $data['token'] = $_SESSION['__v:store']["paypal_express_checkout"]["token"];
     $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
-    $data['store_name'] = $a['store_name'];
-    $data['store_logo'] = $a['store_logo'];
-    foreach (array('gateway_transaction_id', 'stored_payment_method', 'subscription_status') as $optional_param) {
+    foreach (array('gateway_transaction_id', 'stored_payment_method', 'subscription_status', 'brand_name', 'store_name', 'store_logo') as $optional_param) {
       if ($a[$optional_param]) $data[$optional_param] = $a[$optional_param];
     }
     if ($a['skip_emails']) $data['skip_emails'] = "1";
@@ -541,7 +543,6 @@ function _vae_store_complete_checkout($data, $tag = null) {
       $_SESSION['__v:store']['user']['gateway_customer_id'] = $order_data['gateway_customer_id'];
       $_SESSION['__v:store']['user']['gateway'] = $order_data['payment_method'];
     }
-    _vae_run_hooks("store:checkout:success");
     unset($_SESSION['__v:store']['cart']);
     unset($_SESSION['__v:store']['discount']);
     unset($_SESSION['__v:store']['discount_code']);
@@ -549,6 +550,7 @@ function _vae_store_complete_checkout($data, $tag = null) {
     unset($_SESSION['__v:store']['checkout_attempts']);
     unset($_SESSION['__v:store']['total_weight']);
     unset($_SESSION['__v:store']['previous_orders']);
+    _vae_run_hooks("store:checkout:success");
     if ($tag == null) return true;
     return vae_redirect($tag['attrs']['redirect']);
   }
