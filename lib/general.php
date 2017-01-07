@@ -1395,7 +1395,8 @@ function _vae_remote() {
 
 function _vae_remote_addr() {
   if (substr($_SERVER['REMOTE_ADDR'], 0, 3) == "10." && strlen($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $e = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
+    return array_pop($e);
   }
   return $_SERVER['REMOTE_ADDR'];
 }
