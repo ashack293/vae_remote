@@ -378,6 +378,12 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
     $_SESSION['__v:store']['paypal_express_checkout'] = array('token' => $_REQUEST['token'], 'payer_id' => $_REQUEST['PayerID']);
     if ($addr = _vae_rest(array('token' => $_REQUEST['token']), "api/site/v1/store/paypal_express_checkout", "order")) {
       $xml = simplexml_load_string($addr);
+      if ($tag['attrs']['skip_registration']) {
+        $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout";
+        $_SESSION['__v:store']['paypal_express_checkout']['skip_registration'] = true;
+        if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
+        return vae_redirect($_SERVER['PHP_SELF']);
+      }
       $data = array('e_mail_address' => (string)$xml->email);
       foreach (array("billing_", "shipping_") as $type) {
         foreach($xml as $k => $v) {
@@ -1636,7 +1642,7 @@ function _vae_store_render_recent_order_items($a, &$tag, $context, &$callback, $
 
 function _vae_store_render_register($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_register');
-  if ($_SESSION['__v:store']['payment_method'] == "paypal_express_checkout") {
+  if ($_SESSION['__v:store']['payment_method'] == "paypal_express_checkout" && !$_SESSION['__v:store']['paypal_express_checkout']['skip_registration']) {
     _vae_flash("You cannot edit your address on our site when using PayPal Express Checkout.  Use the back button to go back to PayPal to set the correct address.", "err");
     return vae_redirect($a['redirect']);
   }
