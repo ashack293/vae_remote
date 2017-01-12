@@ -381,8 +381,6 @@ class StoreTest extends VaeUnitTestCase {
       'payment_method' => 'unittest',
       'weight' => 4,
       'notes' => "",
-      'store_name' => "",
-      'store_logo' => "",
       'token' => "Ptok",
       'payer_id' => "Pid",
       'billing_name' => 'Kevin Bombino',
