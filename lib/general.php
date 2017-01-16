@@ -501,7 +501,7 @@ function _vae_honeybadger_send($message, $class_name, $backtrace) {
     return;
   }
   $safe_request = array();
-  $bad = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number');
+  $bad = array($_VAE['unsafe_params']);
   foreach ($_REQUEST as $k => $v) {
     if (!in_array($k, $bad)) {
       $safe_request[$k] = $v;

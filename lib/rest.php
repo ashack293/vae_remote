@@ -146,7 +146,7 @@ function _vae_send_rest($method, $data, &$errors) {
     $split_out_header = explode("\n\n", $response, 2);
     return $split_out_header[1];
   }
-  foreach (array('cc_number','cc_cvv','password','cc_month','cc_year','cc_start_month','cc_start_year') as $bad) {
+  foreach ($_VAE['unsafe_params'] as $bad) {
     $data = preg_replace("/<" . $bad . ">([^<]*)/", "<" . $bad . ">[FILTERED]", $data);
   }
   $url = preg_replace("/secret_key=([^<]*)/", "secret_key=[FILTERED]", $url);
@@ -192,7 +192,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false, $follow_redi
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
   if ($http_code >= 300 || $http_code == 0) {
-    foreach (array('cc_number','cc_cvv','password','cc_month','cc_year','cc_start_month','cc_start_year') as $bad) {
+    foreach ($_VAE['unsafe_params'] as $bad) {
       $post_data = preg_replace("/<" . $bad . ">([^<]*)/", "<" . $bad . ">[FILTERED]", $post_data);
       $post_data = preg_replace("/" . $bad . "=([^<]*)/", $bad . "=[FILTERED]", $post_data);
     }
