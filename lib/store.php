@@ -1266,12 +1266,14 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
             jQuery('input[name*=\"cc\"], select[name*=\"cc\"]').val('');
             jQuery('input[name=\"token\"]').val(result.id);
             var form = button.parents('form').eq(0);
+            tokenized = true;
             form.attr('href', form.attr('href') + '&__full_redirect=1');
             form.ajaxForm({ success: function(data,status) {
               completion(ApplePaySession.STATUS_SUCCESS);
             }, error: function() {
               completion(ApplePaySession.STATUS_FAILURE);
             } });
+            form.submit();
           }, function(error) {
             console.log(error.message);
           }).begin();
