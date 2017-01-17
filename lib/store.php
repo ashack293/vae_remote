@@ -1264,12 +1264,18 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
           };
           Stripe.applePay.buildSession(paymentRequest, function(result, completion) {
             jQuery('input[name*=\"cc\"], select[name*=\"cc\"]').val('');
-            jQuery('input[name=\"token\"]').val(result.id);
+            jQuery('input[name=\"token\"]').val(result.token.id);
             var form = button.parents('form').eq(0);
             tokenized = true;
             form.attr('href', form.attr('href') + '&__full_redirect=1');
             form.ajaxForm({ success: function(data,status) {
-              completion(ApplePaySession.STATUS_SUCCESS);
+              if (match = /^__err=(.*)/.exec(d)) {
+                var error = match[1];
+                console.log(match[1].replace(/\\\\n/g, \"\\n\"));
+                completion(ApplePaySession.STATUS_FAILURE);
+              } else {
+                completion(ApplePaySession.STATUS_SUCCESS);
+              }
             }, error: function() {
               completion(ApplePaySession.STATUS_FAILURE);
             } });
@@ -1298,7 +1304,7 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
 	</style>" : "") . _vae_render_tag("button", $a, $inner, $context, $render_context);
 }
 
-function _vae_store_render_bundled_item($a, &$tag, $context, &$callback, $render_context) {  
+function _vae_store_render_bundled_item($a, &$tag, $context, &$callback, $render_context) {
   $main_item_id = $render_context->get("add_to_cart_item_id");
   if (!$main_item_id) return _vae_error("You must use <span class='c'>&lt;v:store:bundled_item&gt;</span> within a <span class='c'>&lt;v:store:add_to_cart&gt;</span> tag.");
   if (!$context) return _vae_error("You must use <span class='c'>&lt;v:store:bundled_item&gt;</span> within the context of the item you wish to bundle.");
