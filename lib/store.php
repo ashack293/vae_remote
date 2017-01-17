@@ -1267,7 +1267,7 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
             jQuery('input[name=\"token\"]').val(result.token.id);
             var form = button.parents('form').eq(0);
             tokenized = true;
-            form.attr('href', form.attr('href') + '&__full_redirect=1');
+            form.attr('action', form.attr('action') + '&__full_redirect=1');
             form.ajaxForm({ success: function(data,status) {
               if (match = /^__err=(.*)/.exec(data)) {
                 var error = match[1];
