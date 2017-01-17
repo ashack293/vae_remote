@@ -1272,12 +1272,14 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
               if (match = /^__err=(.*)/.exec(data)) {
                 var error = match[1];
                 console.log(match[1].replace(/\\\\n/g, \"\\n\"));
+                button.after(\"<label id='\" + field + \"-error\" + \"' class='error' for='\" + field + \"'>\" + error + \"</label>\");
                 completion(ApplePaySession.STATUS_FAILURE);
               } else {
                 " . ($a['ajax'] ? "jQuery('#'" . $a['ajax'] . ").html" : "button.after") . "(data);
                 completion(ApplePaySession.STATUS_SUCCESS);
               }
             }, error: function() {
+              button.after(\"<label id='\" + field + \"-error\" + \"' class='error' for='\" + field + \"'></label>\");
               completion(ApplePaySession.STATUS_FAILURE);
             } });
             form.submit();
