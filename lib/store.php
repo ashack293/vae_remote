@@ -1269,11 +1269,12 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
             tokenized = true;
             form.attr('href', form.attr('href') + '&__full_redirect=1');
             form.ajaxForm({ success: function(data,status) {
-              if (match = /^__err=(.*)/.exec(d)) {
+              if (match = /^__err=(.*)/.exec(data)) {
                 var error = match[1];
                 console.log(match[1].replace(/\\\\n/g, \"\\n\"));
                 completion(ApplePaySession.STATUS_FAILURE);
               } else {
+                " . ($a['ajax'] ? "jQuery('#'" . $a['ajax'] . ").html" : "button.after") . "(data);
                 completion(ApplePaySession.STATUS_SUCCESS);
               }
             }, error: function() {
