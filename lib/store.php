@@ -1245,7 +1245,8 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
     Stripe.applePay.checkAvailability(function(available) {
       if (available) {
         jQuery('." . $a['active_class'] . "').show();
-        jQuery('#" . $a['id'] . "').show().click(function() {
+        jQuery('#" . $a['id'] . "').show().click(function(e) {
+          e.preventDefault();
           var button = jQuery(this);
           var paymentRequest = {
             countryCode: 'US',
@@ -1263,7 +1264,7 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
           };
           Stripe.applePay.buildSession(paymentRequest, function(result, completion) {
             jQuery('input[name*=\"cc\"], select[name*=\"cc\"]').val('');
-            jQuery('input[name=\"token\"]').val(res.id);
+            jQuery('input[name=\"token\"]').val(result.id);
             var form = button.parents('form').eq(0);
             form.attr('href', form.attr('href') + '&__full_redirect=1');
             form.ajaxForm({ success: function(data,status) {
@@ -1279,6 +1280,7 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
     });
   ");
   if (!strlen($a['class'])) $a['class'] = "apple-pay-button";
+  if (!strlen($a['style'])) $a['style'] = "display: none";
   return ($a['class'] == "apple-pay-button" ? "<style type='text/css'>
 		.apple-pay-button {
 			background-color: black;
