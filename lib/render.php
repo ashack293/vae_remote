@@ -558,12 +558,13 @@ function _vae_render_flash_inside($which = "", $render_context, $is_flash_tag = 
   return $out;
 }
 
-function _vae_render_form($a, &$tag, $context, &$callback = null, $render_context) {
+function _vae_render_form($a, &$tag, $context, &$callback = null, $render_context, $inside = "") {
   if ($render_context->get("form")) _vae_error("You cannot nest <span class='c'>&lt;form&gt;</span> tags.  Watch out for any VaeML tags you have that generate <span class='c'>&lt;form&gt;</span> tags.", "", $tag['filename']);
   if (!strlen($a['id']) && ($a['ajax'] || $a['validateinline'] || $a['loading'])) $a['id'] = _vae_global_id();
   if (!strlen($a['method'])) $a['method'] = 'post';
   $out = _vae_render_flash_inside($a['flash'], $render_context, false, $a['flash_skip']);
-  $out .= _vae_render_tag("form", $a, $tag, $context, $render_context->set("form_context", $context)->set_in_place("form", true));
+  $inside .= _vae_render_tags($tag, $context, $render_context, true);
+  $out .= _vae_render_tag("form", $a, $inside, $context, $render_context->set("form_context", $context)->set_in_place("form", true));
   if ($a['ajax']) {
     if ($a['loading']) {
       $loader = '<img id="' . $a['id'] . '_loading" src="' . $a['loading'] . '" alt="Loading ..." class="loading-indicator" style="display: none; vertical-align: middle;" />';

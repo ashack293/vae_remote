@@ -468,7 +468,7 @@ function _vae_handleob($vaeml) {
       if ($_REQUEST['__debug']) $url .= (strstr($url, "?") ? "&" : "?") . "__debug=" . $_REQUEST['__debug'];
       if ($_REQUEST['__host']) $url .= (strstr($url, "?") ? "&" : "?") . "__host=" . $_REQUEST['__host'];
       if (strstr($url, "<script>")) $url = "/";
-      if (_vae_is_xhr() && strstr($url, "www.paypal.com")) {
+      if (_vae_is_xhr()) {
         return "<script type='text/javascript'>window.location.href='" . $url . "'; window.vRedirected = true;</script>";
       }
       @header("Location: " . $url);
@@ -637,7 +637,13 @@ function _vae_inject_assets($out) {
           if (strstr($asset, str_replace(".min", "", $s))) $s = null;
         }
       }
-      if (strlen($s)) $bottom .= '<script type="text/javascript" src="' . $_VAE['config']['asset_url'] . $s . '.js"></script>';
+      if (strlen($s)) {
+        if (preg_match('/^http(s|):\/\//', $s)) {
+          $bottom .= '<script type="text/javascript" src="' . $s . '"></script>';
+        } else {
+          $bottom .= '<script type="text/javascript" src="' . $_VAE['config']['asset_url'] . $s . '.js"></script>';
+        }
+      }
     }
   }
   if (count($_VAE['assets'])) {

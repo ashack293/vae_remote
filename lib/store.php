@@ -490,6 +490,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     }
     $data['token'] = $_SESSION['__v:store']["paypal_express_checkout"]["token"];
     $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
+    if ($_REQUEST['token']) $data['token'] = $_REQUEST['token'];
     foreach (array('gateway_transaction_id', 'stored_payment_method', 'subscription_status', 'brand_name', 'store_name', 'store_logo') as $optional_param) {
       if ($a[$optional_param]) $data[$optional_param] = $a[$optional_param];
     }
@@ -1289,7 +1290,63 @@ function _vae_store_render_checkout($a, &$tag, $context, &$callback, $render_con
   if (!count($_SESSION['__v:store']['cart'])) return vae_redirect($a['shop_page'] ? $a['shop_page'] : "/");
   if (!$_SESSION['__v:logged_in'] && !isset($_SESSION['__v:store']['user'])) return vae_redirect($a['register_page']);
   _vae_store_compute_shipping($a['register_page']);
-  return _vae_render_callback("store_checkout", $a, $tag, $context, $callback, $render_context);
+  if ($_SESSION['__v:store']['payment_method'] == "stripe" || $_SESSION['__v:store']['payment_method'] == "stripe_test") {
+    foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
+      if ($method['method_name'] == $_SESSION['__v:store']['payment_method'] && ($method['use_stripe_js'] || $method['accept_apple_pay'])) {
+        $stripe_js = ($_SESSION['__v:store']['payment_method'] == "stripe_test" ? $method['publishable_test'] : $method['publishable']);
+      }
+    }
+  }
+  if (!strlen($a['id'])) $a['id'] = _vae_global_id();
+  if ($stripe_js) {
+    $user = _vae_store_current_user();
+    _vae_needs_jquery();
+    _vae_needs_javascript("https://js.stripe.com/v2/");
+    _vae_on_dom_ready("
+    Stripe.setPublishableKey('" . $stripe_js . "');
+    var tokenized = stripeInProgress = false;
+    jQuery('#" . $a['id'] . "').submit(function(e) {
+      var form = jQuery(this);
+      if (stripeInProgress) {
+        e.preventDefault();
+        return;
+      }
+      if (!tokenized) {
+        e.preventDefault();
+        Stripe.card.createToken({
+          number: jQuery('input[name=\"cc_number\"]').val(),
+          cvc: jQuery('input[name=\"cc_cvv\"]').val(),
+          exp_month: jQuery('input[name=\"cc_month\"], select[name=\"cc_month\"]').val(),
+          exp_year: jQuery('input[name=\"cc_year\"], select[name=\"cc_year\"]').val(),
+          name: '" . str_replace("'", "\\'", $user['billing_name']) . "',
+          address_line1: '" . str_replace("'", "\\'", $user['billing_address']) . "',
+          address_line2: '" . str_replace("'", "\\'", $user['billing_address_2']) . "',
+          address_city: '" . str_replace("'", "\\'", $user['billing_city']) . "',
+          address_state: '" . str_replace("'", "\\'", $user['billing_state']) . "',
+          address_zip: '" . str_replace("'", "\\'", $user['billing_zip']) . "',
+          address_country: '" . str_replace("'", "\\'", $user['billing_country']) . "',
+        }, function(status, res) {
+          stripeInProgress = false;
+          if (res.error) {
+            var field = 'cc_number';
+            if (res.error.param == 'number') field = 'cc_number';
+            if (res.error.param == 'cvc') field = 'cc_cvv';
+            if (res.error.param == 'exp_month') field = 'cc_month';
+            if (res.error.param == 'exp_year') field = 'cc_year';
+            jQuery('#' + field + '-error').remove();
+            jQuery('input[name=\"' + field + '\"], select[name=\"' + field + '\"]').addClass('error').after(\"<label id='\" + field + \"-error\" + \"' class='error' for='\" + field + \"'>\" + res.error.message + \"</label>\");
+          } else {
+            tokenized = true;
+            jQuery('input[name*=\"cc\"], select[name*=\"cc\"]').val('');
+            jQuery('input[name=\"token\"]').val(res.id);
+            form.submit();
+          }
+        });
+      }
+    });");
+  }
+  $a['action'] = $_SERVER['PHP_SELF'] . _vae_qs("__v:store_checkout=" . _vae_tag_unique_id($tag, $context) . (strlen($qs) ? "&" . $qs : ""));
+  return _vae_render_form($a, $tag, $context, $callback, $render_context, "<input type='hidden' name='token' />");
 }
 
 function _vae_store_render_credit_card_select($a, &$tag, $context, &$callback, $render_context) {
