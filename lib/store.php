@@ -1291,7 +1291,7 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
 			padding: 10px 0;
 			border-radius: 10px;
 		}
-	</style>" : "") . vae_render_tag("button", $a, $inner, $context, $render_context);
+	</style>" : "") . _vae_render_tag("button", $a, $inner, $context, $render_context);
 }
 
 function _vae_store_render_bundled_item($a, &$tag, $context, &$callback, $render_context) {  
