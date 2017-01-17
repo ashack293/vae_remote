@@ -468,7 +468,7 @@ function _vae_handleob($vaeml) {
       if ($_REQUEST['__debug']) $url .= (strstr($url, "?") ? "&" : "?") . "__debug=" . $_REQUEST['__debug'];
       if ($_REQUEST['__host']) $url .= (strstr($url, "?") ? "&" : "?") . "__host=" . $_REQUEST['__host'];
       if (strstr($url, "<script>")) $url = "/";
-      if (_vae_is_xhr() && (strstr($url, "www.paypal.com") || $_REQUEST['__full_redirect'])) {
+      if ((_vae_is_xhr() && strstr($url, "www.paypal.com")) || $_REQUEST['__full_redirect']) {
         return "<script type='text/javascript'>window.location.href='" . $url . "'; window.vRedirected = true;</script>";
       }
       @header("Location: " . $url);
