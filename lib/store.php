@@ -1278,7 +1278,6 @@ function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_co
       }
     });
   ");
-  return "";
   if (!strlen($a['class'])) $a['class'] = "apple-pay-button";
   return ($a['class'] == "apple-pay-button" ? "<style type='text/css'>
 		.apple-pay-button {
