@@ -68,6 +68,7 @@ _vae_register_tag('store_add_to_cart', array('callback' => '_vae_store_callback_
 _vae_register_tag('store_address_delete', array('callback' => '_vae_store_callback_address_delete', 'html' => 'a', 'handler' => '_vae_store_render_address_delete'));
 _vae_register_tag('store_address_select', array('callback' => '_vae_store_callback_address_select', 'handler' => '_vae_store_render_address_select', 'html' => 'select'));
 _vae_register_tag('store_addresses', array('handler' => '_vae_store_render_addresses'));
+_vae_register_tag('store_apple_pay', array('handler' => '_vae_store_render_apple_pay', 'html' => 'button', 'required' => array('store_name')));
 _vae_register_tag('store_bundled_item', array('handler' => '_vae_store_render_bundled_item'));
 _vae_register_tag('store_cart', array('callback' => '_vae_store_callback_cart', 'handler' => '_vae_store_render_cart', 'html' => 'form'));
 _vae_register_tag('store_cart_items', array('handler' => '_vae_store_render_cart_items'));

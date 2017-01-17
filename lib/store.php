@@ -1106,7 +1106,7 @@ function _vae_store_payment_paypal_express_checkout_method($required = true) {
   foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
     if ($method['method_name'] == "paypal_express_checkout") return $method;
   }
-  if ($required) _vae_error("This website does not have PayPal Express Checkout configured as a payment method.  Please enable Google Checkout in the backstage under Store > Settings.");
+  if ($required) _vae_error("This website does not have PayPal Express Checkout configured as a payment method.  Please enable PayPal Express Checkout in the backstage under Store > Settings.");
   return false;
 }
 
@@ -1231,6 +1231,68 @@ function _vae_store_render_addresses($a, &$tag, $context, &$callback, $render_co
   _vae_session_deps_add('__v:store', '_vae_store_render_addresses');
   if (!$_SESSION['__v:store']['loggedin'] || !$_SESSION['__v:store']['customer_id']) return "";
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($_SESSION['__v:store']['customer_addresses']));
+}
+
+function _vae_store_render_apple_pay($a, &$tag, $context, &$callback, $render_context) {
+  $method = _vae_store_payment_stripe_method(false);
+  if ($method === false) return "";
+  $key = ($_SESSION['__v:store']['payment_method'] == "stripe_test" ? $method['publishable_test'] : $method['publishable']);
+  if (!strlen($a['id'])) $a['id'] = _vae_global_id();
+  _vae_needs_jquery();
+  _vae_needs_javascript("https://js.stripe.com/v2/");
+  _vae_on_dom_ready("
+    Stripe.setPublishableKey('" . $key . "');
+    Stripe.applePay.checkAvailability(function(available) {
+      if (available) {
+        jQuery('." . $a['active_class'] . "').show();
+        jQuery('#" . $a['id'] . "').show().click(function() {
+          var button = jQuery(this);
+          var paymentRequest = {
+            countryCode: 'US',
+            currencyCode: 'USD',
+            lineItems: [
+              { type: 'final', label: 'Subtotal', amount: '" . _vae_store_compute_subtotal() . "' },
+              { type: 'final', label: 'Shipping', amount: '" . _vae_store_compute_shipping() . "' },
+              { type: 'final', label: 'Tax', amount: '" . _vae_store_compute_tax() . "' },
+              { type: 'final', label: 'Discount', amount: '" . (_vae_store_compute_discount() * -1) . "' }
+            ],
+            total: {
+              label: '" . $a['store_name'] . "',
+              amount: '" . _vae_store_compute_total() . "'
+            }
+          };
+          Stripe.applePay.buildSession(paymentRequest, function(result, completion) {
+            jQuery('input[name*=\"cc\"], select[name*=\"cc\"]').val('');
+            jQuery('input[name=\"token\"]').val(res.id);
+            var form = button.parents('form').eq(0);
+            form.attr('href', form.attr('href') + '&__full_redirect=1');
+            form.ajaxForm({ success: function(data,status) {
+              completion(ApplePaySession.STATUS_SUCCESS);
+            }, error: function() {
+              completion(ApplePaySession.STATUS_FAILURE);
+            } });
+          }, function(error) {
+            console.log(error.message);
+          }).begin();
+        });
+      }
+    });
+  ");
+  return "";
+  if (!strlen($a['class'])) $a['class'] = "apple-pay-button";
+  return ($a['class'] == "apple-pay-button" ? "<style type='text/css'>
+		.apple-pay-button {
+			background-color: black;
+			background-image: -webkit-named-image(apple-pay-logo-white);
+			background-size: 100% 100%;
+			background-origin: content-box;
+			background-repeat: no-repeat;
+			width: 100%;
+			height: 44px;
+			padding: 10px 0;
+			border-radius: 10px;
+		}
+	</style>" : "") . vae_render_tag("button", $a, $inner, $context, $render_context);
 }
 
 function _vae_store_render_bundled_item($a, &$tag, $context, &$callback, $render_context) {  
@@ -1771,6 +1833,15 @@ function _vae_store_shipping_methods() {
     }
   }
   return $methods;
+}
+
+function _vae_store_payment_stripe_method($required = true) {
+  global $_VAE;
+  foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
+    if ($method['method_name'] == "stripe" || $method['method_name'] == "stripe_test") return $method;
+  }
+  if ($required) _vae_error("This website does not have Stripe configured as a payment method.  Please enable Stripe in the backstage under Store > Settings.");
+  return false;
 }
 
 function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {

@@ -933,6 +933,12 @@ $_VAE['tags'] = array (
   array (
     'handler' => '_vae_store_render_addresses',
   ),
+  'store_apple_pay' =>
+  array (
+    'handler' => '_vae_store_render_apple_pay',
+    'html' => 'button',
+    'required' => array('store_name')
+  ),
   'store_bundled_item' =>
   array (
     'handler' => '_vae_store_render_bundled_item',
