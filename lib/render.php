@@ -563,7 +563,7 @@ function _vae_render_form($a, &$tag, $context, &$callback = null, $render_contex
   if (!strlen($a['id']) && ($a['ajax'] || $a['validateinline'] || $a['loading'])) $a['id'] = _vae_global_id();
   if (!strlen($a['method'])) $a['method'] = 'post';
   $out = _vae_render_flash_inside($a['flash'], $render_context, false, $a['flash_skip']);
-  $render_context = $render_context->set("form_context", $context)->set_in_place("form", true));
+  $render_context = $render_context->set("form_context", $context)->set_in_place("form", true);
   $inside .= _vae_render_tags($tag, $context, $render_context, true);
   $out .= _vae_render_tag("form", $a, $inside, $context, $render_context);
   if ($a['ajax']) {
