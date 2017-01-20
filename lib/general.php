@@ -564,7 +564,7 @@ function _vae_htmlarea($text, $a, $offsite = false) {
     $text = preg_replace("/\n\n(\n*)/", "\n\n", $text);
     $text = strip_tags(html_entity_decode($text));
     if ($a['entities']) $text = htmlspecialchars($text);
-    if ($a['maxlength'] && (strlen($text) > $a['maxlength'])) $text = substr($text, 0, $a['maxlength']) . "...";
+    if ($a['maxlength'] && (strlen($text) > $a['maxlength'])) $text = mb_substr($text, 0, $a['maxlength']) . "...";
     $text = $a['before'] . $text . $a['after'];
     return $text;
   }
