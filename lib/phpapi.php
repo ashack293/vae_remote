@@ -610,11 +610,11 @@ function vae_store_total_weight($weight) {
 }
 
 function vae_store_update_cart_item($id, $data) {
+  global $_VAE;
   _vae_session_deps_add('__v:store');
   unset($_VAE['store_cached_number_of_items']);
   unset($_VAE['store_cached_shipping']);
   unset($_VAE['store_cached_subtotal']);
-  unset($_VAE['store_cached_total']);
   unset($_VAE['store_cached_tax']);
   if (!isset($_SESSION['__v:store']['cart'][$id])) return false;
   $data = _vae_stringify_array($data);
