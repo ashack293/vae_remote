@@ -404,7 +404,7 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
   } else {
     $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
     $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&__method=") : _vae_qs(""));
-    $options = array(array('total' => _vae_store_compute_total(), 'ip' => _vae_remote_addr(), 'return_url' => $return_url, 'cancel_return_url' => $cancel_url);
+    $options = array('total' => _vae_store_compute_total(), 'ip' => _vae_remote_addr(), 'return_url' => $return_url, 'cancel_return_url' => $cancel_url);
     foreach (array('subscription_description') as $k) {
       if ($tag['attrs'][$k]) $options[$k] = $tag['attrs'][$k];
     }
