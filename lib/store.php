@@ -404,7 +404,11 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
   } else {
     $return_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__method=") : _vae_qs("__v:store_paypal_express_checkout=" . _vae_tag_unique_id($tag, $context)));
     $cancel_url = _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . ($from_select ? _vae_qs("__v:store_payment_methods_select=&__method=") : _vae_qs(""));
-    if ($url = _vae_rest(array('total' => _vae_store_compute_total(), 'ip' => _vae_remote_addr(), 'return_url' => $return_url, 'cancel_return_url' => $cancel_url), "api/site/v1/store/paypal_express_checkout", "order")) {
+    $options = array(array('total' => _vae_store_compute_total(), 'ip' => _vae_remote_addr(), 'return_url' => $return_url, 'cancel_return_url' => $cancel_url);
+    foreach (array('subscription_description') as $k) {
+      if ($tag['attrs'][$k]) $options[$k] = $tag['attrs'][$k];
+    }
+    if ($url = _vae_rest($options, "api/site/v1/store/paypal_express_checkout", "order")) {
       return vae_redirect($url);
     } else {
       return vae_redirect($_SERVER['PHP_SELF']);
@@ -491,7 +495,7 @@ function _vae_store_checkout($a = null, $tag = null) {
     $data['token'] = $_SESSION['__v:store']["paypal_express_checkout"]["token"];
     $data['payer_id'] = $_SESSION['__v:store']["paypal_express_checkout"]["payer_id"];
     if ($_REQUEST['token']) $data['token'] = $_REQUEST['token'];
-    foreach (array('gateway_transaction_id', 'stored_payment_method', 'subscription_status', 'brand_name', 'store_name', 'store_logo') as $optional_param) {
+    foreach (array('gateway_transaction_id', 'stored_payment_method', 'subscription_amount', 'subscription_days', 'subscription_description', 'subscription_name', 'subscription_status', 'brand_name', 'store_name', 'store_logo') as $optional_param) {
       if ($a[$optional_param]) $data[$optional_param] = $a[$optional_param];
     }
     if ($a['skip_emails']) $data['skip_emails'] = "1";
@@ -998,6 +1002,7 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   $_SESSION['__v:store']['user']['gateway_customer_id'] = (string)$data->{'gateway-customer-id'};
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
   $_SESSION['__v:store']['user']['e_mail_address'] = (string)$data->{'e-mail-address'};
+  $_SESSION['__v:store']['customer_subscriptions'] = _vae_array_from_rails_xml($data->{'customer-subscriptions'}->{'customer-subscription'}, true);
   _vae_store_populate_addresses();
   return false;
 }
@@ -1677,7 +1682,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
   if (_vae_store_compute_total() == 0.00) {
     $a['options'] = array($_SESSION['__v:store']['payment_method'] => $_SESSION['__v:store']['payment_method']);
   } else {
-    $a['options'] = array();  
+    $a['options'] = array();
     if ($a['stored_payment_method']) {
       $a['options']['stored_payment_method'] = $a['stored_payment_method'];
     }
