@@ -614,6 +614,7 @@ function vae_store_update_cart_item($id, $data) {
   unset($_VAE['store_cached_number_of_items']);
   unset($_VAE['store_cached_shipping']);
   unset($_VAE['store_cached_subtotal']);
+  unset($_VAE['store_cached_total']);
   unset($_VAE['store_cached_tax']);
   if (!isset($_SESSION['__v:store']['cart'][$id])) return false;
   $data = _vae_stringify_array($data);
