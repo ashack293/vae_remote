@@ -379,7 +379,7 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
     if ($addr = _vae_rest(array('token' => $_REQUEST['token']), "api/site/v1/store/paypal_express_checkout", "order")) {
       $xml = simplexml_load_string($addr);
       if ($tag['attrs']['skip_registration']) {
-        if (strlen($_REQUEST['token'] && $_REQUEST['PayerID'] && !$_REQUEST['__cancel_paypal']) {
+        if (strlen($_REQUEST['token']) && $_REQUEST['PayerID'] && !$_REQUEST['__cancel_paypal']) {
           $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout";
           $_SESSION['__v:store']['paypal_express_checkout']['skip_registration'] = true;
         }
