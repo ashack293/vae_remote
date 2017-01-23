@@ -1007,7 +1007,7 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   $_SESSION['__v:store']['user']['gateway_customer_id'] = (string)$data->{'gateway-customer-id'};
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
   $_SESSION['__v:store']['user']['e_mail_address'] = (string)$data->{'e-mail-address'};
-  $_SESSION['__v:store']['customer_subscriptions'] = _vae_array_from_rails_xml($data->{'customer-subscriptions'}->{'customer-subscription'}, true);
+  $_SESSION['__v:store']['user']['subscriptions'] = _vae_array_from_rails_xml($data->{'subscriptions'}->{'subscription'}, true);
   _vae_store_populate_addresses();
   return false;
 }
