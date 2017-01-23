@@ -1214,20 +1214,20 @@ class StoreTest extends VaeUnitTestCase {
   }
 
   function testVaeStoreLoadCustomer() {
-    $raw = "<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
+    $raw = "<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>";
     _vae_store_load_customer($raw);
     $this->assertSessionDep('__v:store');
     $this->assertTrue($_SESSION['__v:store']['loggedin']);
-    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123'));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123', 'subscriptions' => array()));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertEqual($_SESSION['__v:store']['customer_addresses'], array(array('address_type' => 'billing', 'name' => 'Kevin Bombino', 'city' => 'Sydney')));
   }
 
   function testVaeStoreLoadCustomerNotLoggedIn() {
-    $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>";
+    $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>";
     _vae_store_load_customer($raw, false);
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null, 'gateway' => null, 'gateway_customer_id' => null));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null, 'gateway' => null, 'gateway_customer_id' => null, 'subscriptions' => array()));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertFalse($_SESSION['__v:store']['loggedin']);
     $this->assertNull($_SESSION['__v:store']['customer_addresses']);
