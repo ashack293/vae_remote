@@ -77,6 +77,12 @@ function vae_customer($id, $load = false) {
   if ($raw == false) return false;
   if ($load) _vae_store_load_customer($raw);
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
+
+}
+function vae_customer_cancel_subscription($id) {
+  $customer_id = $_SESSION['__v:store']['customer_id'];
+  $ret = _vae_rest(array(), "api/site/v1/customers/" . $customer_id . "/cancel_subscription/" . $id);
+  return ($ret != false);
 }
 
 function vae_customer_create_address($customer_id, $address) {
@@ -117,6 +123,12 @@ function vae_customer_order_ids($id) {
 function vae_customer_update($id = null, $data) {
   if (!$id) $id = $_SESSION['__v:store']['customer_id'];
   $ret = _vae_rest($data, "api/site/v1/customers/update/" . $id, "customer");
+  return ($ret != false);
+}
+
+function vae_customer_update_subscription($id, $data) {
+  $customer_id = $_SESSION['__v:store']['customer_id'];
+  $ret = _vae_rest($data, "api/site/v1/customers/" . $customer_id . "/update_subscription/" . $id, "customer_subscription");
   return ($ret != false);
 }
 
