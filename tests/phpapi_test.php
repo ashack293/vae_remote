@@ -70,7 +70,7 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertFalse(vae_customer(123));
     $this->expectException();
     try {
-      vae_customer("bad");
+      vae_customer("");
       $this->fail("expected VaeException");
     } catch (VaeException $e) {
       $this->pass();
