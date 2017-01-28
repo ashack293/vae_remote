@@ -47,6 +47,7 @@ function _vae_build_xml($parent, $data, $method) {
 
 function _vae_create($structure_id, $row_id, $data, $hide_errors = false) {
   global $_VAE;
+  if (!is_numeric($structure_id)) return false;
   $url = "api/site/v1/content/create/" . $structure_id . "/" . $row_id;
   if ($data['publish'] === false) $url .= "?row[disabled]=1";
   $raw = _vae_rest($data, $url, "content", null, null, $hide_errors);

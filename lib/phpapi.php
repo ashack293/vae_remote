@@ -67,7 +67,6 @@ function vae_create($structure_id, $row_id, $data) {
       $row_id = $createInfo->row_id;
     }
   }
-  if (!is_numeric($structure_id)) _vae_error("You called <span class='c'>vae_create()</span> but didn't provide a proper structure ID.");
   return _vae_create($structure_id, $row_id, $data, true);
 }
 
