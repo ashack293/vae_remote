@@ -1613,7 +1613,7 @@ function _vae_require_ssl() {
   $_VAE['ssl_required'] = true;
   $_VAE['cant_cache'] = "ssl_required";
   if (!_vae_ssl() && !$_VAE['local_full_stack'] && !$_REQUEST['__vae_local'] && !$_REQUEST['__verb_local']) {
-    if (!strstr($_SERVER['HTTP_HOST'], "-secure.vaesite.com") && !$_SESSION['__v:pre_ssl_host']) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
+    if (!strstr($_SERVER['HTTP_HOST'], ".vaesite.com") && !$_SESSION['__v:pre_ssl_host']) $_SESSION['__v:pre_ssl_host'] = $_SERVER['HTTP_HOST'];
     if (strlen($_VAE['settings']['ssl_host']) && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
       $domain = $_VAE['settings']['ssl_host'];
     } elseif ($_VAE['settings']['domain_ssl'] && strstr($_SERVER['DOCUMENT_ROOT'], ".verb/releases/")) {
