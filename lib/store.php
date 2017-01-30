@@ -426,7 +426,7 @@ function _vae_store_callback_register($tag) {
   $data = $_SESSION['__v:store']['user'];
   $errors = array();
   _vae_merge_data_from_tags($tag, $data, $errors);
-  if ($a['brand_name']) $data['brand_name'] = $tag['attrs']['brand_name'];
+  if ($tag['attrs']['brand_name']) $data['brand_name'] = $tag['attrs']['brand_name'];
   if ($error = _vae_store_banned_country($data['shipping_country'])) {
     $errors[] = $error;
   }
