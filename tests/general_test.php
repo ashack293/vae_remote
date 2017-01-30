@@ -981,7 +981,6 @@ class GeneralTest extends VaeUnitTestCase {
     global $_VAE;
     $this->assertNull($_VAE['ssl_required']);
     $this->assertEqual("", _vae_require_ssl());
-    $this->assertEqual($_SESSION['__v:pre_ssl_host'], "btg.vaesite.com");
     $this->assertRedirect("https://btg.vaesite.com/page");
     $this->assertNotNull($_VAE['ssl_required']);
   }
