@@ -543,6 +543,14 @@ function vae_store_orders($finders = null) {
   return _vae_store_transform_orders($raw);
 }
 
+function vae_store_orders_bulk_update($finders = null) {
+  if (!is_array($finders)) $finders = array();
+  if ($finders['ids'] && (is_array($finders['ids']))) {
+    $finders['ids'] = implode(",", $finders['ids']);
+  }
+  return _vae_rest($finders, "api/site/v1/store/orders/bulk_update", "order", array(), array(), true);
+}
+
 function vae_store_payment_method() {
   global $_VAE;
   _vae_store_set_default_payment_method();
