@@ -23,3 +23,12 @@ header
 titlemy
 inside
 footer
+=
+<v:template filename="template" title="titlemy2">
+inside
+</v:template>
+>
+header
+titlemy2
+inside
+footer
