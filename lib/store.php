@@ -1744,7 +1744,7 @@ function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $rend
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
   $data = vae_store_previous_orders();
-  $pdata = $pdata[$_REQUEST['order']]];
+  $pdata = $pdata[$_REQUEST['order']];
   if (!$pdata) {
     return vae_redirect("/");
   }
