@@ -1008,6 +1008,7 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   $_SESSION['__v:store']['user']['tags'] = (string)$data->{'tags-input'};
   $_SESSION['__v:store']['user']['e_mail_address'] = (string)$data->{'e-mail-address'};
   $_SESSION['__v:store']['user']['subscriptions'] = _vae_array_from_rails_xml($data->{'subscriptions'}->{'subscription'}, true);
+  unset($_SESSION['__v:store']['previous_orders']);
   _vae_store_populate_addresses();
   return false;
 }
@@ -1731,10 +1732,10 @@ function _vae_store_render_paypal_express_checkout($a, &$tag, $context, &$callba
 function _vae_store_render_previous_order_items($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
-  if (!isset($_SESSION['__v:store']['previous_orders'])) {
+  $data = vae_store_previous_orders();
+  $pdata = $pdata[$_REQUEST['order']]['items'];
+  if (!$pdata) {
     return vae_redirect("/");
-  } else {
-    $pdata = $_SESSION['__v:store']['previous_orders'][$_REQUEST['order']]['items'];
   }
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($pdata));
 }
@@ -1742,12 +1743,12 @@ function _vae_store_render_previous_order_items($a, &$tag, $context, &$callback,
 function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
-  if (!isset($_SESSION['__v:store']['previous_orders'])) {
+  $data = vae_store_previous_orders();
+  $pdata = $pdata[$_REQUEST['order']]];
+  if (!$pdata) {
     return vae_redirect("/");
-  } else {
-    $pdata = array($_SESSION['__v:store']['previous_orders']);
   }
-  return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($pdata));
+  return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml(array($pdata)));
 }
 
 function _vae_store_render_previous_orders($a, &$tag, $context, &$callback, $render_context) {
