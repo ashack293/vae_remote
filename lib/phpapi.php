@@ -70,11 +70,11 @@ function vae_create($structure_id, $row_id, $data) {
   return _vae_create($structure_id, $row_id, $data, true);
 }
 
-function vae_customer($id, $load = false) {
+function vae_customer($id, $load = false, $logged_in = false) {
   if (!strlen($id)) _vae_error("You called <span class='c'>vae_customer()</span> but didn't provide a proper customer ID.");
   $raw = _vae_rest(array(), "api/site/v1/customers/show?id=" . rawurlencode($id), "customer", array(), array(), ['404']);
   if ($raw == false) return false;
-  if ($load) _vae_store_load_customer($raw);
+  if ($load) _vae_store_load_customer($raw, $logged_in);
   return _vae_array_from_rails_xml(simplexml_load_string($raw));
 
 }
