@@ -430,7 +430,7 @@ function _vae_store_callback_register($tag) {
   if ($error = _vae_store_banned_country($data['shipping_country'])) {
     $errors[] = $error;
   }
-  if (!_vae_flash_errors($errors, $tag['attrs']['flash'])) { 
+  if (!_vae_flash_errors($errors, $tag['attrs']['flash'])) {
     if ($tag['attrs']['newsletter_confirm'] && !$_REQUEST[$tag['attrs']['newsletter_confirm']]) unset($tag['attrs']['newsletter']);
     if (_vae_store_create_customer($data, $tag['attrs']['newsletter'])) {
       if ($tag['attrs']['formmail']) {
@@ -635,7 +635,7 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
 	        }
 	        $max = $item['total'];
 	      } else {
-	        $max = ((($disc['discount_shipping'] || $disc['voucher']) && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());      
+	        $max = ((($disc['discount_shipping'] || $disc['voucher']) && !$disc['free_shipping']) ? (_vae_store_compute_subtotal() + _vae_store_compute_shipping()) : _vae_store_compute_subtotal());
 	      }
 	      if (strlen($disc['required_classes'])) {
 	        $found_one = false;
@@ -828,7 +828,7 @@ function _vae_store_create_customer($data, $newsletter_code = null, $from_php = 
       $data['shipping_city'] = $res;
     }
   }
-  if ($_SESSION['__v:store']['customer_id'] && $_SESSION['__v:store']['loggedin']) { 
+  if ($_SESSION['__v:store']['customer_id'] && $_SESSION['__v:store']['loggedin']) {
     if ($raw = _vae_rest($data, "api/site/v1/customers/update/" . $_SESSION['__v:store']['customer_id'], "customer")) {
       _vae_store_load_customer($raw);
       if ($newsletter_code) _vae_newsletter_subscribe($newsletter_code, $data['e_mail_address']);
@@ -1489,7 +1489,7 @@ function _vae_store_render_forgot($a, &$tag, $context, &$callback, $render_conte
 
 function _vae_store_render_google_checkout($a, &$tag, $context, &$callback, $render_context) {
   if (_vae_store_payment_google_checkout_method(false) === false) return "";
-  if (!strlen($a['src'])) $a['src'] = "https://checkout.google.com/buttons/checkout.gif?w=168&h=44&loc=en_US&variant=text&style=trans"; 
+  if (!strlen($a['src'])) $a['src'] = "https://checkout.google.com/buttons/checkout.gif?w=168&h=44&loc=en_US&variant=text&style=trans";
   $inner = _vae_render_tag("img", $a, $inner, $context, $render_context);
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs(array("__v:store_google_checkout" => _vae_tag_unique_id($tag, $context)));
   return _vae_render_tag("a", $a, $inner, $context, $render_context);
@@ -1716,7 +1716,7 @@ function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callbac
 
 function _vae_store_render_paypal_checkout($a, &$tag, $context, &$callback, $render_context) {
   if (_vae_store_payment_paypal_email() === false) return "";
-  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
+  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif";
   $inner = _vae_render_tag("img", $a, $inner, $context, $render_context);
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs(array("__v:store_paypal_checkout" => _vae_tag_unique_id($tag, $context)));
   return _vae_render_tag("a", $a, $inner, $context, $render_context);
@@ -1724,7 +1724,7 @@ function _vae_store_render_paypal_checkout($a, &$tag, $context, &$callback, $ren
 
 function _vae_store_render_paypal_express_checkout($a, &$tag, $context, &$callback, $render_context) {
   if (_vae_store_payment_paypal_express_checkout_method(false) === false) return "";
-  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"; 
+  if (!strlen($a['src'])) $a['src'] = _vae_proto() . "www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif";
   $inner = _vae_render_tag("img", $a, $inner, $context, $render_context);
   $a['href'] = $_SERVER['PHP_SELF'] . _vae_qs(array("__v:store_paypal_express_checkout" => _vae_tag_unique_id($tag, $context), "token" => ""));
   return _vae_render_tag("a", $a, $inner, $context, $render_context);
