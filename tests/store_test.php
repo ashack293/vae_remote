@@ -625,6 +625,7 @@ class StoreTest extends VaeUnitTestCase {
     $_REQUEST['token'] = 12345;
     $_REQUEST['PayerID'] = 6789;
     $this->mockRest("<response><address1>1375 Broadway</address1><address2>Floor 3</address2></response>");
+    $this->mockRest("<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><address>1375 Broadway</address><address-2>Floor 3</address-2></customer-address></customer-addresses><subscriptions></subscriptions></customer>");
     $tag = $this->callbackTag('<v:store:paypal_express_checkout redirect="/checkout" />');
     _vae_store_callback_paypal_express_checkout($tag);
     $this->assertEqual($_SESSION['__v:store']['paypal_express_checkout'], array('token' => 12345, 'payer_id' => 6789));
@@ -1099,13 +1100,12 @@ class StoreTest extends VaeUnitTestCase {
     global $_VAE;
     $_VAE['settings']['store_shipping_use_ups_address_validation'] = true;
     vae_register_hook("store:register:success", "helperHook");
-    $this->mockRest("<customer><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>");
+    $this->mockRest("<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>");
     $this->assertNull($_VAE['__test_hooked']);
-    $data = array('e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin");
+    $data = array('e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney");
     $this->assertTrue(_vae_store_create_customer($data));
     $this->assertSessionDep('__v:store');
-    $this->assertNull($_SESSION['__v:store']['customer_addresses']);
-    $this->assertEqual($_SESSION['__v:store']['user'], $data);
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123', 'order_count_from_matching_address' => null, 'subscriptions' => array()));
     $this->assertRest();
     $this->assertEqual($_VAE['__test_hooked'], 1);
   }
@@ -1114,11 +1114,11 @@ class StoreTest extends VaeUnitTestCase {
     global $_VAE;
     vae_register_hook("store:register:success", "helperHook");
     $_SESSION['__v:store']['customer_id'] = 123;
-    $this->mockRest("<customer><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses></customer>");
+    $this->mockRest("<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>");
     $this->assertNull($_VAE['__test_hooked']);
     $this->assertTrue(_vae_store_create_customer(array('e_mail_address' => 'kevin@actionverb.com')));
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com'));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123', 'order_count_from_matching_address' => null, 'subscriptions' => array()));
     $this->assertRest();
     $this->assertEqual($_VAE['__test_hooked'], 1);
   }
@@ -1224,13 +1224,12 @@ class StoreTest extends VaeUnitTestCase {
   }
 
   function testVaeStoreLoadCustomerNotLoggedIn() {
-    $raw = "<customer><id>124</id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>";
+    $raw = "<customer><id>124</id><gateway>stripe</gateway><gateway-customer-id>123</gateway-customer-id><e-mail-address>kevin@actionverb.com</e-mail-address><customer-addresses><customer-address><address_type>billing</address_type><name>Kevin Bombino</name><city>Sydney</city></customer-address></customer-addresses><subscriptions></subscriptions></customer>";
     _vae_store_load_customer($raw, false);
     $this->assertSessionDep('__v:store');
-    $this->assertEqual($_SESSION['__v:store']['user'], array('e_mail_address' => 'kevin@actionverb.com', 'id' => 124, 'name' => "", 'tags' => null, 'gateway' => null, 'gateway_customer_id' => null, 'order_count_from_matching_address' => null, 'subscriptions' => array()));
+    $this->assertEqual($_SESSION['__v:store']['user'], array('id' => 124, 'tags' => null, 'name' => "", 'e_mail_address' => 'kevin@actionverb.com', 'billing_name' => "Kevin Bombino", 'billing_city' => "Sydney", 'gateway' => 'stripe', 'gateway_customer_id' => '123', 'order_count_from_matching_address' => null, 'subscriptions' => array()));
     $this->assertEqual($_SESSION['__v:store']['customer_id'], 124);
     $this->assertFalse($_SESSION['__v:store']['loggedin']);
-    $this->assertNull($_SESSION['__v:store']['customer_addresses']);
   }
 
   function testVaeStoreMostSpecificField() {

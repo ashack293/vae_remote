@@ -998,8 +998,8 @@ function _vae_store_load_customer($raw, $logged_in = true) {
   $_SESSION['__v:store']['user']['id'] = (int)$data->id;
   if ($logged_in) {
     $_SESSION['__v:store']['loggedin'] = 1;
-    $_SESSION['__v:store']['customer_addresses'] = _vae_array_from_rails_xml($data->{'customer-addresses'}->{'customer-address'}, true);
   }
+  $_SESSION['__v:store']['customer_addresses'] = _vae_array_from_rails_xml($data->{'customer-addresses'}->{'customer-address'}, true);
   $_SESSION['__v:store']['user']['name'] = (string)$data->{'name'};
   $_SESSION['__v:store']['user']['gateway'] = (string)$data->{'gateway'};
   $_SESSION['__v:store']['user']['gateway_customer_id'] = (string)$data->{'gateway-customer-id'};
