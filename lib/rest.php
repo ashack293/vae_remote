@@ -102,7 +102,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   $_VAE['errors'] = $errors;
   if (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'], $hide_errors)) && _vae_flash_errors($errors, $tag['attrs']['flash'])) {
     return false;
-  } elseif (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'], $hide_errors)) && ($ret == false)) {
+  } elseif (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'], $hide_errors)) && ($ret === false)) {
     _vae_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
     if (!strstr($method, "content/create")) {
       _vae_log_error("An attempt to communicate with the Vae backstage failed.\n\nDebugging information follows:\n\n" . $_VAE['resterror'], "VaeBackstageError", debug_backtrace());
