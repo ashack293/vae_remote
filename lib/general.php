@@ -1541,7 +1541,7 @@ function _vae_render_error($e) {
   }
   return _vae_render_message($error_type, $out);
 }
-
+_SESSION
 function _vae_render_final($txt) {
   global $_VAE;
   if (!_vae_in_ob()) die($txt);
@@ -1649,7 +1649,7 @@ function _vae_run_hooks($name, $params = null) {
       } catch (Exception $e) {
         if (strstr($e->getMessage(), "TSocket")) {
         } else {
-          _vae_log_error("Callback Hook Error: $name", get_class($e), debug_backtrace());
+          _vae_log_error("A hook registered with Vae for event '$name' failed.\n\nIt raised the following error: " . $e->getMessage(), get_class($e), debug_backtrace());
         }
       }
     }

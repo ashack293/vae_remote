@@ -105,7 +105,7 @@ function _vae_rest($data, $method, $param, $tag = null, $errors = null, $hide_er
   } elseif (!$hide_errors && !(is_array($hide_errors) && in_array($_VAE['reststatus'],$hide_errors)) && ($ret == false)) {
     _vae_flash("A network error occured.  Please try again.  If this error continues, please contact us.", 'err');
     if (!strstr($method, "content/create")) {
-      _vae_log_error("VaeRailsAppRestApiError", $_VAE['resterror'], debug_backtrace());
+      _vae_log_error("An attempt to communicate with the Vae backstage failed.\n\nDebugging information follows:\n\n" . $_VAE['resterror'], "VaeBackstageError", debug_backtrace());
     }
   }
   return $ret;
@@ -198,7 +198,7 @@ function _vae_simple_rest($url, $post_data = null, $header = false, $follow_redi
       $post_data = preg_replace("/" . $bad . "=([^<]*)/", $bad . "=[FILTERED]", $post_data);
     }
     $url = preg_replace("/secret_key=([^<]*)/", "secret_key=[FILTERED]", $url);
-    _vae_log_error("VaeSimpleRestError", "Submitting to URL: $url\n\n-------------\n\nHost:\n\n$header\n\nData:\n\n$post_data\n\nResponse Code:\n\n$http_code\n\nResponse:\n\n$res\n\n-------------", debug_backtrace());
+    _vae_log_error("An attempt to communicate with the Vae backstage failed.\n\nDebugging information follows:\n\nSimple REST URL: $url\n\n-------------\n\nHost:\n\n$header\n\nData:\n\n$post_data\n\nResponse Code:\n\n$http_code\n\nResponse:\n\n$res\n\n-------------", "VaeBackstageError", debug_backtrace());
     return "";
   }
   return $res;
