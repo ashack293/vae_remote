@@ -1541,7 +1541,7 @@ function _vae_render_error($e) {
   }
   return _vae_render_message($error_type, $out);
 }
-_SESSION
+
 function _vae_render_final($txt) {
   global $_VAE;
   if (!_vae_in_ob()) die($txt);
