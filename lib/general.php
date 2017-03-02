@@ -1463,10 +1463,10 @@ function _vae_render_backtrace($backtrace, $format = 'html') {
       'args'  => $args
     );
   }
-  if ($format == 'hb') {
+  if ($format == 'vae_report') {
     $out = array();
     foreach ($calls as $call) {
-      $out[] = array('number' => $call['line'], 'file' => $call['file'], 'method' => $call['func'], 'class' => $call['class']);
+      $out[] = array('type' => $call['type'], 'args' => $call['args'], 'number' => $call['line'], 'file' => $call['file'], 'method' => $call['func'], 'class' => $call['class']);
     }
     return $out;
   }
@@ -1534,7 +1534,7 @@ function _vae_render_error($e) {
     foreach ($vae_error_log_ignore_msg as $msg) {
       if (strstr($vae_error_log_msg, $msg)) $vae_error_log_msg = "";
     }
-    if (strlen($vae_error_log_msg)) _vae_log_error(trim($vae_error_log_msg), $e_class, _vae_render_backtrace($backtrace, 'hb'));
+    if (strlen($vae_error_log_msg)) _vae_log_error(trim($vae_error_log_msg), $e_class, _vae_render_backtrace($backtrace, 'vae_report'));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
