@@ -513,7 +513,7 @@ function _vae_log_error($message, $class_name, $backtrace) {
     }
   }
   $data = array(
-    'class_name' => $class_name, 'message' => $message, 'backtrace' => json_encode($backtrace),
+    'class_name' => $class_name, 'message' => $message, 'backtrace' => json_encode(_vae_render_backtrace($backtrace, 'vae_report')),
     'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
     'params' => json_encode($safe_request), 'session' => json_encode($safe_session),
     'server' => json_encode($_SERVER), 'hostname' => gethostname()
@@ -1534,7 +1534,7 @@ function _vae_render_error($e) {
     foreach ($vae_error_log_ignore_msg as $msg) {
       if (strstr($vae_error_log_msg, $msg)) $vae_error_log_msg = "";
     }
-    if (strlen($vae_error_log_msg)) _vae_log_error(trim($vae_error_log_msg), $e_class, _vae_render_backtrace($backtrace, 'vae_report'));
+    if (strlen($vae_error_log_msg)) _vae_log_error(trim($vae_error_log_msg), $e_class, $backtrace));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
