@@ -514,7 +514,7 @@ function _vae_log_error($message, $class_name, $backtrace) {
   }
   $data = array(
     'class_name' => $class_name, 'message' => $message, 'backtrace' => json_encode($backtrace),
-    'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'],
+    'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
     'params' => json_encode($safe_request), 'session' => json_encode($safe_session),
     'server' => json_encode($_SERVER), 'hostname' => gethostname()
   );
