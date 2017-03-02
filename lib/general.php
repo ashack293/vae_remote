@@ -1534,7 +1534,7 @@ function _vae_render_error($e) {
     foreach ($vae_error_log_ignore_msg as $msg) {
       if (strstr($vae_error_log_msg, $msg)) $vae_error_log_msg = "";
     }
-    if (strlen($vae_error_log_msg)) _vae_log_error($vae_error_log_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
+    if (strlen($vae_error_log_msg)) _vae_log_error(trim($vae_error_log_msg), $e_class, _vae_render_backtrace($backtrace, 'hb'));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
