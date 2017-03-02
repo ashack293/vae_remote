@@ -508,12 +508,12 @@ function _vae_log_error($message, $class_name, $backtrace) {
     }
   }
   $data = array(
-    'class' => $class_name, 'message' => $message, 'backtrace' => $backtrace,
+    'class_name' => $class_name, 'message' => $message, 'backtrace' => $backtrace,
     'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'],
     'params' => $safe_request, 'session' => $_SESSION, 'server' => $_SERVER, 'hostname' => gethostname()
   );
 
-  _vae_rest($data, "api/site/v1/record_error", "error");
+  _vae_rest($data, "api/site/v1/record_error", "error_report");
 }
 
 function _vae_html2rgb($color) {
