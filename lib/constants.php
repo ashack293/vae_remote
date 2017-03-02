@@ -461,7 +461,7 @@ $_VAE['safe_params'] = array(
   'api/site/v1/store_tax_rates/update' => array('description', 'rate', 'tax_class', 'minimum_price', 'minimum_subtotal', 'country', 'state', 'zip', 'include_shipping'),
 );
 
-$_VAE['unsafe_params'] = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number','stripe_token');
+$_VAE['unsafe_params'] = array('cc_number','cc_month','cc_year','cc_start_month','cc_cvv','cc_start_year','cc_issue_number','stripe_token','__vae_local','__vae_local_files','secret_key','__v:sso_key','__v:customer_key','__v:flash');
 
 $_VAE['store']['payment_methods'] = array(
   'authorize_net' => array('name' => "Credit Card", 'credit_card' => true),

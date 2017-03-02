@@ -501,16 +501,21 @@ function _vae_log_error($message, $class_name, $backtrace) {
     return;
   }
   $safe_request = array();
-  $bad = array($_VAE['unsafe_params']);
   foreach ($_REQUEST as $k => $v) {
-    if (!in_array($k, $bad)) {
+    if (!in_array($k, $_VAE['unsafe_params'])) {
       $safe_request[$k] = $v;
+    }
+  }
+  $safe_session = array();
+  foreach ($_SESSION as $k => $v) {
+    if (!in_array($k, $_VAE['unsafe_params'])) {
+      $safe_session[$k] = $v;
     }
   }
   $data = array(
     'class_name' => $class_name, 'message' => $message, 'backtrace' => json_encode($backtrace),
     'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'],
-    'params' => json_encode($safe_request), 'session' => json_encode($_SESSION), 
+    'params' => json_encode($safe_request), 'session' => json_encode($safe_session),
     'server' => json_encode($_SERVER), 'hostname' => gethostname()
   );
   _vae_local_log("[ERROR] $class_name: $message");
