@@ -1181,7 +1181,7 @@ function _vae_store_payment_paypal_ipn() {
   $out .= "\nRequest  : " . $req . "\nResponse : " . $res;
   _vae_log($out);
   if (!$good) {
-    if ($report_error) _vae_honeybadger_send("PayPalIPNError", $out, debug_backtrace());
+    if ($report_error) _vae_log_error("PayPalIPNError", $out, debug_backtrace());
     @header("HTTP/1.1 503 Service Temporarily Unavailable");
     @header("Status: 503 Service Temporarily Unavailable");
     $out = "Status: 503 Service Temporarily Unavailable\n" . $out;

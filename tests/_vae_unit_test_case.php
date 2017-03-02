@@ -114,7 +114,7 @@ class VaeUnitTestCase extends UnitTestCase {
   }
 
   function assertNoReportedErrors() {
-    $this->assertEqual($_VAE['honeybadger_sent'], 0, "Expected no errors reported to Honeybadger.");
+    $this->assertEqual($_VAE['vae_error_logging_sent'], 0, "Expected no errors reported to Vae Error Logging.");
   }
 
   function assertNoRest() {
@@ -143,7 +143,7 @@ class VaeUnitTestCase extends UnitTestCase {
 
   function assertReportedError($pattern = "") {
     global $_VAE;
-    $this->assertTrue($_VAE['honeybadger_sent'] > 0, "Expected errors reported to Honeybadger.");
+    $this->assertTrue($_VAE['vae_error_logging_sent'] > 0, "Expected errors reported to Vae Error Logging.");
   }
 
   function assertRestError($message = "A network error occured.") {

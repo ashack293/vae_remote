@@ -494,10 +494,10 @@ function _vae_hide_dir($filename) {
   return str_replace($_SERVER['DOCUMENT_ROOT'], "", str_replace("/ebs/vhosts", "/var/www/vhosts", $filename));
 }
 
-function _vae_honeybadger_send($message, $class_name, $backtrace) {
+function _vae_log_error($message, $class_name, $backtrace) {
   global $_VAE;
   if ($_ENV['TEST']) {
-    $_VAE['honeybadger_sent']++;
+    $_VAE['vae_error_logging_sent']++;
     return;
   }
   $safe_request = array();
@@ -508,19 +508,12 @@ function _vae_honeybadger_send($message, $class_name, $backtrace) {
     }
   }
   $data = array(
-    'notifier' => array('name' => 'Vae Remote Notifier', 'version' => '1.0.0', 'url' => 'http://github.com/actionverb/vae_remote'),
-    'error' => array('class' => $class_name, 'message' => $message, 'backtrace' => $backtrace),
-    'request' => array('url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'], 'params' => $safe_request, 'session' => $_SESSION, 'cgi_data' => $_SERVER),
-    'server' => array('project_root' => $_SERVER['DOCUMENT_ROOT'], 'environment_name' => 'production', 'hostname' => gethostname())
+    'class' => $class_name, 'message' => $message, 'backtrace' => $backtrace,
+    'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'],
+    'params' => $safe_request, 'session' => $_SESSION, 'server' => $_SERVER, 'hostname' => gethostname()
   );
-  $curl = curl_init("https://api.honeybadger.io/v1/notices");
-  curl_setopt($curl, CURLOPT_POST, true);
-  curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-  curl_setopt($curl, CURLOPT_HEADER, true);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curl, CURLOPT_HTTPHEADER, Array("X-API-Key: f437889e", "Content-Type: application/json", "Accept: application/json"));
-  $out = curl_exec($curl);
-  curl_close($curl);
+
+  _vae_rest($data, "api/site/v1/record_error", "error");
 }
 
 function _vae_html2rgb($color) {
@@ -1535,7 +1528,7 @@ function _vae_render_error($e) {
     foreach ($hb_ignore_msg as $msg) {
       if (strstr($hb_msg, $msg)) $hb_msg = "";
     }
-    if (strlen($hb_msg)) _vae_honeybadger_send($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
+    if (strlen($hb_msg)) _vae_log_error($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
@@ -1650,7 +1643,7 @@ function _vae_run_hooks($name, $params = null) {
       } catch (Exception $e) {
         if (strstr($e->getMessage(), "TSocket")) {
         } else {
-          _vae_honeybadger_send("Callback Hook Error: $name", get_class($e), debug_backtrace());
+          _vae_log_error("Callback Hook Error: $name", get_class($e), debug_backtrace());
         }
       }
     }
