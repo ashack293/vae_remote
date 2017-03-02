@@ -508,12 +508,13 @@ function _vae_log_error($message, $class_name, $backtrace) {
     }
   }
   $data = array(
-    'class_name' => $class_name, 'message' => $message, 'backtrace' => $backtrace,
+    'class_name' => $class_name, 'message' => $message, 'backtrace' => json_encode($backtrace),
     'url' => _vae_proto() . $_SERVER['HTTP_HOST'] . $_REQUEST['REQUEST_URI'],
-    'params' => $safe_request, 'session' => $_SESSION, 'server' => $_SERVER, 'hostname' => gethostname()
+    'params' => json_encode($safe_request), 'session' => json_encode($_SESSION), 
+    'server' => json_encode($_SERVER), 'hostname' => gethostname()
   );
-
-  _vae_rest($data, "api/site/v1/record_error", "error_report");
+  _vae_local_log("[ERROR] $class_name: $message");
+  _vae_rest($data, "api/site/v1/report_error", "error_report", null, null, true);
 }
 
 function _vae_html2rgb($color) {
@@ -1521,14 +1522,14 @@ function _vae_render_error($e) {
     $log_msg .= "  Call Stack:\n" . _vae_render_backtrace($backtrace, 'text');
   }
   _vae_logstash_send(str_replace("\n", "; ", $log_msg));
-  $hb_msg = "[" . $_VAE['settings']['subdomain'] . "] " . ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
-  $hb_ignore_msg = array("Call to undefined function ereg");
-  $hb_ignore_classes = array('VaeQLQueryParseException','ParseError');
-  if (!in_array($e_class, $hb_ignore_classes)) {
-    foreach ($hb_ignore_msg as $msg) {
-      if (strstr($hb_msg, $msg)) $hb_msg = "";
+  $vae_error_log_msg = ($e->debugging_info ? "  " . $e->debugging_info . "\n" : "") . ($e->getMessage() ? "  " . $e->getMessage() . "\n" : "");
+  $vae_error_log_ignore_msg = array("Call to undefined function ereg");
+  $vae_error_log_ignore_classes = array('VaeQLQueryParseException','ParseError');
+  if (!in_array($e_class, $vae_error_log_ignore_classes)) {
+    foreach ($vae_error_log_ignore_msg as $msg) {
+      if (strstr($vae_error_log_msg, $msg)) $vae_error_log_msg = "";
     }
-    if (strlen($hb_msg)) _vae_log_error($hb_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
+    if (strlen($vae_error_log_msg)) _vae_log_error($vae_error_log_msg, $e_class, _vae_render_backtrace($backtrace, 'hb'));
   }
   if ($_REQUEST['secret_key']) {
     return json_encode(array('error' => $msg, 'debug' => $_VAE['debug']));
