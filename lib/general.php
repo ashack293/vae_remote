@@ -1422,7 +1422,7 @@ function _vae_render_backtrace($backtrace, $format = 'html') {
     $args = '';
     if ($bt['args']) {
       foreach ($bt['args'] as $arg) {
-        if (!strlen($args)) {
+        if (strlen($args)) {
           $args .= ', ';
         }
         switch (gettype($arg)) {
