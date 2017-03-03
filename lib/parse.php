@@ -81,6 +81,7 @@ function _vae_parser_mask_errors($errno, $error_string) {
   global $_VAE;
   $e = str_replace(array(
       "DOMDocument::loadXML() [<a href='domdocument.loadxml'>domdocument.loadxml</a>]: ",
+      "DOMDocument::loadXML(): ",
       " in tag vaeml line 1 in Entity",
       " and vaeml in Entity",
       " in Entity",
@@ -135,7 +136,7 @@ class VaeMLParser {
     $xml = "<vaeml>" . $vaeml . "</vaeml>";
     set_error_handler('_vae_parser_mask_errors');
     if ($dom->loadXML($xml) == FALSE) {
-      return _vae_error("Could not parse VaeML document <code>" . $this->filename . "</code>.  Please make sure all your VaeML tags are closed properly.  This information may help:<ul>" . $_VAE['parser_errors'] . "</ul>");
+      return _vae_error("Could not parse VaeML document <code>" . $this->filename . "</code>.\n\nPlease make sure all your VaeML tags are closed properly.  This information may help:<ul>" . $_VAE['parser_errors'] . "</ul>");
     }
     restore_error_handler();
     return $this->dom_to_vae($dom->firstChild);
