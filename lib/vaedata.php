@@ -293,34 +293,32 @@ class VaeQuery implements Iterator, ArrayAccess, Countable {
 
   private function ___executeQuery($responseId, $query, $options, $raiseErrors = false) {
     global $_VAE;
-    try {
-      if (substr($query, 0, 1) == "~") {
-        self::___openClient();
-        $q = new VaeSqlQuery($responseId, substr($query, 1), $options);
-        return $q->toVaeDbResponse();
-      }
-      for ($i = 0; $i < 10; $i++) {
-        $start = microtime(true);
-        $result = null;
-        try {
-          if (!self::$sessionId) self::___openSession();
-          if ($options == null) $options = array();
-          $result = self::$client->get(self::$sessionId, $responseId, $query, $options);
-        } catch (Thrift\Exception\TException $e) {
-          self::___resetClient();
-        }
-        if ($result) {
-          return $result;
-        }
-      }
-      throw new VaeException("", "Could not connect to VaeDBd to get()");
-    } catch (Thrift\VaeDbInternalError $ie) {
-      if ($raiseErrors) throw new VaeException("", "VaeDB (" . $_VAE['thrift_host'] . ") Internal Error: " . $ie->getMessage());
-      return false;
-    } catch (Thrift\VaeDbQueryError $qe) {
-      if ($raiseErrors) throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
-      return false;
+    if (substr($query, 0, 1) == "~") {
+      self::___openClient();
+      $q = new VaeSqlQuery($responseId, substr($query, 1), $options);
+      return $q->toVaeDbResponse();
     }
+    for ($i = 0; $i < 10; $i++) {
+      $start = microtime(true);
+      $result = null;
+      try {
+        if (!self::$sessionId) self::___openSession();
+        if ($options == null) $options = array();
+        $result = self::$client->get(self::$sessionId, $responseId, $query, $options);
+      } catch (Thrift\VaeDbInternalError $ie) {
+        if ($raiseErrors) throw new VaeException("", "VaeDB (" . $_VAE['thrift_host'] . ") Internal Error: " . $ie->getMessage());
+        return false;
+      } catch (Thrift\VaeDbQueryError $qe) {
+        if ($raiseErrors) throw new VaeException("VaeQL Query Error: " . $qe->getMessage());
+        return false;
+      } catch (Thrift\Exception\TException $e) {
+        self::___resetClient();
+      }
+      if ($result) {
+        return $result;
+      }
+    }
+    throw new VaeException("", "Could not connect to VaeDBd to get()");
   }
 
   public function ___first() {

@@ -310,6 +310,21 @@ class VaeDataTest extends VaeUnitTestCase {
     $this->assertEqual(vae("strlen(artists[name='Kevin Bombino']/name)==strlen(artists[name='Kevin Bombino']/name)"), 1);
   }
 
+  function testVaeDbPrevAndNext() {
+    try {
+      _vae_fetch("prev()", null);
+      $this->fail();
+    } catch (VaeException $e) {
+      $this->pass();
+    }
+    try {
+      _vae_fetch("next()", null);
+      $this->fail();
+    } catch (VaeException $e) {
+      $this->pass();
+    }
+  }
+
   function testShortTermCacheGetAndSet() {
     $this->assertEqual(_vae_short_term_cache_get("badkey"), "");
     _vae_short_term_cache_set("st1", "v1");
