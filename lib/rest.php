@@ -173,6 +173,9 @@ function _vae_simple_rest($url, $post_data = null, $header = false, $follow_redi
   }
   if (!strstr($url, "://")) {
     $url = $_VAE['config']['backlot_url'] . $url;
+    $backstage = true;
+  } elseif (strstr($url, "r.newsletter-agent.com")) {
+    $backstage = true;
   }
   $ch = curl_init($url);
   if (strstr($url, "127.0.0.1") !== false) {
@@ -198,7 +201,9 @@ function _vae_simple_rest($url, $post_data = null, $header = false, $follow_redi
       $post_data = preg_replace("/" . $bad . "=([^<]*)/", $bad . "=[FILTERED]", $post_data);
     }
     $url = preg_replace("/secret_key=([^<]*)/", "secret_key=[FILTERED]", $url);
-    _vae_log_error("An attempt to communicate with the Vae backstage failed.\n\nDebugging information follows:\n\nSimple REST URL: $url\n\n-------------\n\nHost:\n\n$header\n\nData:\n\n$post_data\n\nResponse Code:\n\n$http_code\n\nResponse:\n\n$res\n\n-------------", "VaeBackstageError", debug_backtrace());
+    if (!strstr($url, "://127.0.0.1/")) {
+      _vae_log_error("An attempt to communicate with " . ($backstage ? "the Vae backstage" : "an external API service") . " failed.\n\nDebugging information follows:\n\nRetrieving URL: $url\n\n-------------\n\nHost:\n\n$header\n\nData:\n\n$post_data\n\nResponse Code:\n\n$http_code\n\nResponse:\n\n$res\n\n-------------", ($backstage ? "VaeBackstageError" : "VaeExternalServiceError"), debug_backtrace());
+    }
     return "";
   }
   return $res;
