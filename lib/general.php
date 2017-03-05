@@ -519,6 +519,7 @@ function _vae_log_error($message, $class_name, $backtrace) {
     'server' => json_encode($_SERVER), 'hostname' => gethostname()
   );
   _vae_local_log("[ERROR] $class_name: $message");
+  if ($_REQUEST['__vae_local'] || $_VAE['local_full_stack']) return;
   _vae_rest($data, "api/site/v1/report_error", "error_report", null, null, true);
 }
 
