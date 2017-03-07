@@ -396,7 +396,7 @@ function _vae_store_callback_paypal_express_checkout($tag, $from_select = false)
         if ($_SESSION['__v:store']['user'][$type."phone"] && !$data[$type."phone"]) $data[$type."phone"] = $_SESSION['__v:store']['user'][$type."phone"];
       }
       if ($error = _vae_store_banned_country($data['shipping_country'])) {
-        _vae_flash($error . " Please return to PayPal and choose a different address.");
+        _vae_flash($error . " Please return to PayPal and choose a different address.", 'err', $tag['attrs']['flash']);
       } elseif (_vae_store_create_customer($data)) {
         $_SESSION['__v:store']['payment_method'] = "paypal_express_checkout";
         if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
@@ -479,7 +479,7 @@ function _vae_store_checkout($a = null, $tag = null) {
   $payment_method = $_VAE['store']['payment_methods'][$_SESSION['__v:store']['payment_method']];
   $line_items = _vae_store_convert_cart_to_line_items();
   if (!count($line_items)) {
-    _vae_flash("You submitted a duplicate order.  Maybe you clicked the submit button twice.  Please check your email to see if you see an order confirmation.  If you don't see one, please contact us.", 'err');
+    _vae_flash("You submitted a duplicate order.  Maybe you clicked the submit button twice.  Please check your email to see if you see an order confirmation.  If you don't see one, please contact us.", 'err', $a['flash']);
     return false;
   }
   if (_vae_store_verify_available()) {
@@ -1788,7 +1788,7 @@ function _vae_store_render_recent_order_items($a, &$tag, $context, &$callback, $
 function _vae_store_render_register($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_register');
   if ($_SESSION['__v:store']['payment_method'] == "paypal_express_checkout" && !$_SESSION['__v:store']['paypal_express_checkout']['skip_registration']) {
-    _vae_flash("You cannot edit your address on our site when using PayPal Express Checkout.  Use the back button to go back to PayPal to set the correct address.", "err");
+    _vae_flash("You cannot edit your address on our site when using PayPal Express Checkout.  Use the back button to go back to PayPal to set the correct address.", "err", $a['flash']);
     return vae_redirect($a['redirect']);
   }
   return _vae_render_callback("store_register", $a, $tag, _vae_to_xml($_SESSION['__v:store']['user']), $callback, $render_context);
@@ -1817,7 +1817,7 @@ function _vae_store_render_shipping_methods_select($a, &$tag, $context, &$callba
 function _vae_store_render_user($a, &$tag, $context, &$callback, $render_context) {
   _vae_session_deps_add('__v:store', '_vae_store_render_user');
   if (!$_SESSION['__v:store']['user'] && !$a['safe']) {
-    _vae_flash("Your session expired due to lack of activity.  Please start again.");
+    _vae_flash("Your session expired due to lack of activity.  Please start again.", $a['flash']);
     return vae_redirect("/");
   }
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml(array($_SESSION['__v:store']['user'])));

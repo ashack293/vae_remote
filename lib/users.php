@@ -8,7 +8,7 @@ function _vae_users_callback_forgot($tag) {
       _vae_long_term_cache_set("users:forgot-".$_REQUEST['__v:users_forgot_code'], null);
       $u = explode("|", $u);
       $_SESSION['__v:logged_in'] = array('path' => $u[1], 'id' => $u[0]);
-      _vae_flash("You have been logged in.  Please take this time to change your password to something memorable.");
+      _vae_flash("You have been logged in.  Please take this time to change your password to something memorable.", 'msg', $tag['attrs']['flash']);
       if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     }
   } else {
@@ -19,10 +19,10 @@ function _vae_users_callback_forgot($tag) {
       $domain = $_SERVER['HTTP_HOST'];
       $msg = "You are receiving this E-Mail because a request was submitted to reset your password for $domain.  If you submitted this request, please go to the following URL to login and reset your password:\n\nhttp://$domain" . $_SERVER['PHP_SELF'] . _vae_qs("__v:users_forgot_code=$code&__v:users_forgot=" . _vae_tag_unique_id($tag, $context)) . "\n\nThanks,\n$domain Password Recovery";
       _vae_mail(_vae_fetch($tag['attrs']['email_field'], $user), "$domain Password Recovery", $msg, "From: $domain Password Recovery <noreply@$domain>");
-      _vae_flash('We have sent you an E-Mail containing a link that will let you reset your password.','msg');
+      _vae_flash('We have sent you an E-Mail containing a link that will let you reset your password.', 'msg', $tag['attrs']['flash']);
       if (strlen($tag['attrs']['redirect'])) return vae_redirect($tag['attrs']['redirect']);
     } else {
-      _vae_flash("Your entry didn't match any user stored in our records.",'err');
+      _vae_flash("Your entry didn't match any user stored in our records.", 'err', $tag['attrs']['flash']);
     }
   }
   return vae_redirect($_SERVER['PHP_SELF']);
@@ -35,7 +35,7 @@ function _vae_users_callback_login($tag) {
     $_SESSION['__v:logged_in'] = array('path' => $tag['attrs']['path'], 'id' => $user->id());
     return vae_redirect($tag['attrs']['redirect']);
   }
-  _vae_flash(($tag['attrs']['invalid'] ? $tag['attrs']['invalid'] : 'Login information incorrect.'),'err');
+  _vae_flash(($tag['attrs']['invalid'] ? $tag['attrs']['invalid'] : 'Login information incorrect.'), 'err', $tag['attrs']['flash']);
   return vae_redirect($_SERVER['PHP_SELF']);
 }
 
@@ -51,7 +51,7 @@ function _vae_users_callback_register($tag) {
   if ($ret) {
     $data = _vae_array_from_rails_xml(simplexml_load_string($ret));
     $_SESSION['__v:logged_in'] = array('path' => $tag['attrs']['path'], 'id' => $data['id']);
-    _vae_flash('Your account has been created.');
+    _vae_flash('Your account has been created.', 'msg', $tag['attrs']['flash']);
     if ($tag['attrs']['formmail']) {
       $tag['attrs']['to'] = $tag['attrs']['formmail'];
       return _vae_callback_formmail($tag);
