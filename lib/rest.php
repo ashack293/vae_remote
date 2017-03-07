@@ -79,7 +79,11 @@ function _vae_proxy($url, $qs = "", $send_request_data = false, $yield = false) 
   if (substr($url, 0, 1) == "/") $url = substr($url, 1);
   $qs .= "&__proxy=" . $id;
   $host = $_SERVER['HTTP_HOST'];
-  $out = _vae_simple_rest(_vae_proto() . "127.0.0.1/" . $url . "?" . $qs, null, $host);
+  for ($i = 0; $i < 2; $i++) {
+    $out = _vae_simple_rest(_vae_proto() . "127.0.0.1/" . $url . "?" . $qs, null, $host);
+    if (strlen($out)) break;
+    usleep(100000);
+  }
   $out = str_replace("src=\"http", "__SAVE1__", $out);
   $out = str_replace("src='http", "__SAVE2__", $out);
   $out = str_replace("src=\"", "src=\"http://" . $host . "/", $out);
