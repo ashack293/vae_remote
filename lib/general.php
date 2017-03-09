@@ -1743,6 +1743,9 @@ function _vae_set_login() {
         _vae_store_load_customer($raw);
       }
     }
+    if ($_REQUEST['session_id']) {
+      session_id($_REQUEST['session_id']);
+    }
     if (strlen($_REQUEST['redirect'])) {
       @header("Location: " . $_REQUEST['redirect']);
     } else {
