@@ -140,7 +140,7 @@ function _vae_configure_php() {
     $_VAE['from_proxy'] = true;
   }
   if ($_REQUEST['__host']) $_SERVER['HTTP_HOST'] = $_REQUEST['__host'];
-  if (!$_REQUEST['__v:store_payment_method_ipn']) {
+  if (!$_REQUEST['__v:store_payment_method_ipn'] && !($_REQUEST['set_login'] && $_REQUEST['session_id'])) {
     session_start();
   }
   _vae_store_marketing_data_in_session();
@@ -1734,17 +1734,19 @@ function _vae_set_login() {
   global $_VAE;
   $res = _vae_simple_rest("/api/site/v1/authenticate?secret_key=" . $_VAE['config']['secret_key'] . "&remote_access_key=" . $_REQUEST['remote_access_key']);
   if (preg_match('/601 Authorized\. user_id=([0-9]*)/', $res, $output)) {
-    foreach ($_SESSION as $k => $v) {
-      unset($_SESSION[$k]);
-    }
-    $_SESSION['__v:user_id'] = $output[1];
-    if ($_REQUEST['customer_id']) {
-      if ($raw = _vae_rest(array(), "api/site/v1/customers/show/" . $_REQUEST['customer_id'], "customer", $tag, null, true)) {
-        _vae_store_load_customer($raw);
-      }
-    }
     if ($_REQUEST['session_id']) {
       session_id($_REQUEST['session_id']);
+      session_start();
+    } else {
+      foreach ($_SESSION as $k => $v) {
+        unset($_SESSION[$k]);
+      }
+      $_SESSION['__v:user_id'] = $output[1];
+      if ($_REQUEST['customer_id']) {
+        if ($raw = _vae_rest(array(), "api/site/v1/customers/show/" . $_REQUEST['customer_id'], "customer", $tag, null, true)) {
+          _vae_store_load_customer($raw);
+        }
+      }
     }
     if (strlen($_REQUEST['redirect'])) {
       @header("Location: " . $_REQUEST['redirect']);
