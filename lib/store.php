@@ -1376,7 +1376,7 @@ function _vae_store_render_checkout($a, &$tag, $context, &$callback, $render_con
   }
   _vae_session_deps_add('__v:store', '_vae_store_render_checkout');
   if (!count($_SESSION['__v:store']['cart'])) return vae_redirect($a['shop_page'] ? $a['shop_page'] : "/");
-  if (!$_SESSION['__v:logged_in'] && !isset($_SESSION['__v:store']['user']) && !count($_SESSION['__v:store']['user'])) return vae_redirect($a['register_page']);
+  if (!$_SESSION['__v:logged_in'] && (!isset($_SESSION['__v:store']['user']) || !count($_SESSION['__v:store']['user']))) return vae_redirect($a['register_page']);
   _vae_store_compute_shipping($a['register_page']);
   if ($_SESSION['__v:store']['payment_method'] == "stripe" || $_SESSION['__v:store']['payment_method'] == "stripe_test") {
     foreach ($_VAE['settings']['payment_methods'] as $id => $method) {
