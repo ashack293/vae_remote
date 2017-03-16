@@ -299,6 +299,10 @@ function vae_latest_data() {
   return ($_VAE['feed_generation'] >= $latest_generation ? 1 : 0);
 }
 
+function vae_log_error($message) {
+  _vae_log_error(trim($message), "ManuallyLoggedError", debug_backtrace());
+}
+
 function vae_loggedin() {
   _vae_session_deps_add('__v:logged_in');
   return ($_SESSION['__v:logged_in'] ? $_SESSION['__v:logged_in']['id'] : false);
