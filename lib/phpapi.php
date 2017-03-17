@@ -178,13 +178,18 @@ function vae_flash($message, $type = 'msg', $which = "") {
   return _vae_flash($message, $type, $which);
 }
 
-function vae_image($id, $width = "", $height = "", $image_size = "", $grow = "", $quality = "", $preserve_filename = false, $trim = false) {
+function vae_image($id, $width = "", $height = "", $image_size = "", $size_method = "", $quality = "", $preserve_filename = false, $trim = false) {
   $id = trim($id);
   if (!strlen($id)) return "";
   $iden = $id . "-" . $width . "-" . $height;
   if ($image_size) $iden .= "-" . $image_size;
   if ($quality) $iden .= "-q" . $quality;
-  if ($grow) $iden .= "-g";
+  if (in_array($size_method, array("fill"))) {
+    $iden .= "-sm-" . $size_method;
+  } elseif ($size_method) {
+    $size_method = "grow";
+    $iden .= "-g";
+  }
   if ($trim) $iden .= "-t";
   return _vae_file($iden, $id, "api/site/v1/image/" . $id, ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($image_size ? "&size=" . rawurlencode($image_size) : "") . ($quality ? "&quality=" . $quality : "") . ($grow ? "&grow=1" : "") . ($trim ? "&trim=1" : ""), $preserve_filename);
 }

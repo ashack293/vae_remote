@@ -688,7 +688,8 @@ function _vae_render_img($a, &$tag, $context, &$callback, $render_context) {
     } else {
       $preserve_filename = ($_VAE['settings']['preserve_filenames'] ? true : false);
     }
-    $a['src'] = (($a['image_size'] && !$a['width']) ? vae_sizedimage(_vae_fetch($a['path'], $context), $a['image_size'], $preserve_filename) : vae_image(_vae_fetch($a['path'], $context), $a['width'], $a['height'], $a['image_size'], $a['grow'], $a['quality'], $preserve_filename, $a['trim']));
+    if (isset($a['grow']) && !isset($a['size_method'])) $a['size_method'] = "grow";
+    $a['src'] = (($a['image_size'] && !$a['width']) ? vae_sizedimage(_vae_fetch($a['path'], $context), $a['image_size'], $preserve_filename) : vae_image(_vae_fetch($a['path'], $context), $a['width'], $a['height'], $a['image_size'], $a['size_method'], $a['quality'], $preserve_filename, $a['trim']));
     if (!$a['src']) return "";
     if ($a['watermark']) $a['src'] = vae_watermark($a['src'], $a['watermark'], $a['watermark_vertical_align'], $a['watermark_align'], $a['watermark_vertical_padding'], $a['watermark_horizontal_padding']);
     if (substr($a['filter'], 0, 7) == "reflect") {
