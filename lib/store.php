@@ -606,7 +606,7 @@ function _vae_store_compute_discount($item = null, $remaining = null, $flash_loc
     } elseif (($disc['min_order_items'] > 0) && (_vae_store_compute_number_of_items() < $disc['min_order_items'])) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because there are not enough items in your order.  Minimum number of items needed for this coupon: " . $disc['min_order_items'], 'err', $flash_location);
       unset($_SESSION['__v:store']['discount_code']);
-    } elseif (($disc['country']) && $current['shipping_country'] != $disc['country']) {
+    } elseif (($disc['country']) && strlen($current['shipping_country']) && $current['shipping_country'] != $disc['country']) {
       if ($show_errors && ($item == null)) _vae_flash("You cannot use this coupon code because your order is not being shipped to " . $disc['country'] . ".", 'err', $flash_location);
       unset($_SESSION['__v:store']['discount_code']);
     } else {
