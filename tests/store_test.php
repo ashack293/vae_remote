@@ -753,8 +753,17 @@ class StoreTest extends VaeUnitTestCase {
     $this->populateCart();
     $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>500</fixed-amount><country>jp</country></store-discount-code>');
     vae_store_discount_code("BLOGLINGS");
+    $_SESSION['__v:store']['user']['shipping_country'] = "US";
     $_SESSION['__v:store']['discount_code_show_errors'] = true;
     $this->assertEqual(_vae_store_compute_discount(), 0.00);
+  }
+
+  function testVaeStoreComputeDiscountCountryBlank() {
+    $this->populateCart();
+    $this->mockRest('<store-discount-code><code>BLOGLINGS</code><fixed-amount>500</fixed-amount><country>jp</country></store-discount-code>');
+    vae_store_discount_code("BLOGLINGS");
+    $_SESSION['__v:store']['discount_code_show_errors'] = true;
+    $this->assertEqual(_vae_store_compute_discount(), 454.97);
   }
 
   function testVaeStoreComputeDiscountMax() {
