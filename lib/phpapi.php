@@ -184,14 +184,14 @@ function vae_image($id, $width = "", $height = "", $image_size = "", $size_metho
   $iden = $id . "-" . $width . "-" . $height;
   if ($image_size) $iden .= "-" . $image_size;
   if ($quality) $iden .= "-q" . $quality;
-  if (in_array($size_method, array("fill"))) {
+  if (in_array((string)$size_method, array("fill"))) {
     $iden .= "-sm-" . $size_method;
   } elseif ($size_method) {
     $size_method = "grow";
     $iden .= "-g";
   }
   if ($trim) $iden .= "-t";
-  return _vae_file($iden, $id, "api/site/v1/image/" . $id, ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($image_size ? "&size=" . rawurlencode($image_size) : "") . ($quality ? "&quality=" . $quality : "") . ($grow ? "&grow=1" : "") . ($trim ? "&trim=1" : ""), $preserve_filename);
+  return _vae_file($iden, $id, "api/site/v1/image/" . $id, ($width ? "&width=" . $width : "") . ($height ? "&height=" . $height : "") . ($image_size ? "&size=" . rawurlencode($image_size) : "") . ($quality ? "&quality=" . $quality : "") . ($size_method ? "&size_method=" . $size_method : "") . ($trim ? "&trim=1" : ""), $preserve_filename);
 }
 
 function _vae_image_filter_prepare($image, $iden_string, $func, $internal) {

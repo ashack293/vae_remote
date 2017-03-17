@@ -113,12 +113,13 @@ class PhpapiTest extends VaeUnitTestCase {
     $this->assertEqual(vae_image(123), array("123--", 123, "api/site/v1/image/123", "", false));
     $this->assertEqual(vae_image(123, 450, 500), array("123-450-500", 123, "api/site/v1/image/123", "&width=450&height=500", false));
     $this->assertEqual(vae_image(123, 450, 500, "Main"), array("123-450-500-Main", 123, "api/site/v1/image/123", "&width=450&height=500&size=Main", false));
+    $this->assertEqual(vae_image(123, 450, 500, null, "fill"), array("123-450-500-sm-fill", 123, "api/site/v1/image/123", "&width=450&height=500&size_method=fill", false));
     $this->assertEqual(vae_image(123, "", "", "Main"), array("123---Main", 123, "api/site/v1/image/123", "&size=Main", false));
-    $this->assertEqual(vae_image(123, "", "", "Main", true), array("123---Main-g", 123, "api/site/v1/image/123", "&size=Main&grow=1", false));
+    $this->assertEqual(vae_image(123, "", "", "Main", true), array("123---Main-g", 123, "api/site/v1/image/123", "&size=Main&size_method=grow", false));
     $this->assertEqual(vae_image(123, "", "", "Main", false, "80"), array("123---Main-q80", 123, "api/site/v1/image/123", "&size=Main&quality=80", false));
-    $this->assertEqual(vae_image(123, "", "", "Main", true, "70"), array("123---Main-q70-g", 123, "api/site/v1/image/123", "&size=Main&quality=70&grow=1", false));
-    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70"), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&grow=1", false));
-    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70", true), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&grow=1", true));
+    $this->assertEqual(vae_image(123, "", "", "Main", true, "70"), array("123---Main-q70-g", 123, "api/site/v1/image/123", "&size=Main&quality=70&size_method=grow", false));
+    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70"), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&size_method=grow", false));
+    $this->assertEqual(vae_image(123, 480, 320, "Main", true, "70", true), array("123-480-320-Main-q70-g", 123, "api/site/v1/image/123", "&width=480&height=320&size=Main&quality=70&size_method=grow", true));
   }
 
   function testVaeImageFilterPrepare() {
