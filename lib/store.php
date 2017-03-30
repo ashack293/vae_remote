@@ -1736,7 +1736,11 @@ function _vae_store_render_previous_order_items($a, &$tag, $context, &$callback,
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
   $data = vae_store_previous_orders();
-  $pdata = $data[$_REQUEST['order']]['items'];
+  if ($_REQUEST['order']) {
+    $pdata = $data[$_REQUEST['order']]['items'];
+  } else {
+    $pdata = $data[(string)$context->id]['items'];
+  }
   if (!$pdata) {
     return vae_redirect("/");
   }
@@ -1747,7 +1751,11 @@ function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $rend
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_previous_order');
   $data = vae_store_previous_orders();
-  $pdata = $data[$_REQUEST['order']];
+  if ($_REQUEST['order']) {
+    $pdata = $data[$_REQUEST['order']];
+  } else {
+    $pdata = $data[(string)$context->id];
+  }
   if (!$pdata) {
     return vae_redirect("/");
   }
