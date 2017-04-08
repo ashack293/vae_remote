@@ -1742,7 +1742,7 @@ function _vae_store_render_previous_order_items($a, &$tag, $context, &$callback,
     $pdata = $data[(string)$context->id]['items'];
   }
   if (!$pdata) {
-    return vae_redirect("/");
+    return "";
   }
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($pdata));
 }
@@ -1757,7 +1757,7 @@ function _vae_store_render_previous_order($a, &$tag, $context, &$callback, $rend
     $pdata = $data[(string)$context->id];
   }
   if (!$pdata) {
-    return vae_redirect("/");
+    return "";
   }
   return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml(array($pdata)));
 }

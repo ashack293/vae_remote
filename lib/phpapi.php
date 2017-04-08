@@ -454,6 +454,7 @@ function vae_store_add_cart_items_to_existing_order($order_id = null) {
   $line_items = _vae_store_convert_cart_to_line_items();
   if (!count($line_items)) return false;
   $data = array('line_items' => $line_items);
+  unset($_SESSION['__v:store']['previous_orders']);
   $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/add_line_items", "order", null, null, true);
   if ($ret != false) unset($_SESSION['__v:store']['cart']);
   return ($ret != false);
@@ -683,6 +684,7 @@ function vae_store_update_order_line_items($order_id = null, $line_items = null)
   foreach ($line_items as $id => $qty) {
     $data["item_" . $id . "_qty"] = $qty;
   }
+  unset($_SESSION['__v:store']['previous_orders']);
   $ret = _vae_rest($data, "api/site/v1/store/orders/$order_id/update_line_items", "order", null, null, true);
   return ($ret != false);
 }
@@ -690,6 +692,7 @@ function vae_store_update_order_line_items($order_id = null, $line_items = null)
 function vae_store_update_order_status($order_id, $status) {
   if ($status != "Processing" && $status != "Ordered" && $status != "Shipped") return false;
   if (!is_numeric($order_id)) _vae_error("You called <span class='c'>vae_store_update_order_status()</span> but didn't provide a proper ID.");
+  unset($_SESSION['__v:store']['previous_orders']);
   $ret =_vae_rest(array(), "api/site/v1/store/orders/$order_id/update_status?status=" . $status, "order", null, null, true);
   return ($ret != false);
 }
