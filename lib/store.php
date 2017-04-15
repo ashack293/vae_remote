@@ -1683,6 +1683,13 @@ function _vae_store_render_logout($a, &$tag, $context, &$callback, $render_conte
  return _vae_render_callback_link("store_logout", $a, $tag, $context, $callback, $render_context);
 }
 
+function _vae_store_render_orders($a, &$tag, $context, &$callback, $render_context) {
+  global $_VAE;
+  $orders = vae_store_orders($a);
+  if (!count($orders)) return _vae_get_else($tag, $context, $render_context);
+  return _vae_render_collection($a, $tag, $context, $callback, $render_context, _vae_array_to_xml($orders));
+}
+
 function _vae_store_render_payment_methods_select($a, &$tag, $context, &$callback, $render_context) {
   global $_VAE;
   _vae_session_deps_add('__v:store', '_vae_store_render_payment_methods_select');

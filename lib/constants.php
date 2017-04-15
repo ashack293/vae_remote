@@ -1143,6 +1143,10 @@ $_VAE['tags'] = array (
     'html' => 'a',
     'handler' => '_vae_store_render_logout',
   ),
+  'store_orders' =>
+  array (
+    'handler' => '_vae_store_render_orders',
+  ),
   'store_paypal_checkout' =>
   array (
     'callback' => '_vae_store_callback_paypal_checkout',

@@ -114,6 +114,7 @@ _vae_register_tag('store_item_if_discount', array('handler' => '_vae_store_rende
 _vae_register_tag('store_item_price', array('handler' => '_vae_store_render_item_price'));
 _vae_register_tag('store_login', array('callback' => '_vae_store_callback_login', 'handler' => '_vae_store_render_login', 'html' => 'form'));
 _vae_register_tag('store_logout', array('callback' => '_vae_store_callback_logout', 'html' => 'a', 'handler' => '_vae_store_render_logout'));
+_vae_register_tag('store_orders', array('handler' => '_vae_store_render_orders'));
 _vae_register_tag('store_paypal_express_checkout', array('callback' => '_vae_store_callback_paypal_express_checkout', 'handler' => '_vae_store_render_paypal_express_checkout', 'html' => 'img'));
 _vae_register_tag('store_payment_methods_select', array('callback' => '_vae_store_callback_payment_methods_select', 'handler' => '_vae_store_render_payment_methods_select', 'html' => 'select'));
 _vae_register_tag('store_previous_order_items', array('handler' => '_vae_store_render_previous_order_items'));
