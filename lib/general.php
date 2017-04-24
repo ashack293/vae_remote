@@ -797,7 +797,9 @@ function _vae_interpret_vaeml($vaeml) {
     if (_vae_run_hooks($name) != false) {
       $func = $_VAE['callbacks'][$name];
       if (isset($func['filename'])) require_once(dirname(__FILE__)."/".$func['filename']);
-      return call_user_func($func['callback'], $tag);
+      $ret = call_user_func($func['callback'], $tag);
+      _vae_run_hooks("after:" . $name);
+      return $ret;
     }
   }
   if ($_SESSION != $old_session) {
