@@ -1816,7 +1816,7 @@ function _vae_start_ob() {
 
 function _vae_statsd_send($value) {
   global $_VAE;
-  if ($fp = @fsockopen("udp://statsd.av", 8125, $errno, $errstr)) {
+  if (!$_ENV['TEST'] && $fp = @fsockopen("udp://statsd.av", 8125, $errno, $errstr)) {
     fwrite($fp, "vaesite." . $_VAE['settings']['subdomain'] . "." . $value);
     fclose($fp);
   }
