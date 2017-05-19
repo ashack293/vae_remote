@@ -1930,7 +1930,8 @@ function _vae_store_suggest_alternate_address($country, $city, $state, $zip) {
 
 function _vae_store_transform_orders($xml) {
   $data = simplexml_load_string($xml);
-  $pdata = @_vae_array_from_rails_xml($data->{store-orders}->{store-order}, true, array('email' => 'e_mail_address', 'store-order-line-items' => 'items'));
+  if ($data->{"store-orders"}) $data = $data->{"store-orders"};
+  $pdata = @_vae_array_from_rails_xml($data->{"store-order"}, true, array('email' => 'e_mail_address', 'store-order-line-items' => 'items'));
   if (count($pdata)) {
     foreach ($pdata as $id => $r2) {
       $pdata[$id]['date'] = strftime("%B %d, %Y", strtotime($r2['created_at']));
