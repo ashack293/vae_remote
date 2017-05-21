@@ -55,7 +55,6 @@ if ($data_path = getenv("VAE_LOCAL_DATA_PATH")) {
     if ($local_script) break;
   }
   if (!$local_script && file_exists($_SERVER['DOCUMENT_ROOT'] . $script_name)) return false;
-
 }
 
 if (_vae_should_load()) {
