@@ -545,6 +545,7 @@ function _vae_store_checkout($a = null, $tag = null) {
 }
 
 function _vae_store_complete_checkout($data, $tag = null) {
+  global $_VAE;
   $ret = _vae_rest($data, "api/site/v1/store/create_order", "order", $tag);
   if ($ret) {
     $order_data = _vae_array_from_rails_xml(simplexml_load_string($ret));
@@ -553,7 +554,15 @@ function _vae_store_complete_checkout($data, $tag = null) {
     foreach ($_SESSION['__v:store']['cart'] as $id => $d) {
       $_SESSION['__v:store']['cart'][$id]['order_id'] = $data['id'];
     }
-    $_SESSION['__v:store']['recent_order'] = $_SESSION['__v:store']['cart'];
+    if (!isset($_SESSION['__v:store']['recent_order']) || !$_VAE['settings']['store_combine_recent_orders_in_session']) {
+      $_SESSION['__v:store']['recent_order'] = array();
+    }
+    foreach ($_SESSION['__v:store']['cart'] as $id => $li) {
+      while (isset($_SESSION['__v:store']['recent_order'][$id])) {
+        $id++;
+      }
+      $_SESSION['__v:store']['recent_order'][$id] = $li;
+    }
     $_SESSION['__v:store']['recent_order_data'] = $data;
     if ($order_data['gateway_customer_id']) {
       $_SESSION['__v:store']['user']['gateway_customer_id'] = $order_data['gateway_customer_id'];
