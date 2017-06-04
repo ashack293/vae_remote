@@ -346,7 +346,7 @@ function _vae_form_prepare($a, &$tag, $context, $render_context) {
     }
   }
   if ($a['required']) {
-    $special_requires = array('email','url','date','name','number','digits','creditcard');
+    $special_requires = array('email','url','date','name','number','digits','nodigits','creditcard');
     $class = (in_array($a['required'], $special_requires) ? "required " . $a['required'] : "required");
     $a['class'] .= " " . $class;
   }
@@ -1013,6 +1013,8 @@ function _vae_merge_data_from_tags(&$tag, &$data, &$errors, $nested = false) {
   	        if (!_vae_valid_date($value)) $err = "must be a valid date.";
   	      } elseif ($itag['attrs']['required'] == "digits") {
   	        if (!_vae_valid_digits($value)) $err = "must only contain numeric digits.";
+  	      } elseif ($itag['attrs']['required'] == "nodigits") {
+  	        if (!_vae_valid_nodigits($value)) $err = "must not contain any numeric digits.";
   	      } elseif ($itag['attrs']['required'] == "email") {
   	        if (!_vae_valid_email($value)) $err = "must be a valid E-Mail address.";
   	      } elseif ($itag['attrs']['required'] == "name") {
@@ -1917,6 +1919,10 @@ function _vae_valid_date($date) {
 
 function _vae_valid_digits($input) {
   return (strlen($input) && !preg_match('/[^0-9]/', $input));
+}
+
+function _vae_valid_nodigits($input) {
+  return !preg_match('/[0-9]/', $input);
 }
 
 function _vae_valid_email($email) {

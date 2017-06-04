@@ -361,6 +361,7 @@ $.extend( $.validator, {
     dateISO: "Please enter a valid date ( ISO ).",
     number: "Please enter a valid number.",
     digits: "Please enter only digits.",
+    nodigits: "Please do not enter numeric digits in this field.",
     equalTo: "Please enter the same value again.",
     maxlength: $.validator.format( "Please enter no more than {0} characters." ),
     minlength: $.validator.format( "Please enter at least {0} characters." ),
@@ -1112,6 +1113,7 @@ $.extend( $.validator, {
     dateISO: { dateISO: true },
     number: { number: true },
     digits: { digits: true },
+    nodigits: { nodigits: true },
     creditcard: { creditcard: true }
   },
 
@@ -1354,6 +1356,11 @@ $.extend( $.validator, {
     // Added by Vae Platform
     name_: function(value, element) {
       return this.optional(element) || (value.length > 3 && / /.test(value));
+    },
+
+    // Added by Vae Platform
+    nodigits: function( value, element ) {
+      return !(/^\d+$/.test( value ));
     },
 
     // http://jqueryvalidation.org/date-method/
