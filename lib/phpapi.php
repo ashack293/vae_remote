@@ -650,6 +650,7 @@ function vae_store_update_cart_item($id, $data) {
   $new_data = array_merge($_SESSION['__v:store']['cart'][$id], $data);
   if (!$data['total'] && ($data['price'] || $data['qty'])) $new_data['total'] = $new_data['price'] * $new_data['qty'];
   $_SESSION['__v:store']['cart'][$id] = $new_data;
+  _vae_run_hooks("store:cart:updated");
   return true;
 }
 
